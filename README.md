@@ -1,4 +1,4 @@
-# Indian Railways AI-Powered Automatic Block Planning Platform
+# RAKSHA PATH — Indian Railways AI Platform
 ### Intelligent, Real-Time Railway Maintenance Scheduling & Traffic De-Confliction Engine
 
 [![Platform Status](https://img.shields.io/badge/System-Operational-00d4aa?style=for-the-badge&logo=railway)](https://indianrailways.gov.in)
@@ -11,7 +11,7 @@
 
 ## 🚆 Executive Overview
 
-The **Indian Railways AI-Powered Automatic Block Planning Platform** transforms the scheduling and execution of track maintenance across the 68,000+ route km Indian Railways network. Operating over 13,000 passenger trains and 9,000 freight trains daily, traditional manual block granting between Divisional Control Offices and field engineering cells frequently created corridor congestion, maintenance backlogs, and train delays.
+**RAKSHA PATH** (Indian Railways AI-Powered Automatic Block Planning Platform) transforms the scheduling and execution of track maintenance across the 68,000+ route km Indian Railways network. Operating over 13,000 passenger trains and 9,000 freight trains daily, traditional manual block granting between Divisional Control Offices and field engineering cells frequently created corridor congestion, maintenance backlogs, and train delays.
 
 This platform integrates modern operations research, predictive machine learning, and real-time IoT track geometry feeds to automate:
 1. **Defect Prioritization & Triage (IRPWM 2020)**: Automatic severity scoring (P1 Critical 24h, P2 High 72h, P3 Medium 7d, P4 Routine) based on track quality index (TQI), line speed, traffic density (GMT), and flaw propagation rates.

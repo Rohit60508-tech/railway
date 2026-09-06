@@ -34,8 +34,8 @@
   // ═══════════════════════════════════════════════════════════════════════════
 
   const BRAND = {
-    appName: 'Indian Railways AI Maintenance & Block Planning Platform',
-    shortName: 'IR-AI Planner',
+    appName: 'RAKSHA PATH — Indian Railways AI Maintenance & Block Planning Platform',
+    shortName: 'RAKSHA PATH',
     ministry: 'Ministry of Railways, Government of India',
     techAgency: 'Centre for Railway Information Systems (CRIS)',
     version: '2.4.0-PROD',
@@ -803,7 +803,7 @@
 
     registerRoutes() {
       this.add('#/home', {
-        title: 'Home — Indian Railways AI Platform',
+        title: 'Home — RAKSHA PATH | Indian Railways AI Platform',
         file: '../../index.html',
         roleRequired: null,
       });
@@ -872,7 +872,7 @@
         return;
       }
 
-      document.title = `${route.title} — Indian Railways`;
+      document.title = `${route.title} — RAKSHA PATH`;
       RailwayApp.a11y.announce(`Navigated to ${route.title}`);
 
       // Highlight active nav links

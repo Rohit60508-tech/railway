@@ -82,7 +82,7 @@
     return `
       <header id="ir-shared-nav" class="snav-header">
         <!-- Brand -->
-        <a href="../../index.html" class="snav-brand" style="text-decoration: none; color: inherit;" title="Return to IR AI Portal">
+        <a href="../../index.html" class="snav-brand" style="text-decoration: none; color: inherit;" title="Return to RAKSHA PATH Portal">
           <div class="snav-logo">
             <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" width="28" height="28">
               <circle cx="20" cy="20" r="18" stroke="url(#sn-g1)" stroke-width="2"/>
@@ -101,8 +101,8 @@
             </svg>
           </div>
           <div class="snav-title-group">
-            <span class="snav-title">INDIAN RAILWAYS AI COMMAND</span>
-            <span class="snav-subtitle">EXECUTIVE ADMINISTRATION &amp; MAINTENANCE PLANNING</span>
+            <span class="snav-title">RAKSHA PATH</span>
+            <span class="snav-subtitle">INDIAN RAILWAYS AI COMMAND &amp; BLOCK PLANNING</span>
           </div>
         </a>
 

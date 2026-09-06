@@ -103,7 +103,7 @@ const server = http.createServer(async (req, res) => {
         res.end(`
           <!DOCTYPE html>
           <html>
-          <head><title>404 - Page Not Found | Indian Railways AI</title></head>
+          <head><title>404 - Page Not Found | RAKSHA PATH</title></head>
           <body style="background:#FAF6EE;color:#0F172A;font-family:'Inter',sans-serif;text-align:center;padding:80px 20px;">
             <div style="max-width:500px;margin:0 auto;background:#FFFFFF;border:1px solid rgba(195,178,150,0.45);border-radius:12px;padding:40px;box-shadow:0 8px 30px rgba(15,23,42,0.06);">
               <h1 style="color:#003366;font-size:2rem;margin-bottom:12px;">404 &bull; Resource Not Found</h1>
@@ -139,7 +139,7 @@ const server = http.createServer(async (req, res) => {
 
 server.listen(PORT, HOST, () => {
   console.log('=============================================================');
-  console.log('  INDIAN RAILWAYS AI PLATFORM — WEB & API SERVER RUNNING     ');
+  console.log('  RAKSHA PATH — WEB & API SERVER RUNNING                    ');
   console.log('=============================================================');
   console.log(`  Local URL:       http://localhost:${PORT}`);
   console.log(`  Network URL:     http://${HOST === '0.0.0.0' ? '127.0.0.1' : HOST}:${PORT}`);
