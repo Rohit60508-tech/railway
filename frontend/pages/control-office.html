@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Divisional Control Office — Indian Railways AI</title>
+  <meta name="description" content="Indian Railways AI Maintenance Platform - Section Controller & DOM Corridor Traffic Optimization Console." />
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Orbitron:wght@500;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <!-- Auth guard (runs before page renders) -->
+  <script src="../components/auth-guard.js"></script>
+
+  <!-- Core Styles -->
+  <link rel="stylesheet" href="../styles/main.css" />
+
+  <!-- Shared Navigation -->
+  <script src="../components/SharedNav.js"></script>
+
+  <!-- AI Component Scripts -->
+  <script type="module" src="../components/PriorityScoreBadge.js"></script>
+  <script type="module" src="../components/AIExplanationCard.js"></script>
+  <script type="module" src="../components/TrafficImpactMeter.js"></script>
+  <script type="module" src="../components/SlotFeasibilityIndicator.js"></script>
+  <script type="module" src="../components/ConfidenceIndicator.js"></script>
+  <script type="module" src="../components/ManualOverrideModal.js"></script>
+
+  <style>
+    :root {
+      --bg-dark: #FAF6EE;
+      --card-bg: rgba(255, 255, 255, 0.92);
+      --border-cyan: rgba(195, 178, 150, 0.38);
+      --accent-cyan: #0056B3;
+      --accent-green: #059669;
+      --accent-gold: #D97706;
+      --accent-red: #DC2626;
+      --font-main: 'Calibri', 'Arial', sans-serif;
+      --font-mono: 'Calibri', 'Arial', sans-serif;
+      --font-display: 'Calibri', 'Arial', sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: radial-gradient(circle at 50% 0%, #FFFFFF 0%, #FAF6EE 100%);
+      color: #0F172A;
+      font-family: var(--font-main);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Header Bar ────────────────────────────────────────────── */
+    .ctrl-header {
+      background: rgba(250, 246, 238, 0.96);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-cyan);
+      box-shadow: 0 2px 12px rgba(70, 50, 30, 0.05);
+      height: 64px;
+      padding: 0 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .brand-logo {
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #003366, #0056B3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      box-shadow: 0 2px 10px rgba(0, 51, 102, 0.25);
+    }
+    .brand-title {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #0F172A;
+      letter-spacing: 0.8px;
+    }
+    .brand-sub {
+      font-size: 0.72rem;
+      color: #64748B;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .header-nav {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .nav-pill {
+      color: #334155;
+      text-decoration: none;
+      font-size: 0.82rem;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 6px;
+      transition: all 0.2s;
+    }
+    .nav-pill:hover, .nav-pill.active {
+      color: #003366;
+      background: rgba(0, 51, 102, 0.08);
+      border: 1px solid rgba(0, 51, 102, 0.25);
+    }
+
+    /* ── Main Container ────────────────────────────────────────── */
+    .ctrl-container {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 28px 32px;
+    }
+
+    /* ── Conflict Alert Banner ─────────────────────────────────── */
+    .conflict-alert-banner {
+      background: #FFF5F5;
+      border: 1px solid rgba(220, 38, 38, 0.25);
+      border-left: 4px solid #DC2626;
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin-bottom: 28px;
+      box-shadow: 0 4px 16px rgba(220, 38, 38, 0.06);
+    }
+    .alert-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    .alert-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #DC2626;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      letter-spacing: 0.5px;
+    }
+
+    /* ── Grid Layout ───────────────────────────────────────────── */
+    .ctrl-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    @media (max-width: 1024px) {
+      .ctrl-grid { grid-template-columns: 1fr; }
+    }
+
+    .panel-card {
+      background: #FFFFFF;
+      border: 1px solid rgba(195, 178, 150, 0.45);
+      border-radius: 12px;
+      padding: 22px;
+      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+    }
+    .panel-title {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      color: #003366;
+      font-weight: 700;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* ── Slot Card ─────────────────────────────────────────────── */
+    .slot-item {
+      background: #FCFBF7;
+      border: 1px solid rgba(195, 178, 150, 0.45);
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 14px;
+      transition: all 0.2s;
+    }
+    .slot-item:hover {
+      background: #FAF6EE;
+      border-color: rgba(0, 51, 102, 0.35);
+    }
+    .slot-item.top-ranked {
+      border: 1px solid rgba(5, 150, 105, 0.45);
+      background: #F0FDF4;
+    }
+
+    /* ── Conflict Suggestion Box ───────────────────────────────── */
+    .conflict-card {
+      background: #FFFBFB;
+      border: 1px solid rgba(220, 38, 38, 0.25);
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+    .alternative-box {
+      background: #F0FDF4;
+      border: 1px dashed rgba(5, 150, 105, 0.4);
+      border-radius: 6px;
+      padding: 12px 14px;
+      margin-top: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* ── Tooltips ──────────────────────────────────────────────── */
+    .tooltip-wrap {
+      position: relative;
+      display: inline-flex;
+      cursor: help;
+    }
+    .tooltip-wrap:hover .tooltip-box {
+      visibility: visible;
+      opacity: 1;
+    }
+    .tooltip-box {
+      visibility: hidden;
+      opacity: 0;
+      width: 270px;
+      background: #0F172A;
+      border: 1px solid #003366;
+      color: #FAF6EE;
+      border-radius: 6px;
+      padding: 8px 12px;
+      position: absolute;
+      z-index: 1000;
+      bottom: 125%;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.74rem;
+      line-height: 1.4;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+      transition: opacity 0.2s ease, visibility 0.2s ease;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- SharedNav mounts here -->
+  <div id="shared-nav"></div>
+
+  <main class="ctrl-container">
+
+    <!-- ═══════════════════ LIVE CONFLICT WARNING BANNER ═══════════════════ -->
+    <div class="conflict-alert-banner">
+      <div class="alert-header">
+        <div class="alert-title">
+          <span>🚨</span>
+          <span>CRITICAL TRAIN CONFLICT DETECTED BY AI TRAFFIC ENGINE</span>
+        </div>
+        <span style="font-family: var(--font-mono); font-size: 0.76rem; background: rgba(220, 38, 38, 0.1); color: #DC2626; border: 1px solid rgba(220, 38, 38, 0.25); padding: 2px 8px; border-radius: 4px; font-weight: 700;">
+          COLLISION WARNING #904
+        </span>
+      </div>
+      <p style="font-size: 0.85rem; color: #991B1B; line-height: 1.4; margin: 0;">
+        Manual block request <strong>REQ-PWAY-904</strong> on <em>NDLS-GZB-DN (KM 12-16)</em> scheduled for <strong>08:30 – 10:30</strong> overlaps with scheduled path of <strong>12002 Shatabdi Express</strong> and suburban EMU peak flow (Estimated delay: <strong>210 mins</strong> | Choke Penalty: <strong>91.4/100</strong>).
+      </p>
+    </div>
+
+    <div class="ctrl-grid">
+
+      <!-- ═══════════════════ LEFT COLUMN: RECOMMENDED SLOTS ═══════════════════ -->
+      <div class="panel-card">
+        <div class="panel-title">
+          <span>AI-Recommended Block Windows (Feasibility Ranked)</span>
+          <span style="font-size: 0.75rem; color: #003366; font-family: var(--font-mono); font-weight: 700;">NDLS-CNB-UP Corridor</span>
+        </div>
+
+        <div id="recommended-slots-list">
+          <!-- Populated dynamically with SlotFeasibilityIndicator & TrafficImpactMeter -->
+        </div>
+      </div>
+
+      <!-- ═══════════════════ RIGHT COLUMN: CONFLICTS & ALTERNATIVES ═══════════════════ -->
+      <div class="panel-card">
+        <div class="panel-title">
+          <span>Active Conflict Analysis & AI Alternatives</span>
+          <span style="font-size: 0.75rem; color: #D9531E; font-family: var(--font-mono); font-weight: 700;">Live Disruption Engine</span>
+        </div>
+
+        <div id="conflicts-alternatives-list">
+          <!-- Populated dynamically with AI Warnings and Suggested Alternatives -->
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ═══════════════════ AUDIT LOGS SECTION ═══════════════════ -->
+    <div style="background: #FFFFFF; border: 1px solid rgba(195, 178, 150, 0.45); border-radius: 10px; padding: 18px; margin-top: 24px; box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+        <h3 style="font-family: var(--font-display); font-size: 0.95rem; color: #003366; font-weight: 700; margin: 0;">
+          📋 Section Controller Override & Force Sanction Audit Trail
+        </h3>
+        <button onclick="window.refreshCtrlAudit()" style="background:#FAF6EE; border:1px solid rgba(0,51,102,0.3); color:#003366; padding:4px 12px; border-radius:4px; font-size:0.75rem; font-weight:600; cursor:pointer;">Refresh Log</button>
+      </div>
+      <div id="ctrl-audit-log-container" style="font-size: 0.8rem; color: #475569;">
+        No manual block overrides recorded in current shift.
+      </div>
+    </div>
+
+  </main>
+
+  <script type="module">
+    import { TrafficImpactMeter } from '../components/TrafficImpactMeter.js';
+    import { SlotFeasibilityIndicator } from '../components/SlotFeasibilityIndicator.js';
+    import { ConfidenceIndicator } from '../components/ConfidenceIndicator.js';
+    import { ManualOverrideModal } from '../components/ManualOverrideModal.js';
+
+    // Mock Recommended Slots (Ranked by Feasibility)
+    const recommendedSlots = [
+      {
+        id: "SLOT-NDLS-01",
+        rank: "#1 RECOMMENDED",
+        window: "01:30 – 03:30 (Tomorrow Night)",
+        duration: "120 min duration",
+        status: "HIGH_FEASIBILITY",
+        conflicts: 0,
+        disruptionScore: 14.2,
+        delayMins: 0,
+        trainCount: 0,
+        confidence: 0.98,
+        tooltipExplanation: "Overnight shadow window with zero passenger train conflicts and 25% night bonus.",
+        rationale: "Zero passenger conflicts. 25% night bonus applied. Minimum line occupancy.",
+        isTop: true
+      },
+      {
+        id: "SLOT-NDLS-02",
+        rank: "#2 VIABLE",
+        window: "12:45 – 14:45 (Afternoon Lull)",
+        duration: "120 min duration",
+        status: "MODERATE_FEASIBILITY",
+        conflicts: 1,
+        disruptionScore: 42.0,
+        delayMins: 35,
+        trainCount: 1,
+        confidence: 0.91,
+        tooltipExplanation: "Afternoon lull window; requires 35 min regulation of freight train BOXN-5891 at siding.",
+        rationale: "Requires 35m loop siding regulation for freight rake BOXN-5891.",
+        isTop: false
+      },
+      {
+        id: "SLOT-NDLS-03",
+        rank: "#3 RESTRICTED",
+        window: "15:30 – 17:30 (Pre-Peak)",
+        duration: "120 min duration",
+        status: "LOW_FEASIBILITY",
+        conflicts: 3,
+        disruptionScore: 71.5,
+        delayMins: 110,
+        trainCount: 3,
+        confidence: 0.88,
+        tooltipExplanation: "Pre-peak evening surge encroaching on 3 passenger trains. Requires DRM approval.",
+        rationale: "Pre-peak evening surge. Encroaches on 3 passenger trains. Requires DRM approval.",
+        isTop: false
+      }
+    ];
+
+    // Mock Conflict Records & AI Suggested Alternatives
+    const conflictItems = [
+      {
+        conflictId: "CONF-NDLS-01",
+        proposedTime: "08:30 – 10:30 (Morning Peak)",
+        section: "NDLS-GZB-DN",
+        impactScore: 91.4,
+        conflictedTrains: ["12002 Shatabdi Express (ETA 09:12)", "EMU 64402 Suburban (ETA 09:45)"],
+        warning: "Direct spatial collision with high-speed passenger path and heavy commuter load.",
+        confidence: 0.99,
+        alternative: {
+          recommendedWindow: "01:30 – 03:30 (Shadow Window)",
+          newImpactScore: 14.5,
+          savedDelay: "190 minutes saved",
+          action: "Shift to recommended night slot with 0 train disruption"
+        }
+      },
+      {
+        conflictId: "CONF-CNB-02",
+        proposedTime: "17:00 – 18:30 (Evening Peak)",
+        section: "CNB-PRYJ-UP",
+        impactScore: 68.0,
+        conflictedTrains: ["22436 Vande Bharat Exp (ETA 17:40)"],
+        warning: "Vande Bharat path conflict; maximum 15m regulation permissible.",
+        confidence: 0.94,
+        alternative: {
+          recommendedWindow: "13:00 – 14:30 (Afternoon Slot)",
+          newImpactScore: 28.0,
+          savedDelay: "55 minutes saved",
+          action: "Advance block execution by 4 hours to clear afternoon corridor"
+        }
+      }
+    ];
+
+    function renderRecommendedSlots() {
+      const container = document.getElementById('recommended-slots-list');
+      container.innerHTML = recommendedSlots.map(slot => `
+        <div class="slot-item ${slot.isTop ? 'top-ranked' : ''}">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="font-family: var(--font-mono); font-size: 0.72rem; font-weight: 800; color: ${slot.isTop ? '#059669' : '#003366'};">
+                ${slot.rank}
+              </span>
+              <span style="font-weight: 700; font-size: 0.95rem; color: #0F172A;">${slot.window}</span>
+
+              <div class="tooltip-wrap">
+                <span style="font-size: 0.85rem; color: #003366;">ℹ️</span>
+                <div class="tooltip-box">${slot.tooltipExplanation}</div>
+              </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 6px;">
+              ${SlotFeasibilityIndicator.render({ status: slot.status, conflicts: slot.conflicts, compact: true })}
+              ${ConfidenceIndicator.render({ confidence: slot.confidence, compact: true })}
+            </div>
+          </div>
+
+          <div style="margin-bottom: 10px;">
+            ${TrafficImpactMeter.render({ score: slot.disruptionScore, delayMinutes: slot.delayMins, trainCount: slot.trainCount })}
+          </div>
+
+          <div style="display: flex; align-items: center; justify-content: space-between; font-size: 0.78rem; color: #475569;">
+            <span>ℹ️ ${slot.rationale}</span>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <button style="
+                background: #003366;
+                border: none;
+                color: #ffffff;
+                padding: 6px 16px;
+                border-radius: 6px;
+                font-weight: 700;
+                font-size: 0.76rem;
+                cursor: pointer;
+                box-shadow: 0 2px 8px rgba(0, 51, 102, 0.2);
+              " onclick="alert('Block slot for ${slot.window} sanctioned by Section Controller!')">Sanction Block</button>
+
+              <button onclick="window.overrideBlock('${slot.id}', '${slot.status}')" style="
+                background: rgba(217, 83, 30, 0.08);
+                border: 1px solid rgba(217, 83, 30, 0.35);
+                color: #D9531E;
+                padding: 5px 12px;
+                border-radius: 6px;
+                font-size: 0.74rem;
+                font-weight: 700;
+                cursor: pointer;
+              ">Override</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderConflictsAndAlternatives() {
+      const container = document.getElementById('conflicts-alternatives-list');
+      container.innerHTML = conflictItems.map(item => `
+        <div class="conflict-card">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="font-size: 1rem;">⚠️</span>
+              <span style="font-family: var(--font-mono); font-weight: 700; color: #DC2626;">${item.conflictId}</span>
+              <span style="font-size: 0.78rem; color: #475569;">${item.section}</span>
+            </div>
+            ${ConfidenceIndicator.render({ confidence: item.confidence, compact: true })}
+          </div>
+
+          <div style="font-size: 0.8rem; color: #0F172A; margin-bottom: 6px;">
+            Requested Window: <strong>${item.proposedTime}</strong>
+          </div>
+
+          <div style="font-size: 0.78rem; color: #D9531E; margin-bottom: 8px;">
+            <strong>Conflicted Train Paths:</strong> ${item.conflictedTrains.join(', ')}
+          </div>
+
+          <div style="font-size: 0.76rem; color: #991B1B; margin-bottom: 10px; line-height: 1.4;">
+            ${item.warning}
+          </div>
+
+          <!-- AI Suggested Alternative Box -->
+          <div class="alternative-box">
+            <div>
+              <div style="font-size: 0.72rem; text-transform: uppercase; color: #003366; font-weight: 700; display: flex; align-items: center; gap: 4px;">
+                <span>💡</span> AI-SUGGESTED OPTIMAL ALTERNATIVE
+              </div>
+              <div style="font-family: var(--font-mono); font-size: 0.84rem; font-weight: 700; color: #0F172A; margin-top: 2px;">
+                ${item.alternative.recommendedWindow}
+              </div>
+              <div style="font-size: 0.74rem; color: #059669; font-weight: 600; margin-top: 2px;">
+                ✓ ${item.alternative.savedDelay}
+              </div>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <button style="
+                background: #003366;
+                border: none;
+                color: #ffffff;
+                font-weight: 700;
+                font-size: 0.76rem;
+                padding: 7px 14px;
+                border-radius: 6px;
+                cursor: pointer;
+                box-shadow: 0 2px 8px rgba(0, 51, 102, 0.2);
+              " onclick="alert('Accepted AI alternative: Shifted to ${item.alternative.recommendedWindow}!')">Apply AI Alternative</button>
+
+              <button onclick="window.overrideBlock('${item.conflictId}', 'INFEASIBLE')" style="
+                background: rgba(220, 38, 38, 0.08);
+                border: 1px solid rgba(220, 38, 38, 0.35);
+                color: #DC2626;
+                padding: 6px 12px;
+                border-radius: 6px;
+                font-size: 0.74rem;
+                font-weight: 700;
+                cursor: pointer;
+              ">Force Sanction</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    window.overrideBlock = function(targetId, currentVal) {
+      ManualOverrideModal.open({
+        targetId,
+        currentVal,
+        type: 'block',
+        onComplete: (log) => {
+          window.refreshCtrlAudit();
+        }
+      });
+    };
+
+    window.refreshCtrlAudit = function() {
+      const logs = ManualOverrideModal.getAuditLogs();
+      const container = document.getElementById('ctrl-audit-log-container');
+      if (!logs || logs.length === 0) {
+        container.innerHTML = "No manual block overrides recorded in current shift.";
+        return;
+      }
+      container.innerHTML = logs.map(l => `
+        <div style="padding: 8px 12px; background: #FAF6EE; border-left: 3px solid #D9531E; border-radius: 4px; margin-bottom: 6px; color: #0F172A;">
+          <strong>[${l.timestamp.slice(11, 19)}] ${l.targetId}</strong>: ${l.originalValue} ➔ <span style="color:#003366; font-weight:700;">${l.overriddenValue}</span> (${l.reasonCode}) by <em>${l.officerId}</em>
+        </div>
+      `).join('');
+    };
+
+    renderRecommendedSlots();
+    renderConflictsAndAlternatives();
+    window.refreshCtrlAudit();
+  </script>
+</body>
+</html>

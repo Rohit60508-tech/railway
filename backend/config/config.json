@@ -1,0 +1,23 @@
+{
+  "ai_service": {
+    "api_base_url": "http://127.0.0.1:5000",
+    "python_path": "python",
+    "timeout_ms": 15000,
+    "strategy": "REST_FIRST",
+    "endpoints": {
+      "health": "/api/v1/health",
+      "health_models": "/api/v1/health/models",
+      "priority_defect": "/api/v1/prioritize/defect",
+      "priority_batch": "/api/v1/prioritize/batch",
+      "priority_model_info": "/api/v1/priority/model-info",
+      "traffic_occupancy": "/api/v1/traffic/occupancy",
+      "traffic_slots": "/api/v1/traffic/slots",
+      "traffic_best_slots": "/api/v1/traffic/best-slots",
+      "traffic_forecast": "/api/v1/traffic/forecast",
+      "optimizer_schedule": "/api/v1/optimize/schedule",
+      "optimizer_bundle": "/api/v1/optimize/bundle",
+      "optimizer_constraints": "/api/v1/optimize/constraints",
+      "optimizer_validate": "/api/v1/optimize/validate"
+    }
+  }
+}

@@ -1,0 +1,342 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "id": null,
+  "links": [],
+  "liveNow": true,
+  "panels": [
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 0 },
+      "id": 100,
+      "title": "Model Metadata & Executive KPIs",
+      "type": "row"
+    },
+    {
+      "id": 1,
+      "title": "Active Model Version & Deployment",
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 1 },
+      "targets": [
+        {
+          "expr": "ai_model_info{service=\"priority-engine\"}",
+          "format": "time_series",
+          "legendFormat": "Version: {{ version }}"
+        }
+      ],
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "textMode": "auto"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "blue", "value": null }
+            ]
+          },
+          "unit": "string"
+        }
+      }
+    },
+    {
+      "id": 2,
+      "title": "Model Last Updated",
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 6, "x": 6, "y": 1 },
+      "targets": [
+        {
+          "expr": "ai_model_last_update_timestamp_seconds",
+          "format": "time_series",
+          "legendFormat": "Last Retrained"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "dateTimeFromNow",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 2592000 }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": 3,
+      "title": "Current Predictions / Minute",
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 6, "x": 12, "y": 1 },
+      "targets": [
+        {
+          "expr": "sum(rate(ai_predictions_total[1m])) * 60",
+          "legendFormat": "Preds/Min"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 500 },
+              { "color": "red", "value": 1500 }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": 4,
+      "title": "Optimization Success Rate",
+      "type": "gauge",
+      "gridPos": { "h": 4, "w": 6, "x": 18, "y": 1 },
+      "targets": [
+        {
+          "expr": "sum(rate(ai_optimizer_solutions_total{status=\"OPTIMAL\"}[5m])) / sum(rate(ai_optimizer_solutions_total[5m])) * 100",
+          "legendFormat": "Success Rate"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "min": 0,
+          "max": 100,
+          "unit": "percent",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "red", "value": null },
+              { "color": "yellow", "value": 85 },
+              { "color": "green", "value": 95 }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 5 },
+      "id": 101,
+      "title": "Inference Throughput & Latency",
+      "type": "row"
+    },
+    {
+      "id": 5,
+      "title": "Predictions per Minute by Service",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 6 },
+      "targets": [
+        {
+          "expr": "sum(rate(ai_predictions_total[1m])) by (service) * 60",
+          "legendFormat": "{{ service }}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps",
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "fillOpacity": 15
+          }
+        }
+      }
+    },
+    {
+      "id": 6,
+      "title": "Average Prediction Latency by Service",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 6 },
+      "targets": [
+        {
+          "expr": "sum(rate(ai_prediction_duration_seconds_sum[5m])) by (service) / sum(rate(ai_prediction_duration_seconds_count[5m])) by (service)",
+          "legendFormat": "Avg Latency: {{ service }}"
+        },
+        {
+          "expr": "histogram_quantile(0.95, sum(rate(ai_prediction_duration_seconds_bucket[5m])) by (le))",
+          "legendFormat": "p95 Overall Latency"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth"
+          }
+        }
+      }
+    },
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 14 },
+      "id": 102,
+      "title": "Quality, Accuracy & Error Observability",
+      "type": "row"
+    },
+    {
+      "id": 7,
+      "title": "Priority Score Distribution (P1 - P4)",
+      "type": "piechart",
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 15 },
+      "targets": [
+        {
+          "expr": "sum(increase(ai_defect_prioritized_total[1h])) by (category)",
+          "legendFormat": "{{ category }}"
+        }
+      ],
+      "options": {
+        "legend": { "displayMode": "table", "placement": "right", "values": ["value", "percent"] },
+        "pieType": "donut"
+      }
+    },
+    {
+      "id": 8,
+      "title": "Traffic Prediction Accuracy Over Time",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 15 },
+      "targets": [
+        {
+          "expr": "ai_traffic_prediction_accuracy_percent",
+          "legendFormat": "Timetable Accuracy %"
+        },
+        {
+          "expr": "ai_model_accuracy_ratio{service=\"priority-engine\"} * 100",
+          "legendFormat": "Defect Priority Accuracy %"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "min": 0,
+          "max": 100,
+          "unit": "percent",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "red", "value": null },
+              { "color": "yellow", "value": 85 },
+              { "color": "green", "value": 90 }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": 9,
+      "title": "Error Rate by Service (% 5xx Errors)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 15 },
+      "targets": [
+        {
+          "expr": "sum(rate(http_requests_total{status=~\"5..\"}[5m])) by (service) / sum(rate(http_requests_total[5m])) by (service) * 100",
+          "legendFormat": "Error Rate: {{ service }}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 2 },
+              { "color": "red", "value": 5 }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 23 },
+      "id": 103,
+      "title": "Resource Saturation & Queue Backlog",
+      "type": "row"
+    },
+    {
+      "id": 10,
+      "title": "Resource Utilization (CPU & Memory)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 16, "x": 0, "y": 24 },
+      "targets": [
+        {
+          "expr": "sum(rate(container_cpu_usage_seconds_total{container=~\"ai-.*\"}[1m])) by (container) * 100",
+          "legendFormat": "CPU %: {{ container }}"
+        },
+        {
+          "expr": "container_memory_working_set_bytes{container=~\"ai-.*\"} / container_spec_memory_limit_bytes{container=~\"ai-.*\"} * 100",
+          "legendFormat": "Memory %: {{ container }}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "min": 0,
+          "max": 100,
+          "unit": "percent",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 75 },
+              { "color": "red", "value": 90 }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": 11,
+      "title": "Pending Prediction Queue Backlog",
+      "type": "stat",
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 24 },
+      "targets": [
+        {
+          "expr": "ai_prediction_queue_backlog_total",
+          "legendFormat": "Queued Inferences"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 50 },
+              { "color": "red", "value": 100 }
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "refresh": "10s",
+  "schemaVersion": 38,
+  "style": "dark",
+  "tags": ["indian-railways", "ai-monitoring", "machine-learning", "cris"],
+  "time": { "from": "now-6h", "to": "now" },
+  "timezone": "browser",
+  "title": "Indian Railways - AI Inference & Model Observability",
+  "version": 1
+}

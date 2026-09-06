@@ -1,0 +1,8 @@
+team_id,team_name,department,base_section_id,availability_status,primary_equipment,shift
+TEAM-EN-01,Track team A,ENGINEERING,SEC-A01,AVAILABLE,Track trolley,NIGHT
+TEAM-EN-02,Track team B,ENGINEERING,SEC-B02,AVAILABLE,Track trolley,DAY
+TEAM-EN-03,Track team C,ENGINEERING,SEC-B02,LIMITED,Signal testing kit,DAY
+TEAM-TR-01,OHE team A,TRACTION,SEC-B02,AVAILABLE,Signal testing kit,DAY
+TEAM-TR-02,OHE team B,TRACTION,SEC-B01,AVAILABLE,Tower wagon,NIGHT
+TEAM-S&-01,S&T team A,S&T,SEC-A01,AVAILABLE,Track trolley,ALL
+TEAM-S&-02,S&T team B,S&T,SEC-B02,AVAILABLE,Signal testing kit,ALL

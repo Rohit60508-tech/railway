@@ -1,0 +1,1299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Executive Admin AI Dashboard — Indian Railways</title>
+  <meta name="description" content="Indian Railways AI Maintenance Platform - Executive Admin Command Center for defect prioritization, traffic disruption analysis, and block scheduling." />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Orbitron:wght@500;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <!-- Auth guard (runs before page renders) -->
+  <script src="../components/auth-guard.js"></script>
+
+  <!-- User Store (admin panel) -->
+  <script src="../components/user-store.js"></script>
+
+  <!-- Core Styles -->
+  <link rel="stylesheet" href="../styles/main.css" />
+
+  <!-- Shared Navigation -->
+  <script src="../components/SharedNav.js"></script>
+
+  <!-- AI Component Scripts -->
+  <script type="module" src="../components/PriorityScoreBadge.js"></script>
+  <script type="module" src="../components/AIExplanationCard.js"></script>
+  <script type="module" src="../components/TrafficImpactMeter.js"></script>
+  <script type="module" src="../components/SlotFeasibilityIndicator.js"></script>
+  <script type="module" src="../components/ConfidenceIndicator.js"></script>
+  <script type="module" src="../components/BundlingSuggestionCard.js"></script>
+  <script type="module" src="../components/ManualOverrideModal.js"></script>
+  <script src="../main-app.js"></script>
+
+  <style>
+    :root {
+      --bg-dark: #FAF6EE;
+      --card-bg: rgba(255, 255, 255, 0.92);
+      --border-cyan: rgba(195, 178, 150, 0.38);
+      --accent-cyan: #0056B3;
+      --accent-green: #059669;
+      --accent-gold: #D97706;
+      --accent-red: #DC2626;
+      --font-main: 'Calibri', 'Arial', sans-serif;
+      --font-mono: 'Calibri', 'Arial', sans-serif;
+      --font-display: 'Calibri', 'Arial', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Calibri', 'Arial', sans-serif !important;
+    }
+    button, input, select, textarea, th, td, h1, h2, h3, h4, h5, h6, span, p, a, div, label, table {
+      font-family: 'Calibri', 'Arial', sans-serif !important;
+    }
+    body {
+      background: radial-gradient(circle at 50% 0%, #FFFFFF 0%, #FAF6EE 100%);
+      color: #0F172A;
+      font-family: 'Calibri', 'Arial', sans-serif !important;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Header Bar ────────────────────────────────────────────── */
+    .admin-header {
+      background: rgba(250, 246, 238, 0.96);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-cyan);
+      box-shadow: 0 2px 12px rgba(70, 50, 30, 0.05);
+      height: 64px;
+      padding: 0 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .brand-logo {
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #003366, #0056B3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      box-shadow: 0 0 15px rgba(0, 51, 102, 0.2);
+    }
+    .brand-title {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #0F172A;
+      letter-spacing: 0.8px;
+    }
+    .brand-sub {
+      font-size: 0.72rem;
+      color: #64748B;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .header-nav {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .nav-pill {
+      color: #334155;
+      text-decoration: none;
+      font-size: 0.82rem;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 6px;
+      transition: all 0.2s;
+    }
+    .nav-pill:hover, .nav-pill.active {
+      color: #003366;
+      background: rgba(0, 51, 102, 0.08);
+      border: 1px solid rgba(0, 51, 102, 0.25);
+    }
+
+    /* ── Main Container ────────────────────────────────────────── */
+    .admin-container {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 28px 32px;
+    }
+
+    /* ── KPI Row ───────────────────────────────────────────────── */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin-bottom: 28px;
+      width: 100%;
+    }
+    @media (max-width: 1100px) {
+      .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 640px) {
+      .kpi-grid { grid-template-columns: 1fr; }
+    }
+    .kpi-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-cyan);
+      border-radius: 12px;
+      padding: 20px 22px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(70, 50, 30, 0.05);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 132px;
+      box-sizing: border-box;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .kpi-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 24px rgba(70, 50, 30, 0.08);
+    }
+    .kpi-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 3px;
+      background: var(--accent-cyan);
+    }
+    .kpi-card.danger::before { background: var(--accent-red); }
+    .kpi-card.success::before { background: var(--accent-green); }
+    .kpi-card.warning::before { background: var(--accent-gold); }
+
+    .kpi-label {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: #64748B;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .kpi-val {
+      font-family: var(--font-mono);
+      font-size: 1.85rem;
+      font-weight: 800;
+      color: #0F172A;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 4px 0 6px 0;
+      line-height: 1.2;
+    }
+    .kpi-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-family: var(--font-main);
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 6px;
+      line-height: 1;
+      white-space: nowrap;
+    }
+    .kpi-badge.urgent {
+      background: rgba(220, 38, 38, 0.1);
+      color: #DC2626;
+      border: 1px solid rgba(220, 38, 38, 0.25);
+    }
+    .kpi-badge.warning {
+      background: rgba(217, 83, 30, 0.1);
+      color: #D9531E;
+      border: 1px solid rgba(217, 83, 30, 0.25);
+    }
+    .kpi-delta {
+      font-size: 0.76rem;
+      font-weight: 600;
+      margin-top: auto;
+      padding-top: 4px;
+      line-height: 1.4;
+    }
+
+    /* ── Section Header ────────────────────────────────────────── */
+    .section-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .section-title-group h2 {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      color: #0F172A;
+      letter-spacing: 0.5px;
+    }
+    .section-title-group p {
+      font-size: 0.8rem;
+      color: #64748B;
+      margin-top: 2px;
+    }
+
+    .action-btn-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .btn-reprioritize {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #003366;
+      border: none;
+      color: #ffffff;
+      font-family: var(--font-main);
+      font-size: 0.82rem;
+      font-weight: 700;
+      padding: 8px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 2px 10px rgba(0, 51, 102, 0.25);
+      transition: all 0.25s ease;
+    }
+    .btn-reprioritize:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px rgba(0, 51, 102, 0.35);
+    }
+    .btn-reprioritize:active {
+      transform: translateY(1px);
+    }
+
+    /* ── Table & Cards ─────────────────────────────────────────── */
+    .card-panel {
+      background: var(--card-bg);
+      border: 1px solid var(--border-cyan);
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+      margin-bottom: 28px;
+    }
+
+    .table-container, .table-responsive {
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      border-radius: 8px;
+    }
+    .ai-table, .admin-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-size: 0.84rem;
+      text-align: left;
+    }
+    .ai-table th, .admin-table th {
+      background: #F6F1E5;
+      color: #334155;
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      padding: 14px 18px;
+      border-bottom: 2px solid rgba(195, 178, 150, 0.5);
+      font-weight: 700;
+      white-space: nowrap;
+      vertical-align: middle;
+    }
+    .ai-table th:first-child, .admin-table th:first-child {
+      border-top-left-radius: 8px;
+    }
+    .ai-table th:last-child, .admin-table th:last-child {
+      border-top-right-radius: 8px;
+    }
+    .ai-table td, .admin-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(195, 178, 150, 0.28);
+      vertical-align: middle;
+      color: #0F172A;
+      line-height: 1.45;
+    }
+    .ai-table tbody tr:hover td, .admin-table tbody tr:hover td {
+      background: rgba(0, 51, 102, 0.025);
+    }
+    .ai-table tbody tr:last-child td, .admin-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* Column Sizing and Alignments for Defects Table */
+    #defects-table th:nth-child(1), #defects-table td:nth-child(1) { width: 14%; white-space: nowrap; }
+    #defects-table th:nth-child(2), #defects-table td:nth-child(2) { width: 11%; white-space: nowrap; }
+    #defects-table th:nth-child(3), #defects-table td:nth-child(3) { width: 22%; }
+    #defects-table th:nth-child(4), #defects-table td:nth-child(4) { width: 13%; text-align: center; white-space: nowrap; }
+    #defects-table th:nth-child(5), #defects-table td:nth-child(5) { width: 9%; text-align: center; white-space: nowrap; }
+    #defects-table th:nth-child(6), #defects-table td:nth-child(6) { width: 25%; }
+    #defects-table th:nth-child(7), #defects-table td:nth-child(7) { width: 6%; text-align: center; white-space: nowrap; }
+
+    /* Centered element alignment inside table cells */
+    #defects-table td:nth-child(4) .tooltip-wrap,
+    #defects-table td:nth-child(5) .ai-confidence-indicator,
+    #defects-table td:nth-child(7) .btn-override-sm {
+      display: inline-flex;
+      justify-content: center;
+    }
+
+    /* Column Sizing and Alignments for Proposed Blocks Table */
+    #blocks-table th:nth-child(1), #blocks-table td:nth-child(1) { width: 18%; white-space: nowrap; }
+    #blocks-table th:nth-child(2), #blocks-table td:nth-child(2) { width: 16%; white-space: nowrap; }
+    #blocks-table th:nth-child(3), #blocks-table td:nth-child(3) { width: 18%; }
+    #blocks-table th:nth-child(4), #blocks-table td:nth-child(4) { width: 16%; text-align: center; white-space: nowrap; }
+    #blocks-table th:nth-child(5), #blocks-table td:nth-child(5) { width: 11%; text-align: center; white-space: nowrap; }
+    #blocks-table th:nth-child(6), #blocks-table td:nth-child(6) { width: 13%; }
+    #blocks-table th:nth-child(7), #blocks-table td:nth-child(7) { width: 8%; text-align: center; white-space: nowrap; }
+
+    #blocks-table td:nth-child(4) .ai-slot-feasibility,
+    #blocks-table td:nth-child(5) .ai-confidence-indicator,
+    #blocks-table td:nth-child(7) .btn-override-sm {
+      display: inline-flex;
+      justify-content: center;
+    }
+
+    /* ── Tooltips ──────────────────────────────────────────────── */
+    .tooltip-wrap {
+      position: relative;
+      display: inline-flex;
+      cursor: help;
+    }
+    .tooltip-wrap:hover .tooltip-box {
+      visibility: visible;
+      opacity: 1;
+    }
+    .tooltip-box {
+      visibility: hidden;
+      opacity: 0;
+      width: 260px;
+      background: #0F172A;
+      border: 1px solid #003366;
+      color: #FAF6EE;
+      border-radius: 6px;
+      padding: 8px 12px;
+      position: absolute;
+      z-index: 1000;
+      bottom: 125%;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.73rem;
+      line-height: 1.4;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+      transition: opacity 0.2s ease, visibility 0.2s ease;
+      pointer-events: none;
+    }
+
+    .btn-override-sm {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(217, 83, 30, 0.08);
+      border: 1px solid rgba(217, 83, 30, 0.35);
+      color: #D9531E;
+      padding: 5px 12px;
+      border-radius: 6px;
+      font-size: 0.74rem;
+      font-weight: 700;
+      font-family: var(--font-main);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+    .btn-override-sm:hover {
+      background: rgba(217, 83, 30, 0.18);
+      border-color: #D9531E;
+      transform: translateY(-1px);
+    }
+
+    /* ── Toast ─────────────────────────────────────────────────── */
+    #toast-banner {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 999;
+      background: #FFFFFF;
+      border: 1px solid rgba(195, 178, 150, 0.45);
+      border-left: 4px solid #003366;
+      color: #0F172A;
+      padding: 12px 20px;
+      border-radius: 8px;
+      box-shadow: 0 8px 32px rgba(15, 23, 42, 0.12);
+      font-size: 0.84rem;
+      display: none;
+      align-items: center;
+      gap: 12px;
+    }
+    /* ── User Management Panel ─────────────────────────────────── */
+    .um-section {
+      margin-top: 36px;
+      border-top: 2px solid rgba(0,51,102,0.1);
+      padding-top: 28px;
+    }
+    .um-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+    .um-title-group h2 {
+      font-size: 1.25rem;
+      color: #0F172A;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+    }
+    .um-title-group p {
+      font-size: 0.82rem;
+      color: #64748B;
+      margin-top: 3px;
+    }
+    .btn-add-user {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 9px 18px;
+      border-radius: 8px;
+      border: none;
+      background: #003366;
+      color: white;
+      font-size: 0.84rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+      box-shadow: 0 2px 10px rgba(0,51,102,0.22);
+    }
+    .btn-add-user:hover { transform: translateY(-1px); box-shadow: 0 5px 16px rgba(0,51,102,0.3); }
+
+    /* User Table */
+    .um-table-wrap { overflow-x: auto; border-radius: 10px; border: 1px solid var(--border-cyan); box-shadow: 0 2px 10px rgba(15,23,42,0.03); }
+    .um-table { width: 100%; border-collapse: separate; border-spacing: 0; background: var(--card-bg); font-size: 0.84rem; }
+    .um-table th {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #475569;
+      font-weight: 700;
+      padding: 13px 18px;
+      text-align: left;
+      border-bottom: 2px solid rgba(195, 178, 150, 0.45);
+      background: #F6F1E5;
+      white-space: nowrap;
+    }
+    .um-table td { padding: 13px 18px; font-size: 0.84rem; border-bottom: 1px solid rgba(195,178,150,0.22); vertical-align: middle; }
+    .um-table tr:last-child td { border-bottom: none; }
+    .um-table tr:hover td { background: rgba(0,51,102,0.025); }
+
+    /* User table column widths */
+    .um-table th:nth-child(1), .um-table td:nth-child(1) { width: 24%; }
+    .um-table th:nth-child(2), .um-table td:nth-child(2) { width: 14%; }
+    .um-table th:nth-child(3), .um-table td:nth-child(3) { width: 20%; }
+    .um-table th:nth-child(4), .um-table td:nth-child(4) { width: 22%; }
+    .um-table th:nth-child(5), .um-table td:nth-child(5) { width: 10%; text-align: center; }
+    .um-table th:nth-child(6), .um-table td:nth-child(6) { width: 10%; text-align: center; }
+
+    .um-table td:nth-child(5) .um-status-chip,
+    .um-table td:nth-child(6) .um-actions {
+      display: inline-flex;
+      justify-content: center;
+    }
+
+    .um-avatar {
+      width: 34px; height: 34px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.82rem; font-weight: 700; color: white;
+      flex-shrink: 0;
+    }
+    .um-name-cell { display: flex; align-items: center; gap: 12px; }
+    .um-name { font-weight: 700; color: #0F172A; font-size: 0.88rem; }
+    .um-email { font-size: 0.76rem; color: #64748B; margin-top: 1px; }
+    .um-user-chip { font-size: 0.82rem; color: #003366; font-weight: 700; background: rgba(0,51,102,0.06); padding: 2px 7px; border-radius: 4px; }
+    .um-role-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 4px 10px; border-radius: 20px;
+      font-size: 0.74rem; font-weight: 700;
+      border: 1px solid;
+    }
+    .um-status-chip {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 4px 10px; border-radius: 20px;
+      font-size: 0.74rem; font-weight: 700;
+    }
+    .um-status-active   { background: rgba(5,150,105,0.09);  color: #059669; border: 1px solid rgba(5,150,105,0.25); }
+    .um-status-inactive { background: rgba(100,116,139,0.09); color: #64748B; border: 1px solid rgba(100,116,139,0.25); }
+    .um-actions { display: flex; align-items: center; gap: 6px; }
+    .um-btn {
+      padding: 5px 12px; border-radius: 6px; border: 1px solid rgba(195,178,150,0.4);
+      background: #FFFFFF; font-size: 0.76rem; font-weight: 700;
+      cursor: pointer; transition: all 0.15s;
+      display: inline-flex; align-items: center; gap: 4px;
+    }
+    .um-btn-edit:hover  { border-color: #0056B3; color: #0056B3; background: rgba(0,86,179,0.06); }
+    .um-btn-toggle:hover { border-color: #D97706; color: #D97706; background: rgba(217,119,6,0.06); }
+    .um-btn-del:hover   { border-color: #DC2626; color: #DC2626; background: rgba(220,38,38,0.06); }
+    .um-btn-del { color: #DC2626; border-color: rgba(220,38,38,0.25); }
+
+    /* ── User Modal ─────────────────────────────────────────────── */
+    .um-modal-overlay {
+      display: none;
+      position: fixed; inset: 0; z-index: 10000;
+      background: rgba(15,23,42,0.55); backdrop-filter: blur(4px);
+      align-items: center; justify-content: center;
+    }
+    .um-modal-overlay.open { display: flex; }
+    .um-modal {
+      background: #FFFFFF; border-radius: 16px;
+      width: 100%; max-width: 520px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.18);
+      overflow: hidden;
+      animation: modalIn 0.22s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    @keyframes modalIn { from { opacity:0; transform: scale(0.94) translateY(12px); } to { opacity:1; transform: none; } }
+    .um-modal-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 24px;
+      border-bottom: 1px solid rgba(0,51,102,0.1);
+    }
+    .um-modal-header h3 { font-family: var(--font-display); font-size: 1rem; color: #0F172A; font-weight: 700; }
+    .um-modal-close {
+      width: 30px; height: 30px; border-radius: 50%; border: none;
+      background: rgba(0,51,102,0.06); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem; color: #64748B; transition: background 0.15s;
+    }
+    .um-modal-close:hover { background: rgba(220,38,38,0.1); color: #DC2626; }
+    .um-modal-body { padding: 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .um-field { display: flex; flex-direction: column; gap: 6px; }
+    .um-field.full-width { grid-column: span 2; }
+    .um-field label { font-size: 0.72rem; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.7px; }
+    .um-field input, .um-field select {
+      padding: 9px 12px; border: 1.5px solid rgba(0,51,102,0.14);
+      border-radius: 8px; font-size: 0.84rem; font-family: var(--font-main);
+      color: #0F172A; background: #FAF6EE; outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .um-field input:focus, .um-field select:focus {
+      border-color: #0056B3; box-shadow: 0 0 0 3px rgba(0,86,179,0.1); background: white;
+    }
+    .um-modal-footer {
+      display: flex; align-items: center; justify-content: flex-end; gap: 10px;
+      padding: 16px 24px; border-top: 1px solid rgba(0,51,102,0.08);
+    }
+    .um-modal-cancel {
+      padding: 9px 18px; border-radius: 8px; border: 1px solid rgba(0,51,102,0.18);
+      background: transparent; color: #475569; font-size: 0.82rem; font-weight: 600;
+      cursor: pointer; font-family: var(--font-main); transition: all 0.15s;
+    }
+    .um-modal-cancel:hover { background: rgba(0,51,102,0.05); }
+    .um-modal-save {
+      padding: 9px 22px; border-radius: 8px; border: none;
+      background: linear-gradient(135deg, #003366, #0056B3);
+      color: white; font-size: 0.82rem; font-weight: 700;
+      cursor: pointer; font-family: var(--font-main);
+      box-shadow: 0 3px 10px rgba(0,51,102,0.25); transition: all 0.15s;
+    }
+    .um-modal-save:hover { transform: translateY(-1px); box-shadow: 0 5px 14px rgba(0,51,102,0.35); }
+    .um-modal-err { grid-column: span 2; font-size: 0.78rem; color: #DC2626; font-weight: 500; display: none; }
+    .um-modal-err.show { display: block; }
+  </style>
+</head>
+<body>
+
+  <!-- SharedNav mounts here -->
+  <div id="shared-nav"></div>
+
+  <main class="admin-container">
+
+    <!-- ═══════════════════ KPI STATS ═══════════════════ -->
+    <div class="kpi-grid">
+      <div class="kpi-card danger">
+        <div class="kpi-label">P1 Critical Defects</div>
+        <div class="kpi-val" id="kpi-p1">4 <span class="kpi-badge urgent">⚠️ Urgent SLA</span></div>
+        <div class="kpi-delta" style="color: #DC2626;">Immediate 24h block intervention required</div>
+      </div>
+
+      <div class="kpi-card warning">
+        <div class="kpi-label">P2 High Priority</div>
+        <div class="kpi-val" id="kpi-p2">11 <span class="kpi-badge warning">⚡ 72h SLA</span></div>
+        <div class="kpi-delta" style="color: #D9531E;">Scheduled in rolling corridor windows</div>
+      </div>
+
+      <div class="kpi-card success">
+        <div class="kpi-label">AI Optimization Rate</div>
+        <div class="kpi-val">94.8%</div>
+        <div class="kpi-delta" style="color: #059669;">+18.4% corridor downtime saved by bundling</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-label">AI Inference Engine</div>
+        <div class="kpi-val" style="color: #059669;">ONLINE</div>
+        <div class="kpi-delta" style="color: #64748B;">FastAPI Daemon / CP-SAT Solver 4 Workers</div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════ SECTION 1: DEFECT PRIORITIZATION ═══════════════════ -->
+    <div class="section-bar">
+      <div class="section-title-group">
+        <h2>AI-Prioritized Track Defects</h2>
+        <p>Live classification by Random Forest & Gradient Boosting models with explainable risk rationale.</p>
+      </div>
+
+      <div class="action-btn-group">
+        <button class="btn-reprioritize" id="btn-re-prioritize">
+          <span>⚡</span>
+          <span>Re-prioritize Active Defects</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="card-panel">
+      <div class="table-responsive">
+        <table class="ai-table" id="defects-table">
+          <thead>
+            <tr>
+              <th>Defect ID & Section</th>
+              <th>Department</th>
+              <th>Anomaly Description</th>
+              <th>AI Priority Score</th>
+              <th>AI Confidence</th>
+              <th>AI Explainable Rationale (XAI)</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="defects-tbody">
+            <!-- Populated dynamically with AI Components -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ═══════════════════ SECTION 2: AI OPTIMIZATION RECOMMENDATIONS ═══════════════════ -->
+    <div class="section-bar">
+      <div class="section-title-group">
+        <h2>AI Optimization Recommendations (OR-Tools CP-SAT Solver)</h2>
+        <p>Multi-department bundled corridors generated to minimize train disruption and maximize track safety.</p>
+      </div>
+    </div>
+
+    <div id="admin-optimization-recommendations">
+      <!-- BundlingSuggestionCard items rendered here -->
+    </div>
+
+    <!-- ═══════════════════ SECTION 3: PROPOSED CORRIDOR BLOCKS & TRAFFIC PREDICTIONS ═══════════════════ -->
+    <div class="section-bar">
+      <div class="section-title-group">
+        <h2>Proposed Corridor Maintenance Blocks & Traffic Predictions</h2>
+        <p>Predicted traffic disruption scores, train delay impact, and feasibility assessments.</p>
+      </div>
+    </div>
+
+    <div class="card-panel">
+      <div class="table-responsive">
+        <table class="ai-table" id="blocks-table">
+          <thead>
+            <tr>
+              <th>Block Ref & Section</th>
+              <th>Proposed Window</th>
+              <th>Traffic Impact Score</th>
+              <th>Slot Feasibility</th>
+              <th>AI Confidence</th>
+              <th>Participating Units</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="blocks-tbody">
+            <!-- Populated dynamically with AI Components -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ═══════════════════ SECTION 4: AUDIT LOGS ═══════════════════ -->
+    <div class="card-panel" style="margin-top: 10px;">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+        <h3 style="font-family: 'Calibri', 'Arial', sans-serif; font-size: 0.95rem; color: #003366; font-weight: 700;">
+          📋 Regulatory Audit Trail (Manual AI Overrides)
+        </h3>
+        <button onclick="window.refreshAdminAudit()" style="background:#FAF6EE; border:1px solid rgba(0,51,102,0.3); color:#003366; font-weight:600; padding:4px 12px; border-radius:4px; font-size:0.75rem; cursor:pointer;">Refresh Log</button>
+      </div>
+      <div id="admin-audit-log-container" style="font-size: 0.8rem; color: #475569;">
+        No overrides logged in this session.
+      </div>
+    </div>
+
+  </main>
+
+  <div id="toast-banner">
+    <span id="toast-icon">⚡</span>
+    <span id="toast-text">AI re-prioritization complete!</span>
+  </div>
+
+  <script type="module">
+    import { PriorityScoreBadge } from '../components/PriorityScoreBadge.js';
+    import { AIExplanationCard } from '../components/AIExplanationCard.js';
+    import { TrafficImpactMeter } from '../components/TrafficImpactMeter.js';
+    import { SlotFeasibilityIndicator } from '../components/SlotFeasibilityIndicator.js';
+    import { ConfidenceIndicator } from '../components/ConfidenceIndicator.js';
+    import { BundlingSuggestionCard } from '../components/BundlingSuggestionCard.js';
+    import { ManualOverrideModal } from '../components/ManualOverrideModal.js';
+
+    // Mock Sample Defect Records
+    const defectsData = [
+      {
+        id: "DEF-2026-USFD-101",
+        section: "NDLS-CNB-UP (KM 412/18)",
+        department: "CIVIL (P-Way)",
+        desc: "Internal transverse fissure flaw detected in rail head under USFD testing.",
+        score: 93.6,
+        category: "P1",
+        confidence: 0.98,
+        tooltipExplanation: "USFD flaw signals imminent risk of rail fracture on high-density freight/passenger corridor (112 GMT).",
+        summary: "Severe rail fracture hazard on high-density freight/passenger trunk corridor (112 GMT).",
+        detailed: "USFD flaw signals imminent risk of rail fracture. The section carries 140+ trains daily including Rajdhani and Shatabdi expresses. IRPWM safety guidelines dictate immediate clamp and speed restriction to 20 km/h within 24 hours.",
+        factors: [
+          { name: "Safety Severity", weight: 0.24, value: "CRITICAL (100)" },
+          { name: "Traffic Density", weight: 0.18, value: "112.4 GMT" },
+          { name: "Inspection Reliability", weight: 0.15, value: "USFD Car" },
+          { name: "Failure Probability", weight: 0.14, value: "88% Catastrophic" }
+        ],
+        action: "Impose 20 km/h TSR immediately; execute rail piece cut and replacement in 24h block."
+      },
+      {
+        id: "DEF-2026-TRD-082",
+        section: "GZB-ALJN (KM 68/4)",
+        department: "TRD_OHE (Traction)",
+        desc: "Severe carbon dropper erosion and insulator flashover risk under 25kV OHE.",
+        score: 82.4,
+        category: "P2",
+        confidence: 0.91,
+        tooltipExplanation: "Dropper wear exceeding 35% threshold. High risk of pantograph entanglement on high-speed track.",
+        summary: "High risk of pantograph entanglement and traction power outage.",
+        detailed: "Dropper wear exceeding 35% threshold on high-speed line. May cause pantograph entanglement with Vande Bharat trainsets. Scheduled for rectification in the next rolling 72-hour corridor window.",
+        factors: [
+          { name: "Overdue Days", weight: 0.20, value: "3 Days Overdue" },
+          { name: "Department Criticality", weight: 0.18, value: "TRD (90)" },
+          { name: "Asset Redundancy", weight: 0.14, value: "Single Cantilever" }
+        ],
+        action: "Schedule 90-minute power block with tower wagon for dropper replacement."
+      },
+      {
+        id: "DEF-2026-SIG-045",
+        section: "NDLS-GZB-DN (KM 14/8)",
+        department: "SIGNALLING (S&T)",
+        desc: "Point machine operating time degraded from 4.2s to 6.8s at crossover point 104.",
+        score: 64.2,
+        category: "P3",
+        confidence: 0.88,
+        tooltipExplanation: "Operating time trending above 5.0s. Minor risk of intermittent signal aspect reversion.",
+        summary: "Degraded switch movement indicating clutch friction plate wear.",
+        detailed: "Operating time is trending above allowable limit (5.0s). Can trigger intermittent signal aspect reversion if not lubricated and adjusted.",
+        factors: [
+          { name: "Location Criticality", weight: 0.18, value: "Interlocking Crossover" },
+          { name: "Defect Age", weight: 0.12, value: "14 Days Active" }
+        ],
+        action: "Batch with upcoming weekend station interlocking maintenance block."
+      },
+      {
+        id: "DEF-2026-CIVIL-319",
+        section: "CNB-PRYJ (KM 620/12)",
+        department: "CIVIL (P-Way)",
+        desc: "Slight ballast shoulder deficiency along cess on embankment.",
+        score: 34.0,
+        category: "P4",
+        confidence: 0.94,
+        tooltipExplanation: "Ballast profile deficiency within permissible limit. Routine maintenance only.",
+        summary: "Routine track profile maintenance; zero structural derailment hazard.",
+        detailed: "Ballast shoulder deficiency does not exceed safety margins. Routine replenishment required during normal gang inspection.",
+        factors: [
+          { name: "Safety Severity", weight: 0.10, value: "LOW (20)" },
+          { name: "Redundancy", weight: 0.08, value: "Double Line Section" }
+        ],
+        action: "Address during scheduled monthly sectional ballast profiling."
+      }
+    ];
+
+    // Mock Proposed Blocks Data
+    const blocksData = [
+      {
+        ref: "BLK-NDLS-2026-001",
+        section: "NDLS-CNB-UP (KM 410-416)",
+        window: "01:30 – 03:30 (120 min)",
+        impactScore: 14.5,
+        delayMins: 0,
+        trainCount: 0,
+        feasibility: "HIGH_FEASIBILITY",
+        confidence: 0.96,
+        units: "CIVIL (P-Way) + TRD (OHE)"
+      },
+      {
+        ref: "BLK-GZB-2026-004",
+        section: "GZB-ALJN (KM 65-72)",
+        window: "12:45 – 14:45 (120 min)",
+        impactScore: 44.0,
+        delayMins: 35,
+        trainCount: 1,
+        feasibility: "MODERATE_FEASIBILITY",
+        confidence: 0.89,
+        units: "TRD Tower Wagon (Single Line)"
+      },
+      {
+        ref: "BLK-DLI-2026-012",
+        section: "NDLS-GZB-DN (KM 10-18)",
+        window: "08:00 – 10:30 (150 min)",
+        impactScore: 89.2,
+        delayMins: 190,
+        trainCount: 6,
+        feasibility: "INFEASIBLE",
+        confidence: 0.99,
+        units: "CIVIL Heavy Track Tamper"
+      }
+    ];
+
+    // Mock Optimization Recommendations
+    const optimizationRecommendations = [
+      {
+        bundleId: "OPT-CORRIDOR-NDLS-01",
+        sectionId: "NDLS-CNB-UP (KM 410-416)",
+        timeWindow: "01:30 – 04:00 (2h 30m) Night Shadow Slot",
+        synergyScore: 95,
+        savedHours: 2.8,
+        departments: ["CIVIL", "TRD_OHE", "SIGNALLING"],
+        tasks: [
+          { id: "DEF-2026-USFD-101", desc: "P-Way rail piece cut and flash-butt welding", machine: "Welding Plant", duration: "120m" },
+          { id: "DEF-2026-TRD-082", desc: "25kV OHE dropper renewal under power block", machine: "Tower Wagon 08", duration: "90m" }
+        ]
+      }
+    ];
+
+    function renderDefectsTable(data) {
+      const tbody = document.getElementById('defects-tbody');
+      tbody.innerHTML = '';
+
+      data.forEach(item => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>
+            <div style="font-family: var(--font-main); font-weight: 700; color: #003366;">${item.id}</div>
+            <div style="font-size: 0.74rem; color: #64748B; margin-top: 2px;">${item.section}</div>
+          </td>
+          <td>
+            <span style="font-weight: 600; color: #0F172A;">${item.department}</span>
+          </td>
+          <td style="color: #334155; line-height: 1.4;">
+            ${item.desc}
+          </td>
+          <td>
+            <div class="tooltip-wrap" id="badge-slot-${item.id}">
+              ${PriorityScoreBadge.render({ score: item.score, category: item.category, showSla: true })}
+              <div class="tooltip-box">
+                <strong>AI Score Rationale:</strong><br/>
+                ${item.tooltipExplanation}
+              </div>
+            </div>
+          </td>
+          <td>
+            ${ConfidenceIndicator.render({ confidence: item.confidence })}
+          </td>
+          <td>
+            ${AIExplanationCard.render({
+              id: item.id,
+              summary: item.summary,
+              detailedReason: item.detailed,
+              factors: item.factors,
+              recommendedAction: item.action,
+              defaultExpanded: false
+            })}
+          </td>
+          <td>
+            <button class="btn-override-sm" onclick="window.overrideItem('${item.id}', '${item.category} (${item.score})')">
+              Override
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function renderOptimizationSection() {
+      const container = document.getElementById('admin-optimization-recommendations');
+      container.innerHTML = optimizationRecommendations.map(b => BundlingSuggestionCard.render(b)).join('');
+    }
+
+    function renderBlocksTable(data) {
+      const tbody = document.getElementById('blocks-tbody');
+      tbody.innerHTML = '';
+
+      data.forEach(item => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>
+            <div style="font-family: var(--font-mono); font-weight: 700; color: #0F172A;">${item.ref}</div>
+            <div style="font-size: 0.74rem; color: #64748B; margin-top: 2px;">${item.section}</div>
+          </td>
+          <td>
+            <div style="font-family: var(--font-mono); font-weight: 700; color: #003366;">${item.window}</div>
+          </td>
+          <td style="min-width: 170px;">
+            <div class="tooltip-wrap">
+              ${TrafficImpactMeter.render({ score: item.impactScore, delayMinutes: item.delayMins, trainCount: item.trainCount, compact: true })}
+              <div class="tooltip-box">
+                <strong>Traffic Disruption Calculation:</strong><br/>
+                Score: ${item.impactScore}/100. Expected total delay: ${item.delayMins}m across ${item.trainCount} train paths.
+              </div>
+            </div>
+          </td>
+          <td>
+            ${SlotFeasibilityIndicator.render({ status: item.feasibility, conflicts: item.trainCount })}
+          </td>
+          <td>
+            ${ConfidenceIndicator.render({ confidence: item.confidence, compact: true })}
+          </td>
+          <td style="font-size: 0.8rem; color: #475569;">
+            ${item.units}
+          </td>
+          <td>
+            <button class="btn-override-sm" onclick="window.overrideItem('${item.ref}', '${item.feasibility}')">
+              Override
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    window.overrideItem = function(targetId, currentVal) {
+      ManualOverrideModal.open({
+        targetId,
+        currentVal,
+        onComplete: (log) => {
+          const badgeSlot = document.getElementById(`badge-slot-${targetId}`);
+          if (badgeSlot) {
+            badgeSlot.innerHTML = PriorityScoreBadge.render({
+              score: log.overriddenValue === 'P1' ? 95.0 : 75.0,
+              category: log.overriddenValue.replace('_OVERRIDE', '')
+            });
+          }
+          window.refreshAdminAudit();
+        }
+      });
+    };
+
+    window.refreshAdminAudit = function() {
+      const logs = ManualOverrideModal.getAuditLogs();
+      const container = document.getElementById('admin-audit-log-container');
+      if (!logs || logs.length === 0) {
+        container.innerHTML = "No manual overrides logged in this session.";
+        return;
+      }
+      container.innerHTML = logs.map(l => `
+        <div style="padding: 6px 10px; background: #FAF6EE; border: 1px solid rgba(195, 178, 150, 0.35); border-left: 3px solid #D9531E; border-radius: 4px; margin-bottom: 4px; color: #0F172A;">
+          <strong>[${l.timestamp.slice(11, 19)}] ${l.targetId}</strong>: ${l.originalValue} ➔ <span style="color:#003366; font-weight:700;">${l.overriddenValue}</span> (${l.reasonCode}) by <em>${l.officerId}</em>
+        </div>
+      `).join('');
+    };
+
+    // Interactive Re-Prioritize Simulation
+    document.getElementById('btn-re-prioritize').addEventListener('click', () => {
+      const btn = document.getElementById('btn-re-prioritize');
+      btn.disabled = true;
+      btn.innerHTML = `<span>⏳</span><span>Executing AI Inference...</span>`;
+
+      setTimeout(() => {
+        defectsData.forEach(d => {
+          if (d.category === 'P1') d.score = 94.2;
+          if (d.category === 'P2') d.score = 83.1;
+        });
+
+        renderDefectsTable(defectsData);
+        btn.disabled = false;
+        btn.innerHTML = `<span>⚡</span><span>Re-prioritize Active Defects</span>`;
+
+        showToast("✅ AI Re-prioritization complete! Model refreshed scores with 10 features.");
+      }, 900);
+    });
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast-banner');
+      document.getElementById('toast-text').innerText = msg;
+      toast.style.display = 'flex';
+      setTimeout(() => { toast.style.display = 'none'; }, 4000);
+    }
+
+    // Initial render
+    renderDefectsTable(defectsData);
+    renderOptimizationSection();
+    renderBlocksTable(blocksData);
+    window.refreshAdminAudit();
+  </script>
+
+  <!-- ═══════════════════ USER MANAGEMENT PANEL ═══════════════════ -->
+  <div class="um-section" id="um-section">
+    <div class="um-header">
+      <div class="um-title-group">
+        <h2>👤 User Management</h2>
+        <p>View, edit, activate/deactivate, and add platform user accounts</p>
+      </div>
+      <button class="btn-add-user" id="um-add-btn">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Add User
+      </button>
+    </div>
+    <div class="um-table-wrap">
+      <table class="um-table">
+        <thead><tr>
+          <th>User</th>
+          <th>Username</th>
+          <th>Role</th>
+          <th>Division</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr></thead>
+        <tbody id="um-tbody"><!-- JS renders --></tbody>
+      </table>
+    </div>
+  </div>
+
+  </main><!-- /admin-container -->
+
+  <!-- ═══════════════════ USER EDIT MODAL ═══════════════════ -->
+  <div class="um-modal-overlay" id="um-modal-overlay">
+    <div class="um-modal" role="dialog" aria-modal="true" aria-labelledby="um-modal-title">
+      <div class="um-modal-header">
+        <h3 id="um-modal-title">Edit User</h3>
+        <button class="um-modal-close" id="um-modal-close" title="Close">✕</button>
+      </div>
+      <div class="um-modal-body">
+        <input type="hidden" id="um-edit-id" />
+
+        <div class="um-field">
+          <label for="um-f-name">Full Name</label>
+          <input type="text" id="um-f-name" placeholder="Rajesh Kumar" maxlength="64" />
+        </div>
+        <div class="um-field">
+          <label for="um-f-username">Username</label>
+          <input type="text" id="um-f-username" placeholder="admin" maxlength="32" spellcheck="false" autocomplete="off" />
+        </div>
+        <div class="um-field">
+          <label for="um-f-password">Password <span style="color:#94a3b8;font-weight:400;text-transform:none;letter-spacing:0">(leave blank to keep current)</span></label>
+          <input type="text" id="um-f-password" placeholder="New password" maxlength="64" autocomplete="off" />
+        </div>
+        <div class="um-field">
+          <label for="um-f-role">Role</label>
+          <select id="um-f-role">
+            <option value="admin">🛡️ Executive / Admin</option>
+            <option value="field-engineer">🔧 Field Engineer</option>
+            <option value="control-office">🎛️ Control Office Controller</option>
+            <option value="surveillance">📡 Surveillance Inspector</option>
+            <option value="platform-portal">🚉 Platform Portal User</option>
+          </select>
+        </div>
+        <div class="um-field">
+          <label for="um-f-email">Email</label>
+          <input type="email" id="um-f-email" placeholder="user@indianrailways.gov.in" maxlength="120" />
+        </div>
+        <div class="um-field">
+          <label for="um-f-phone">Phone</label>
+          <input type="text" id="um-f-phone" placeholder="+91-98XXX-XXXXX" maxlength="24" />
+        </div>
+        <div class="um-field full-width">
+          <label for="um-f-division">Division / Zone</label>
+          <input type="text" id="um-f-division" placeholder="Northern Railway — Delhi Division" maxlength="80" />
+        </div>
+        <div class="um-field full-width">
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+            <input type="checkbox" id="um-f-active" style="width:16px;height:16px;cursor:pointer" />
+            Account Active
+          </label>
+        </div>
+        <div class="um-modal-err" id="um-modal-err"></div>
+      </div>
+      <div class="um-modal-footer">
+        <button class="um-modal-cancel" id="um-modal-cancel">Cancel</button>
+        <button class="um-modal-save" id="um-modal-save">Save Changes</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ── User Management Panel ─────────────────────────────────────
+    (function () {
+      'use strict';
+
+      const store     = window.IR_UserStore;
+      const ROLE_META = store.getRoleMeta();
+
+      const tbody       = document.getElementById('um-tbody');
+      const overlay     = document.getElementById('um-modal-overlay');
+      const modalTitle  = document.getElementById('um-modal-title');
+      const closeBtn    = document.getElementById('um-modal-close');
+      const cancelBtn   = document.getElementById('um-modal-cancel');
+      const saveBtn     = document.getElementById('um-modal-save');
+      const modalErr    = document.getElementById('um-modal-err');
+      const addBtn      = document.getElementById('um-add-btn');
+
+      // Fields
+      const fId       = document.getElementById('um-edit-id');
+      const fName     = document.getElementById('um-f-name');
+      const fUsername = document.getElementById('um-f-username');
+      const fPassword = document.getElementById('um-f-password');
+      const fRole     = document.getElementById('um-f-role');
+      const fEmail    = document.getElementById('um-f-email');
+      const fPhone    = document.getElementById('um-f-phone');
+      const fDivision = document.getElementById('um-f-division');
+      const fActive   = document.getElementById('um-f-active');
+
+      let editingId = null;
+
+      function roleBadgeStyle(role) {
+        const m = ROLE_META[role] || {};
+        const c = m.color || '#334155';
+        const hex2rgba = (h, a) => `rgba(${parseInt(h.slice(1,3),16)},${parseInt(h.slice(3,5),16)},${parseInt(h.slice(5,7),16)},${a})`;
+        return `style="color:${c};background:${hex2rgba(c,0.09)};border-color:${hex2rgba(c,0.25)}"`;
+      }
+
+      function renderTable() {
+        const users = store.getAll();
+        if (!users.length) {
+          tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:24px;color:#64748B;">No users found.</td></tr>';
+          return;
+        }
+        tbody.innerHTML = users.map(u => {
+          const meta   = ROLE_META[u.role] || {};
+          const initials = (u.name || u.username).split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase();
+          const color  = meta.color || '#334155';
+          return `
+            <tr data-uid="${u.id}">
+              <td>
+                <div class="um-name-cell">
+                  <div class="um-avatar" style="background:${color}">${initials}</div>
+                  <div>
+                    <div class="um-name">${u.name || u.username}</div>
+                    <div class="um-email">${u.email || '—'}</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="um-user-chip">${u.username}</span></td>
+              <td><span class="um-role-badge" ${roleBadgeStyle(u.role)}>${meta.icon || ''} ${meta.label || u.role}</span></td>
+              <td style="font-size:0.78rem;color:#475569">${u.division || '—'}</td>
+              <td>
+                <span class="um-status-chip ${u.active ? 'um-status-active' : 'um-status-inactive'}">
+                  ${u.active ? '● Active' : '○ Inactive'}
+                </span>
+              </td>
+              <td>
+                <div class="um-actions">
+                  <button class="um-btn um-btn-edit" onclick="umEdit('${u.id}')">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                    Edit
+                  </button>
+                  <button class="um-btn um-btn-toggle" onclick="umToggle('${u.id}')" title="${u.active ? 'Deactivate' : 'Activate'}">
+                    ${u.active ? '⏸' : '▶'}
+                  </button>
+                  <button class="um-btn um-btn-del" onclick="umDelete('${u.id}')" title="Delete user">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3,6 5,6 21,6"/><path d="M19,6l-1,14H6L5,6"/><path d="M10,11v6"/><path d="M14,11v6"/><path d="M9,6V4h6v2"/></svg>
+                  </button>
+                </div>
+              </td>
+            </tr>`;
+        }).join('');
+      }
+
+      function openModal(user) {
+        editingId = user ? user.id : null;
+        modalTitle.textContent = user ? 'Edit User' : 'Add New User';
+        fId.value        = user ? user.id : '';
+        fName.value      = user ? (user.name || '') : '';
+        fUsername.value  = user ? user.username : '';
+        fPassword.value  = '';
+        fRole.value      = user ? user.role : 'field-engineer';
+        fEmail.value     = user ? (user.email || '') : '';
+        fPhone.value     = user ? (user.phone || '') : '';
+        fDivision.value  = user ? (user.division || '') : '';
+        fActive.checked  = user ? user.active : true;
+        modalErr.classList.remove('show');
+        overlay.classList.add('open');
+        fName.focus();
+      }
+
+      function closeModal() { overlay.classList.remove('open'); editingId = null; }
+
+      // Actions exposed globally
+      window.umEdit = function(id) {
+        const u = store.getAll().find(x => x.id === id);
+        if (u) openModal(u);
+      };
+      window.umToggle = function(id) {
+        const r = store.toggleActive(id);
+        if (r.ok) renderTable();
+        else alert(r.error);
+      };
+      window.umDelete = function(id) {
+        const u = store.getAll().find(x => x.id === id);
+        if (!u) return;
+        if (!confirm(`Delete user "${u.name || u.username}"? This cannot be undone.`)) return;
+        const r = store.delete(id);
+        if (r.ok) renderTable();
+        else alert(r.error);
+      };
+
+      // Add user
+      addBtn.addEventListener('click', () => openModal(null));
+
+      // Close
+      closeBtn.addEventListener('click', closeModal);
+      cancelBtn.addEventListener('click', closeModal);
+      overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
+
+      // Save
+      saveBtn.addEventListener('click', () => {
+        modalErr.classList.remove('show');
+
+        const fields = {
+          name:     fName.value.trim(),
+          username: fUsername.value.trim(),
+          role:     fRole.value,
+          email:    fEmail.value.trim(),
+          phone:    fPhone.value.trim(),
+          division: fDivision.value.trim(),
+          active:   fActive.checked,
+        };
+
+        if (fPassword.value.trim()) fields.password = fPassword.value.trim();
+
+        let result;
+        if (editingId) {
+          result = store.update(editingId, fields);
+        } else {
+          if (!fields.password) { modalErr.textContent = 'Password is required for new users.'; modalErr.classList.add('show'); return; }
+          result = store.add(fields);
+        }
+
+        if (!result.ok) { modalErr.textContent = result.error; modalErr.classList.add('show'); return; }
+        closeModal();
+        renderTable();
+      });
+
+      // Initial render (only for admin role)
+      if (window.IR_AUTH && window.IR_AUTH.role === 'admin') {
+        renderTable();
+        document.getElementById('um-section').style.display = 'block';
+      } else {
+        document.getElementById('um-section').style.display = 'none';
+      }
+
+    })();
+  </script>
+</body>
+</html>

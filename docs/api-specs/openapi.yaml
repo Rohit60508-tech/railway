@@ -1,0 +1,415 @@
+openapi: 3.0.3
+info:
+  title: Indian Railways AI Maintenance Platform API
+  description: Enterprise REST API for automated defect risk scoring, corridor traffic delay modeling, and multi-department maintenance block optimization (Google OR-Tools CP-SAT).
+  version: 1.2.0
+  contact:
+    name: CRIS Track Maintenance & AI Operations
+    email: ai-support@cris.railnet.gov.in
+servers:
+  - url: http://127.0.0.1:8080/api/v1/ai
+    description: Local Node.js API Gateway
+  - url: https://ai.maintenance.railnet.gov.in/api/v1/ai
+    description: CRIS Enterprise Production Gateway
+
+security:
+  - ApiKeyAuth: []
+  - BearerAuth: []
+
+paths:
+  /prioritize/defect:
+    post:
+      summary: Score and prioritize a single defect
+      operationId: prioritizeDefect
+      tags:
+        - Priority Engine
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DefectInput'
+      responses:
+        '200':
+          description: Defect successfully prioritized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SingleDefectResponse'
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '429':
+          $ref: '#/components/responses/429Error'
+
+  /prioritize/batch:
+    post:
+      summary: Batch defect prioritization and ranking
+      operationId: prioritizeBatch
+      tags:
+        - Priority Engine
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - defects
+              properties:
+                defects:
+                  type: array
+                  maxItems: 500
+                  items:
+                    $ref: '#/components/schemas/DefectInput'
+                sort_by_priority:
+                  type: boolean
+                  default: true
+      responses:
+        '200':
+          description: Batch prioritized and ranked
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchDefectResponse'
+        '400':
+          $ref: '#/components/responses/400Error'
+
+  /traffic/slots/{sectionId}:
+    get:
+      summary: Get available corridor maintenance slots
+      operationId: getTrafficSlots
+      tags:
+        - Traffic Predictor
+      parameters:
+        - name: sectionId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: NDLS-CNB-UP
+        - name: duration
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 120
+      responses:
+        '200':
+          description: List of candidate corridor slots
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean, example: true }
+                  data:
+                    type: object
+                    properties:
+                      section_id: { type: string }
+                      slots:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/CorridorSlot'
+
+  /traffic/best-slots/{sectionId}/{duration}:
+    get:
+      summary: Predict best maintenance windows ranked by disruption score
+      operationId: getBestSlots
+      tags:
+        - Traffic Predictor
+      parameters:
+        - name: sectionId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: duration
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 15
+            maximum: 1440
+        - name: top_k
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: Top recommended maintenance slots
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean, example: true }
+                  data:
+                    type: object
+                    properties:
+                      section_id: { type: string }
+                      best_slots:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/CorridorSlot'
+
+  /optimize/schedule:
+    post:
+      summary: Formulate and solve multi-department block schedule (OR-Tools CP-SAT)
+      operationId: optimizeSchedule
+      tags:
+        - Block Optimizer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - tasks
+                - slots
+              properties:
+                tasks:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/MaintenanceTask'
+                slots:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/CorridorSlot'
+                auto_bundle:
+                  type: boolean
+                  default: true
+      responses:
+        '200':
+          description: Optimal schedule solution
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean, example: true }
+                  data:
+                    type: object
+                    properties:
+                      status: { type: string, example: OPTIMAL }
+                      scheduled_blocks: { type: array, items: { type: object } }
+
+  /optimize/bundle:
+    post:
+      summary: Evaluate cross-department task compatibility & bundling
+      operationId: optimizeBundle
+      tags:
+        - Block Optimizer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - tasks
+              properties:
+                tasks:
+                  type: array
+                  minItems: 2
+                  items:
+                    $ref: '#/components/schemas/MaintenanceTask'
+      responses:
+        '200':
+          description: Bundled task opportunities
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean, example: true }
+                  data: { type: object }
+
+  /models/info:
+    get:
+      summary: Fetch model versions, architectures, and health
+      operationId: getModelsInfo
+      tags:
+        - Model Governance
+      responses:
+        '200':
+          description: Model registry and architecture metadata
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean, example: true }
+                  data: { type: object }
+
+  /models/retrain:
+    post:
+      summary: Trigger asynchronous model retraining
+      operationId: triggerRetraining
+      tags:
+        - Model Governance
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                samples: { type: integer, default: 3000 }
+                model_type: { type: string, enum: [RandomForest, GradientBoosting, Ensemble], default: RandomForest }
+      responses:
+        '200':
+          description: Retraining job dispatched
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean, example: true }
+                  data:
+                    type: object
+                    properties:
+                      job_id: { type: string }
+                      status: { type: string, example: INITIATED }
+
+  /models/metrics:
+    get:
+      summary: Serve real-time telemetry, drift PSI, and latency
+      operationId: getModelsMetrics
+      tags:
+        - Model Governance
+      responses:
+        '200':
+          description: Telemetry and benchmark metrics
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean, example: true }
+                  data: { type: object }
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    DefectInput:
+      type: object
+      required:
+        - defect_id
+        - section_id
+      properties:
+        defect_id: { type: string, example: DEF-2026-001 }
+        section_id: { type: string, example: NDLS-CNB-UP }
+        department: { type: string, enum: [CIVIL, TRD_OHE, SIGNAL_TELECOM, MECHANICAL], example: CIVIL }
+        asset_type: { type: string, example: RAIL_THERMIT_WELD }
+        severity: { type: string, enum: [CRITICAL, HIGH, MEDIUM, LOW], example: CRITICAL }
+        source: { type: string, enum: [USFD, OMS, TRC, DRONE, MANUAL], example: USFD }
+        track_quality_index: { type: number, example: 38.5 }
+        trains_per_day: { type: number, example: 125 }
+        speed_limit_kmh: { type: number, example: 110 }
+        overdue_days: { type: number, example: 2.5 }
+
+    CorridorSlot:
+      type: object
+      properties:
+        slotId: { type: string, example: SLOT-01 }
+        slotStart: { type: string, format: date-time }
+        slotEnd: { type: string, format: date-time }
+        durationMinutes: { type: integer, example: 120 }
+        disruptionScore: { type: number, example: 14.5 }
+        feasibility: { type: string, example: HIGH_FEASIBILITY }
+
+    MaintenanceTask:
+      type: object
+      required:
+        - task_id
+        - section_id
+        - duration_minutes
+      properties:
+        task_id: { type: string, example: TASK-01 }
+        section_id: { type: string, example: NDLS-CNB-UP }
+        department: { type: string, example: CIVIL }
+        duration_minutes: { type: integer, example: 120 }
+        priority_score: { type: number, example: 92.0 }
+
+    SingleDefectResponse:
+      type: object
+      properties:
+        success: { type: boolean, example: true }
+        data:
+          type: object
+          properties:
+            isValid: { type: boolean }
+            defect:
+              type: object
+              properties:
+                defect_id: { type: string }
+                priority_score: { type: number, example: 92.4 }
+                priority_category: { type: string, example: P1 }
+                confidence: { type: number, example: 0.94 }
+                sla_hours: { type: integer, example: 24 }
+                explanation: { type: string }
+
+    BatchDefectResponse:
+      type: object
+      properties:
+        success: { type: boolean, example: true }
+        data:
+          type: object
+          properties:
+            totalDefects: { type: integer }
+            ranked_defects:
+              type: array
+              items: { type: object }
+
+    ErrorPayload:
+      type: object
+      properties:
+        success: { type: boolean, example: false }
+        error:
+          type: object
+          properties:
+            code: { type: string, example: VALIDATION_ERROR }
+            message: { type: string }
+            timestamp: { type: string, format: date-time }
+
+  responses:
+    400Error:
+      description: Bad Request / Validation Failure
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorPayload'
+    401Error:
+      description: Unauthorized / Missing Credentials
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorPayload'
+    429Error:
+      description: Rate Limit Exceeded
+      headers:
+        Retry-After:
+          schema: { type: integer }
+          description: Seconds to wait before retrying
+        X-RateLimit-Limit:
+          schema: { type: integer }
+        X-RateLimit-Remaining:
+          schema: { type: integer }
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorPayload'

@@ -1,0 +1,62 @@
+[
+  {
+    "defect_id": "DEF-001-TEST",
+    "section_id": "NDLS-CNB-UP",
+    "department": "CIVIL",
+    "asset_type": "RAIL_THERMIT_WELD",
+    "severity": "CRITICAL",
+    "source": "USFD",
+    "track_quality_index": 34.0,
+    "trains_per_day": 125.0,
+    "track_count": 2,
+    "overdue_days": 3.0,
+    "location_criticality": 90.0,
+    "speed_restriction_kmh": 30,
+    "failure_probability": 0.85
+  },
+  {
+    "defect_id": "DEF-002-TEST",
+    "section_id": "NDLS-CNB-UP",
+    "department": "TRD_OHE",
+    "asset_type": "OHE_CANTILEVER",
+    "severity": "HIGH",
+    "source": "ITMS",
+    "track_quality_index": 62.0,
+    "trains_per_day": 90.0,
+    "track_count": 2,
+    "overdue_days": 1.0,
+    "location_criticality": 60.0,
+    "speed_restriction_kmh": null,
+    "failure_probability": 0.55
+  },
+  {
+    "defect_id": "DEF-003-TEST",
+    "section_id": "CNB-PRYJ-DN",
+    "department": "SIGNALLING",
+    "asset_type": "POINT_MACHINE",
+    "severity": "MEDIUM",
+    "source": "PATROL",
+    "track_quality_index": 75.0,
+    "trains_per_day": 70.0,
+    "track_count": 2,
+    "overdue_days": 0.0,
+    "location_criticality": 40.0,
+    "speed_restriction_kmh": null,
+    "failure_probability": 0.25
+  },
+  {
+    "defect_id": "DEF-004-TEST",
+    "section_id": "PRYJ-DDU-UP",
+    "department": "CIVIL",
+    "asset_type": "SLEEPER_CONCRETE",
+    "severity": "LOW",
+    "source": "MANUAL",
+    "track_quality_index": 85.0,
+    "trains_per_day": 50.0,
+    "track_count": 1,
+    "overdue_days": 0.0,
+    "location_criticality": 30.0,
+    "speed_restriction_kmh": null,
+    "failure_probability": 0.10
+  }
+]

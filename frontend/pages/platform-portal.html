@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Platform Portal — Indian Railways AI Command</title>
+  <meta name="description" content="Indian Railways AI Command - Station-level crowding stats, platform allocations, and passenger dispatch notices." />
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Orbitron:wght@500;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <!-- Auth guard (runs before page renders) -->
+  <script src="../components/auth-guard.js"></script>
+
+  <!-- Core Styles -->
+  <link rel="stylesheet" href="../styles/main.css" />
+
+  <!-- Shared Navigation -->
+  <script src="../components/SharedNav.js"></script>
+
+  <style>
+    :root {
+      --bg-dark: #FAF6EE;
+      --card-bg: rgba(255, 255, 255, 0.92);
+      --border-light: rgba(195, 178, 150, 0.38);
+      --accent-navy: #003366;
+      --accent-blue: #0056B3;
+      --accent-green: #059669;
+      --accent-gold: #D97706;
+      --accent-red: #DC2626;
+      --accent-purple: #7C3AED;
+      --font-main: 'Calibri', 'Arial', sans-serif;
+      --font-mono: 'Calibri', 'Arial', sans-serif;
+      --font-display: 'Calibri', 'Arial', sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: radial-gradient(circle at 50% 0%, #FFFFFF 0%, #FAF6EE 100%);
+      color: #0F172A;
+      font-family: var(--font-main);
+      min-height: 100vh;
+    }
+
+    /* ── Page Container ─────────────────────────────────────────── */
+    .portal-container {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 28px 32px;
+    }
+
+    /* ── Page Header ────────────────────────────────────────────── */
+    .page-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 28px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border-light);
+    }
+    .page-header-left h1 {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--accent-navy);
+      letter-spacing: 0.5px;
+    }
+    .page-header-left p {
+      font-size: 0.82rem;
+      color: #64748B;
+      margin-top: 4px;
+    }
+    .page-header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .live-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: 20px;
+      background: rgba(5, 150, 105, 0.08);
+      border: 1px solid rgba(5, 150, 105, 0.25);
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--accent-green);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+    .live-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent-green);
+      animation: livePulse 1.8s ease-in-out infinite;
+    }
+    @keyframes livePulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+    .refresh-btn {
+      padding: 7px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--border-light);
+      background: var(--card-bg);
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #334155;
+      cursor: pointer;
+      font-family: inherit;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.18s;
+    }
+    .refresh-btn:hover {
+      border-color: var(--accent-blue);
+      color: var(--accent-blue);
+      background: rgba(0, 86, 179, 0.04);
+    }
+
+    /* ── KPI Grid ───────────────────────────────────────────────── */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    .kpi-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-light);
+      border-radius: 12px;
+      padding: 18px 20px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 16px rgba(70, 50, 30, 0.05);
+      transition: transform 0.18s, box-shadow 0.18s;
+    }
+    .kpi-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(70, 50, 30, 0.09); }
+    .kpi-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 3px;
+      background: var(--accent-blue);
+    }
+    .kpi-card.green::before { background: var(--accent-green); }
+    .kpi-card.gold::before  { background: var(--accent-gold); }
+    .kpi-card.red::before   { background: var(--accent-red); }
+    .kpi-card.purple::before { background: var(--accent-purple); }
+    .kpi-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #64748B;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .kpi-value {
+      font-family: var(--font-mono);
+      font-size: 1.9rem;
+      font-weight: 800;
+      color: #0F172A;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .kpi-sub {
+      font-size: 0.73rem;
+      color: #64748B;
+    }
+    .kpi-trend {
+      font-size: 0.73rem;
+      font-weight: 600;
+      margin-top: 4px;
+    }
+    .trend-up   { color: var(--accent-green); }
+    .trend-warn { color: var(--accent-gold); }
+    .trend-crit { color: var(--accent-red); }
+
+    /* ── Two-column layout ──────────────────────────────────────── */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 20px;
+      margin-bottom: 28px;
+    }
+
+    /* ── Section Card ───────────────────────────────────────────── */
+    .section-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-light);
+      border-radius: 14px;
+      padding: 22px 24px;
+      box-shadow: 0 4px 16px rgba(70, 50, 30, 0.05);
+    }
+    .section-title {
+      font-family: var(--font-display);
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--accent-navy);
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+    .section-sub {
+      font-size: 0.75rem;
+      color: #64748B;
+      margin-bottom: 18px;
+    }
+
+    /* ── Platform Allocation Table ──────────────────────────────── */
+    .platform-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .platform-table th {
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: #64748B;
+      font-weight: 700;
+      padding: 8px 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--border-light);
+    }
+    .platform-table td {
+      padding: 11px 12px;
+      font-size: 0.82rem;
+      border-bottom: 1px solid rgba(195, 178, 150, 0.2);
+      vertical-align: middle;
+    }
+    .platform-table tr:last-child td { border-bottom: none; }
+    .platform-table tr:hover td { background: rgba(0, 51, 102, 0.025); }
+    .platform-num {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      color: var(--accent-navy);
+      font-size: 1rem;
+    }
+    .train-num {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: #334155;
+      font-weight: 600;
+    }
+    .train-name {
+      font-size: 0.78rem;
+      color: #64748B;
+      margin-top: 2px;
+    }
+    .status-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .chip-on-time {
+      background: rgba(5, 150, 105, 0.1);
+      color: #059669;
+      border: 1px solid rgba(5, 150, 105, 0.2);
+    }
+    .chip-delayed {
+      background: rgba(217, 119, 6, 0.1);
+      color: #D97706;
+      border: 1px solid rgba(217, 119, 6, 0.2);
+    }
+    .chip-arriving {
+      background: rgba(0, 86, 179, 0.1);
+      color: #0056B3;
+      border: 1px solid rgba(0, 86, 179, 0.2);
+    }
+    .chip-departed {
+      background: rgba(100, 116, 139, 0.1);
+      color: #64748B;
+      border: 1px solid rgba(100, 116, 139, 0.2);
+    }
+    .chip-blocked {
+      background: rgba(220, 38, 38, 0.1);
+      color: #DC2626;
+      border: 1px solid rgba(220, 38, 38, 0.2);
+    }
+    .eta-cell {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #0F172A;
+    }
+    .crowd-bar-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .crowd-bar-bg {
+      flex: 1;
+      height: 6px;
+      border-radius: 3px;
+      background: rgba(0, 51, 102, 0.1);
+      overflow: hidden;
+    }
+    .crowd-bar-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 0.8s ease;
+    }
+    .crowd-pct {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 700;
+      min-width: 34px;
+      text-align: right;
+    }
+
+    /* ── Crowding Stats (right column) ──────────────────────────── */
+    .crowding-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .crowding-item {
+      padding: 14px 16px;
+      border-radius: 10px;
+      border: 1px solid var(--border-light);
+      background: rgba(250, 246, 238, 0.6);
+    }
+    .crowding-item-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    .crowding-zone {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #0F172A;
+    }
+    .crowding-level {
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 10px;
+      text-transform: uppercase;
+    }
+    .level-high   { background: rgba(220,38,38,0.1); color: #DC2626; }
+    .level-medium { background: rgba(217,119,6,0.1); color: #D97706; }
+    .level-low    { background: rgba(5,150,105,0.1);  color: #059669; }
+    .crowding-bar-bg {
+      height: 8px;
+      border-radius: 4px;
+      background: rgba(0, 51, 102, 0.08);
+      overflow: hidden;
+      margin-bottom: 6px;
+    }
+    .crowding-bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 1s ease;
+    }
+    .crowding-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.71rem;
+      color: #64748B;
+    }
+
+    /* ── Dispatch Ticker ────────────────────────────────────────── */
+    .dispatch-section {
+      background: var(--card-bg);
+      border: 1px solid var(--border-light);
+      border-radius: 14px;
+      padding: 22px 24px;
+      box-shadow: 0 4px 16px rgba(70, 50, 30, 0.05);
+    }
+    .dispatch-ticker-wrap {
+      overflow: hidden;
+      border-radius: 8px;
+      border: 1px solid var(--border-light);
+      background: #0F172A;
+      padding: 0;
+    }
+    .dispatch-ticker-header {
+      background: var(--accent-navy);
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .dispatch-ticker-title {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: rgba(255,255,255,0.9);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .dispatch-ticker-status {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: #34D399;
+    }
+    .dispatch-notices {
+      padding: 12px 0;
+      max-height: 220px;
+      overflow-y: auto;
+    }
+    .dispatch-notice {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 10px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      animation: slideInNotice 0.4s ease;
+    }
+    .dispatch-notice:last-child { border-bottom: none; }
+    @keyframes slideInNotice {
+      from { opacity: 0; transform: translateX(-8px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+    .notice-time {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: rgba(255,255,255,0.4);
+      flex-shrink: 0;
+      margin-top: 2px;
+      min-width: 48px;
+    }
+    .notice-badge {
+      flex-shrink: 0;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      margin-top: 5px;
+    }
+    .notice-text {
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.82);
+      line-height: 1.5;
+    }
+    .notice-text strong { color: #93C5FD; font-weight: 700; }
+  </style>
+</head>
+<body>
+  <!-- SharedNav mounts here -->
+  <div id="shared-nav"></div>
+
+  <div class="portal-container">
+
+    <!-- ── Page Header ── -->
+    <div class="page-header">
+      <div class="page-header-left">
+        <h1>🚉 Platform Portal</h1>
+        <p>Station-level crowding analytics, platform allocations &amp; passenger dispatch notices</p>
+      </div>
+      <div class="page-header-right">
+        <div class="live-badge">
+          <div class="live-dot"></div>
+          Live Feed
+        </div>
+        <button class="refresh-btn" onclick="refreshData()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="23,4 23,10 17,10"/><path d="M20.5 17A9 9 0 1 1 22 12"/>
+          </svg>
+          Refresh
+        </button>
+      </div>
+    </div>
+
+    <!-- ── KPI Cards ── -->
+    <div class="kpi-grid">
+      <div class="kpi-card green">
+        <div class="kpi-label">Active Platforms</div>
+        <div class="kpi-value">14</div>
+        <div class="kpi-sub">Of 18 total • 4 under maintenance</div>
+        <div class="kpi-trend trend-up">↑ 2 restored since 06:00</div>
+      </div>
+      <div class="kpi-card gold">
+        <div class="kpi-label">Avg. Crowding Index</div>
+        <div class="kpi-value">67%</div>
+        <div class="kpi-sub">Peak zone: Platform 3 (92%)</div>
+        <div class="kpi-trend trend-warn">▲ +12% vs yesterday</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Trains Today</div>
+        <div class="kpi-value">142</div>
+        <div class="kpi-sub">84 arrived · 31 in transit · 27 pending</div>
+        <div class="kpi-trend trend-up">On schedule: 78%</div>
+      </div>
+      <div class="kpi-card red">
+        <div class="kpi-label">Delayed Arrivals</div>
+        <div class="kpi-value">11</div>
+        <div class="kpi-sub">Avg delay: 23 min · Max: 67 min</div>
+        <div class="kpi-trend trend-crit">⚠ 3 exceed 45-min SLA</div>
+      </div>
+      <div class="kpi-card purple">
+        <div class="kpi-label">Dispatch Alerts</div>
+        <div class="kpi-value">6</div>
+        <div class="kpi-sub">Active passenger notices broadcast</div>
+        <div class="kpi-trend trend-warn">2 high-priority</div>
+      </div>
+    </div>
+
+    <!-- ── Main Grid ── -->
+    <div class="main-grid">
+
+      <!-- Platform Allocation Table -->
+      <div class="section-card">
+        <div class="section-title">Platform Allocation</div>
+        <div class="section-sub">Live platform assignments, train status &amp; crowding levels</div>
+        <table class="platform-table">
+          <thead>
+            <tr>
+              <th>PF</th>
+              <th>Train</th>
+              <th>Status</th>
+              <th>ETA / ETD</th>
+              <th>Crowding</th>
+            </tr>
+          </thead>
+          <tbody id="platform-tbody">
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Crowding Stats -->
+      <div class="section-card">
+        <div class="section-title">Zone Crowding Stats</div>
+        <div class="section-sub">Real-time occupancy by station zone</div>
+        <div class="crowding-list" id="crowding-list"></div>
+      </div>
+    </div>
+
+    <!-- ── Dispatch Notices ── -->
+    <div class="dispatch-section">
+      <div class="section-title" style="margin-bottom:4px">Passenger Dispatch Notices</div>
+      <div class="section-sub">Live announcements broadcast across all platforms</div>
+      <div class="dispatch-ticker-wrap">
+        <div class="dispatch-ticker-header">
+          <span class="dispatch-ticker-title">▶ Live Broadcast Channel</span>
+          <span class="dispatch-ticker-status">● Broadcasting</span>
+        </div>
+        <div class="dispatch-notices" id="dispatch-notices"></div>
+      </div>
+    </div>
+
+  </div><!-- /portal-container -->
+
+  <script>
+    'use strict';
+
+    // ── Static data (would be live API in production) ──────────────
+    const PLATFORMS = [
+      { num: 1,  train: '12951', name: 'Mumbai Rajdhani',         status: 'on-time',  eta: '14:35', crowd: 78 },
+      { num: 2,  train: '22691', name: 'Rajdhani Express',        status: 'delayed',  eta: '14:52', crowd: 45 },
+      { num: 3,  train: '12001', name: 'Shatabdi Express',        status: 'arriving', eta: '14:28', crowd: 92 },
+      { num: 4,  train: '12309', name: 'Patna Rajdhani',          status: 'on-time',  eta: '15:10', crowd: 55 },
+      { num: 5,  train: '15483', name: 'Mahananda Express',       status: 'departed', eta: '14:00', crowd: 12 },
+      { num: 6,  train: 'MAINT','name': 'Track Maintenance Block', status: 'blocked',  eta: '—',     crowd: 0  },
+      { num: 7,  train: '12559', name: 'Shiv Ganga Express',      status: 'on-time',  eta: '15:22', crowd: 63 },
+      { num: 8,  train: '12275', name: 'Duronto Express',         status: 'delayed',  eta: '16:05', crowd: 38 },
+      { num: 9,  train: '12007', name: 'Chennai Shatabdi',        status: 'arriving', eta: '14:40', crowd: 84 },
+      { num: 10, train: '22439', name: 'Vande Bharat Express',    status: 'on-time',  eta: '14:50', crowd: 71 },
+    ];
+
+    const ZONES = [
+      { name: 'Main Concourse (PF 1–4)', pct: 82, capacity: 4000, current: 3280 },
+      { name: 'North Wing (PF 5–8)',       pct: 54, capacity: 2800, current: 1512 },
+      { name: 'South Wing (PF 9–12)',      pct: 91, capacity: 3200, current: 2912 },
+      { name: 'East Foyer (PF 13–16)',     pct: 38, capacity: 2000, current:  760 },
+      { name: 'Suburban Hub (PF 17–18)',   pct: 67, capacity: 5000, current: 3350 },
+    ];
+
+    const NOTICES = [
+      { time: '14:22', color: '#DC2626', text: 'Train <strong>12951 Mumbai Rajdhani</strong> arriving Platform 1. All passengers kindly proceed to PF-1.' },
+      { time: '14:19', color: '#D97706', text: 'Train <strong>22691 Rajdhani Express</strong> delayed by 17 min. New arrival: <strong>14:52</strong>. Passengers please wait at PF-2.' },
+      { time: '14:15', color: '#0056B3', text: '<strong>Vande Bharat VB-3402</strong> boarding commences at PF-10. Departure: 14:50 sharp.' },
+      { time: '14:12', color: '#059669', text: 'Platform 5 cleared. <strong>Mahananda Express 15483</strong> has departed. Next assignment in 40 min.' },
+      { time: '14:08', color: '#DC2626', text: '⚠ <strong>South Wing (PF 9–12) crowding at 91%.</strong> Additional RPF deployed. Passengers advised to use North Wing entrance.' },
+      { time: '14:01', color: '#7C3AED', text: 'Lost baggage claim at <strong>Platform 3 help desk</strong>. Item: Black trolley bag, Tag #MAS-00472.' },
+      { time: '13:55', color: '#D97706', text: 'Platform 6 blocked for scheduled track maintenance until <strong>17:00 hrs</strong>. No train movement authorized.' },
+      { time: '13:48', color: '#0056B3', text: '<strong>Special Train 05923</strong> added for festival demand. Departing PF-8 at 16:30. Tickets available at counter 14.' },
+    ];
+
+    function getCrowdColor(pct) {
+      if (pct >= 80) return '#DC2626';
+      if (pct >= 60) return '#D97706';
+      return '#059669';
+    }
+
+    function getStatusChip(status) {
+      const chips = {
+        'on-time':  '<span class="status-chip chip-on-time">● On Time</span>',
+        'delayed':  '<span class="status-chip chip-delayed">▲ Delayed</span>',
+        'arriving': '<span class="status-chip chip-arriving">→ Arriving</span>',
+        'departed': '<span class="status-chip chip-departed">✓ Departed</span>',
+        'blocked':  '<span class="status-chip chip-blocked">✖ Blocked</span>',
+      };
+      return chips[status] || '';
+    }
+
+    function renderPlatforms() {
+      const tbody = document.getElementById('platform-tbody');
+      tbody.innerHTML = PLATFORMS.map(p => {
+        const crowdColor = getCrowdColor(p.crowd);
+        return `
+          <tr>
+            <td><span class="platform-num">${p.num}</span></td>
+            <td>
+              <div class="train-num">${p.train}</div>
+              <div class="train-name">${p.name}</div>
+            </td>
+            <td>${getStatusChip(p.status)}</td>
+            <td><span class="eta-cell">${p.eta}</span></td>
+            <td>
+              ${p.status === 'blocked' ? '<span style="color:#64748B;font-size:0.75rem">N/A</span>' : `
+              <div class="crowd-bar-wrap">
+                <div class="crowd-bar-bg">
+                  <div class="crowd-bar-fill" style="width:${p.crowd}%;background:${crowdColor}"></div>
+                </div>
+                <span class="crowd-pct" style="color:${crowdColor}">${p.crowd}%</span>
+              </div>`}
+            </td>
+          </tr>`;
+      }).join('');
+    }
+
+    function renderCrowding() {
+      const list = document.getElementById('crowding-list');
+      list.innerHTML = ZONES.map(z => {
+        const color = getCrowdColor(z.pct);
+        const level = z.pct >= 80 ? 'High' : z.pct >= 60 ? 'Medium' : 'Low';
+        const levelClass = z.pct >= 80 ? 'level-high' : z.pct >= 60 ? 'level-medium' : 'level-low';
+        return `
+          <div class="crowding-item">
+            <div class="crowding-item-header">
+              <span class="crowding-zone">${z.name}</span>
+              <span class="crowding-level ${levelClass}">${level}</span>
+            </div>
+            <div class="crowding-bar-bg">
+              <div class="crowding-bar-fill" style="width:${z.pct}%;background:${color}"></div>
+            </div>
+            <div class="crowding-meta">
+              <span>${z.current.toLocaleString()} / ${z.capacity.toLocaleString()} pax</span>
+              <span style="font-weight:700;color:${color}">${z.pct}%</span>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    function renderDispatch() {
+      const container = document.getElementById('dispatch-notices');
+      container.innerHTML = NOTICES.map(n => `
+        <div class="dispatch-notice">
+          <span class="notice-time">${n.time}</span>
+          <div class="notice-badge" style="background:${n.color}"></div>
+          <span class="notice-text">${n.text}</span>
+        </div>`).join('');
+    }
+
+    function refreshData() {
+      // Simulate slight data variation on refresh
+      ZONES.forEach(z => {
+        z.pct = Math.min(98, Math.max(10, z.pct + (Math.random() * 6 - 3) | 0));
+        z.current = Math.round(z.capacity * z.pct / 100);
+      });
+      PLATFORMS.forEach(p => {
+        if (p.status !== 'blocked' && p.status !== 'departed') {
+          p.crowd = Math.min(99, Math.max(5, p.crowd + (Math.random() * 8 - 4) | 0));
+        }
+      });
+      renderPlatforms();
+      renderCrowding();
+    }
+
+    // Initial render
+    renderPlatforms();
+    renderCrowding();
+    renderDispatch();
+
+    // Auto-refresh every 30s
+    setInterval(refreshData, 30000);
+  </script>
+</body>
+</html>

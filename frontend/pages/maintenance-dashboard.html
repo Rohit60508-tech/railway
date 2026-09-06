@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Maintenance Operations & Bundling — Indian Railways AI</title>
+  <meta name="description" content="Indian Railways AI Maintenance Platform - Work Order Prioritization, Corridor Bundling, and Machine Allocation." />
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Orbitron:wght@500;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <!-- Auth guard (runs before page renders) -->
+  <script src="../components/auth-guard.js"></script>
+
+  <!-- Core Styles -->
+  <link rel="stylesheet" href="../styles/main.css" />
+
+  <!-- Shared Navigation -->
+  <script src="../components/SharedNav.js"></script>
+
+  <!-- AI Component Scripts -->
+  <script type="module" src="../components/PriorityScoreBadge.js"></script>
+  <script type="module" src="../components/AIExplanationCard.js"></script>
+  <script type="module" src="../components/TrafficImpactMeter.js"></script>
+  <script type="module" src="../components/SlotFeasibilityIndicator.js"></script>
+  <script type="module" src="../components/ConfidenceIndicator.js"></script>
+  <script type="module" src="../components/BundlingSuggestionCard.js"></script>
+  <script type="module" src="../components/ManualOverrideModal.js"></script>
+
+  <style>
+    :root {
+      --bg-dark: #FAF6EE;
+      --card-bg: rgba(255, 255, 255, 0.92);
+      --border-cyan: rgba(195, 178, 150, 0.38);
+      --accent-cyan: #0056B3;
+      --accent-green: #059669;
+      --accent-gold: #D97706;
+      --accent-red: #DC2626;
+      --font-main: 'Calibri', 'Arial', sans-serif;
+      --font-mono: 'Calibri', 'Arial', sans-serif;
+      --font-display: 'Calibri', 'Arial', sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: radial-gradient(circle at 50% 0%, #FFFFFF 0%, #FAF6EE 100%);
+      color: #0F172A;
+      font-family: var(--font-main);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Header Bar ────────────────────────────────────────────── */
+    .maint-header {
+      background: rgba(250, 246, 238, 0.96);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-cyan);
+      box-shadow: 0 2px 12px rgba(70, 50, 30, 0.05);
+      height: 64px;
+      padding: 0 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .brand-logo {
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #003366, #0056B3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      box-shadow: 0 0 15px rgba(0, 51, 102, 0.2);
+    }
+    .brand-title {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #0F172A;
+      letter-spacing: 0.8px;
+    }
+    .brand-sub {
+      font-size: 0.72rem;
+      color: #64748B;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .header-nav {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .nav-pill {
+      color: #334155;
+      text-decoration: none;
+      font-size: 0.82rem;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 6px;
+      transition: all 0.2s;
+    }
+    .nav-pill:hover, .nav-pill.active {
+      color: #003366;
+      background: rgba(0, 51, 102, 0.08);
+      border: 1px solid rgba(0, 51, 102, 0.25);
+    }
+
+    /* ── Main Container ────────────────────────────────────────── */
+    .maint-container {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 28px 32px;
+    }
+
+    /* ── Filter Controls ───────────────────────────────────────── */
+    .filter-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--card-bg);
+      border: 1px solid var(--border-cyan);
+      border-radius: 10px;
+      padding: 12px 20px;
+      margin-bottom: 24px;
+      box-shadow: 0 2px 10px rgba(70, 50, 30, 0.04);
+    }
+    .dept-tabs {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .dept-tab {
+      background: rgba(0, 51, 102, 0.04);
+      border: 1px solid rgba(0, 51, 102, 0.15);
+      color: #334155;
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .dept-tab.active {
+      background: rgba(0, 51, 102, 0.1);
+      border-color: #003366;
+      color: #003366;
+      box-shadow: 0 0 10px rgba(0, 51, 102, 0.15);
+    }
+
+    /* ── Section Title ─────────────────────────────────────────── */
+    .section-title {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      color: #0F172A;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* ── Work Order Card ───────────────────────────────────────── */
+    .work-orders-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 36px;
+    }
+
+    .work-order-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-cyan);
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 20px rgba(70, 50, 30, 0.06);
+      transition: border-color 0.2s;
+    }
+    .work-order-card.p1-alert {
+      border-left: 4px solid var(--accent-red);
+      background: linear-gradient(90deg, rgba(255, 77, 109, 0.05) 0%, rgba(255, 255, 255, 0.95) 20%);
+    }
+    .work-order-card.p2-alert {
+      border-left: 4px solid var(--accent-gold);
+    }
+
+    .wo-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .wo-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #0F172A;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .wo-meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 16px;
+      font-size: 0.8rem;
+      color: #8eb3da;
+      margin-bottom: 14px;
+    }
+
+    .wo-slot-box {
+      background: rgba(0, 255, 204, 0.04);
+      border: 1px solid rgba(0, 255, 204, 0.2);
+      border-radius: 8px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 10px;
+    }
+
+    /* ── Tooltips ──────────────────────────────────────────────── */
+    .tooltip-wrap {
+      position: relative;
+      display: inline-flex;
+      cursor: help;
+    }
+    .tooltip-wrap:hover .tooltip-box {
+      visibility: visible;
+      opacity: 1;
+    }
+    .tooltip-box {
+      visibility: hidden;
+      opacity: 0;
+      width: 270px;
+      background: #0F172A;
+      border: 1px solid #003366;
+      color: #FAF6EE;
+      border-radius: 6px;
+      padding: 8px 12px;
+      position: absolute;
+      z-index: 1000;
+      bottom: 125%;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.74rem;
+      line-height: 1.4;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+      transition: opacity 0.2s ease, visibility 0.2s ease;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- SharedNav mounts here -->
+  <div id="shared-nav"></div>
+
+  <main class="maint-container">
+
+    <!-- ═══════════════════ FILTER CONTROLS ═══════════════════ -->
+    <div class="filter-bar">
+      <div class="dept-tabs" id="dept-filter-tabs">
+        <button class="dept-tab active" data-dept="ALL">All Departments (18)</button>
+        <button class="dept-tab" data-dept="CIVIL">Civil / P-Way (8)</button>
+        <button class="dept-tab" data-dept="TRD">Electrical / TRD (5)</button>
+        <button class="dept-tab" data-dept="SIG">Signalling & Telecom (3)</button>
+        <button class="dept-tab" data-dept="MECH">Mechanical / Rolling Stock (2)</button>
+      </div>
+
+      <div style="font-size: 0.78rem; color: #64748B; font-family: var(--font-mono);">
+        Sorted by: <span style="color: #003366; font-weight: 700;">AI Risk Priority (P1 → P4)</span>
+      </div>
+    </div>
+
+    <!-- ═══════════════════ MULTI-DEPT BUNDLING SECTION ═══════════════════ -->
+    <div class="section-title">
+      <span>🔗</span>
+      <span>AI Multi-Department Bundling Opportunities (CP-SAT Solver)</span>
+    </div>
+
+    <div id="bundling-cards-container">
+      <!-- Populated dynamically by BundlingSuggestionCard -->
+    </div>
+
+    <!-- ═══════════════════ WORK ORDERS SECTION ═══════════════════ -->
+    <div class="section-title" style="margin-top: 36px;">
+      <span>📋</span>
+      <span>Prioritized Maintenance Work Orders (Highest Priority First)</span>
+    </div>
+
+    <div class="work-orders-grid" id="work-orders-container">
+      <!-- Populated dynamically with AI-prioritized work orders -->
+    </div>
+
+    <!-- ═══════════════════ AUDIT LOGS SECTION ═══════════════════ -->
+    <div style="background: #FFFFFF; border: 1px solid rgba(195, 178, 150, 0.45); border-radius: 10px; padding: 18px; margin-top: 20px; box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+        <h3 style="font-family: var(--font-display); font-size: 0.95rem; color: #003366; font-weight: 700; margin: 0;">
+          📋 Supervisor Manual Override Audit Trail
+        </h3>
+        <button onclick="window.refreshMaintAudit()" style="background:#FAF6EE; border:1px solid rgba(0,51,102,0.3); color:#003366; padding:4px 12px; border-radius:4px; font-size:0.75rem; font-weight:600; cursor:pointer;">Refresh Log</button>
+      </div>
+      <div id="maint-audit-log-container" style="font-size: 0.8rem; color: #475569;">
+        No supervisor overrides recorded in this session.
+      </div>
+    </div>
+
+  </main>
+
+  <script type="module">
+    import { PriorityScoreBadge } from '../components/PriorityScoreBadge.js';
+    import { AIExplanationCard } from '../components/AIExplanationCard.js';
+    import { SlotFeasibilityIndicator } from '../components/SlotFeasibilityIndicator.js';
+    import { ConfidenceIndicator } from '../components/ConfidenceIndicator.js';
+    import { BundlingSuggestionCard } from '../components/BundlingSuggestionCard.js';
+    import { ManualOverrideModal } from '../components/ManualOverrideModal.js';
+
+    // Bundling Suggestions Data
+    const bundlingData = [
+      {
+        bundleId: "BNDL-NDLS-CNB-001",
+        sectionId: "NDLS-CNB-UP (KM 410-416)",
+        timeWindow: "01:30 – 04:00 (2h 30m)",
+        synergyScore: 94,
+        savedHours: 2.5,
+        departments: ["CIVIL", "TRD_OHE", "SIGNALLING"],
+        tasks: [
+          { id: "WO-CIVIL-401", desc: "USFD rail fracture replacement & flash-butt welding", machine: "Flash Butt Welder", duration: "120m" },
+          { id: "WO-TRD-112", desc: "25kV OHE dropper adjustment under power shadow block", machine: "Tower Wagon 08", duration: "90m" },
+          { id: "WO-SIG-094", desc: "Track circuit bonding & insulation resistance test", machine: null, duration: "45m" }
+        ]
+      },
+      {
+        bundleId: "BNDL-GZB-ALJN-003",
+        sectionId: "GZB-ALJN-DN (KM 64-68)",
+        timeWindow: "12:45 – 15:15 (2h 30m)",
+        synergyScore: 88,
+        savedHours: 2.0,
+        departments: ["CIVIL", "TRD_OHE"],
+        tasks: [
+          { id: "WO-CIVIL-419", desc: "CSM Continuous Action Tamper track ballast packing", machine: "CSM-44", duration: "140m" },
+          { id: "WO-TRD-125", desc: "Catenary wire contact height verification", machine: "Tower Wagon 04", duration: "80m" }
+        ]
+      }
+    ];
+
+    // Prioritized Work Orders Data (Highest Priority First: P1 -> P2 -> P3 -> P4)
+    const workOrders = [
+      {
+        id: "WO-CIVIL-401",
+        title: "Immediate Rail Fracture Cut & Replacement (KM 412/18)",
+        dept: "CIVIL",
+        deptLabel: "Civil / P-Way",
+        section: "NDLS-CNB-UP",
+        score: 94.2,
+        category: "P1",
+        confidence: 0.98,
+        duration: "120 min",
+        machinery: "Flash-Butt Welding Plant + Rail Saw",
+        slotRecommended: "01:30 – 03:30 (Tomorrow Night)",
+        slotFeasibility: "HIGH_FEASIBILITY",
+        slotConflicts: 0,
+        tooltipExplanation: "Urgency Reason: Transverse rail fissure on 112 GMT high-speed corridor with 92% failure probability.",
+        explanationSummary: "CRITICAL rail break risk under high freight axle loading; 24-hour mandatory safety SLA.",
+        detailedExplanation: "Transverse fissure observed during USFD testing with defect growth rate exceeding permissible limits. Failure to execute block repair will mandate a 20 km/h emergency speed restriction with heavy ripple delays.",
+        factors: [
+          { name: "Safety Severity", weight: 0.25, value: "CRITICAL (100)" },
+          { name: "Axle Load Factor", weight: 0.20, value: "25-Tonne Axle" },
+          { name: "Failure Probability", weight: 0.18, value: "92%" }
+        ],
+        action: "Mobilize AEN P-Way gang; request 120-minute night corridor block."
+      },
+      {
+        id: "WO-TRD-112",
+        title: "Overhead 25kV Insulator & Dropper Replacement (KM 68/4)",
+        dept: "TRD",
+        deptLabel: "Electrical / TRD",
+        section: "GZB-ALJN",
+        score: 82.5,
+        category: "P2",
+        confidence: 0.92,
+        duration: "90 min",
+        machinery: "Self-Propelled 8-Wheeler Tower Wagon",
+        slotRecommended: "01:30 – 04:00 (Bundled with BNDL-001)",
+        slotFeasibility: "HIGH_FEASIBILITY",
+        slotConflicts: 0,
+        tooltipExplanation: "Urgency Reason: Carbon erosion on 25kV catenary dropper exceeding 35% threshold. Risk of pantograph entanglement.",
+        explanationSummary: "Carbon erosion on main catenary dropper posing flashover & pantograph entanglement risk.",
+        detailedExplanation: "Current dropper wear is 38%. Can withstand current load for 48 hours but must be replaced within the 72h SLA window to prevent line shutdown during peak express operations.",
+        factors: [
+          { name: "Overdue Hours", weight: 0.22, value: "18h Remaining" },
+          { name: "Department Weight", weight: 0.20, value: "TRD (90)" }
+        ],
+        action: "Take power shutdown block and replace 12 droppers."
+      },
+      {
+        id: "WO-SIG-094",
+        title: "Track Circuit Overhaul & Glued Insulated Rail Joint Inspection",
+        dept: "SIG",
+        deptLabel: "Signalling & Telecom",
+        section: "NDLS-CNB-UP",
+        score: 68.0,
+        category: "P3",
+        confidence: 0.89,
+        duration: "60 min",
+        machinery: "Handheld Megger & Digital Multimeter Kit",
+        slotRecommended: "02:00 – 03:00 (Bundled in Shadow Window)",
+        slotFeasibility: "HIGH_FEASIBILITY",
+        slotConflicts: 0,
+        tooltipExplanation: "Urgency Reason: Insulation resistance degraded to 850 ohms; preventive overhaul to avoid red lamp failure.",
+        explanationSummary: "Glued joint insulation resistance degraded to 850 ohms; within safe limit but declining.",
+        detailedExplanation: "Pre-monsoon track circuit bonding check to prevent red-lamp failure in automatic signaling territory.",
+        factors: [
+          { name: "Asset Criticality", weight: 0.16, value: "Glued Joint" },
+          { name: "Weather Hazard", weight: 0.14, value: "Monsoon Ingress" }
+        ],
+        action: "Re-insulate fishplates and test audio frequency track circuit."
+      },
+      {
+        id: "WO-CIVIL-419",
+        title: "Machine Ballast Tamping & Track Lining (KM 64-68)",
+        dept: "CIVIL",
+        deptLabel: "Civil / P-Way",
+        section: "GZB-ALJN-DN",
+        score: 45.0,
+        category: "P4",
+        confidence: 0.95,
+        duration: "150 min",
+        machinery: "CSM Continuous Action Tamper (CSM-44)",
+        slotRecommended: "12:45 – 15:15 (Afternoon Lull)",
+        slotFeasibility: "MODERATE_FEASIBILITY",
+        slotConflicts: 1,
+        tooltipExplanation: "Urgency Reason: Routine maintenance surfacing; no structural derailment or speed restriction.",
+        explanationSummary: "Routine track geometry smoothing following monsoon settling; no safety restriction.",
+        detailedExplanation: "Track recording car (TRC) recorded standard track index of 82. Non-urgent surfacing upkeep scheduled during normal afternoon lull.",
+        factors: [
+          { name: "Track Index", weight: 0.12, value: "82 / 100" },
+          { name: "Speed Clearance", weight: 0.10, value: "130 km/h Unrestricted" }
+        ],
+        action: "Execute 1.5 km mechanized tamping and dynamic track stabilization."
+      }
+    ];
+
+    function renderBundles() {
+      const container = document.getElementById('bundling-cards-container');
+      container.innerHTML = bundlingData.map(b => BundlingSuggestionCard.render(b)).join('');
+    }
+
+    function renderWorkOrders(filterDept = 'ALL') {
+      const container = document.getElementById('work-orders-container');
+      container.innerHTML = '';
+
+      const filtered = filterDept === 'ALL' 
+        ? workOrders 
+        : workOrders.filter(w => w.dept === filterDept);
+
+      filtered.forEach(wo => {
+        const card = document.createElement('div');
+        const alertClass = wo.category === 'P1' ? 'p1-alert' : wo.category === 'P2' ? 'p2-alert' : '';
+        card.className = `work-order-card ${alertClass}`;
+
+        card.innerHTML = `
+          <div class="wo-header">
+            <div>
+              <div class="wo-title">
+                <span>${wo.title}</span>
+                <div class="tooltip-wrap">
+                  <span style="font-size: 0.85rem; color: #003366;">ℹ️</span>
+                  <div class="tooltip-box">${wo.tooltipExplanation}</div>
+                </div>
+              </div>
+              <div style="font-family: var(--font-mono); font-size: 0.78rem; color: #64748B; margin-top: 4px;">
+                ID: <span style="color: #003366; font-weight: 700;">${wo.id}</span> | Section: <span style="color: #0F172A; font-weight: 600;">${wo.section}</span> | Dept: <span style="color: #059669; font-weight: 600;">${wo.deptLabel}</span>
+              </div>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span id="badge-slot-${wo.id}">
+                ${PriorityScoreBadge.render({ score: wo.score, category: wo.category })}
+              </span>
+              ${ConfidenceIndicator.render({ confidence: wo.confidence })}
+
+              <button onclick="window.overrideWo('${wo.id}', '${wo.category}')" style="
+                background: rgba(217, 83, 30, 0.08);
+                border: 1px solid rgba(217, 83, 30, 0.35);
+                color: #D9531E;
+                padding: 5px 12px;
+                border-radius: 6px;
+                font-size: 0.74rem;
+                font-weight: 700;
+                cursor: pointer;
+              ">Manual Override</button>
+            </div>
+          </div>
+
+          <div class="wo-meta-row">
+            <span>⏱️ <strong>Required Block:</strong> ${wo.duration}</span>
+            <span>🚜 <strong>Machinery:</strong> ${wo.machinery}</span>
+          </div>
+
+          <!-- AI Recommended Time Slot Box -->
+          <div class="wo-slot-box">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span style="font-size: 1.1rem;">🗓️</span>
+              <div>
+                <div style="font-size: 0.72rem; text-transform: uppercase; color: #64748B; font-weight: 700;">AI Recommended Time Slot</div>
+                <div style="font-family: var(--font-mono); font-size: 0.88rem; font-weight: 700; color: #003366;">${wo.slotRecommended}</div>
+              </div>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 10px;">
+              ${SlotFeasibilityIndicator.render({ status: wo.slotFeasibility, conflicts: wo.slotConflicts, compact: true })}
+              <button style="
+                background: #003366;
+                border: none;
+                color: #ffffff;
+                padding: 6px 14px;
+                border-radius: 6px;
+                font-size: 0.76rem;
+                font-weight: 700;
+                cursor: pointer;
+                box-shadow: 0 2px 8px rgba(0, 51, 102, 0.2);
+              " onclick="alert('Block slot for ${wo.id} confirmed for requisition submission!')">Confirm Slot</button>
+            </div>
+          </div>
+
+          <!-- AI Explanation Card -->
+          ${AIExplanationCard.render({
+            id: wo.id,
+            summary: wo.explanationSummary,
+            detailedReason: wo.detailedExplanation,
+            factors: wo.factors,
+            recommendedAction: wo.action,
+            defaultExpanded: wo.category === 'P1'
+          })}
+        `;
+
+        container.appendChild(card);
+      });
+    }
+
+    window.overrideWo = function(targetId, currentVal) {
+      ManualOverrideModal.open({
+        targetId,
+        currentVal,
+        onComplete: (log) => {
+          const badgeSlot = document.getElementById(`badge-slot-${targetId}`);
+          if (badgeSlot) {
+            badgeSlot.innerHTML = PriorityScoreBadge.render({
+              score: log.overriddenValue === 'P1' ? 95.0 : 75.0,
+              category: log.overriddenValue.replace('_OVERRIDE', '')
+            });
+          }
+          window.refreshMaintAudit();
+        }
+      });
+    };
+
+    window.refreshMaintAudit = function() {
+      const logs = ManualOverrideModal.getAuditLogs();
+      const container = document.getElementById('maint-audit-log-container');
+      if (!logs || logs.length === 0) {
+        container.innerHTML = "No supervisor overrides logged in this session.";
+        return;
+      }
+      container.innerHTML = logs.map(l => `
+        <div style="padding: 8px 12px; background: #FAF6EE; border-left: 3px solid #D9531E; border-radius: 4px; margin-bottom: 6px; color: #0F172A;">
+          <strong>[${l.timestamp.slice(11, 19)}] ${l.targetId}</strong>: ${l.originalValue} ➔ <span style="color:#003366; font-weight:700;">${l.overriddenValue}</span> (${l.reasonCode}) by <em>${l.officerId}</em>
+        </div>
+      `).join('');
+    };
+
+    // Filter tab listeners
+    document.querySelectorAll('.dept-tab').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.dept-tab').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        renderWorkOrders(btn.getAttribute('data-dept'));
+      });
+    });
+
+    renderBundles();
+    renderWorkOrders();
+    window.refreshMaintAudit();
+  </script>
+</body>
+</html>

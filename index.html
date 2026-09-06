@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="AI-Powered Automatic Block Planning System for Indian Railways – Intelligent, real-time, and data-driven railway traffic management platform." />
+  <meta name="keywords" content="Indian Railways, AI Block Planning, Railway Automation, Train Scheduling, IoT Railways" />
+  <meta name="author" content="Indian Railways AI Division" />
+  <title>AI Block Planner | Indian Railways</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100..900;1,100..900&family=Orbitron:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Three.js CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  <!-- Main Styles -->
+  <link rel="stylesheet" href="frontend/styles/main.css" />
+</head>
+<body>
+
+  <!-- ═══════════════════ CANVAS BACKGROUND ═══════════════════ -->
+  <canvas id="bg-canvas"></canvas>
+
+  <!-- ═══════════════════ NAVBAR ═══════════════════ -->
+  <nav id="navbar">
+    <div class="nav-logo">
+      <div class="logo-emblem">
+        <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="20" cy="20" r="18" stroke="url(#lg1)" stroke-width="2"/>
+          <path d="M8 24 L20 10 L32 24 L8 24Z" fill="url(#lg1)" opacity="0.85"/>
+          <rect x="14" y="24" width="12" height="6" rx="2" fill="url(#lg2)"/>
+          <circle cx="16" cy="32" r="2" fill="#D9531E"/>
+          <circle cx="24" cy="32" r="2" fill="#D9531E"/>
+          <defs>
+            <linearGradient id="lg1" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#003366"/>
+              <stop offset="1" stop-color="#0056B3"/>
+            </linearGradient>
+            <linearGradient id="lg2" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#D9531E"/>
+              <stop offset="1" stop-color="#E65100"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <div class="logo-text">
+        <span class="logo-main">IR</span>
+        <span class="logo-sub">AI Block Planner</span>
+      </div>
+    </div>
+
+    <ul class="nav-links" id="nav-links">
+      <li><a href="#home" class="nav-link active">Home</a></li>
+      <li><a href="#features" class="nav-link">Features</a></li>
+      <li><a href="#how-it-works" class="nav-link">How It Works</a></li>
+      <li><a href="#network" class="nav-link">Network</a></li>
+      <li><a href="frontend/pages/admin-dashboard.html" class="nav-link">Admin AI</a></li>
+      <li><a href="frontend/pages/project-summary.html" class="nav-link">Executive Summary</a></li>
+      <li><a href="frontend/pages/maintenance-dashboard.html" class="nav-link">Work Orders</a></li>
+      <li><a href="frontend/pages/control-office.html" class="nav-link">Control Office</a></li>
+      <li><a href="frontend/pages/surveillance-dashboard.html" class="nav-link">Surveillance</a></li>
+      <li><a href="frontend/pages/ai-model-management.html" class="nav-link">AI Models</a></li>
+      <li><a href="frontend/pages/data-sources.html" class="nav-link">3D Data</a></li>
+    </ul>
+
+    <div class="nav-actions">
+      <div class="status-pill">
+        <span class="status-dot pulse"></span>
+        <span>System Live</span>
+      </div>
+      <button class="btn-primary" id="launch-btn">Launch Dashboard</button>
+    </div>
+
+    <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- ═══════════════════ HERO SECTION ═══════════════════ -->
+  <section id="home" class="hero-section">
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="badge-icon">⚡</span>
+        <span>Ministry of Railways, Government of India</span>
+      </div>
+
+      <h1 class="hero-title">
+        <span class="title-line-1">AI-Powered</span>
+        <span class="title-line-2">Automatic Block</span>
+        <span class="title-line-3">Planning System</span>
+      </h1>
+
+      <p class="hero-subtitle">
+        Revolutionizing Indian Railways with real-time AI intelligence — 
+        zero conflicts, maximum efficiency, nationwide coverage.
+      </p>
+
+      <div class="hero-stats">
+        <div class="stat-card" data-target="14000">
+          <span class="stat-num" id="stat-trains">0</span>
+          <span class="stat-unit">+</span>
+          <span class="stat-label">Trains Daily</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-card" data-target="68000">
+          <span class="stat-num" id="stat-km">0</span>
+          <span class="stat-unit">km</span>
+          <span class="stat-label">Network Covered</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-card">
+          <span class="stat-num" id="stat-uptime">99.97</span>
+          <span class="stat-unit">%</span>
+          <span class="stat-label">System Uptime</span>
+        </div>
+      </div>
+
+      <div class="hero-actions">
+        <button class="btn-hero-primary" id="explore-btn">
+          <span>Explore Platform</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </button>
+        <button class="btn-hero-secondary" id="watch-demo-btn">
+          <div class="play-icon">&#9654;</div>
+          <span>Watch Demo</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- 3D Train Visualization Panel -->
+    <div class="hero-visual">
+      <div class="train-scene-wrapper">
+        <canvas id="train-canvas"></canvas>
+        <div class="scene-overlay">
+          <div class="track-info-card">
+            <div class="track-info-header">
+              <span class="track-badge">BLOCK SECTION</span>
+              <span class="track-status safe">SAFE</span>
+            </div>
+            <div class="track-detail">
+              <span>Mumbai–Delhi Rajdhani</span>
+              <span class="track-time">ETA 14:32</span>
+            </div>
+            <div class="track-progress">
+              <div class="track-bar">
+                <div class="track-fill" id="track-fill-1"></div>
+              </div>
+              <span>Block 7 of 12</span>
+            </div>
+          </div>
+          <div class="ai-badge floating">
+            <div class="ai-core"></div>
+            <span>AI Active</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scroll Indicator -->
+    <div class="scroll-indicator">
+      <div class="scroll-mouse">
+        <div class="scroll-wheel"></div>
+      </div>
+      <span>Scroll to explore</span>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ FEATURES SECTION ═══════════════════ -->
+  <section id="features" class="features-section">
+    <div class="section-header">
+      <span class="section-tag">Core Capabilities</span>
+      <h2 class="section-title">Built for India's Railways</h2>
+      <p class="section-desc">Every feature engineered for reliability, safety, and scale across one of the world's largest railway networks.</p>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card" data-delay="0">
+        <div class="feature-icon-wrap" style="--icon-color: #003366;">
+          <svg viewBox="0 0 48 48" fill="none">
+            <circle cx="24" cy="24" r="20" stroke="currentColor" stroke-width="2" opacity="0.3"/>
+            <path d="M12 24C12 17.37 17.37 12 24 12s12 5.37 12 12-5.37 12-12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="24" cy="24" r="4" fill="currentColor"/>
+            <path d="M24 8v4M24 36v4M8 24h4M36 24h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h3>Real-Time Block Allocation</h3>
+        <p>AI dynamically assigns track blocks milliseconds ahead, preventing collisions and ensuring zero downtime between consecutive trains.</p>
+        <ul class="feature-tags">
+          <li>Sub-100ms response</li>
+          <li>Multi-zone coverage</li>
+          <li>Collision-free</li>
+        </ul>
+      </div>
+
+      <div class="feature-card" data-delay="100">
+        <div class="feature-icon-wrap" style="--icon-color: #D9531E;">
+          <svg viewBox="0 0 48 48" fill="none">
+            <rect x="8" y="18" width="32" height="20" rx="4" stroke="currentColor" stroke-width="2"/>
+            <path d="M16 18V14a8 8 0 0116 0v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="24" cy="28" r="4" fill="currentColor"/>
+            <path d="M24 28v6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h3>Predictive Conflict Detection</h3>
+        <p>Machine learning models anticipate scheduling conflicts up to 4 hours in advance, enabling proactive rerouting before issues arise.</p>
+        <ul class="feature-tags">
+          <li>4-hour foresight</li>
+          <li>98.9% accuracy</li>
+          <li>Auto-rerouting</li>
+        </ul>
+      </div>
+
+      <div class="feature-card" data-delay="200">
+        <div class="feature-icon-wrap" style="--icon-color: #0056B3;">
+          <svg viewBox="0 0 48 48" fill="none">
+            <polyline points="8,36 18,20 28,28 38,10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="8" cy="36" r="3" fill="currentColor"/>
+            <circle cx="18" cy="20" r="3" fill="currentColor"/>
+            <circle cx="28" cy="28" r="3" fill="currentColor"/>
+            <circle cx="38" cy="10" r="3" fill="currentColor"/>
+          </svg>
+        </div>
+        <h3>Intelligent Scheduling Engine</h3>
+        <p>Genetic algorithm and reinforcement learning optimize 14,000+ daily train schedules for minimal delays and maximum throughput.</p>
+        <ul class="feature-tags">
+          <li>14,000+ trains</li>
+          <li>RL optimization</li>
+          <li>Dynamic rescheduling</li>
+        </ul>
+      </div>
+
+      <div class="feature-card" data-delay="300">
+        <div class="feature-icon-wrap" style="--icon-color: #059669;">
+          <svg viewBox="0 0 48 48" fill="none">
+            <path d="M24 4L4 14v20l20 10 20-10V14L24 4z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+            <path d="M24 4v30M4 14l20 10 20-10" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h3>IoT Sensor Integration</h3>
+        <p>Live data from trackside sensors, axle counters, and signal systems feeds directly into the AI decision engine in real time.</p>
+        <ul class="feature-tags">
+          <li>10,000+ sensors</li>
+          <li>MQTT protocol</li>
+          <li>Edge computing</li>
+        </ul>
+      </div>
+
+      <div class="feature-card" data-delay="400">
+        <div class="feature-icon-wrap" style="--icon-color: #D97706;">
+          <svg viewBox="0 0 48 48" fill="none">
+            <path d="M24 4a20 20 0 100 40A20 20 0 0024 4z" stroke="currentColor" stroke-width="2"/>
+            <path d="M4 24h40M24 4C18 12 15 18 15 24s3 12 9 20M24 4c6 8 9 14 9 20s-3 12-9 20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h3>National Network Visibility</h3>
+        <p>Unified geographic dashboard covering all 17 railway zones with drill-down capability to individual block sections.</p>
+        <ul class="feature-tags">
+          <li>17 zones</li>
+          <li>GIS-integrated</li>
+          <li>Real-time map</li>
+        </ul>
+      </div>
+
+      <div class="feature-card" data-delay="500">
+        <div class="feature-icon-wrap" style="--icon-color: #003366;">
+          <svg viewBox="0 0 48 48" fill="none">
+            <rect x="8" y="8" width="14" height="14" rx="2" stroke="currentColor" stroke-width="2"/>
+            <rect x="26" y="8" width="14" height="14" rx="2" stroke="currentColor" stroke-width="2"/>
+            <rect x="8" y="26" width="14" height="14" rx="2" stroke="currentColor" stroke-width="2"/>
+            <rect x="26" y="26" width="14" height="14" rx="2" stroke="currentColor" stroke-width="2"/>
+            <path d="M15 22v4M33 22v4M22 15h4M22 33h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h3>Multi-Zone Coordination</h3>
+        <p>Seamless cross-divisional block handover protocols ensure uninterrupted AI coverage across railway zone boundaries.</p>
+        <ul class="feature-tags">
+          <li>Zone handover</li>
+          <li>Protocol-based</li>
+          <li>No blind spots</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ HOW IT WORKS ═══════════════════ -->
+  <section id="how-it-works" class="hiw-section">
+    <div class="section-header">
+      <span class="section-tag">Architecture</span>
+      <h2 class="section-title">How the AI Works</h2>
+      <p class="section-desc">A seamlessly orchestrated pipeline from raw sensor data to an optimal block plan.</p>
+    </div>
+
+    <div class="hiw-timeline">
+      <div class="timeline-line"></div>
+
+      <div class="timeline-step" data-step="01">
+        <div class="step-icon-ring"><div class="step-icon">📡</div></div>
+        <div class="step-content">
+          <h3>Data Ingestion</h3>
+          <p>IoT sensors, GPS transponders, and signal systems stream real-time telemetry to the central data lake via secure MQTT and gRPC channels.</p>
+          <div class="step-tech"><span>Kafka</span><span>MQTT</span><span>gRPC</span><span>InfluxDB</span></div>
+        </div>
+      </div>
+
+      <div class="timeline-step" data-step="02">
+        <div class="step-icon-ring"><div class="step-icon">🧠</div></div>
+        <div class="step-content">
+          <h3>AI Processing Core</h3>
+          <p>Deep reinforcement learning models analyze current network state and predict optimal block allocation using a constraint satisfaction solver.</p>
+          <div class="step-tech"><span>TensorFlow</span><span>PyTorch</span><span>OR-Tools</span><span>CUDA</span></div>
+        </div>
+      </div>
+
+      <div class="timeline-step" data-step="03">
+        <div class="step-icon-ring"><div class="step-icon">⚙️</div></div>
+        <div class="step-content">
+          <h3>Block Plan Generation</h3>
+          <p>The engine generates a conflict-free block plan for the next rolling 4-hour window, accounting for maintenance windows, priority trains, and emergency overrides.</p>
+          <div class="step-tech"><span>Genetic Algo</span><span>CSP Solver</span><span>Rule Engine</span></div>
+        </div>
+      </div>
+
+      <div class="timeline-step" data-step="04">
+        <div class="step-icon-ring"><div class="step-icon">🚦</div></div>
+        <div class="step-content">
+          <h3>Signal Dispatch</h3>
+          <p>Approved plans are cryptographically signed and dispatched to interlocking systems, signal posts, and station master consoles across the network.</p>
+          <div class="step-tech"><span>TLS 1.3</span><span>ERTMS</span><span>ECS</span><span>REST API</span></div>
+        </div>
+      </div>
+
+      <div class="timeline-step" data-step="05">
+        <div class="step-icon-ring"><div class="step-icon">📊</div></div>
+        <div class="step-content">
+          <h3>Monitoring &amp; Feedback</h3>
+          <p>Continuous monitoring compares actual vs. planned states. Deviations trigger immediate re-planning cycles and alerts to control room operators.</p>
+          <div class="step-tech"><span>Grafana</span><span>Prometheus</span><span>ELK Stack</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ LIVE NETWORK MAP ═══════════════════ -->
+  <section id="network" class="network-section">
+    <div class="section-header">
+      <span class="section-tag">Live Network</span>
+      <h2 class="section-title">National Rail Grid</h2>
+      <p class="section-desc">Real-time block allocation across India's 68,000 km railway network.</p>
+    </div>
+
+    <div class="network-layout">
+      <div class="map-container">
+        <canvas id="map-canvas"></canvas>
+        <div class="map-legend">
+          <div class="legend-item"><span class="legend-dot" style="background:#0284C7"></span>Clear Block</div>
+          <div class="legend-item"><span class="legend-dot" style="background:#D97706"></span>Occupied</div>
+          <div class="legend-item"><span class="legend-dot" style="background:#D9531E"></span>Maintenance</div>
+          <div class="legend-item"><span class="legend-dot" style="background:#059669"></span>AI Override</div>
+        </div>
+      </div>
+
+      <div class="network-stats-panel">
+        <h3 class="panel-title">Live Metrics</h3>
+        <div class="metric-row"><span class="metric-label">Active Trains</span><span class="metric-value" id="active-trains">8,241</span></div>
+        <div class="metric-row"><span class="metric-label">Blocks Allocated</span><span class="metric-value" id="blocks-allocated">23,456</span></div>
+        <div class="metric-row"><span class="metric-label">Avg. Block Efficiency</span><span class="metric-value" id="efficiency">97.8%</span></div>
+        <div class="metric-row"><span class="metric-label">Conflicts Prevented</span><span class="metric-value" id="conflicts">0 today</span></div>
+        <div class="metric-row"><span class="metric-label">AI Response Time</span><span class="metric-value" id="response-time">47ms</span></div>
+        <div class="zone-status">
+          <h4>Zone Health</h4>
+          <div class="zone-list" id="zone-list"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ DASHBOARD PREVIEW ═══════════════════ -->
+  <section id="dashboard" class="dashboard-section">
+    <div class="section-header">
+      <span class="section-tag">Control Room</span>
+      <h2 class="section-title">Operator Dashboard</h2>
+      <p class="section-desc">A unified, intuitive interface for railway controllers and AI system operators.</p>
+    </div>
+
+    <div class="dashboard-preview">
+      <div class="db-topbar">
+        <div class="db-logo">IR Block AI</div>
+        <div class="db-tabs">
+          <span class="db-tab active">Overview</span>
+          <span class="db-tab">Block Map</span>
+          <span class="db-tab">Trains</span>
+          <span class="db-tab">Alerts</span>
+        </div>
+        <div class="db-status"><span class="pulse-dot"></span> All Systems Normal</div>
+      </div>
+
+      <div class="db-body">
+        <div class="db-sidebar">
+          <div class="db-nav-item active">📊 Overview</div>
+          <div class="db-nav-item">🗺️ Network Map</div>
+          <div class="db-nav-item">🚆 Train List</div>
+          <div class="db-nav-item">🔧 Block Mgmt</div>
+          <div class="db-nav-item">⚠️ Alerts</div>
+          <div class="db-nav-item">📈 Analytics</div>
+          <div class="db-nav-item">⚙️ Settings</div>
+        </div>
+
+        <div class="db-main">
+          <div class="db-kpi-row">
+            <div class="db-kpi">
+              <span class="kpi-label">Active Trains</span>
+              <span class="kpi-value">8,241</span>
+              <span class="kpi-delta positive">+2.1%</span>
+            </div>
+            <div class="db-kpi">
+              <span class="kpi-label">On-Time Rate</span>
+              <span class="kpi-value">94.7%</span>
+              <span class="kpi-delta positive">+0.4%</span>
+            </div>
+            <div class="db-kpi">
+              <span class="kpi-label">Block Conflicts</span>
+              <span class="kpi-value">0</span>
+              <span class="kpi-delta positive">−3 vs. yesterday</span>
+            </div>
+            <div class="db-kpi">
+              <span class="kpi-label">AI Decisions/min</span>
+              <span class="kpi-value">1,430</span>
+              <span class="kpi-delta neutral">nominal</span>
+            </div>
+          </div>
+
+          <div class="db-charts-row">
+            <div class="db-chart-panel">
+              <div class="chart-title">Block Utilization (Today)</div>
+              <canvas id="util-chart" width="320" height="140"></canvas>
+            </div>
+            <div class="db-chart-panel small-chart">
+              <div class="chart-title">Alert Log</div>
+              <div class="alert-list" id="alert-list"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ CONTACT ═══════════════════ -->
+  <section id="contact" class="contact-section">
+    <div class="contact-glow"></div>
+    <div class="contact-content">
+      <span class="section-tag">Get Involved</span>
+      <h2 class="contact-title">Ready to Transform Indian Railways?</h2>
+      <p class="contact-desc">Join thousands of railway professionals already using the AI Block Planner. Contact our technical team for a live demo or pilot program enrollment.</p>
+
+      <form class="contact-form" id="contact-form" novalidate>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="name">Full Name</label>
+            <input type="text" id="name" name="name" placeholder="Rajesh Kumar" required />
+          </div>
+          <div class="form-group">
+            <label for="designation">Designation</label>
+            <input type="text" id="designation" name="designation" placeholder="Divisional Railway Manager" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="email">Official Email</label>
+            <input type="email" id="email" name="email" placeholder="you@indianrailways.gov.in" required />
+          </div>
+          <div class="form-group">
+            <label for="zone-select">Railway Zone</label>
+            <select id="zone-select" name="zone">
+              <option value="">Select Zone</option>
+              <option>Northern Railway</option>
+              <option>Southern Railway</option>
+              <option>Eastern Railway</option>
+              <option>Western Railway</option>
+              <option>Central Railway</option>
+              <option>South Central Railway</option>
+              <option>North Eastern Railway</option>
+              <option>Northeast Frontier Railway</option>
+              <option>East Central Railway</option>
+              <option>East Coast Railway</option>
+              <option>North Central Railway</option>
+              <option>North Western Railway</option>
+              <option>South Eastern Railway</option>
+              <option>South Western Railway</option>
+              <option>West Central Railway</option>
+              <option>Metro Railway Kolkata</option>
+              <option>South East Central Railway</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group full-width">
+          <label for="message">Message</label>
+          <textarea id="message" name="message" rows="4" placeholder="Describe your use case or query..."></textarea>
+        </div>
+        <button type="submit" class="btn-primary btn-submit" id="submit-btn">
+          <span>Send Request</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+            <path d="M22 2L11 13M22 2L15 22l-4-9-9-4 20-7z"/>
+          </svg>
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ FOOTER ═══════════════════ -->
+  <footer class="site-footer">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo">IR AI Block Planner</div>
+        <p>An initiative by the Ministry of Railways, Government of India to modernize train operations through artificial intelligence.</p>
+        <div class="footer-badges">
+          <span>🇮🇳 Made in India</span>
+          <span>ISO 27001</span>
+          <span>RDSO Certified</span>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Platform</h4>
+        <ul>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#how-it-works">Architecture</a></li>
+          <li><a href="#network">Network Map</a></li>
+          <li><a href="#dashboard">Dashboard</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Documentation</h4>
+        <ul>
+          <li><a href="docs/api-specs">API Reference</a></li>
+          <li><a href="docs/workflows">Workflows</a></li>
+          <li><a href="docs/research">Research Papers</a></li>
+          <li><a href="security/policies">Security Policy</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <ul>
+          <li><a href="mailto:ai-block@indianrailways.gov.in">ai-block@indianrailways.gov.in</a></li>
+          <li><a href="tel:+911800110139">1800-110-139</a></li>
+          <li>Rail Bhavan, New Delhi – 110001</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Ministry of Railways, Government of India. All rights reserved.</span>
+      <div class="footer-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Use</a>
+        <a href="#">Accessibility</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="frontend/components/three-scene.js"></script>
+  <script src="frontend/components/map-canvas.js"></script>
+  <script src="frontend/components/dashboard-charts.js"></script>
+  <script src="frontend/components/animations.js"></script>
+  <script src="frontend/pages/main.js"></script>
+  <script src="frontend/main-app.js"></script>
+</body>
+</html>

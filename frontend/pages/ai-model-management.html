@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Model Management & MLOps — Indian Railways</title>
+  <meta name="description" content="Indian Railways AI Maintenance Platform - Machine Learning Operations (MLOps), model versioning, retraining pipeline, A/B testing, and rollback console." />
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Orbitron:wght@500;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <!-- Core Styles -->
+  <link rel="stylesheet" href="../styles/main.css" />
+
+  <!-- AI Component Scripts -->
+  <script type="module" src="../components/PriorityScoreBadge.js"></script>
+  <script type="module" src="../components/ConfidenceIndicator.js"></script>
+  <script type="module" src="../components/ManualOverrideModal.js"></script>
+
+  <style>
+    :root {
+      --bg-dark: #FAF6EE;
+      --card-bg: #FFFFFF;
+      --border-cyan: rgba(195, 178, 150, 0.38);
+      --accent-cyan: #003366;
+      --accent-green: #059669;
+      --accent-gold: #D97706;
+      --accent-red: #DC2626;
+      --accent-purple: #0056B3;
+      --font-main: 'Calibri', 'Arial', sans-serif;
+      --font-mono: 'Calibri', 'Arial', sans-serif;
+      --font-display: 'Calibri', 'Arial', sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: radial-gradient(circle at 50% 0%, #FFFFFF 0%, #FAF6EE 100%);
+      color: #0F172A;
+      font-family: var(--font-main);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Header Bar ────────────────────────────────────────────── */
+    .mlops-header {
+      background: rgba(250, 246, 238, 0.96);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-cyan);
+      box-shadow: 0 2px 12px rgba(70, 50, 30, 0.05);
+      height: 64px;
+      padding: 0 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .brand-logo {
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #003366, #0056B3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      box-shadow: 0 2px 10px rgba(0, 51, 102, 0.25);
+    }
+    .brand-title {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #0F172A;
+      letter-spacing: 0.8px;
+    }
+    .brand-sub {
+      font-size: 0.72rem;
+      color: #64748B;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .header-nav {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .nav-pill {
+      color: #334155;
+      text-decoration: none;
+      font-size: 0.82rem;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 6px;
+      transition: all 0.2s;
+    }
+    .nav-pill:hover, .nav-pill.active {
+      color: #003366;
+      background: rgba(0, 51, 102, 0.08);
+      border: 1px solid rgba(0, 51, 102, 0.25);
+    }
+
+    /* ── Main Container ────────────────────────────────────────── */
+    .mlops-container {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 28px 32px;
+    }
+
+    /* ── Model Version Cards ───────────────────────────────────── */
+    .model-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-bottom: 30px;
+      width: 100%;
+    }
+    @media (max-width: 1080px) {
+      .model-cards-grid { grid-template-columns: 1fr; }
+    }
+    .model-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border-cyan);
+      border-radius: 12px;
+      padding: 22px;
+      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.2s;
+    }
+    .model-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 3px;
+      background: #003366;
+    }
+    .model-card.traffic::before { background: #059669; }
+    .model-card.optimizer::before { background: #D9531E; }
+
+    .model-title-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .model-name {
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #0F172A;
+      letter-spacing: 0.3px;
+    }
+    .model-type-tag {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: #64748B;
+      margin-top: 2px;
+    }
+    .model-version-badge {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #003366;
+      background: rgba(0, 51, 102, 0.08);
+      border: 1px solid rgba(0, 51, 102, 0.25);
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+
+    .metrics-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin: 16px 0;
+      padding: 12px;
+      background: #FAF6EE;
+      border-radius: 8px;
+      border: 1px solid rgba(195, 178, 150, 0.45);
+    }
+    .metric-col {
+      text-align: center;
+    }
+    .metric-label {
+      font-size: 0.7rem;
+      color: #64748B;
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .metric-val {
+      font-family: var(--font-mono);
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #0F172A;
+    }
+
+    .model-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: #64748B;
+      padding-top: 12px;
+      border-top: 1px solid rgba(195, 178, 150, 0.35);
+    }
+
+    /* ── Retraining Pipeline Banner ────────────────────────────── */
+    .retrain-banner {
+      background: #FFFFFF;
+      border: 1px solid rgba(195, 178, 150, 0.45);
+      border-radius: 12px;
+      padding: 22px 28px;
+      margin-bottom: 30px;
+      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+    }
+    .retrain-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .retrain-title {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      color: #003366;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-retrain {
+      background: #003366;
+      border: none;
+      color: #ffffff;
+      font-family: var(--font-main);
+      font-size: 0.84rem;
+      font-weight: 700;
+      padding: 10px 22px;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 2px 10px rgba(0, 51, 102, 0.25);
+      transition: all 0.25s;
+    }
+    .btn-retrain:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px rgba(0, 51, 102, 0.35);
+    }
+    .btn-retrain:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    /* Progress bar */
+    .pipeline-progress-wrap {
+      width: 100%;
+      height: 10px;
+      background: #E5DED0;
+      border-radius: 5px;
+      overflow: hidden;
+      position: relative;
+      margin-bottom: 12px;
+    }
+    .pipeline-progress-bar {
+      height: 100%;
+      width: 0%;
+      background: #003366;
+      border-radius: 5px;
+      transition: width 0.4s ease;
+    }
+
+    .pipeline-steps {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: #64748B;
+      font-family: var(--font-mono);
+    }
+    .pipeline-step.active {
+      color: #003366;
+      font-weight: 700;
+    }
+
+    /* ── 2-Column Analytics Layout ─────────────────────────────── */
+    .analytics-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 30px;
+    }
+    @media (max-width: 1024px) {
+      .analytics-grid { grid-template-columns: 1fr; }
+    }
+
+    .panel-card {
+      background: #FFFFFF;
+      border: 1px solid rgba(195, 178, 150, 0.45);
+      border-radius: 12px;
+      padding: 22px;
+      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+    }
+    .panel-title {
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      color: #003366;
+      font-weight: 700;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* ── Feature Importance Bars ───────────────────────────────── */
+    .feature-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 9px;
+      font-size: 0.8rem;
+    }
+    .feature-name {
+      width: 40%;
+      color: #334155;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .feature-bar-bg {
+      flex: 1;
+      height: 7px;
+      background: #E5DED0;
+      border-radius: 4px;
+      margin: 0 14px;
+      overflow: hidden;
+    }
+    .feature-bar-fill {
+      height: 100%;
+      background: #003366;
+      border-radius: 4px;
+    }
+    .feature-val {
+      font-family: var(--font-mono);
+      color: #003366;
+      font-weight: 700;
+      width: 45px;
+      text-align: right;
+    }
+
+    /* ── A/B Testing Matrix ────────────────────────────────────── */
+    .ab-matrix {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.84rem;
+      margin-top: 10px;
+    }
+    .ab-matrix th {
+      background: #FAF6EE;
+      padding: 10px 12px;
+      text-align: left;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: #475569;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .ab-matrix td {
+      padding: 12px;
+      border-bottom: 1px solid rgba(195, 178, 150, 0.35);
+      color: #0F172A;
+    }
+
+    /* ── Rollback Table ────────────────────────────────────────── */
+    .version-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+    }
+    .version-table th {
+      background: #FAF6EE;
+      padding: 10px 12px;
+      text-align: left;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: #475569;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .version-table td {
+      padding: 12px;
+      border-bottom: 1px solid rgba(195, 178, 150, 0.35);
+      color: #0F172A;
+    }
+    .btn-rollback {
+      background: rgba(220, 38, 38, 0.08);
+      border: 1px solid rgba(220, 38, 38, 0.35);
+      color: #DC2626;
+      padding: 4px 10px;
+      border-radius: 5px;
+      font-size: 0.74rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-rollback:hover {
+      background: rgba(220, 38, 38, 0.18);
+    }
+
+    /* ── Live Canvas ───────────────────────────────────────────── */
+    canvas.chart-cv {
+      width: 100%;
+      height: 180px;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══════════════════ HEADER ═══════════════════ -->
+  <header class="mlops-header">
+    <div class="brand-group">
+      <div class="brand-logo">🧠</div>
+      <div>
+        <div class="brand-title">AI MODEL LIFECYCLE & MLOPS</div>
+        <div class="brand-sub">Model Registry, Continuous Retraining, A/B Testing & Governance</div>
+      </div>
+    </div>
+
+    <nav class="header-nav">
+      <a href="admin-dashboard.html" class="nav-pill">Admin Overview</a>
+      <a href="maintenance-dashboard.html" class="nav-pill">Work Orders</a>
+      <a href="control-office.html" class="nav-pill">Control Office</a>
+      <a href="surveillance-dashboard.html" class="nav-pill">Surveillance</a>
+      <a href="ai-model-management.html" class="nav-pill active">AI Models</a>
+      <a href="data-sources.html" class="nav-pill">3D Data</a>
+      <a href="../../index.html" class="nav-pill">Portal</a>
+    </nav>
+  </header>
+
+  <main class="mlops-container">
+
+    <!-- ═══════════════════ SECTION 1: MODEL STATUS CARDS ═══════════════════ -->
+    <div class="model-cards-grid">
+
+      <!-- Priority Model -->
+      <div class="model-card">
+        <div class="model-title-row">
+          <div>
+            <div class="model-name">Defect Priority Classifier</div>
+            <div class="model-type-tag">RandomForestClassifier (120 trees, depth 6)</div>
+          </div>
+          <span class="model-version-badge">v1.2.0 (Active)</span>
+        </div>
+
+        <div class="metrics-row">
+          <div class="metric-col">
+            <div class="metric-label">Accuracy</div>
+            <div class="metric-val" style="color: #059669;">92.4%</div>
+          </div>
+          <div class="metric-col">
+            <div class="metric-label">Macro F1</div>
+            <div class="metric-val" style="color: #003366;">0.896</div>
+          </div>
+          <div class="metric-col">
+            <div class="metric-label">P1 Recall</div>
+            <div class="metric-val" style="color: #DC2626;">98.1%</div>
+          </div>
+        </div>
+
+        <div class="model-footer">
+          <span>📅 Last Trained: <strong>2026-09-05 18:30 IST</strong></span>
+          <span style="color: #059669; font-weight: 700;">● HEALTHY / SERVING</span>
+        </div>
+      </div>
+
+      <!-- Traffic Model -->
+      <div class="model-card traffic">
+        <div class="model-title-row">
+          <div>
+            <div class="model-name">Train Traffic & Delay Forecaster</div>
+            <div class="model-type-tag">GradientBoosting Ensemble Regressor</div>
+          </div>
+          <span class="model-version-badge" style="color: #059669; border-color: rgba(5,150,105,0.3); background: rgba(5,150,105,0.08);">v1.1.4 (Active)</span>
+        </div>
+
+        <div class="metrics-row">
+          <div class="metric-col">
+            <div class="metric-label">Delay MAE</div>
+            <div class="metric-val" style="color: #003366;">3.8m</div>
+          </div>
+          <div class="metric-col">
+            <div class="metric-label">RMSE</div>
+            <div class="metric-val" style="color: #0F172A;">6.2m</div>
+          </div>
+          <div class="metric-col">
+            <div class="metric-label">Punctuality R²</div>
+            <div class="metric-val" style="color: #059669;">0.912</div>
+          </div>
+        </div>
+
+        <div class="model-footer">
+          <span>📅 Last Trained: <strong>2026-09-04 14:15 IST</strong></span>
+          <span style="color: #059669; font-weight: 700;">● HEALTHY / SERVING</span>
+        </div>
+      </div>
+
+      <!-- Optimizer Model -->
+      <div class="model-card optimizer">
+        <div class="model-title-row">
+          <div>
+            <div class="model-name">Block Constraint Optimizer</div>
+            <div class="model-type-tag">Google OR-Tools CP-SAT (4 Search Workers)</div>
+          </div>
+          <span class="model-version-badge" style="color: #D9531E; border-color: rgba(217,83,30,0.3); background: rgba(217,83,30,0.08);">v2.0.1 (Active)</span>
+        </div>
+
+        <div class="metrics-row">
+          <div class="metric-col">
+            <div class="metric-label">Feasibility</div>
+            <div class="metric-val" style="color: #059669;">96.5%</div>
+          </div>
+          <div class="metric-col">
+            <div class="metric-label">Avg Solve</div>
+            <div class="metric-val" style="color: #003366;">4.2s</div>
+          </div>
+          <div class="metric-col">
+            <div class="metric-label">Synergy</div>
+            <div class="metric-val" style="color: #0056B3;">89.0%</div>
+          </div>
+        </div>
+
+        <div class="model-footer">
+          <span>📅 Solver Config: <strong>30s Timeout / Multi-Thread</strong></span>
+          <span style="color: #059669; font-weight: 700;">● OPTIMAL / READY</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ═══════════════════ SECTION 2: RETRAINING PIPELINE ═══════════════════ -->
+    <div class="retrain-banner">
+      <div class="retrain-header">
+        <div class="retrain-title">
+          <span>⚙️</span>
+          <span>Automated Model Retraining Pipeline</span>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 14px;">
+          <span id="pipeline-status-text" style="font-family: var(--font-mono); font-size: 0.8rem; color: #475569;">
+            Ready to retrain against trailing 30-day verified inspection logs
+          </span>
+          <button class="btn-retrain" id="btn-trigger-retrain" onclick="window.triggerRetrainingPipeline()">
+            <span>⚡ Trigger Retraining Pipeline</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="pipeline-progress-wrap">
+        <div class="pipeline-progress-bar" id="pipeline-progress-bar"></div>
+      </div>
+
+      <div class="pipeline-steps">
+        <span class="pipeline-step" id="step-1">1. Ingest Defects &amp; Timetables</span>
+        <span class="pipeline-step" id="step-2">2. Feature Extraction &amp; Scaling</span>
+        <span class="pipeline-step" id="step-3">3. 5-Fold Cross Validation</span>
+        <span class="pipeline-step" id="step-4">4. Check Quality Gates (F1 &ge; 0.88)</span>
+        <span class="pipeline-step" id="step-5">5. Atomic Hot-Reload in RAM</span>
+      </div>
+    </div>
+
+    <!-- ═══════════════════ SECTION 3: PERFORMANCE CHARTS ═══════════════════ -->
+    <div class="analytics-grid">
+
+      <!-- Accuracy Over Time Chart -->
+      <div class="panel-card">
+        <div class="panel-title">
+          <span>Accuracy Trend Over Time (Retraining Cycles)</span>
+          <span style="font-size: 0.72rem; color: #059669; font-family: var(--font-mono); font-weight: 700;">Baseline: 90.0%</span>
+        </div>
+        <canvas id="accuracy-cv" class="chart-cv" width="600" height="180"></canvas>
+      </div>
+
+      <!-- Prediction Distribution Chart -->
+      <div class="panel-card">
+        <div class="panel-title">
+          <span>Priority Classification Distribution (P1 - P4)</span>
+          <span style="font-size: 0.72rem; color: #003366; font-family: var(--font-mono); font-weight: 700;">Total: 14,820 Inferences</span>
+        </div>
+        <canvas id="dist-cv" class="chart-cv" width="600" height="180"></canvas>
+      </div>
+
+    </div>
+
+    <!-- ═══════════════════ SECTION 4: FEATURE IMPORTANCE & A/B TESTING ═══════════════════ -->
+    <div class="analytics-grid">
+
+      <!-- Feature Importance -->
+      <div class="panel-card">
+        <div class="panel-title">
+          <span>Feature Importance Weights (Gini Impurity Metric)</span>
+          <span style="font-size: 0.72rem; color: #003366; font-family: var(--font-mono); font-weight: 700;">Top 8 Features</span>
+        </div>
+
+        <div id="feature-importance-list">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- A/B Model Testing Matrix -->
+      <div class="panel-card">
+        <div class="panel-title">
+          <span>A/B Testing Interface (Production Champion vs Challenger)</span>
+          <span style="font-size: 0.72rem; color: #D97706; font-family: var(--font-mono); font-weight: 700;">Live Split: 80% / 20%</span>
+        </div>
+
+        <table class="ab-matrix">
+          <thead>
+            <tr>
+              <th>Evaluation Metric</th>
+              <th>Champion (v1.2.0)</th>
+              <th>Challenger (v1.3.0-rc2)</th>
+              <th>Delta</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Overall Accuracy</strong></td>
+              <td>92.4%</td>
+              <td style="color: #059669; font-weight: 700;">94.1%</td>
+              <td style="color: #059669; font-weight: 600;">+1.7%</td>
+            </tr>
+            <tr>
+              <td><strong>P1 Safety Recall</strong></td>
+              <td>98.1%</td>
+              <td style="color: #059669; font-weight: 700;">99.3%</td>
+              <td style="color: #059669; font-weight: 600;">+1.2%</td>
+            </tr>
+            <tr>
+              <td><strong>Macro F1-Score</strong></td>
+              <td>0.896</td>
+              <td style="color: #059669; font-weight: 700;">0.918</td>
+              <td style="color: #059669; font-weight: 600;">+0.022</td>
+            </tr>
+            <tr>
+              <td><strong>Inference Latency</strong></td>
+              <td>14.2 ms</td>
+              <td>15.1 ms</td>
+              <td style="color: #D9531E; font-weight: 600;">+0.9 ms</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 18px; padding-top: 14px; border-top: 1px solid rgba(195,178,150,0.35);">
+          <div style="font-size: 0.78rem; color: #475569;">
+            Traffic Allocation: <strong>80% Champion / 20% Challenger</strong>
+          </div>
+          <button onclick="window.promoteChallenger()" style="
+            background: #003366;
+            border: none;
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 0.76rem;
+            padding: 8px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0, 51, 102, 0.2);
+          ">Promote Challenger to 100% Champion</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ═══════════════════ SECTION 5: ROLLBACK REGISTRY & HEALTH ALERTS ═══════════════════ -->
+    <div class="analytics-grid">
+
+      <!-- Model Version History & Rollback -->
+      <div class="panel-card">
+        <div class="panel-title">
+          <span>Model Version Registry &amp; Rollback Capability</span>
+          <span style="font-size: 0.72rem; color: #64748B; font-family: var(--font-mono);">Immutable Artifacts</span>
+        </div>
+
+        <table class="version-table">
+          <thead>
+            <tr>
+              <th>Version Tag</th>
+              <th>Trained Date</th>
+              <th>Records</th>
+              <th>Accuracy</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong style="color: #003366;">v1.2.0</strong> <span style="font-size: 0.7rem; color: #059669; font-weight: 700;">(ACTIVE)</span></td>
+              <td>2026-09-05</td>
+              <td>48,500</td>
+              <td>92.4%</td>
+              <td><span style="color: #64748B; font-size: 0.72rem;">Current Live</span></td>
+            </tr>
+            <tr>
+              <td><strong>v1.1.0</strong></td>
+              <td>2026-08-15</td>
+              <td>42,100</td>
+              <td>91.2%</td>
+              <td>
+                <button class="btn-rollback" onclick="window.rollbackModel('v1.1.0')">Rollback</button>
+              </td>
+            </tr>
+            <tr>
+              <td><strong>v1.0.0</strong></td>
+              <td>2026-07-01</td>
+              <td>35,000</td>
+              <td>89.6%</td>
+              <td>
+                <button class="btn-rollback" onclick="window.rollbackModel('v1.0.0')">Rollback</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Model Health Status & Telemetry Alerts -->
+      <div class="panel-card">
+        <div class="panel-title">
+          <span>Live Telemetry &amp; Model Health Status</span>
+          <span style="font-size: 0.72rem; color: #059669; font-family: var(--font-mono); font-weight: 700;">Status: HEALTHY</span>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px;">
+          <div style="background: #FCFBF7; padding: 10px; border-radius: 6px; border: 1px solid rgba(195,178,150,0.45);">
+            <div style="font-size: 0.7rem; color: #64748B; text-transform: uppercase; font-weight: 600;">PSI Drift Metric</div>
+            <div style="font-family: var(--font-mono); font-size: 1.1rem; font-weight: 700; color: #059669;">0.041 (No Drift)</div>
+          </div>
+          <div style="background: #FCFBF7; padding: 10px; border-radius: 6px; border: 1px solid rgba(195,178,150,0.45);">
+            <div style="font-size: 0.7rem; color: #64748B; text-transform: uppercase; font-weight: 600;">p95 Latency</div>
+            <div style="font-family: var(--font-mono); font-size: 1.1rem; font-weight: 700; color: #003366;">24.5 ms</div>
+          </div>
+          <div style="background: #FCFBF7; padding: 10px; border-radius: 6px; border: 1px solid rgba(195,178,150,0.45);">
+            <div style="font-size: 0.7rem; color: #64748B; text-transform: uppercase; font-weight: 600;">Inference Error Rate</div>
+            <div style="font-family: var(--font-mono); font-size: 1.1rem; font-weight: 700; color: #059669;">0.00% (5xx: 0)</div>
+          </div>
+          <div style="background: #FCFBF7; padding: 10px; border-radius: 6px; border: 1px solid rgba(195,178,150,0.45);">
+            <div style="font-size: 0.7rem; color: #64748B; text-transform: uppercase; font-weight: 600;">Memory RSS</div>
+            <div style="font-family: var(--font-mono); font-size: 1.1rem; font-weight: 700; color: #0F172A;">245 MB</div>
+          </div>
+        </div>
+
+        <div style="
+          background: #F0FDF4;
+          border: 1px solid rgba(5, 150, 105, 0.35);
+          border-radius: 6px;
+          padding: 10px 14px;
+          font-size: 0.76rem;
+          color: #065F46;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        ">
+          <span>🛡️</span>
+          <span><strong>Zero Critical Alerts:</strong> All models operating within statutory Indian Railway safety thresholds.</span>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <script type="module">
+    import { ManualOverrideModal } from '../components/ManualOverrideModal.js';
+
+    // ── 1. Render Feature Importance ───────────────────────────────────────
+    const features = [
+      { name: "safety_severity", weight: 0.22 },
+      { name: "traffic_density_gmt", weight: 0.14 },
+      { name: "overdue_days", weight: 0.12 },
+      { name: "failure_probability", weight: 0.12 },
+      { name: "asset_criticality", weight: 0.10 },
+      { name: "redundancy_factor", weight: 0.08 },
+      { name: "defect_age_days", weight: 0.06 },
+      { name: "inspection_source", weight: 0.06 }
+    ];
+
+    const featureContainer = document.getElementById('feature-importance-list');
+    featureContainer.innerHTML = features.map(f => {
+      const pct = (f.weight * 100).toFixed(0);
+      return `
+        <div class="feature-item">
+          <span class="feature-name" title="${f.name}">${f.name}</span>
+          <div class="feature-bar-bg">
+            <div class="feature-bar-fill" style="width: ${pct * 3.5}%;"></div>
+          </div>
+          <span class="feature-val">${pct}%</span>
+        </div>
+      `;
+    }).join('');
+
+    // ── 2. Draw Accuracy Over Time Chart ───────────────────────────────────
+    function drawAccuracyChart() {
+      const cv = document.getElementById('accuracy-cv');
+      if (!cv) return;
+      const ctx = cv.getContext('2d');
+      const W = cv.width = cv.clientWidth;
+      const H = cv.height = cv.clientHeight;
+
+      const months = ['Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'];
+      const acc = [88.5, 89.4, 90.2, 91.0, 91.8, 92.4];
+
+      ctx.clearRect(0, 0, W, H);
+
+      // Grid
+      ctx.strokeStyle = 'rgba(195, 178, 150, 0.4)';
+      ctx.lineWidth = 1;
+      for (let y = 20; y < H - 20; y += 30) {
+        ctx.beginPath();
+        ctx.moveTo(30, y);
+        ctx.lineTo(W - 10, y);
+        ctx.stroke();
+      }
+
+      // Plot Line
+      ctx.strokeStyle = '#003366';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+
+      acc.forEach((val, i) => {
+        const x = 40 + i * ((W - 70) / (acc.length - 1));
+        const y = H - 30 - ((val - 85) / 10) * (H - 50);
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      });
+      ctx.stroke();
+
+      // Draw points & labels
+      acc.forEach((val, i) => {
+        const x = 40 + i * ((W - 70) / (acc.length - 1));
+        const y = H - 30 - ((val - 85) / 10) * (H - 50);
+
+        ctx.fillStyle = '#059669';
+        ctx.beginPath();
+        ctx.arc(x, y, 5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#FFFFFF';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        ctx.fillStyle = '#0F172A';
+        ctx.font = '700 10px Inter, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(`${val}%`, x, y - 9);
+
+        ctx.fillStyle = '#64748B';
+        ctx.font = '500 10px Inter, sans-serif';
+        ctx.fillText(months[i], x, H - 10);
+      });
+    }
+
+    // ── 3. Draw Distribution Chart ─────────────────────────────────────────
+    function drawDistributionChart() {
+      const cv = document.getElementById('dist-cv');
+      if (!cv) return;
+      const ctx = cv.getContext('2d');
+      const W = cv.width = cv.clientWidth;
+      const H = cv.height = cv.clientHeight;
+
+      const categories = [
+        { label: 'P1 Critical', pct: 12, color: '#DC2626' },
+        { label: 'P2 High', pct: 28, color: '#D9531E' },
+        { label: 'P3 Medium', pct: 40, color: '#D97706' },
+        { label: 'P4 Low', pct: 20, color: '#059669' }
+      ];
+
+      ctx.clearRect(0, 0, W, H);
+
+      const barW = (W - 80) / categories.length - 16;
+      categories.forEach((c, i) => {
+        const x = 50 + i * (barW + 20);
+        const barH = (c.pct / 50) * (H - 60);
+        const y = H - 30 - barH;
+
+        ctx.fillStyle = c.color;
+        ctx.fillRect(x, y, barW, barH);
+
+        ctx.fillStyle = '#0F172A';
+        ctx.font = '700 11px JetBrains Mono, monospace';
+        ctx.textAlign = 'center';
+        ctx.fillText(`${c.pct}%`, x + barW / 2, y - 6);
+
+        ctx.fillStyle = '#475569';
+        ctx.font = '600 10px Inter, sans-serif';
+        ctx.fillText(c.label, x + barW / 2, H - 10);
+      });
+    }
+
+    window.addEventListener('resize', () => {
+      drawAccuracyChart();
+      drawDistributionChart();
+    });
+
+    drawAccuracyChart();
+    drawDistributionChart();
+
+    // ── 4. Interactive Retraining Pipeline Simulation ───────────────────────
+    window.triggerRetrainingPipeline = function() {
+      const btn = document.getElementById('btn-trigger-retrain');
+      const bar = document.getElementById('pipeline-progress-bar');
+      const statusText = document.getElementById('pipeline-status-text');
+
+      btn.disabled = true;
+      btn.innerHTML = `<span>⏳ Retraining in Progress...</span>`;
+
+      const steps = [
+        { pct: 20, id: 'step-1', text: "Ingesting verified defect records and timetable logs from PostgreSQL..." },
+        { pct: 45, id: 'step-2', text: "Extracting 10 features, computing standard scaling, and one-hot encoding..." },
+        { pct: 70, id: 'step-3', text: "Training RandomForestClassifier with 5-fold stratified cross-validation..." },
+        { pct: 90, id: 'step-4', text: "Validating quality gates: F1 = 0.918, P1 Recall = 99.3% (PASSED)..." },
+        { pct: 100, id: 'step-5', text: "Retraining COMPLETE! Serialized model hot-reloaded into memory." }
+      ];
+
+      let currentStep = 0;
+      const interval = setInterval(() => {
+        if (currentStep < steps.length) {
+          const s = steps[currentStep];
+          bar.style.width = `${s.pct}%`;
+          statusText.innerText = s.text;
+
+          document.querySelectorAll('.pipeline-step').forEach(el => el.classList.remove('active'));
+          document.getElementById(s.id)?.classList.add('active');
+
+          currentStep++;
+        } else {
+          clearInterval(interval);
+          btn.disabled = false;
+          btn.innerHTML = `<span>⚡ Retraining Completed</span>`;
+          alert("✅ AI Model Retraining Pipeline Finished!\n\nNew Model Artifact: priority_model_v1.3.0.pkl\nAccuracy: 94.1%\nP1 Safety Recall: 99.3%\nStatus: Serving Live Inferences");
+        }
+      }, 900);
+    };
+
+    // ── 5. A/B Promotion & Rollback Handlers ────────────────────────────────
+    window.promoteChallenger = function() {
+      if (confirm("Promote Challenger v1.3.0-rc2 to 100% Production Champion?\nAll live inference traffic will route to this model.")) {
+        alert("✅ Model v1.3.0-rc2 promoted to Production Champion!\nWeights updated in memory across all AI microservice pods.");
+      }
+    };
+
+    window.rollbackModel = function(versionTag) {
+      ManualOverrideModal.open({
+        targetId: `MODEL-ROLLBACK-${versionTag}`,
+        currentVal: "v1.2.0 (Active)",
+        onComplete: (log) => {
+          alert(`✅ Rollback to ${versionTag} executed!\nReason logged to audit trail by ${log.officerId}: "${log.explanation}"`);
+        }
+      });
+    };
+  </script>
+</body>
+</html>

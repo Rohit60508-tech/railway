@@ -1,0 +1,88 @@
+{
+  "service": "priority-engine",
+  "version": "1.0.0",
+  "description": "Defect priority, risk scoring, and urgency engine for Indian Railways maintenance planning",
+
+  "model_type": "RandomForestClassifier",
+  "n_estimators": 120,
+  "max_depth": 6,
+  "artifact_path": "artifacts/defect_priority_model.joblib",
+
+  "priority_thresholds": {
+    "P1": {
+      "min_score": 85,
+      "max_score": 100,
+      "category": "P1",
+      "label": "Critical / Immediate Intervention",
+      "sla_hours": 24
+    },
+    "P2": {
+      "min_score": 70,
+      "max_score": 84,
+      "category": "P2",
+      "label": "High Priority / Planned Window",
+      "sla_hours": 72
+    },
+    "P3": {
+      "min_score": 50,
+      "max_score": 69,
+      "category": "P3",
+      "label": "Medium Priority / Rolling Corridor",
+      "sla_hours": 168
+    },
+    "P4": {
+      "min_score": 0,
+      "max_score": 49,
+      "category": "P4",
+      "label": "Low / Routine Inspection",
+      "sla_hours": 720
+    }
+  },
+
+  "feature_weights": {
+    "safety_severity": 0.22,
+    "traffic_density": 0.14,
+    "overdue_days": 0.12,
+    "failure_probability": 0.12,
+    "asset_criticality": 0.10,
+    "redundancy_factor": 0.08,
+    "defect_age": 0.06,
+    "inspection_source_weight": 0.06,
+    "department_weight": 0.05,
+    "location_criticality": 0.05
+  },
+
+  "training_parameters": {
+    "test_size": 0.2,
+    "random_state": 42,
+    "learning_rate": 0.08,
+    "min_samples_split": 4,
+    "cv_folds": 5,
+    "batch_size": 256,
+    "min_samples_leaf": 2
+  },
+
+  "reference_weights": {
+    "safety_severity": {
+      "CRITICAL": 100,
+      "HIGH": 75,
+      "MEDIUM": 45,
+      "LOW": 20
+    },
+    "departments": {
+      "CIVIL": 95,
+      "TRD_OHE": 90,
+      "SIGNALLING": 88,
+      "ROLLING_STOCK": 80
+    },
+    "inspection_sources": {
+      "USFD": 100,
+      "TRC": 92,
+      "OMS": 85,
+      "ITMS": 88,
+      "PATROL": 80,
+      "DRONE": 70,
+      "MANUAL": 65
+    }
+  }
+}

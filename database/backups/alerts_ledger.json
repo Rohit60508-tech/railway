@@ -1,0 +1,25 @@
+{
+  "timestamp": "2026-09-05T22:17:08.659Z",
+  "activeAlerts": [
+    {
+      "alertId": "ALT-SAFETY-1788646628659-8C6217",
+      "title": "P1 Critical Rail Flaw Block Scheduled",
+      "message": "Joint Civil/OHE block assigned on NDLS-CNB-UP for 01:00-04:00",
+      "severity": "HIGH",
+      "domain": "SAFETY",
+      "status": "ACTIVE",
+      "sectionId": "NDLS-CNB-UP",
+      "entityId": null,
+      "metadata": {},
+      "createdAt": "2026-09-05T22:17:08.659Z",
+      "updatedAt": "2026-09-05T22:17:08.659Z",
+      "acknowledgedBy": null,
+      "acknowledgedAt": null,
+      "resolvedBy": null,
+      "resolvedAt": null,
+      "resolutionNote": null,
+      "escalationLevel": 0
+    }
+  ],
+  "resolvedCount": 1
+}

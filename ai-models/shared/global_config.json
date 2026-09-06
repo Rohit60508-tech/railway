@@ -1,0 +1,10 @@
+{
+  "default_timezone": "Asia/Kolkata",
+  "log_level": "INFO",
+  "database_batch_size": 1000,
+  "cache_expiry_minutes": 60,
+  "max_concurrent_predictions": 10,
+  "model_refresh_interval_minutes": 30,
+  "enable_caching": true,
+  "log_predictions": true
+}

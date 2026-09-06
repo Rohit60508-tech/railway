@@ -1,0 +1,68 @@
+[
+  {
+    "defect_id": "DEF-TEST-001",
+    "section_id": "NDLS-CNB-UP",
+    "department": "CIVIL",
+    "asset_type": "RAIL_THERMIT_WELD",
+    "severity": "CRITICAL",
+    "source": "USFD",
+    "track_quality_index": 38.5,
+    "trains_per_day": 130,
+    "speed_limit_kmh": 110,
+    "overdue_days": 2.5,
+    "flaw_depth_mm": 18.2,
+    "expected_category": "P1"
+  },
+  {
+    "defect_id": "DEF-TEST-002",
+    "section_id": "NDLS-CNB-UP",
+    "department": "TRD_OHE",
+    "asset_type": "OHE_CANTILEVER",
+    "severity": "HIGH",
+    "source": "ITMS",
+    "track_quality_index": 55.0,
+    "trains_per_day": 130,
+    "speed_limit_kmh": 110,
+    "overdue_days": 1.0,
+    "expected_category": "P2"
+  },
+  {
+    "defect_id": "DEF-TEST-003",
+    "section_id": "NDLS-AGC-DN",
+    "department": "SIGNAL_TELECOM",
+    "asset_type": "POINT_MACHINE",
+    "severity": "MEDIUM",
+    "source": "SMMS",
+    "track_quality_index": 65.0,
+    "trains_per_day": 95,
+    "speed_limit_kmh": 130,
+    "overdue_days": 0.0,
+    "expected_category": "P3"
+  },
+  {
+    "defect_id": "DEF-TEST-004",
+    "section_id": "NDLS-AGC-DN",
+    "department": "CIVIL",
+    "asset_type": "BALLAST_CUSHION",
+    "severity": "LOW",
+    "source": "TRC",
+    "track_quality_index": 78.0,
+    "trains_per_day": 95,
+    "speed_limit_kmh": 130,
+    "overdue_days": 0.0,
+    "expected_category": "P4"
+  },
+  {
+    "defect_id": "DEF-TEST-005",
+    "section_id": "BSL-JL-UP",
+    "department": "CIVIL",
+    "asset_type": "SWITCH_EXPANSION_JOINT",
+    "severity": "CRITICAL",
+    "source": "MANUAL",
+    "track_quality_index": 42.0,
+    "trains_per_day": 80,
+    "speed_limit_kmh": 100,
+    "overdue_days": 4.0,
+    "expected_category": "P1"
+  }
+]

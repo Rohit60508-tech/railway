@@ -1,0 +1,52 @@
+[
+  {
+    "train_number": "12002",
+    "train_name": "Bhopal Shatabdi Express",
+    "train_type": "PREMIUM_EXPRESS",
+    "priority_weight": 3.5,
+    "section_id": "NDLS-AGC-DN",
+    "scheduled_departure": "2026-09-08T06:00:00Z",
+    "scheduled_arrival": "2026-09-08T07:50:00Z",
+    "max_speed_kmh": 150
+  },
+  {
+    "train_number": "22436",
+    "train_name": "Vande Bharat Express",
+    "train_type": "VANDE_BHARAT",
+    "priority_weight": 3.8,
+    "section_id": "NDLS-CNB-UP",
+    "scheduled_departure": "2026-09-08T06:00:00Z",
+    "scheduled_arrival": "2026-09-08T10:08:00Z",
+    "max_speed_kmh": 160
+  },
+  {
+    "train_number": "12423",
+    "train_name": "Dibrugarh Rajdhani Express",
+    "train_type": "RAJDHANI",
+    "priority_weight": 3.5,
+    "section_id": "NDLS-CNB-UP",
+    "scheduled_departure": "2026-09-08T16:10:00Z",
+    "scheduled_arrival": "2026-09-08T20:55:00Z",
+    "max_speed_kmh": 130
+  },
+  {
+    "train_number": "64402",
+    "train_name": "Ghaziabad - New Delhi EMU",
+    "train_type": "SUBURBAN",
+    "priority_weight": 2.0,
+    "section_id": "NDLS-CNB-UP",
+    "scheduled_departure": "2026-09-08T08:30:00Z",
+    "scheduled_arrival": "2026-09-08T09:25:00Z",
+    "max_speed_kmh": 100
+  },
+  {
+    "train_number": "GOODS-BOXN-401",
+    "train_name": "Container Freight Express",
+    "train_type": "FREIGHT",
+    "priority_weight": 1.0,
+    "section_id": "NDLS-CNB-UP",
+    "scheduled_departure": "2026-09-08T02:00:00Z",
+    "scheduled_arrival": "2026-09-08T05:30:00Z",
+    "max_speed_kmh": 75
+  }
+]

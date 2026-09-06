@@ -1,0 +1,54 @@
+[
+  {
+    "task_id": "TSK-001",
+    "section_id": "NDLS-CNB-UP",
+    "department": "CIVIL",
+    "description": "Thermit weld renewal km 42/10",
+    "duration_minutes": 90,
+    "priority_score": 88.5,
+    "priority_category": "P1",
+    "requires_power_block": false,
+    "requires_traffic_block": true,
+    "track_km_start": 42.0,
+    "track_km_end": 43.0
+  },
+  {
+    "task_id": "TSK-002",
+    "section_id": "NDLS-CNB-UP",
+    "department": "TRD_OHE",
+    "description": "Cantilever inspection and dropper adjustment",
+    "duration_minutes": 60,
+    "priority_score": 76.0,
+    "priority_category": "P2",
+    "requires_power_block": true,
+    "requires_traffic_block": true,
+    "track_km_start": 41.5,
+    "track_km_end": 43.5
+  },
+  {
+    "task_id": "TSK-003",
+    "section_id": "NDLS-CNB-UP",
+    "department": "SIGNALLING",
+    "description": "Track circuit bonding and axle counter test",
+    "duration_minutes": 45,
+    "priority_score": 68.0,
+    "priority_category": "P3",
+    "requires_power_block": false,
+    "requires_traffic_block": true,
+    "track_km_start": 42.2,
+    "track_km_end": 42.8
+  },
+  {
+    "task_id": "TSK-004",
+    "section_id": "CNB-PRYJ-DN",
+    "department": "CIVIL",
+    "description": "Deep screening of ballast km 112",
+    "duration_minutes": 180,
+    "priority_score": 52.0,
+    "priority_category": "P3",
+    "requires_power_block": false,
+    "requires_traffic_block": true,
+    "track_km_start": 112.0,
+    "track_km_end": 114.0
+  }
+]

@@ -1,0 +1,176 @@
+version: "3.9"
+
+# ==============================================================================
+# Indian Railways AI Maintenance Platform - Docker Compose
+# Services:
+#   1. ai-priority-service   (Defect priority classification & SLA calculation)
+#   2. ai-traffic-service    (Train traffic density, headway & slot discovery)
+#   3. ai-optimizer-service  (OR-Tools CP-SAT multi-department constraint solver)
+#   4. ai-gateway-service    (Unified API entrypoint / reverse proxy)
+#   5. railway-postgres      (PostgreSQL relational database for defects & timetables)
+#   6. railway-redis         (In-memory cache for prediction caching & sessions)
+# Volumes:
+#   - ai_models_data         (Shared pre-trained model weights & joblib artifacts)
+#   - railway_postgres_data  (Database persistence)
+# ==============================================================================
+
+networks:
+  railway_network:
+    name: railway_ai_net
+    driver: bridge
+
+volumes:
+  ai_models_data:
+    name: railway_ai_models_data
+    driver: local
+  railway_postgres_data:
+    name: railway_ai_postgres_data
+    driver: local
+  ai_logs_data:
+    name: railway_ai_logs_data
+    driver: local
+
+x-ai-service-common: &ai-common
+  build:
+    context: ..
+    dockerfile: deployment/dockerfile-ai-service
+  restart: unless-stopped
+  networks:
+    - railway_network
+  depends_on:
+    railway-postgres:
+      condition: service_healthy
+    railway-redis:
+      condition: service_healthy
+  volumes:
+    - ai_models_data:/app/ai-models/models
+    - ai_logs_data:/app/ai-models/logs
+  env_file:
+    - ../ai-models/.env.example
+  environment:
+    - DATABASE_URL=postgresql://ai_service:ai_password@railway-postgres:5432/railway_maintenance
+    - REDIS_URL=redis://railway-redis:6379/0
+    - LOG_LEVEL=INFO
+    - DEFAULT_TIMEZONE=Asia/Kolkata
+    - ENABLE_CACHING=true
+    - CACHE_EXPIRY_MINUTES=60
+  deploy:
+    resources:
+      limits:
+        cpus: '2.00'
+        memory: 2048M
+      reservations:
+        cpus: '0.50'
+        memory: 512M
+
+services:
+  # ── 1. Database Service ──────────────────────────────────────────────────────
+  railway-postgres:
+    image: postgres:15-alpine
+    container_name: railway-ai-postgres
+    restart: unless-stopped
+    networks:
+      - railway_network
+    environment:
+      POSTGRES_USER: ai_service
+      POSTGRES_PASSWORD: ai_password
+      POSTGRES_DB: railway_maintenance
+    ports:
+      - "5432:5432"
+    volumes:
+      - railway_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ai_service -d railway_maintenance"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # ── 2. Cache Service ─────────────────────────────────────────────────────────
+  railway-redis:
+    image: redis:7-alpine
+    container_name: railway-ai-redis
+    restart: unless-stopped
+    networks:
+      - railway_network
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── 3. AI Priority Classification Service ────────────────────────────────────
+  ai-priority-service:
+    <<: *ai-common
+    container_name: railway-ai-priority-service
+    command: ["python", "-m", "uvicorn", "inference.app:app", "--host", "0.0.0.0", "--port", "8001", "--workers", "2"]
+    environment:
+      - API_PORT=8001
+      - SERVICE_ROLE=priority-engine
+      - PRIORITY_MODEL_PATH=/app/ai-models/models/priority_model.pkl
+      - DATABASE_URL=postgresql://ai_service:ai_password@railway-postgres:5432/railway_maintenance
+    ports:
+      - "8001:8001"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8001/api/v1/health || exit 1"]
+      interval: 20s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
+  # ── 4. AI Traffic Prediction Service ─────────────────────────────────────────
+  ai-traffic-service:
+    <<: *ai-common
+    container_name: railway-ai-traffic-service
+    command: ["python", "-m", "uvicorn", "inference.app:app", "--host", "0.0.0.0", "--port", "8002", "--workers", "2"]
+    environment:
+      - API_PORT=8002
+      - SERVICE_ROLE=traffic-predictor
+      - TRAFFIC_MODEL_PATH=/app/ai-models/models/traffic_model.pkl
+      - DATABASE_URL=postgresql://ai_service:ai_password@railway-postgres:5432/railway_maintenance
+    ports:
+      - "8002:8002"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8002/api/v1/health || exit 1"]
+      interval: 20s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
+  # ── 5. AI Maintenance Block Optimizer Service ────────────────────────────────
+  ai-optimizer-service:
+    <<: *ai-common
+    container_name: railway-ai-optimizer-service
+    command: ["python", "-m", "uvicorn", "inference.app:app", "--host", "0.0.0.0", "--port", "8003", "--workers", "2"]
+    environment:
+      - API_PORT=8003
+      - SERVICE_ROLE=block-optimizer
+      - DATABASE_URL=postgresql://ai_service:ai_password@railway-postgres:5432/railway_maintenance
+    ports:
+      - "8003:8003"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8003/api/v1/health || exit 1"]
+      interval: 20s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
+  # ── 6. Unified AI Gateway Microservice ───────────────────────────────────────
+  ai-gateway-service:
+    <<: *ai-common
+    container_name: railway-ai-gateway-service
+    command: ["python", "-m", "uvicorn", "inference.app:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "4"]
+    environment:
+      - API_PORT=8000
+      - SERVICE_ROLE=unified-gateway
+      - DATABASE_URL=postgresql://ai_service:ai_password@railway-postgres:5432/railway_maintenance
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8000/api/v1/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 10s

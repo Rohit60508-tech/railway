@@ -1,0 +1,7 @@
+observation_id,inspection_id,work_order_id,severity,description,status,due_date,owner
+OBS-003,INSP-003,WO-TMS-2026-0003,HIGH,Documentation / quality observation,OPEN,2026-09-22,Maintenance Cell
+OBS-010,INSP-010,WO-TMS-2026-0010,MEDIUM,Documentation / quality observation,OPEN,2026-09-20,Maintenance Cell
+OBS-017,INSP-017,WO-TMS-2026-0017,HIGH,Documentation / quality observation,OPEN,2026-09-19,Maintenance Cell
+OBS-020,INSP-020,WO-TMS-2026-0020,LOW,Documentation / quality observation,OPEN,2026-09-22,Maintenance Cell
+OBS-024,INSP-024,WO-TMS-2026-0024,MEDIUM,Documentation / quality observation,OPEN,2026-09-18,Maintenance Cell
+OBS-035,INSP-035,WO-TDMS-2026-0035,LOW,Documentation / quality observation,OPEN,2026-09-20,Maintenance Cell

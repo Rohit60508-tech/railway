@@ -1,0 +1,361 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: railway-ai
+  labels:
+    app.kubernetes.io/name: railway-ai-platform
+    app.kubernetes.io/part-of: indian-railways-maintenance
+
+---
+# ── 1. Database Credentials & Secrets ─────────────────────────────────────────
+apiVersion: v1
+kind: Secret
+metadata:
+  name: ai-service-secret
+  namespace: railway-ai
+  labels:
+    app.kubernetes.io/name: ai-service-secret
+type: Opaque
+stringData:
+  DATABASE_URL: "postgresql://ai_service:RailAI_Prod_2026!@postgres-service.railway-ai.svc.cluster.local:5432/railway_maintenance"
+  DB_USER: "ai_service"
+  DB_PASSWORD: "RailAI_Prod_2026!"
+  JWT_SECRET: "railway-ai-cryptographic-signing-key-production-2026"
+
+---
+# ── 2. AI Global & Service Configuration Map ─────────────────────────────────
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ai-service-config
+  namespace: railway-ai
+  labels:
+    app.kubernetes.io/name: ai-service-config
+data:
+  LOG_LEVEL: "INFO"
+  DEFAULT_TIMEZONE: "Asia/Kolkata"
+  DATABASE_BATCH_SIZE: "1000"
+  CACHE_EXPIRY_MINUTES: "60"
+  MAX_CONCURRENT_PREDICTIONS: "20"
+  MODEL_REFRESH_INTERVAL_MINUTES: "30"
+  ENABLE_CACHING: "true"
+  LOG_PREDICTIONS: "true"
+  API_HOST: "0.0.0.0"
+  API_PORT: "8000"
+  PRIORITY_MODEL_PATH: "/app/models/priority_model.pkl"
+  TRAFFIC_MODEL_PATH: "/app/models/traffic_model.pkl"
+
+---
+# ── 3. Persistent Volume Claim for Shared Trained Models ─────────────────────
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ai-models-pvc
+  namespace: railway-ai
+  labels:
+    app.kubernetes.io/name: ai-models-pvc
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 20Gi
+  storageClassName: standard
+
+---
+# ── 4. AI Priority Classification Deployment ─────────────────────────────────
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ai-priority-deployment
+  namespace: railway-ai
+  labels:
+    app: ai-priority-service
+    tier: inference-worker
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: ai-priority-service
+  template:
+    metadata:
+      labels:
+        app: ai-priority-service
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8000"
+        prometheus.io/path: "/metrics"
+    spec:
+      containers:
+        - name: ai-priority-worker
+          image: cris-registry.railnet.gov.in/railway-ai/ai-service:v1.0.0
+          imagePullPolicy: IfNotPresent
+          command: ["python", "-m", "uvicorn", "inference.app:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "2"]
+          ports:
+            - containerPort: 8000
+              name: http
+          envFrom:
+            - configMapRef:
+                name: ai-service-config
+            - secretRef:
+                name: ai-service-secret
+          env:
+            - name: SERVICE_ROLE
+              value: "priority-engine"
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+            limits:
+              cpu: "1000m"
+              memory: "1536Mi"
+          livenessProbe:
+            httpGet:
+              path: /api/v1/health/live
+              port: 8000
+            initialDelaySeconds: 20
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /api/v1/health/ready
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 2
+          volumeMounts:
+            - name: shared-models
+              mountPath: /app/models
+      volumes:
+        - name: shared-models
+          persistentVolumeClaim:
+            claimName: ai-models-pvc
+
+---
+# ── 5. AI Traffic Predictor Deployment ───────────────────────────────────────
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ai-traffic-deployment
+  namespace: railway-ai
+  labels:
+    app: ai-traffic-service
+    tier: inference-worker
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: ai-traffic-service
+  template:
+    metadata:
+      labels:
+        app: ai-traffic-service
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8000"
+        prometheus.io/path: "/metrics"
+    spec:
+      containers:
+        - name: ai-traffic-worker
+          image: cris-registry.railnet.gov.in/railway-ai/ai-service:v1.0.0
+          imagePullPolicy: IfNotPresent
+          command: ["python", "-m", "uvicorn", "inference.app:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "2"]
+          ports:
+            - containerPort: 8000
+              name: http
+          envFrom:
+            - configMapRef:
+                name: ai-service-config
+            - secretRef:
+                name: ai-service-secret
+          env:
+            - name: SERVICE_ROLE
+              value: "traffic-predictor"
+          resources:
+            requests:
+              cpu: "300m"
+              memory: "512Mi"
+            limits:
+              cpu: "1200m"
+              memory: "2048Mi"
+          livenessProbe:
+            httpGet:
+              path: /api/v1/health/live
+              port: 8000
+            initialDelaySeconds: 20
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /api/v1/health/ready
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 2
+          volumeMounts:
+            - name: shared-models
+              mountPath: /app/models
+      volumes:
+        - name: shared-models
+          persistentVolumeClaim:
+            claimName: ai-models-pvc
+
+---
+# ── 6. AI Maintenance Block Optimizer Deployment ─────────────────────────────
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ai-optimizer-deployment
+  namespace: railway-ai
+  labels:
+    app: ai-optimizer-service
+    tier: solver-worker
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: ai-optimizer-service
+  template:
+    metadata:
+      labels:
+        app: ai-optimizer-service
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8000"
+        prometheus.io/path: "/metrics"
+    spec:
+      containers:
+        - name: ai-optimizer-worker
+          image: cris-registry.railnet.gov.in/railway-ai/ai-service:v1.0.0
+          imagePullPolicy: IfNotPresent
+          command: ["python", "-m", "uvicorn", "inference.app:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "2"]
+          ports:
+            - containerPort: 8000
+              name: http
+          envFrom:
+            - configMapRef:
+                name: ai-service-config
+            - secretRef:
+                name: ai-service-secret
+          env:
+            - name: SERVICE_ROLE
+              value: "block-optimizer"
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "1024Mi"
+            limits:
+              cpu: "2500m"
+              memory: "3072Mi"
+          livenessProbe:
+            httpGet:
+              path: /api/v1/health/live
+              port: 8000
+            initialDelaySeconds: 25
+            periodSeconds: 15
+            timeoutSeconds: 8
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /api/v1/health/ready
+              port: 8000
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            timeoutSeconds: 4
+            failureThreshold: 2
+          volumeMounts:
+            - name: shared-models
+              mountPath: /app/models
+      volumes:
+        - name: shared-models
+          persistentVolumeClaim:
+            claimName: ai-models-pvc
+
+---
+# ── 7. Horizontal Pod Autoscalers (HPA) ───────────────────────────────────────
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: ai-priority-hpa
+  namespace: railway-ai
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: ai-priority-deployment
+  minReplicas: 2
+  maxReplicas: 8
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 80
+
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: ai-traffic-hpa
+  namespace: railway-ai
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: ai-traffic-deployment
+  minReplicas: 2
+  maxReplicas: 6
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 75
+
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: ai-optimizer-hpa
+  namespace: railway-ai
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: ai-optimizer-deployment
+  minReplicas: 2
+  maxReplicas: 6
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 80

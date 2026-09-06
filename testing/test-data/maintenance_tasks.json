@@ -1,0 +1,46 @@
+[
+  {
+    "task_id": "TASK-CIVIL-01",
+    "section_id": "NDLS-CNB-UP",
+    "department": "CIVIL",
+    "description": "Deep screening and ballast tamping KM 120-125",
+    "duration_minutes": 150,
+    "priority_score": 92.5,
+    "required_track_closure": true,
+    "required_power_block": false,
+    "gang_id": "GANG-CIVIL-12"
+  },
+  {
+    "task_id": "TASK-TRD-01",
+    "section_id": "NDLS-CNB-UP",
+    "department": "TRD_OHE",
+    "description": "OHE contact wire dropper replacement KM 122-124",
+    "duration_minutes": 120,
+    "priority_score": 85.0,
+    "required_track_closure": false,
+    "required_power_block": true,
+    "gang_id": "GANG-TRD-04"
+  },
+  {
+    "task_id": "TASK-SIG-01",
+    "section_id": "NDLS-CNB-UP",
+    "department": "SIGNAL_TELECOM",
+    "description": "Axle counter sensor calibration at Aligarh Outer",
+    "duration_minutes": 60,
+    "priority_score": 72.0,
+    "required_track_closure": true,
+    "required_power_block": false,
+    "gang_id": "GANG-SIG-02"
+  },
+  {
+    "task_id": "TASK-CIVIL-02",
+    "section_id": "NDLS-AGC-DN",
+    "department": "CIVIL",
+    "description": "Thermit weld renewal at Palwal KM 45",
+    "duration_minutes": 90,
+    "priority_score": 96.0,
+    "required_track_closure": true,
+    "required_power_block": false,
+    "gang_id": "GANG-CIVIL-08"
+  }
+]

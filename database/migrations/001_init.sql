@@ -1,0 +1,1 @@
+﻿-- Initial migration: create blocks, trains, alerts tables

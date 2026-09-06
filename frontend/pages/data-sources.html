@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Data Sources — Indian Railways AI Maintenance Platform</title>
+  <meta name="description" content="Interactive 3D visualization of all 15 data sources feeding the Integration Gateway of the Indian Railways AI Maintenance Orchestration Platform." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ── Reset & Base ──────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { width: 100%; height: 100%; overflow: hidden; background: #FAF6EE; }
+
+    :root {
+      --blue:   #0056b3;
+      --cyan:   #0056b3;
+      --green:  #059669;
+      --gold:   #d97706;
+      --purple: #003366;
+      --red:    #dc2626;
+      --white:  #0F172A;
+      --dim:    #64748b;
+      --card:   rgba(255,255,255,0.92);
+      --border: rgba(195,178,150,0.38);
+      --font:   'Inter', sans-serif;
+      --mono:   'JetBrains Mono', monospace;
+    }
+
+    body { font-family: var(--font); color: var(--white); }
+
+    /* ── Canvas ────────────────────────────────────────────────── */
+    #cv {
+      position: fixed; inset: 0; z-index: 0;
+      cursor: grab;
+    }
+    #cv:active { cursor: grabbing; }
+
+    /* ── Scanline overlay ──────────────────────────────────────── */
+    #scanlines {
+      position: fixed; inset: 0; z-index: 1; pointer-events: none;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,0,0,0.03) 2px,
+        rgba(0,0,0,0.03) 4px
+      );
+    }
+
+    /* ── Header ────────────────────────────────────────────────── */
+    #hdr {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 20;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 28px;
+      height: 58px;
+      background: linear-gradient(180deg, rgba(250,246,238,0.97) 60%, transparent);
+      border-bottom: 1px solid rgba(195,178,150,0.3);
+      pointer-events: none;
+    }
+    .hdr-left { display: flex; align-items: center; gap: 12px; }
+    .hdr-logo {
+      width: 34px; height: 34px; border-radius: 8px;
+      background: linear-gradient(135deg, #001f40 0%, #003366 100%);
+      border: 1.5px solid var(--blue);
+      display: flex; align-items: center; justify-content: center;
+      font: 700 11px/1 var(--mono); color: var(--blue); letter-spacing: 0.3px;
+    }
+    .hdr-text { line-height: 1.25; }
+    .hdr-title { font-size: 14px; font-weight: 600; }
+    .hdr-sub   { font-size: 10px; color: var(--dim); }
+    .hdr-right {
+      display: flex; align-items: center; gap: 20px;
+    }
+    .hdr-stat {
+      font-size: 11px; color: var(--dim); font-family: var(--mono);
+      display: flex; align-items: center; gap: 6px;
+    }
+    .hdr-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 6px var(--green);
+      animation: blink 2s ease-in-out infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+    /* ── Right side-panel ──────────────────────────────────────── */
+    #side {
+      position: fixed; top: 70px; right: 20px; bottom: 20px; z-index: 20;
+      width: 300px;
+      display: flex; flex-direction: column; gap: 12px;
+      pointer-events: none;
+    }
+
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px 18px;
+      backdrop-filter: blur(24px) saturate(160%);
+      -webkit-backdrop-filter: blur(24px) saturate(160%);
+    }
+    .panel-title {
+      font-size: 9px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 1.6px;
+      color: var(--dim);
+      margin-bottom: 14px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .panel-title::before {
+      content: '';
+      display: block; width: 14px; height: 2px;
+      background: var(--blue);
+      border-radius: 2px;
+    }
+
+    /* Node detail card */
+    #detail { pointer-events: none; }
+    #detail.hidden { opacity: 0.3; }
+    #detail.active { pointer-events: auto; }
+
+    .detail-cat {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 9px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 1.4px; padding: 3px 10px; border-radius: 20px;
+      margin-bottom: 10px;
+    }
+    .detail-cat-dot { width: 6px; height: 6px; border-radius: 50%; }
+    .detail-name {
+      font-size: 20px; font-weight: 700; line-height: 1.1;
+      margin-bottom: 3px;
+    }
+    .detail-full { font-size: 11px; color: var(--dim); margin-bottom: 10px; }
+    .detail-desc { font-size: 12px; line-height: 1.6; color: #b8d4ee; }
+
+    .detail-meta {
+      display: grid; grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px; margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+    .meta-box { text-align: center; }
+    .meta-val  { font: 600 12px/1 var(--mono); margin-bottom: 3px; }
+    .meta-lbl  { font-size: 9px; color: var(--dim); text-transform: uppercase; letter-spacing: 0.8px; }
+
+    /* Throughput bars */
+    #throughput .bars { display: flex; flex-direction: column; gap: 6px; }
+    .tbar { display: flex; align-items: center; gap: 8px; font-size: 10px; color: var(--dim); }
+    .tbar-label { width: 56px; flex-shrink: 0; font-family: var(--mono); font-size: 9px; }
+    .tbar-track { flex: 1; height: 4px; background: rgba(255,255,255,0.06); border-radius: 2px; overflow: hidden; }
+    .tbar-fill  { height: 100%; border-radius: 2px; transition: width 0.6s ease; }
+    .tbar-val   { width: 36px; text-align: right; font-family: var(--mono); font-size: 9px; }
+
+    /* Legend */
+    #lgd .items { display: flex; flex-direction: column; gap: 7px; }
+    .lgd-row { display: flex; align-items: center; gap: 9px; font-size: 11px; cursor: pointer; transition: opacity 0.2s; }
+    .lgd-row:hover { opacity: 0.75; }
+    .lgd-swatch {
+      width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+      box-shadow: 0 0 8px currentColor;
+    }
+
+    /* ── Left controls ─────────────────────────────────────────── */
+    #ctrl {
+      position: fixed; top: 70px; left: 20px; z-index: 20;
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .ctrl-btn {
+      width: 38px; height: 38px; border-radius: 10px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      backdrop-filter: blur(20px);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; color: var(--dim); font-size: 16px;
+      transition: border-color 0.2s, color 0.2s, background 0.2s;
+      user-select: none;
+    }
+    .ctrl-btn:hover { border-color: var(--blue); color: var(--blue); background: rgba(0,200,255,0.08); }
+    .ctrl-btn.active { border-color: var(--blue); color: var(--blue); background: rgba(0,200,255,0.12); }
+
+    /* ── Bottom hint ───────────────────────────────────────────── */
+    #hint {
+      position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+      z-index: 20;
+      font-size: 10px; color: var(--dim); letter-spacing: 0.4px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px; padding: 6px 18px;
+      backdrop-filter: blur(12px);
+      animation: hintFade 6s ease 1s forwards;
+      pointer-events: none;
+    }
+    @keyframes hintFade { 0%,70%{opacity:1} 100%{opacity:0} }
+
+    /* ── Tooltip (near cursor) ─────────────────────────────────── */
+    #tip {
+      position: fixed; z-index: 30; pointer-events: none;
+      opacity: 0; transition: opacity 0.15s ease;
+    }
+    .tip-inner {
+      background: rgba(2,11,24,0.97);
+      border: 1px solid rgba(0,200,255,0.3);
+      border-radius: 10px; padding: 10px 14px;
+      font-size: 12px;
+      box-shadow: 0 4px 24px rgba(0,200,255,0.12);
+      white-space: nowrap;
+    }
+    .tip-name { font-weight: 700; margin-bottom: 2px; }
+    .tip-sub  { font-size: 10px; color: var(--dim); }
+  </style>
+</head>
+<body>
+
+<canvas id="cv"></canvas>
+<div id="scanlines"></div>
+
+<!-- Header -->
+<div id="hdr">
+  <div class="hdr-left">
+    <div class="hdr-logo">IR</div>
+    <div class="hdr-text">
+      <div class="hdr-title">Data Sources — Integration Gateway</div>
+      <div class="hdr-sub">Indian Railways AI Maintenance Orchestration Platform</div>
+    </div>
+  </div>
+  <div class="hdr-right">
+    <a href="admin-dashboard.html" style="color:#334155; text-decoration:none; font-size:12px; font-weight:600; padding:4px 10px; border-radius:4px; border:1px solid rgba(0,51,102,0.18); background:rgba(255,255,255,0.8);">Admin AI</a>
+    <a href="maintenance-dashboard.html" style="color:#334155; text-decoration:none; font-size:12px; font-weight:600; padding:4px 10px; border-radius:4px; border:1px solid rgba(0,51,102,0.18); background:rgba(255,255,255,0.8);">Work Orders</a>
+    <a href="control-office.html" style="color:#334155; text-decoration:none; font-size:12px; font-weight:600; padding:4px 10px; border-radius:4px; border:1px solid rgba(0,51,102,0.18); background:rgba(255,255,255,0.8);">Control Office</a>
+    <a href="surveillance-dashboard.html" style="color:#334155; text-decoration:none; font-size:12px; font-weight:600; padding:4px 10px; border-radius:4px; border:1px solid rgba(0,51,102,0.18); background:rgba(255,255,255,0.8);">Surveillance</a>
+    <a href="ai-model-management.html" style="color:#334155; text-decoration:none; font-size:12px; font-weight:600; padding:4px 10px; border-radius:4px; border:1px solid rgba(0,51,102,0.18); background:rgba(255,255,255,0.8);">AI Models</a>
+    <a href="../../index.html" style="color:#003366; text-decoration:none; font-size:12px; font-weight:700; padding:4px 10px; border-radius:4px; border:1px solid rgba(0,51,102,0.35); background:#FAF6EE;">Portal</a>
+    <div class="hdr-stat"><div class="hdr-dot"></div>Live</div>
+    <div class="hdr-stat" id="hdr-events">— ev/s</div>
+    <div class="hdr-stat" id="hdr-clock">—</div>
+  </div>
+</div>
+
+<!-- Left controls -->
+<div id="ctrl">
+  <div class="ctrl-btn active" id="btn-rotate" title="Toggle auto-rotate">⟳</div>
+  <div class="ctrl-btn" id="btn-reset"  title="Reset camera">⊙</div>
+  <div class="ctrl-btn" id="btn-flow"   title="Toggle data flow">⚡</div>
+</div>
+
+<!-- Right panel -->
+<div id="side">
+
+  <!-- Node detail -->
+  <div class="panel" id="detail" style="flex:0 0 auto">
+    <div class="panel-title">Node Detail</div>
+    <div class="detail-cat" id="d-cat" style="background:rgba(0,51,102,0.12);color:#003366">
+      <div class="detail-cat-dot" style="background:#003366"></div>
+      <span id="d-cat-text">—</span>
+    </div>
+    <div class="detail-name" id="d-name">Hover a node</div>
+    <div class="detail-full" id="d-full">to explore the data ecosystem</div>
+    <div class="detail-desc" id="d-desc" style="color:var(--dim)">
+      15 heterogeneous data sources converge in real-time at the AI Integration Gateway, powering predictive maintenance across 68,000 km of Indian Railways track.
+    </div>
+    <div class="detail-meta" id="d-meta" style="display:none">
+      <div class="meta-box">
+        <div class="meta-val" id="d-type">—</div>
+        <div class="meta-lbl">Type</div>
+      </div>
+      <div class="meta-box">
+        <div class="meta-val" id="d-freq">—</div>
+        <div class="meta-lbl">Frequency</div>
+      </div>
+      <div class="meta-box">
+        <div class="meta-val" id="d-dept">—</div>
+        <div class="meta-lbl">Dept</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Live throughput -->
+  <div class="panel" id="throughput" style="flex:0 0 auto">
+    <div class="panel-title">Data Throughput</div>
+    <div class="bars" id="thr-bars"></div>
+  </div>
+
+  <!-- Legend -->
+  <div class="panel" id="lgd" style="flex:0 0 auto">
+    <div class="panel-title">Categories</div>
+    <div class="items">
+      <div class="lgd-row" data-cat="CORE_IT">
+        <div class="lgd-swatch" style="background:#003366;color:#003366"></div>Core IT Systems
+      </div>
+      <div class="lgd-row" data-cat="INSPECTION">
+        <div class="lgd-swatch" style="background:#059669;color:#059669"></div>Inspection Systems
+      </div>
+      <div class="lgd-row" data-cat="IOT">
+        <div class="lgd-swatch" style="background:#D97706;color:#D97706"></div>IoT &amp; Sensors
+      </div>
+      <div class="lgd-row" data-cat="HUMAN">
+        <div class="lgd-swatch" style="background:#0056B3;color:#0056B3"></div>Human Reports
+      </div>
+      <div class="lgd-row" data-cat="GATEWAY">
+        <div class="lgd-swatch" style="background:#D9531E;color:#D9531E"></div>Integration Gateway
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Cursor tooltip -->
+<div id="tip">
+  <div class="tip-inner">
+    <div class="tip-name" id="tip-name">—</div>
+    <div class="tip-sub"  id="tip-sub">—</div>
+  </div>
+</div>
+
+<!-- Bottom hint -->
+<div id="hint">🖱 Drag to rotate &nbsp;·&nbsp; Scroll to zoom &nbsp;·&nbsp; Hover nodes for details</div>
+
+<!-- Three.js r134 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+
+<script>
+'use strict';
+
+// ═══════════════════════════════════════════════════════════════
+//  DATA DEFINITIONS
+// ═══════════════════════════════════════════════════════════════
+const CATS = {
+  CORE_IT:    { label: 'Core IT System',  hex: '#003366', num: 0x003366, bg: 'rgba(0,51,102,0.12)' },
+  INSPECTION: { label: 'Inspection',      hex: '#059669', num: 0x059669, bg: 'rgba(5,150,105,0.10)' },
+  IOT:        { label: 'IoT / Sensor',    hex: '#D97706', num: 0xD97706, bg: 'rgba(217,119,6,0.10)' },
+  HUMAN:      { label: 'Human Input',     hex: '#0056B3', num: 0x0056B3, bg: 'rgba(0,86,179,0.10)' },
+  GATEWAY:    { label: 'AI Gateway',      hex: '#D9531E', num: 0xD9531E, bg: 'rgba(217,83,30,0.12)' },
+};
+
+const NODES = [
+  // ── Outer ring: Core IT ──
+  { id:'tms',     label:'TMS',     full:'Train Management System',
+    cat:'CORE_IT', ring:1, idx:0,
+    desc:'Real-time train movement tracking and scheduling across the entire network. Provides live slot availability and headway data for block planning.',
+    type:'Enterprise', freq:'Real-time', dept:'Operations' },
+
+  { id:'smms',    label:'SMMS',    full:'Signal Maintenance Mgmt System',
+    cat:'CORE_IT', ring:1, idx:1,
+    desc:'Tracks relay interlockings, track circuits, point machines, and electronic interlocking telemetry. Identifies signal-induced speed restrictions.',
+    type:'Enterprise', freq:'Periodic', dept:'S&T' },
+
+  { id:'omms',    label:'OMMS',    full:'OHE Maintenance Mgmt System',
+    cat:'CORE_IT', ring:1, idx:2,
+    desc:'Manages the full defect lifecycle for Civil infrastructure — detection, assignment, rectification, and closure — with GPS-linked defect locations.',
+    type:'Enterprise', freq:'Hourly', dept:'Civil' },
+
+  { id:'coa',     label:'COA',     full:'Chart of Assets',
+    cat:'CORE_IT', ring:1, idx:3,
+    desc:'Master asset registry for all IR infrastructure — track, bridges, signals, OHE, and rolling stock — with age, specification, and geospatial data.',
+    type:'Master Data', freq:'Daily', dept:'All Depts' },
+
+  { id:'bdms',    label:'BDMS',    full:'Bridge Data Management System',
+    cat:'CORE_IT', ring:1, idx:4,
+    desc:'Stores bridge inspection records, hydraulic data, load ratings, and structural health assessments for all major bridges and culverts.',
+    type:'Enterprise', freq:'Daily', dept:'Civil' },
+
+  // ── Outer ring: Inspection Systems ──
+  { id:'usfd',    label:'USFD',    full:'Ultrasonic Flaw Detection',
+    cat:'INSPECTION', ring:1, idx:5,
+    desc:'Detects sub-surface rail flaws using pulse-echo ultrasonic technology. Survey results flag rail sections requiring immediate attention before fracture.',
+    type:'Inspection', freq:'Periodic', dept:'Civil' },
+
+  { id:'trc',     label:'TRC',     full:'Track Recording Car',
+    cat:'INSPECTION', ring:1, idx:6,
+    desc:'Automated measurement of track geometry — gauge, alignment, cross-level, twist, and unevenness — producing a Track Quality Index (TQI) per section.',
+    type:'Inspection', freq:'Monthly', dept:'Civil' },
+
+  { id:'oms',     label:'OMS',     full:'OHE Maintenance System',
+    cat:'INSPECTION', ring:1, idx:7,
+    desc:'Overhead Equipment maintenance tracking covering catenary wire, contact wire condition, mast health, and pantograph interaction for all electrified sections.',
+    type:'Enterprise', freq:'30 min', dept:'Electrical' },
+
+  { id:'itms',    label:'ITMS',    full:'Integrated Traction Mgmt System',
+    cat:'INSPECTION', ring:1, idx:8,
+    desc:'Monitors traction power supply, substation health, section load data, and fault events. Links automatically into maintenance work order generation.',
+    type:'SCADA-linked', freq:'Real-time', dept:'Electrical' },
+
+  // ── Inner ring: IoT & Sensors ──
+  { id:'patrol',  label:'Patrol',  full:'Digital Foot Patrol Reports',
+    cat:'IOT', ring:2, idx:0,
+    desc:'GPS-stamped field observations by trackmen — captured on mobile devices with photos and structured defect forms. Closes the last-mile inspection gap.',
+    type:'Mobile IoT', freq:'Per beat', dept:'Civil' },
+
+  { id:'drone',   label:'Drone',   full:'UAV Aerial Inspection',
+    cat:'IOT', ring:2, idx:1,
+    desc:'Drone imagery of hard-to-access assets — bridges, embankments, retaining walls. AI vision pipeline detects cracks, erosion, and OHE anomalies automatically.',
+    type:'UAV/Vision AI', freq:'Scheduled', dept:'Civil/Elec' },
+
+  { id:'scada',   label:'SCADA',   full:'Supervisory Control & Data Acquisition',
+    cat:'IOT', ring:2, idx:2,
+    desc:'Real-time feeds from trackside sensors, level crossings, substations, and remote points. Generates automated fault alerts feeding directly into the maintenance queue.',
+    type:'ICS/SCADA', freq:'Real-time', dept:'S&T/Elec' },
+
+  { id:'weather', label:'Weather', full:'IMD Weather Sensor Network',
+    cat:'IOT', ring:2, idx:3,
+    desc:'Meteorological data from IMD stations and trackside sensors — rainfall intensity, temperature, humidity, wind speed, and flood gauge readings affecting track conditions.',
+    type:'Environmental', freq:'Real-time', dept:'Operations' },
+
+  // ── Inner ring: Human ──
+  { id:'manual',  label:'Reports', full:'Manual Human Reports',
+    cat:'HUMAN', ring:2, idx:4,
+    desc:'Structured digital submissions from engineers, inspectors, and field supervisors — observation reports, emergency flagging, gang completion records, and safety sign-offs.',
+    type:'Human Input', freq:'Ad-hoc', dept:'All Depts' },
+
+  // ── Center: Gateway ──
+  { id:'gateway', label:'Integration\nGateway', full:'AI Integration Gateway',
+    cat:'GATEWAY', ring:0, idx:0,
+    desc:'Central intelligence hub: ingests and normalizes data from all 14 sources in real time, runs anomaly detection, powers the living digital twin, and feeds the AI Orchestration Engine.',
+    type:'Platform Core', freq:'< 5 min', dept:'Platform',
+    isGateway: true },
+];
+
+// ═══════════════════════════════════════════════════════════════
+//  THROUGHPUT BAR DATA
+// ═══════════════════════════════════════════════════════════════
+const THR_ITEMS = [
+  { label:'TMS',    pct:92, color:'#003366' },
+  { label:'SCADA',  pct:88, color:'#0056B3' },
+  { label:'ITMS',   pct:76, color:'#059669' },
+  { label:'Drone',  pct:55, color:'#D97706' },
+  { label:'Manual', pct:42, color:'#D9531E' },
+];
+
+(function buildThroughput() {
+  const bars = document.getElementById('thr-bars');
+  THR_ITEMS.forEach(item => {
+    const row = document.createElement('div');
+    row.className = 'tbar';
+    row.innerHTML = `
+      <span class="tbar-label">${item.label}</span>
+      <div class="tbar-track"><div class="tbar-fill" style="width:0%;background:${item.color}" data-pct="${item.pct}"></div></div>
+      <span class="tbar-val" style="color:${item.color}">${item.pct}%</span>`;
+    bars.appendChild(row);
+  });
+  // Animate bars in
+  setTimeout(() => {
+    document.querySelectorAll('.tbar-fill').forEach(f => {
+      f.style.width = f.dataset.pct + '%';
+    });
+  }, 500);
+})();
+
+// ═══════════════════════════════════════════════════════════════
+//  THREE.JS SCENE
+// ═══════════════════════════════════════════════════════════════
+const canvas = document.getElementById('cv');
+const W = () => window.innerWidth;
+const H = () => window.innerHeight;
+
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.setSize(W(), H());
+renderer.setClearColor(0x000000, 0);
+
+const scene = new THREE.Scene();
+scene.fog = new THREE.FogExp2(0x020b18, 0.016);
+
+const camera = new THREE.PerspectiveCamera(52, W() / H(), 0.1, 300);
+camera.position.set(0, 12, 42);
+camera.lookAt(0, 0, 0);
+
+// ── Lights ──────────────────────────────────────────────────────
+scene.add(new THREE.AmbientLight(0x8ab0cc, 0.6));
+
+const ptBlue   = new THREE.PointLight(0x00c8ff, 3, 60);  ptBlue.position.set(0, 10, 0);
+const ptGreen  = new THREE.PointLight(0x2dde78, 1.5, 50); ptGreen.position.set(-18, 4, 12);
+const ptPurple = new THREE.PointLight(0xb06cff, 1.5, 50); ptPurple.position.set(18, 4, -12);
+scene.add(ptBlue, ptGreen, ptPurple);
+
+// ── Background particles ─────────────────────────────────────────
+(function starfield() {
+  const geo = new THREE.BufferGeometry();
+  const n = 1200;
+  const pos = new Float32Array(n * 3);
+  const col = new Float32Array(n * 3);
+  for (let i = 0; i < n; i++) {
+    pos[i*3]   = (Math.random() - 0.5) * 300;
+    pos[i*3+1] = (Math.random() - 0.5) * 300;
+    pos[i*3+2] = (Math.random() - 0.5) * 300;
+    const c = new THREE.Color().setHSL(0.58 + Math.random() * 0.12, 0.7, 0.6);
+    col[i*3] = c.r; col[i*3+1] = c.g; col[i*3+2] = c.b;
+  }
+  geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  geo.setAttribute('color',    new THREE.BufferAttribute(col, 3));
+  const mat = new THREE.PointsMaterial({ size: 0.22, vertexColors: true, transparent: true, opacity: 0.55 });
+  scene.add(new THREE.Points(geo, mat));
+})();
+
+// ── Floor grid ────────────────────────────────────────────────────
+const grid = new THREE.GridHelper(80, 40, 0x00c8ff, 0x001428);
+grid.material.transparent = true; grid.material.opacity = 0.12;
+grid.position.y = -10;
+scene.add(grid);
+
+// ═══════════════════════════════════════════════════════════════
+//  ORBIT CONTROLS (inline)
+// ═══════════════════════════════════════════════════════════════
+const oc = (function(camera, el) {
+  let autoRotate = true;
+  const target = new THREE.Vector3();
+  const sph = new THREE.Spherical();
+  sph.setFromVector3(camera.position.clone().sub(target));
+  const dSph = new THREE.Spherical();
+  let scale = 1;
+  let dragging = false;
+  const rs = new THREE.Vector2(), re = new THREE.Vector2(), rd = new THREE.Vector2();
+
+  function autoAngle() { return (2 * Math.PI / 60 / 60) * 0.5; }
+
+  function update() {
+    if (autoRotate && !dragging) dSph.theta -= autoAngle();
+    sph.theta  += dSph.theta;
+    sph.phi    += dSph.phi;
+    sph.phi = Math.max(0.15, Math.min(Math.PI * 0.8, sph.phi));
+    sph.radius = Math.max(18, Math.min(75, sph.radius * scale));
+    dSph.theta *= 0.93; dSph.phi *= 0.93; scale = 1;
+    const off = new THREE.Vector3().setFromSpherical(sph);
+    camera.position.copy(target).add(off);
+    camera.lookAt(target);
+  }
+
+  el.addEventListener('mousedown', e => { dragging = true; rs.set(e.clientX, e.clientY); });
+  window.addEventListener('mousemove', e => {
+    if (!dragging) return;
+    re.set(e.clientX, e.clientY);
+    rd.subVectors(re, rs).multiplyScalar(0.005);
+    dSph.theta -= rd.x; dSph.phi -= rd.y;
+    rs.copy(re);
+  });
+  window.addEventListener('mouseup', () => { dragging = false; });
+  el.addEventListener('wheel', e => { scale *= e.deltaY > 0 ? 1.1 : 0.9; }, { passive: true });
+  el.addEventListener('touchstart', e => { if (e.touches.length===1){ dragging=true; rs.set(e.touches[0].clientX, e.touches[0].clientY); }}, {passive:true});
+  el.addEventListener('touchmove',  e => {
+    if (!dragging || e.touches.length!==1) return;
+    re.set(e.touches[0].clientX, e.touches[0].clientY);
+    rd.subVectors(re, rs).multiplyScalar(0.005);
+    dSph.theta -= rd.x; dSph.phi -= rd.y;
+    rs.copy(re);
+  }, {passive:true});
+  el.addEventListener('touchend', () => { dragging = false; });
+
+  return {
+    update,
+    setAutoRotate: v => { autoRotate = v; },
+    getAutoRotate: () => autoRotate,
+    resetCamera: () => {
+      sph.set(42, Math.PI/3.5, Math.PI/6);
+      dSph.set(0,0,0);
+    },
+  };
+})(camera, canvas);
+
+// ═══════════════════════════════════════════════════════════════
+//  NODE POSITIONS
+// ═══════════════════════════════════════════════════════════════
+function nodePosition(node) {
+  if (node.isGateway) return new THREE.Vector3(0, 0, 0);
+  const outerCount = NODES.filter(n => n.ring === 1).length;  // 9
+  const innerCount = NODES.filter(n => n.ring === 2).length;  // 5
+  if (node.ring === 1) {
+    const a = (node.idx / outerCount) * Math.PI * 2 - Math.PI / 2;
+    const r = 17;
+    return new THREE.Vector3(Math.cos(a) * r, Math.sin(a * 0.35) * 3.5, Math.sin(a) * r);
+  }
+  if (node.ring === 2) {
+    const a = (node.idx / innerCount) * Math.PI * 2 - Math.PI / 2;
+    const r = 8.5;
+    return new THREE.Vector3(Math.cos(a) * r, Math.sin(a * 0.5) * 2, Math.sin(a) * r);
+  }
+  return new THREE.Vector3();
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  BUILD NODE MESHES
+// ═══════════════════════════════════════════════════════════════
+const meshes = [];
+const meshByNodeId = {};
+const basePositions = {};
+
+function makeLabel(text, hex, big) {
+  const lines = text.split('\n');
+  const W = 256, H = big ? 80 : 60;
+  const c = document.createElement('canvas');
+  c.width = W; c.height = H;
+  const ctx = c.getContext('2d');
+  const fs = big ? 44 : 34;
+  ctx.font = `700 ${fs}px Inter, sans-serif`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.shadowColor = hex;
+  ctx.shadowBlur = 20;
+  ctx.fillStyle = '#ffffff';
+  if (lines.length === 1) {
+    ctx.fillText(text, W/2, H/2);
+  } else {
+    lines.forEach((l, i) => ctx.fillText(l, W/2, H/2 - 14 + i * 28));
+  }
+  const tex = new THREE.CanvasTexture(c);
+  const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, depthTest: false }));
+  sp.userData.isLabel = true;
+  return sp;
+}
+
+NODES.forEach(node => {
+  const cat = CATS[node.cat];
+  const pos = nodePosition(node);
+  basePositions[node.id] = pos.clone();
+
+  // Geometry
+  let geo;
+  if (node.isGateway) {
+    geo = new THREE.IcosahedronGeometry(2.4, 3);
+  } else if (node.cat === 'IOT') {
+    geo = new THREE.OctahedronGeometry(0.85, 0);
+  } else if (node.cat === 'HUMAN') {
+    geo = new THREE.TetrahedronGeometry(1.0, 0);
+  } else {
+    geo = new THREE.SphereGeometry(0.9, 22, 22);
+  }
+
+  const mat = new THREE.MeshPhongMaterial({
+    color:             cat.num,
+    emissive:          cat.num,
+    emissiveIntensity: node.isGateway ? 0.55 : 0.28,
+    shininess:         150,
+    transparent:       true,
+    opacity:           0.93,
+  });
+
+  const mesh = new THREE.Mesh(geo, mat);
+  mesh.position.copy(pos);
+  mesh.userData = { node, cat, baseEmissive: node.isGateway ? 0.55 : 0.28 };
+  scene.add(mesh);
+  meshes.push(mesh);
+  meshByNodeId[node.id] = mesh;
+
+  // Shadow disc under node
+  if (!node.isGateway) {
+    const disc = new THREE.Mesh(
+      new THREE.CircleGeometry(1.0, 32),
+      new THREE.MeshBasicMaterial({ color: cat.num, transparent: true, opacity: 0.12, depthWrite: false })
+    );
+    disc.rotation.x = -Math.PI / 2;
+    disc.position.copy(pos);
+    disc.position.y -= 1.1;
+    disc.userData.shadow = true;
+    scene.add(disc);
+  }
+
+  // Gateway orbit rings
+  if (node.isGateway) {
+    [3.6, 5.2, 7.0].forEach((rad, ri) => {
+      const ring = new THREE.Mesh(
+        new THREE.TorusGeometry(rad, 0.06, 8, 64),
+        new THREE.MeshBasicMaterial({ color: cat.num, transparent: true, opacity: 0.35 - ri * 0.08 })
+      );
+      ring.rotation.x = Math.PI / 2 + ri * 0.3;
+      ring.userData.orbitRing = ri;
+      scene.add(ring);
+    });
+  }
+
+  // Label sprite
+  const sp = makeLabel(node.label, cat.hex, node.isGateway);
+  const sz = node.isGateway ? [5.2, 2.2] : [3.6, 1.4];
+  sp.scale.set(...sz, 1);
+  sp.position.copy(pos);
+  sp.position.y += node.isGateway ? 3.6 : 1.8;
+  scene.add(sp);
+});
+
+// ═══════════════════════════════════════════════════════════════
+//  CONNECTION CURVES + PACKETS
+// ═══════════════════════════════════════════════════════════════
+const connections = [];
+const packets     = [];
+let flowEnabled   = true;
+
+const GW_POS = new THREE.Vector3(0, 0, 0);
+
+NODES.forEach(node => {
+  if (node.isGateway) return;
+  const cat = CATS[node.cat];
+  const srcPos = basePositions[node.id].clone();
+
+  // Build CatmullRom with a mid-arc control point
+  const mid = new THREE.Vector3(
+    (srcPos.x + GW_POS.x) * 0.5 + (Math.random() - 0.5) * 4,
+    Math.max(srcPos.y, GW_POS.y) + 3 + Math.random() * 3,
+    (srcPos.z + GW_POS.z) * 0.5 + (Math.random() - 0.5) * 4
+  );
+  const curve = new THREE.CatmullRomCurve3([srcPos, mid, GW_POS]);
+
+  // Line tube
+  const tubePts = curve.getPoints(64);
+  const lineGeo = new THREE.BufferGeometry().setFromPoints(tubePts);
+  const lineMat = new THREE.LineBasicMaterial({
+    color: cat.num, transparent: true, opacity: 0.22,
+  });
+  const line = new THREE.Line(lineGeo, lineMat);
+  scene.add(line);
+  connections.push({ line, lineMat, curve, id: node.id, cat });
+
+  // 2 packets per connection
+  for (let p = 0; p < 2; p++) {
+    const pGeo = new THREE.SphereGeometry(0.15, 8, 8);
+    const pMat = new THREE.MeshBasicMaterial({ color: cat.num, transparent: true, opacity: 0.0 });
+    const pMesh = new THREE.Mesh(pGeo, pMat);
+    pMesh.userData = {
+      curve,
+      t: (p * 0.5 + Math.random() * 0.4) % 1,
+      speed: 0.004 + Math.random() * 0.003,
+      srcId: node.id,
+    };
+    scene.add(pMesh);
+    packets.push(pMesh);
+  }
+});
+
+// ═══════════════════════════════════════════════════════════════
+//  RAYCASTING / INTERACTION
+// ═══════════════════════════════════════════════════════════════
+const raycaster = new THREE.Raycaster();
+raycaster.params.Points = { threshold: 0.5 };
+const mouse = new THREE.Vector2(-9999, -9999);
+let hovered = null;
+
+const tooltip  = document.getElementById('tip');
+const tipName  = document.getElementById('tip-name');
+const tipSub   = document.getElementById('tip-sub');
+
+const dCat  = document.getElementById('d-cat');
+const dCatT = document.getElementById('d-cat-text');
+const dName = document.getElementById('d-name');
+const dFull = document.getElementById('d-full');
+const dDesc = document.getElementById('d-desc');
+const dMeta = document.getElementById('d-meta');
+const dType = document.getElementById('d-type');
+const dFreq = document.getElementById('d-freq');
+const dDept = document.getElementById('d-dept');
+
+function showDetail(node, cat) {
+  dCat.style.background = cat.bg;
+  dCat.style.color = cat.hex;
+  dCatT.textContent = cat.label;
+  document.querySelector('#d-cat .detail-cat-dot').style.background = cat.hex;
+  dName.textContent = node.label.replace('\n', ' ');
+  dName.style.color = cat.hex;
+  dFull.textContent = node.full;
+  dDesc.textContent = node.desc;
+  dDesc.style.color = '#b8d4ee';
+  dMeta.style.display = 'grid';
+  dType.textContent = node.type;
+  dFreq.textContent = node.freq;
+  dDept.textContent = node.dept;
+}
+function clearDetail() {
+  dCatT.textContent = '—';
+  dCat.style.background = 'rgba(0,51,102,0.08)';
+  dCat.style.color = '#003366';
+  document.querySelector('#d-cat .detail-cat-dot').style.background = '#003366';
+  dName.textContent = 'Hover a node';
+  dName.style.color = '';
+  dFull.textContent = 'to explore the data ecosystem';
+  dDesc.textContent = '15 heterogeneous data sources converge in real-time at the AI Integration Gateway, powering predictive maintenance across 68,000 km of Indian Railways track.';
+  dDesc.style.color = 'var(--dim)';
+  dMeta.style.display = 'none';
+}
+
+canvas.addEventListener('mousemove', e => {
+  mouse.x =  (e.clientX / W()) * 2 - 1;
+  mouse.y = -(e.clientY / H()) * 2 + 1;
+
+  raycaster.setFromCamera(mouse, camera);
+  const hits = raycaster.intersectObjects(meshes, false);
+
+  if (hits.length) {
+    const m = hits[0].object;
+    if (m !== hovered) {
+      if (hovered) {
+        hovered.material.emissiveIntensity = hovered.userData.baseEmissive;
+        hovered.material.opacity = 0.93;
+      }
+      hovered = m;
+      m.material.emissiveIntensity = 1.0;
+      m.material.opacity = 1.0;
+      canvas.style.cursor = 'pointer';
+      showDetail(m.userData.node, m.userData.cat);
+
+      // Highlight connections
+      connections.forEach(c => {
+        c.lineMat.opacity = c.id === m.userData.node.id ? 0.85 : 0.07;
+      });
+      packets.forEach(p => {
+        p.material.opacity = (p.userData.srcId === m.userData.node.id) ? 0.95 : 0.0;
+      });
+    }
+    // Cursor tooltip
+    tipName.textContent = m.userData.node.label.replace('\n', ' ');
+    tipSub.textContent  = m.userData.node.full;
+    tipName.style.color = m.userData.cat.hex;
+    let tx = e.clientX + 18, ty = e.clientY - 38;
+    if (tx + 280 > W()) tx = e.clientX - 298;
+    if (ty < 0) ty = e.clientY + 18;
+    tooltip.style.left    = tx + 'px';
+    tooltip.style.top     = ty + 'px';
+    tooltip.style.opacity = '1';
+  } else {
+    if (hovered) {
+      hovered.material.emissiveIntensity = hovered.userData.baseEmissive;
+      hovered.material.opacity = 0.93;
+      hovered = null;
+      canvas.style.cursor = 'grab';
+      clearDetail();
+      connections.forEach(c => { c.lineMat.opacity = 0.22; });
+      packets.forEach(p => { p.material.opacity = 0.0; });
+    }
+    tooltip.style.opacity = '0';
+  }
+});
+
+canvas.addEventListener('mouseleave', () => {
+  tooltip.style.opacity = '0';
+  if (hovered) {
+    hovered.material.emissiveIntensity = hovered.userData.baseEmissive;
+    hovered.material.opacity = 0.93;
+    hovered = null;
+    clearDetail();
+    connections.forEach(c => { c.lineMat.opacity = 0.22; });
+    packets.forEach(p => { p.material.opacity = 0.0; });
+  }
+});
+
+// ═══════════════════════════════════════════════════════════════
+//  CONTROLS
+// ═══════════════════════════════════════════════════════════════
+const btnRotate = document.getElementById('btn-rotate');
+const btnReset  = document.getElementById('btn-reset');
+const btnFlow   = document.getElementById('btn-flow');
+
+btnRotate.addEventListener('click', () => {
+  const nr = !oc.getAutoRotate();
+  oc.setAutoRotate(nr);
+  btnRotate.classList.toggle('active', nr);
+});
+btnReset.addEventListener('click', () => oc.resetCamera());
+btnFlow.addEventListener('click', () => {
+  flowEnabled = !flowEnabled;
+  btnFlow.classList.toggle('active', flowEnabled);
+  packets.forEach(p => { if (!flowEnabled) p.material.opacity = 0; });
+});
+btnFlow.classList.add('active');
+
+// Legend row click: highlight category
+document.querySelectorAll('.lgd-row').forEach(row => {
+  row.addEventListener('click', () => {
+    const cat = row.dataset.cat;
+    meshes.forEach(m => {
+      if (m.userData.node && !m.userData.node.isGateway) {
+        const match = m.userData.node.cat === cat;
+        m.material.emissiveIntensity = match ? 0.85 : 0.08;
+        m.material.opacity = match ? 1.0 : 0.35;
+      }
+    });
+    connections.forEach(c => { c.lineMat.opacity = c.cat.label === CATS[cat].label ? 0.7 : 0.06; });
+    setTimeout(() => {
+      meshes.forEach(m => {
+        if (m.userData.node && !m.userData.node.isGateway) {
+          m.material.emissiveIntensity = m.userData.baseEmissive;
+          m.material.opacity = 0.93;
+        }
+      });
+      connections.forEach(c => { c.lineMat.opacity = 0.22; });
+    }, 2000);
+  });
+});
+
+// ═══════════════════════════════════════════════════════════════
+//  LIVE STATS
+// ═══════════════════════════════════════════════════════════════
+setInterval(() => {
+  document.getElementById('hdr-events').textContent =
+    (2200 + Math.floor(Math.random() * 600)).toLocaleString() + ' ev/s';
+}, 1400);
+
+setInterval(() => {
+  document.getElementById('hdr-clock').textContent =
+    new Date().toLocaleTimeString('en-IN', { hour:'2-digit', minute:'2-digit', second:'2-digit' });
+}, 1000);
+document.getElementById('hdr-clock').textContent =
+  new Date().toLocaleTimeString('en-IN', { hour:'2-digit', minute:'2-digit', second:'2-digit' });
+
+// Animate throughput bars slightly
+setInterval(() => {
+  document.querySelectorAll('.tbar-fill').forEach(f => {
+    const base = parseInt(f.dataset.pct);
+    f.style.width = (base + Math.random() * 6 - 3) + '%';
+  });
+}, 2000);
+
+// ═══════════════════════════════════════════════════════════════
+//  ANIMATION LOOP
+// ═══════════════════════════════════════════════════════════════
+const clock = new THREE.Clock();
+
+function animate() {
+  requestAnimationFrame(animate);
+  const t = clock.getElapsedTime();
+
+  oc.update();
+
+  // Float nodes
+  meshes.forEach(m => {
+    const nd = m.userData.node;
+    if (!nd || nd.isGateway) return;
+    const bp = basePositions[nd.id];
+    const phase = nd.id.charCodeAt(0) * 0.3;
+    m.position.y = bp.y + Math.sin(t * 0.7 + phase) * 0.35;
+    m.rotation.y += 0.008;
+    m.rotation.x += 0.003;
+  });
+
+  // Gateway animate
+  const gw = meshByNodeId['gateway'];
+  if (gw) {
+    gw.rotation.y += 0.01;
+    gw.rotation.x += 0.004;
+    gw.material.emissiveIntensity = 0.4 + Math.sin(t * 2.2) * 0.25;
+  }
+  ptBlue.intensity = 2.5 + Math.sin(t * 2.8) * 0.8;
+
+  // Orbit rings
+  scene.children.forEach(obj => {
+    if (obj.userData && obj.userData.orbitRing !== undefined) {
+      const ri = obj.userData.orbitRing;
+      obj.rotation.z = t * (0.4 + ri * 0.15) * (ri % 2 === 0 ? 1 : -1);
+      obj.rotation.x = Math.PI / 2 + ri * 0.3 + Math.sin(t * 0.5 + ri) * 0.1;
+      obj.material.opacity = 0.25 + Math.sin(t * 1.5 + ri * 1.2) * 0.12;
+    }
+  });
+
+  // Data packets
+  if (flowEnabled) {
+    packets.forEach(p => {
+      p.userData.t = (p.userData.t + p.userData.speed) % 1;
+      const pt = p.userData.curve.getPoint(p.userData.t);
+      p.position.copy(pt);
+      // Fade in from source, fade out into gateway
+      const tt = p.userData.t;
+      if (!hovered || p.userData.srcId === hovered?.userData?.node?.id) {
+        p.material.opacity = tt < 0.1 ? tt * 9 : tt > 0.88 ? (1 - tt) * 8.3 : 0.9;
+      }
+    });
+  }
+
+  // Connection line pulse
+  if (!hovered) {
+    connections.forEach((c, i) => {
+      c.lineMat.opacity = 0.15 + Math.sin(t * 0.8 + i * 0.45) * 0.07;
+    });
+  }
+
+  renderer.render(scene, camera);
+}
+animate();
+
+// ═══════════════════════════════════════════════════════════════
+//  RESIZE
+// ═══════════════════════════════════════════════════════════════
+window.addEventListener('resize', () => {
+  renderer.setSize(W(), H());
+  camera.aspect = W() / H();
+  camera.updateProjectionMatrix();
+});
+</script>
+</body>
+</html>

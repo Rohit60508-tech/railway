@@ -1,0 +1,92 @@
+# syntax=docker/dockerfile:1.4
+# ==============================================================================
+# Indian Railways Maintenance AI Platform - Microservices Dockerfile
+# Production-ready Python 3.11 image with ML dependencies:
+# pandas, numpy, scikit-learn, xgboost, google-ortools, fastapi, uvicorn
+# ==============================================================================
+
+# ── Stage 1: Base Builder & Dependency Cache ──────────────────────────────────
+FROM python:3.11-slim-bookworm AS builder
+
+# Prevent Python from writing .pyc files and enable unbuffered output
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1
+
+# Install system compilation headers and library dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    curl \
+    git \
+    libpq-dev \
+    gcc \
+    g++ \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create virtualenv for clean layer extraction
+RUN python -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
+# Install wheels
+COPY ai-models/requirements.txt /tmp/requirements.txt
+RUN pip install --upgrade pip setuptools wheel && \
+    pip install --no-cache-dir -r /tmp/requirements.txt
+
+# ── Stage 2: Final Runtime Image ──────────────────────────────────────────────
+FROM python:3.11-slim-bookworm AS runner
+
+LABEL maintainer="Indian Railways Centre for Railway Information Systems (CRIS)" \
+      platform="Indian Railways AI Maintenance Block Planning" \
+      version="1.0.0"
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PATH="/opt/venv/bin:$PATH" \
+    PYTHONPATH="/app/ai-models" \
+    API_HOST="0.0.0.0" \
+    API_PORT="8000" \
+    AI_ENV="production"
+
+# Install minimal runtime libraries required by psycopg2, ortools, and curl for healthcheck
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    libpq5 \
+    procps \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy virtual environment from builder stage
+COPY --from=builder /opt/venv /opt/venv
+
+# Create dedicated non-root application user and group
+RUN groupadd -g 10001 railwayai && \
+    useradd -u 10001 -g railwayai -s /bin/bash -m railwayai
+
+# Setup working directory structure
+WORKDIR /app
+
+# Prepare directories for application code, shared models, artifacts, and logs
+RUN mkdir -p /app/ai-models/logs \
+             /app/ai-models/models \
+             /app/ai-models/artifacts \
+             /app/ai-models/priority-engine/models \
+             /app/ai-models/traffic-predictor/models \
+             /app/ai-models/block-optimizer/models \
+    && chown -R railwayai:railwayai /app
+
+# Copy AI codebase into container
+COPY --chown=railwayai:railwayai ai-models /app/ai-models
+
+# Switch to non-root user
+USER railwayai
+
+# Expose standard API inference port
+EXPOSE 8000 5000 8001 8002 8003
+
+# Container healthcheck testing the unified health probe
+HEALTHCHECK --interval=30s --timeout=10s --start-period=15s --retries=3 \
+    CMD curl -f http://localhost:${API_PORT}/api/v1/health || exit 1
+
+# Default command: Launches the unified FastAPI inference application
+CMD ["python", "-m", "uvicorn", "inference.app:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "4", "--log-level", "info"]

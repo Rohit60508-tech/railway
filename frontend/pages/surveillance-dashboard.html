@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Surveillance & Inspection Center — Indian Railways AI</title>
+  <meta name="description" content="Indian Railways AI Maintenance Platform - Automated Track Surveillance, USFD, TRC, Drone, and Patrol Anomaly Ranking." />
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Orbitron:wght@500;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <!-- Auth guard (runs before page renders) -->
+  <script src="../components/auth-guard.js"></script>
+
+  <!-- Core Styles -->
+  <link rel="stylesheet" href="../styles/main.css" />
+
+  <!-- Shared Navigation -->
+  <script src="../components/SharedNav.js"></script>
+
+  <!-- AI Component Scripts -->
+  <script type="module" src="../components/PriorityScoreBadge.js"></script>
+  <script type="module" src="../components/AIExplanationCard.js"></script>
+  <script type="module" src="../components/TrafficImpactMeter.js"></script>
+  <script type="module" src="../components/SlotFeasibilityIndicator.js"></script>
+  <script type="module" src="../components/ConfidenceIndicator.js"></script>
+  <script type="module" src="../components/ManualOverrideModal.js"></script>
+
+  <style>
+    :root {
+      --bg-dark: #FAF6EE;
+      --card-bg: rgba(255, 255, 255, 0.92);
+      --border-cyan: rgba(195, 178, 150, 0.38);
+      --accent-cyan: #0056B3;
+      --accent-green: #059669;
+      --accent-gold: #D97706;
+      --accent-red: #DC2626;
+      --accent-purple: #003366;
+      --font-main: 'Calibri', 'Arial', sans-serif;
+      --font-mono: 'Calibri', 'Arial', sans-serif;
+      --font-display: 'Calibri', 'Arial', sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: radial-gradient(circle at 50% 0%, #FFFFFF 0%, #FAF6EE 100%);
+      color: #0F172A;
+      font-family: var(--font-main);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Header Bar ────────────────────────────────────────────── */
+    .surv-header {
+      background: rgba(250, 246, 238, 0.96);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-cyan);
+      box-shadow: 0 2px 12px rgba(70, 50, 30, 0.05);
+      height: 64px;
+      padding: 0 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .brand-logo {
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #003366, #0056B3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      box-shadow: 0 0 15px rgba(0, 51, 102, 0.2);
+    }
+    .brand-title {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #0F172A;
+      letter-spacing: 0.8px;
+    }
+    .brand-sub {
+      font-size: 0.72rem;
+      color: #64748B;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .header-nav {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .nav-pill {
+      color: #334155;
+      text-decoration: none;
+      font-size: 0.82rem;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 6px;
+      transition: all 0.2s;
+    }
+    .nav-pill:hover, .nav-pill.active {
+      color: #003366;
+      background: rgba(0, 51, 102, 0.08);
+      border: 1px solid rgba(0, 51, 102, 0.25);
+    }
+
+    /* ── Main Container ────────────────────────────────────────── */
+    .surv-container {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 28px 32px;
+    }
+
+    /* ── Inspection Streams Bar ────────────────────────────────── */
+    .streams-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    .stream-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-cyan);
+      border-radius: 10px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 4px 16px rgba(70, 50, 30, 0.05);
+    }
+    .stream-icon {
+      font-size: 1.6rem;
+    }
+    .stream-name {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #0F172A;
+    }
+    .stream-status {
+      font-size: 0.72rem;
+      color: #059669;
+      font-family: var(--font-mono);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    /* ── Section Title ─────────────────────────────────────────── */
+    .section-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .section-title {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      color: #0F172A;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* ── Inspection Cards ──────────────────────────────────────── */
+    .inspection-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 36px;
+    }
+
+    .inspection-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-cyan);
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 20px rgba(70, 50, 30, 0.06);
+      position: relative;
+      transition: all 0.2s;
+    }
+    .inspection-card.p1-critical {
+      border: 1px solid rgba(220, 38, 38, 0.35);
+      background: linear-gradient(90deg, rgba(220, 38, 38, 0.04) 0%, rgba(255, 255, 255, 0.95) 25%);
+      box-shadow: 0 4px 24px rgba(220, 38, 38, 0.06);
+    }
+
+    /* ── Explanation Tooltip Style ─────────────────────────────── */
+    .tooltip-container {
+      position: relative;
+      display: inline-flex;
+      cursor: help;
+    }
+    .tooltip-icon {
+      font-size: 0.82rem;
+      color: #003366;
+      margin-left: 4px;
+    }
+    .tooltip-bubble {
+      visibility: hidden;
+      opacity: 0;
+      width: 280px;
+      background: #0F172A;
+      border: 1px solid #003366;
+      color: #FAF6EE;
+      text-align: left;
+      border-radius: 8px;
+      padding: 10px 12px;
+      position: absolute;
+      z-index: 1000;
+      bottom: 125%;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.74rem;
+      line-height: 1.4;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+      transition: opacity 0.2s ease, visibility 0.2s ease;
+      pointer-events: none;
+    }
+    .tooltip-container:hover .tooltip-bubble {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    /* ── Audit Drawer ──────────────────────────────────────────── */
+    .audit-panel {
+      background: #FFFFFF;
+      border: 1px solid var(--border-cyan);
+      border-radius: 10px;
+      padding: 18px 22px;
+      margin-top: 24px;
+      box-shadow: 0 4px 16px rgba(70, 50, 30, 0.05);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- SharedNav mounts here -->
+  <div id="shared-nav"></div>
+
+  <main class="surv-container">
+
+    <!-- ═══════════════════ LIVE TELEMETRY STREAMS ═══════════════════ -->
+    <div class="streams-grid">
+      <div class="stream-card">
+        <div class="stream-icon">🚆</div>
+        <div>
+          <div class="stream-name">USFD Car Flaw Feed</div>
+          <div class="stream-status"><span style="color:#059669;">●</span> Real-time Streaming (99.8%)</div>
+        </div>
+      </div>
+
+      <div class="stream-card">
+        <div class="stream-icon">📏</div>
+        <div>
+          <div class="stream-name">TRC Track Geometry</div>
+          <div class="stream-status"><span style="color:#059669;">●</span> Active Corridor Run</div>
+        </div>
+      </div>
+
+      <div class="stream-card">
+        <div class="stream-icon">🛸</div>
+        <div>
+          <div class="stream-name">Drone LiDAR & Thermal</div>
+          <div class="stream-status"><span style="color:#0056B3;">●</span> 14 Missions Ingested</div>
+        </div>
+      </div>
+
+      <div class="stream-card">
+        <div class="stream-icon">🚶</div>
+        <div>
+          <div class="stream-name">IoT Trackman Patrol</div>
+          <div class="stream-status"><span style="color:#059669;">●</span> 128 Patrols Active</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════ HIGH-PRIORITY INSPECTION ANOMALIES ═══════════════════ -->
+    <div class="section-bar">
+      <div class="section-title">
+        <span>🚨</span>
+        <span>High-Priority Inspection Anomalies (AI-Scored Criticality)</span>
+      </div>
+
+      <div style="font-size: 0.78rem; color: #64748B; font-family: var(--font-mono);">
+        Filtered by: <span style="color: #DC2626; font-weight: 700;">Urgent P1 & P2 Risks</span>
+      </div>
+    </div>
+
+    <div class="inspection-grid" id="inspection-cards-container">
+      <!-- Populated dynamically -->
+    </div>
+
+    <!-- ═══════════════════ AUDIT OVERRIDE TRAIL ═══════════════════ -->
+    <div class="audit-panel">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+        <div style="font-family: var(--font-display); font-size: 0.95rem; color: #003366; font-weight: 700; display: flex; align-items: center; gap: 8px;">
+          <span>📋</span>
+          <span>Recent Manual Overrides & Regulatory Audit Trail</span>
+        </div>
+        <button onclick="window.refreshAuditLogs()" style="
+          background: #FAF6EE;
+          border: 1px solid rgba(0, 51, 102, 0.3);
+          color: #003366;
+          padding: 4px 12px;
+          border-radius: 4px;
+          font-size: 0.74rem;
+          font-weight: 600;
+          cursor: pointer;
+        ">Refresh Log</button>
+      </div>
+
+      <div id="audit-log-list" style="font-size: 0.8rem; color: #475569;">
+        No manual overrides recorded in current browser session. Overrides made via the "Manual Override" button are logged here with officer IDs and justification codes.
+      </div>
+    </div>
+
+  </main>
+
+  <script type="module">
+    import { PriorityScoreBadge } from '../components/PriorityScoreBadge.js';
+    import { AIExplanationCard } from '../components/AIExplanationCard.js';
+    import { ConfidenceIndicator } from '../components/ConfidenceIndicator.js';
+    import { ManualOverrideModal } from '../components/ManualOverrideModal.js';
+
+    // Mock Live Inspection Feeds Data
+    const inspections = [
+      {
+        id: "INSP-USFD-2026-801",
+        system: "USFD Ultrasonic Car #04",
+        section: "NDLS-CNB-UP (KM 412/18-20)",
+        flawType: "INTERNAL_TRANSVERSE_FISSURE",
+        score: 95.4,
+        category: "P1",
+        confidence: 0.99,
+        tooltipExplanation: "USFD ultrasonic echo pattern detected 14mm transverse fissure in rail head. Imminent rail break under 25-tonne freight axle loading.",
+        summary: "Severe internal rail fracture risk detected on 112 GMT high-speed corridor.",
+        detailed: "Ultrasonic probe reflection showed 78% signal attenuation. IRPWM Para 6.2 strictly mandates emergency fishplating within 24 hours and a 20 km/h temporary speed restriction until rail piece exchange.",
+        factors: [
+          { name: "Flaw Depth", weight: 0.28, value: "14 mm" },
+          { name: "Traffic Density", weight: 0.22, value: "112 GMT" },
+          { name: "Failure Probability", weight: 0.20, value: "96%" }
+        ],
+        action: "Impose 20 km/h TSR and execute rail exchange in 24h block window."
+      },
+      {
+        id: "INSP-TRC-2026-442",
+        system: "Track Recording Car TRC-102",
+        section: "GZB-ALJN-DN (KM 88/10-14)",
+        flawType: "TWIST_AND_GAUGE_EXCEEDANCE",
+        score: 83.2,
+        category: "P2",
+        confidence: 0.94,
+        tooltipExplanation: "Dynamic twist exceedance of 3.8 mm/m at 110 km/h. Exceeds standard maintenance threshold (3.0 mm/m).",
+        summary: "Track twist and gauge narrowing at crossover switch approach.",
+        detailed: "High lateral ride index recorded by TRC sensors. May trigger wheel-climb derailment on high-speed trains if not rectified within 72h window.",
+        factors: [
+          { name: "Track Twist", weight: 0.24, value: "3.8 mm/m" },
+          { name: "Line Speed", weight: 0.20, value: "130 km/h" }
+        ],
+        action: "Deploy CSM tamper for 1.2 km precision alignment and dynamic track stabilization."
+      },
+      {
+        id: "INSP-DRONE-2026-109",
+        system: "AI Drone Aerial LiDAR / Thermal",
+        section: "NDLS-GZB-UP (KM 14/2-6)",
+        flawType: "OHE_THERMAL_HOTSPOT",
+        score: 79.5,
+        category: "P2",
+        confidence: 0.91,
+        tooltipExplanation: "Thermal infrared camera recorded 142°C hotspot on 25kV OHE feeder jumper clamp. Overheating under heavy load.",
+        summary: "Extreme thermal overheating on main overhead catenary jumper.",
+        detailed: "Temperature delta is +64°C above ambient, indicating loose terminal clamp connection. Poses fire and wire-parting hazard during peak summer draw.",
+        factors: [
+          { name: "Thermal Delta", weight: 0.26, value: "+64°C Excess" },
+          { name: "Department", weight: 0.22, value: "TRD (90)" }
+        ],
+        action: "Schedule 60m tower wagon power block to clean and re-torque clamp connector."
+      },
+      {
+        id: "INSP-PATROL-2026-031",
+        system: "IoT Keyman Foot Patrol Device",
+        section: "CNB-PRYJ-UP (KM 618/4)",
+        flawType: "ELASTIC_CLIP_MISSING_CLUSTER",
+        score: 66.8,
+        category: "P3",
+        confidence: 0.87,
+        tooltipExplanation: "Keyman logged 8 consecutive missing ERC clips along wooden sleeper bridge transition.",
+        summary: "Cluster of missing Elastic Rail Clips (ERC) on bridge approach.",
+        detailed: "Cluster of missing fastening clips reduces lateral track resistance on approach curve. Scheduled for re-fastening within 7-day rolling corridor.",
+        factors: [
+          { name: "Missing Fastenings", weight: 0.20, value: "8 Clips Missing" },
+          { name: "Location", weight: 0.16, value: "Bridge Transition" }
+        ],
+        action: "Gang maintenance replenishment of ERC clips and rubber pads."
+      }
+    ];
+
+    function renderInspections() {
+      const container = document.getElementById('inspection-cards-container');
+      container.innerHTML = '';
+
+      inspections.forEach(insp => {
+        const card = document.createElement('div');
+        const criticalClass = insp.category === 'P1' ? 'p1-critical' : '';
+        card.className = `inspection-card ${criticalClass}`;
+        card.id = `card-${insp.id}`;
+
+        card.innerHTML = `
+          <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 10px;">
+            <div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-family: var(--font-mono); font-weight: 700; color: #003366; font-size: 0.95rem;">
+                  ${insp.id}
+                </span>
+                <span style="font-size: 0.76rem; background: rgba(0,86,179,0.08); color: #0056B3; padding: 2px 7px; border-radius: 4px; font-weight: 700;">
+                  ${insp.system}
+                </span>
+
+                <!-- Explanation Tooltip Container -->
+                <div class="tooltip-container">
+                  <span class="tooltip-icon">ℹ️</span>
+                  <div class="tooltip-bubble">
+                    <strong>AI Explanatory Rationale:</strong><br/>
+                    ${insp.tooltipExplanation}
+                  </div>
+                </div>
+              </div>
+
+              <div style="font-size: 0.8rem; color: #64748B; margin-top: 4px;">
+                Section: <strong style="color: #0F172A;">${insp.section}</strong> | Anomaly: <strong style="color: #D9531E;">${insp.flawType}</strong>
+              </div>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span id="badge-slot-${insp.id}">
+                ${PriorityScoreBadge.render({ score: insp.score, category: insp.category })}
+              </span>
+              ${ConfidenceIndicator.render({ confidence: insp.confidence })}
+              
+              <!-- Manual Override Button -->
+              <button onclick="window.triggerOverride('${insp.id}', '${insp.category} (${insp.score})')" style="
+                background: rgba(217, 83, 30, 0.08);
+                border: 1px solid rgba(217, 83, 30, 0.35);
+                color: #D9531E;
+                padding: 5px 12px;
+                border-radius: 6px;
+                font-size: 0.74rem;
+                font-weight: 700;
+                cursor: pointer;
+                transition: all 0.2s;
+              " title="Manually override AI score with regulatory audit logging">
+                Manual Override
+              </button>
+            </div>
+          </div>
+
+          <!-- Explainable AI Card -->
+          ${AIExplanationCard.render({
+            id: insp.id,
+            summary: insp.summary,
+            detailedReason: insp.detailed,
+            factors: insp.factors,
+            recommendedAction: insp.action,
+            defaultExpanded: insp.category === 'P1'
+          })}
+        `;
+
+        container.appendChild(card);
+      });
+    }
+
+    // Trigger Manual Override Modal
+    window.triggerOverride = function(targetId, currentVal) {
+      ManualOverrideModal.open({
+        targetId,
+        currentVal,
+        type: 'inspection',
+        onComplete: (logEntry) => {
+          // Update the badge in UI to reflect override
+          const badgeSlot = document.getElementById(`badge-slot-${targetId}`);
+          if (badgeSlot) {
+            badgeSlot.innerHTML = PriorityScoreBadge.render({
+              score: logEntry.overriddenValue === 'P1' ? 95.0 : logEntry.overriddenValue === 'P2' ? 80.0 : 60.0,
+              category: logEntry.overriddenValue.replace('_OVERRIDE', '')
+            });
+          }
+          window.refreshAuditLogs();
+        }
+      });
+    };
+
+    window.refreshAuditLogs = function() {
+      const logs = ManualOverrideModal.getAuditLogs();
+      const container = document.getElementById('audit-log-list');
+      if (!logs || logs.length === 0) {
+        container.innerHTML = "No manual overrides recorded in current browser session.";
+        return;
+      }
+
+      container.innerHTML = logs.map(l => `
+        <div style="
+          padding: 8px 12px;
+          background: #FAF6EE;
+          border: 1px solid rgba(195, 178, 150, 0.45);
+          border-left: 3px solid #D9531E;
+          border-radius: 4px;
+          margin-bottom: 6px;
+        ">
+          <div style="display: flex; justify-content: space-between; font-weight: 600; color: #0F172A;">
+            <span>[${l.timestamp.slice(11, 19)}] ${l.targetId}: ${l.originalValue} ➔ <span style="color:#003366; font-weight:700;">${l.overriddenValue}</span></span>
+            <span style="color: #64748B; font-family: var(--font-mono);">${l.officerId}</span>
+          </div>
+          <div style="color: #475569; margin-top: 3px;">
+            Reason: <strong>${l.reasonCode}</strong> — <em>"${l.explanation}"</em>
+          </div>
+        </div>
+      `).join('');
+    };
+
+    renderInspections();
+    window.refreshAuditLogs();
+  </script>
+</body>
+</html>

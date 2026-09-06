@@ -1,0 +1,138 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ai-priority-service
+  namespace: railway-ai
+  labels:
+    app: ai-priority-service
+    service: priority-classifier
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 8001
+      targetPort: 8000
+      protocol: TCP
+  selector:
+    app: ai-priority-service
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ai-traffic-service
+  namespace: railway-ai
+  labels:
+    app: ai-traffic-service
+    service: traffic-predictor
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 8002
+      targetPort: 8000
+      protocol: TCP
+  selector:
+    app: ai-traffic-service
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ai-optimizer-service
+  namespace: railway-ai
+  labels:
+    app: ai-optimizer-service
+    service: block-optimizer
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 8003
+      targetPort: 8000
+      protocol: TCP
+  selector:
+    app: ai-optimizer-service
+
+---
+# ── Unified AI Inference Gateway Service ─────────────────────────────────────
+apiVersion: v1
+kind: Service
+metadata:
+  name: ai-inference-gateway
+  namespace: railway-ai
+  labels:
+    app: ai-inference-gateway
+    service: unified-ai-api
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 8000
+      targetPort: 8000
+      protocol: TCP
+  selector:
+    app: ai-priority-service
+
+---
+# ── Ingress Configuration for Indian Railways AI Platform ────────────────────
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ai-services-ingress
+  namespace: railway-ai
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "180"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "60"
+    nginx.ingress.kubernetes.io/proxy-body-size: "50m"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "*"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "GET, POST, OPTIONS, PUT, DELETE"
+    nginx.ingress.kubernetes.io/cors-allow-headers: "DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization"
+spec:
+  rules:
+    - host: ai.maintenance.railnet.gov.in
+      http:
+        paths:
+          # Priority Engine Endpoints
+          - path: /api/v1/prioritize
+            pathType: Prefix
+            backend:
+              service:
+                name: ai-priority-service
+                port:
+                  number: 8001
+          - path: /api/v1/priority
+            pathType: Prefix
+            backend:
+              service:
+                name: ai-priority-service
+                port:
+                  number: 8001
+
+          # Traffic Predictor Endpoints
+          - path: /api/v1/traffic
+            pathType: Prefix
+            backend:
+              service:
+                name: ai-traffic-service
+                port:
+                  number: 8002
+
+          # Constraint Optimizer Endpoints
+          - path: /api/v1/optimize
+            pathType: Prefix
+            backend:
+              service:
+                name: ai-optimizer-service
+                port:
+                  number: 8003
+
+          # Global Diagnostics, Health & Docs
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: ai-inference-gateway
+                port:
+                  number: 8000

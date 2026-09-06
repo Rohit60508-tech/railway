@@ -1,0 +1,58 @@
+{
+  "database": {
+    "host":     "${DB_HOST:-localhost}",
+    "port":     5432,
+    "name":     "${DB_NAME:-ir_maintenance}",
+    "user":     "${DB_USER:-ir_app}",
+    "password": "${DB_PASSWORD}",
+    "pool_min_connections": 2,
+    "pool_max_connections": 20,
+    "pool_timeout_seconds": 30,
+    "statement_timeout_ms": 10000,
+    "connect_timeout_seconds": 10,
+    "ssl_mode": "require"
+  },
+
+  "logging": {
+    "level":           "INFO",
+    "format":          "json",
+    "include_trace_id":true,
+    "output":          ["stdout", "file"],
+    "file_path":       "/var/log/ir-ai/{service}.log",
+    "max_file_size_mb":100,
+    "backup_count":    7,
+    "slow_query_threshold_ms": 500
+  },
+
+  "cache": {
+    "backend":      "redis",
+    "host":         "${REDIS_HOST:-localhost}",
+    "port":         6379,
+    "db":           0,
+    "password":     "${REDIS_PASSWORD}",
+    "default_ttl_seconds": 300,
+    "max_connections": 20
+  },
+
+  "integration_gateway": {
+    "base_url":         "${GATEWAY_URL:-http://gateway:9000}",
+    "api_key":          "${GATEWAY_API_KEY}",
+    "timeout_seconds":  10,
+    "retry_attempts":   3,
+    "retry_backoff_ms": 500
+  },
+
+  "feature_store": {
+    "enabled":    true,
+    "backend":    "postgres",
+    "schema":     "feature_store",
+    "ttl_days":   90
+  },
+
+  "monitoring": {
+    "prometheus_enabled": true,
+    "prometheus_port":    9090,
+    "health_check_interval_seconds": 30,
+    "alert_webhook_url": "${ALERT_WEBHOOK_URL}"
+  }
+}

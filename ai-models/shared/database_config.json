@@ -1,0 +1,9 @@
+{
+  "host": "localhost",
+  "port": 5432,
+  "database": "railway_maintenance",
+  "user": "ai_service",
+  "password": "your_password_here",
+  "pool_size": 10,
+  "timeout_seconds": 30
+}

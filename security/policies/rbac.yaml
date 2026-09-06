@@ -1,0 +1,5 @@
+﻿# RBAC Policies
+roles:
+  - name: admin
+  - name: operator
+  - name: viewer
