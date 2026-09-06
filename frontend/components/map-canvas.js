@@ -94,8 +94,8 @@
 
     // Background
     const bgGrad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-    bgGrad.addColorStop(0, '#FAF6EE');
-    bgGrad.addColorStop(1, '#F3EDE2');
+    bgGrad.addColorStop(0, '#060914');
+    bgGrad.addColorStop(1, '#020409');
     ctx.fillStyle = bgGrad;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -106,10 +106,10 @@
       i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
     });
     ctx.closePath();
-    ctx.strokeStyle = 'rgba(0, 51, 102, 0.35)';
+    ctx.strokeStyle = 'rgba(56, 189, 248, 0.45)';
     ctx.lineWidth = 1.5;
     ctx.stroke();
-    ctx.fillStyle = 'rgba(0, 51, 102, 0.05)';
+    ctx.fillStyle = 'rgba(56, 189, 248, 0.07)';
     ctx.fill();
 
     // Routes
@@ -122,7 +122,7 @@
       ctx.beginPath();
       ctx.moveTo(ax, ay);
       ctx.lineTo(bx, by);
-      ctx.strokeStyle = 'rgba(0, 51, 102, 0.22)';
+      ctx.strokeStyle = 'rgba(56, 189, 248, 0.26)';
       ctx.lineWidth = 1;
       ctx.setLineDash([4, 6]);
       ctx.stroke();
@@ -182,7 +182,7 @@
       // Label (only for major cities)
       if (['Delhi','Mumbai','Chennai','Kolkata','Hyderabad','Bengaluru'].includes(city.name)) {
         ctx.font = '600 10px Inter, sans-serif';
-        ctx.fillStyle = '#0F172A';
+        ctx.fillStyle = '#FFFFFF';
         ctx.textAlign = 'center';
         ctx.fillText(city.name, cx, cy - 10);
       }

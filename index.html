@@ -18,6 +18,353 @@
 
   <!-- Main Styles -->
   <link rel="stylesheet" href="frontend/styles/main.css" />
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       HOME PAGE ONLY: DARK BLACK WITH SPARKING LIGHT THEME
+       ═══════════════════════════════════════════════════════════════ -->
+  <style id="home-dark-spark-theme">
+    html, body {
+      background-color: #020408 !important;
+      background: radial-gradient(ellipse at 50% 12%, #090e1b 0%, #03050a 50%, #000103 100%) fixed !important;
+      color: #F8FAFC !important;
+    }
+
+    #bg-canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 0;
+      pointer-events: none;
+      background: transparent !important;
+    }
+
+    /* Ambient spark aura behind hero */
+    .hero-section {
+      position: relative;
+    }
+    .hero-section::before {
+      content: '';
+      position: absolute;
+      top: 20%;
+      left: 45%;
+      transform: translate(-50%, -50%);
+      width: 700px;
+      height: 480px;
+      background: radial-gradient(circle, rgba(56, 189, 248, 0.12) 0%, rgba(249, 115, 22, 0.06) 50%, transparent 70%);
+      pointer-events: none;
+      z-index: -1;
+      filter: blur(45px);
+      animation: sparkAuraPulse 7s ease-in-out infinite alternate;
+    }
+    @keyframes sparkAuraPulse {
+      0% { opacity: 0.55; transform: translate(-50%, -50%) scale(0.95); }
+      100% { opacity: 1.0; transform: translate(-50%, -50%) scale(1.12); }
+    }
+
+    /* Navbar on Dark Theme */
+    #navbar {
+      background: rgba(2, 4, 10, 0.84) !important;
+      backdrop-filter: blur(20px) saturate(1.8) !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.85) !important;
+    }
+    #navbar.scrolled {
+      background: rgba(1, 3, 8, 0.96) !important;
+      border-bottom: 1px solid rgba(56, 189, 248, 0.25) !important;
+      box-shadow: 0 8px 35px rgba(0, 0, 0, 0.95) !important;
+    }
+    .nav-link {
+      color: #CBD5E1 !important;
+    }
+    .nav-link:hover, .nav-link.active {
+      color: #FFFFFF !important;
+      background: rgba(255, 255, 255, 0.07) !important;
+    }
+    .logo-sub {
+      color: #94A3B8 !important;
+    }
+
+    /* Hero Typography */
+    .title-line-1 {
+      color: #F1F5F9 !important;
+    }
+    .title-line-2 {
+      background: linear-gradient(135deg, #60A5FA, #38BDF8) !important;
+      -webkit-background-clip: text !important;
+      -webkit-text-fill-color: transparent !important;
+      filter: drop-shadow(0 0 30px rgba(56, 189, 248, 0.4));
+    }
+    .title-line-3 {
+      background: linear-gradient(135deg, #FB923C, #F97316) !important;
+      -webkit-background-clip: text !important;
+      -webkit-text-fill-color: transparent !important;
+      filter: drop-shadow(0 0 25px rgba(249, 115, 22, 0.4));
+    }
+    .hero-subtitle {
+      color: #94A3B8 !important;
+    }
+
+    /* Hero Stats & Secondary Buttons */
+    .hero-stats {
+      background: rgba(9, 14, 28, 0.75) !important;
+      border: 1px solid rgba(255, 255, 255, 0.1) !important;
+      backdrop-filter: blur(18px) !important;
+      box-shadow: 0 14px 45px rgba(0, 0, 0, 0.7) !important;
+    }
+    .stat-card .stat-num {
+      color: #FFFFFF !important;
+    }
+    .stat-card .stat-label {
+      color: #94A3B8 !important;
+    }
+    .stat-divider {
+      background: rgba(255, 255, 255, 0.12) !important;
+    }
+    .btn-hero-secondary {
+      background: rgba(255, 255, 255, 0.06) !important;
+      border: 1px solid rgba(255, 255, 255, 0.15) !important;
+      color: #F1F5F9 !important;
+    }
+    .btn-hero-secondary:hover {
+      background: rgba(255, 255, 255, 0.12) !important;
+      border-color: #38BDF8 !important;
+      color: #FFFFFF !important;
+    }
+
+    /* Train Scene Wrapper */
+    .train-scene-wrapper {
+      background: #060913 !important;
+      border: 1px solid rgba(56, 189, 248, 0.28) !important;
+      box-shadow: 0 0 50px rgba(0, 0, 0, 0.9), 0 0 30px rgba(56, 189, 248, 0.14) !important;
+    }
+    .track-info-card {
+      background: rgba(6, 10, 20, 0.85) !important;
+      border: 1px solid rgba(255, 255, 255, 0.1) !important;
+      color: #E2E8F0 !important;
+    }
+    .track-detail span {
+      color: #F8FAFC !important;
+    }
+    .track-detail .track-time {
+      color: #38BDF8 !important;
+    }
+    .track-progress span {
+      color: #94A3B8 !important;
+    }
+    .track-bar {
+      background: rgba(255, 255, 255, 0.1) !important;
+    }
+
+    /* Section Tags, Titles & Descriptions */
+    .section-tag {
+      background: rgba(56, 189, 248, 0.12) !important;
+      border: 1px solid rgba(56, 189, 248, 0.35) !important;
+      color: #38BDF8 !important;
+    }
+    .section-title {
+      color: #FFFFFF !important;
+      text-shadow: 0 2px 25px rgba(0, 0, 0, 0.9);
+    }
+    .section-desc {
+      color: #94A3B8 !important;
+    }
+
+    /* Feature Cards */
+    .feature-card {
+      background: rgba(10, 15, 30, 0.75) !important;
+      border: 1px solid rgba(255, 255, 255, 0.08) !important;
+      backdrop-filter: blur(16px) !important;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6) !important;
+    }
+    .feature-card:hover {
+      background: rgba(14, 22, 42, 0.9) !important;
+      border-color: rgba(56, 189, 248, 0.4) !important;
+      box-shadow: 0 14px 44px rgba(0, 0, 0, 0.8), 0 0 30px rgba(56, 189, 248, 0.18) !important;
+      transform: translateY(-4px);
+    }
+    .feature-card h3 {
+      color: #F8FAFC !important;
+    }
+    .feature-card p {
+      color: #94A3B8 !important;
+    }
+    .feature-tags li {
+      background: rgba(255, 255, 255, 0.05) !important;
+      border: 1px solid rgba(255, 255, 255, 0.1) !important;
+      color: #CBD5E1 !important;
+    }
+
+    /* Architecture Timeline Steps */
+    .step-content {
+      background: rgba(10, 15, 30, 0.75) !important;
+      border: 1px solid rgba(255, 255, 255, 0.08) !important;
+      backdrop-filter: blur(16px) !important;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6) !important;
+    }
+    .step-content h3 {
+      color: #FFFFFF !important;
+    }
+    .step-content p {
+      color: #94A3B8 !important;
+    }
+    .step-tech span {
+      background: rgba(56, 189, 248, 0.1) !important;
+      border: 1px solid rgba(56, 189, 248, 0.28) !important;
+      color: #38BDF8 !important;
+    }
+    .step-icon-ring {
+      background: #020409 !important;
+      border-color: #38BDF8 !important;
+      box-shadow: 0 0 25px rgba(56, 189, 248, 0.35) !important;
+    }
+    .timeline-line {
+      background: linear-gradient(180deg, #38BDF8 0%, #0056B3 50%, #F97316 100%) !important;
+      box-shadow: 0 0 15px rgba(56, 189, 248, 0.5) !important;
+    }
+
+    /* Network Map Section */
+    .map-container {
+      background: #050811 !important;
+      border: 1px solid rgba(255, 255, 255, 0.1) !important;
+      box-shadow: 0 14px 45px rgba(0, 0, 0, 0.8) !important;
+    }
+    .network-stats-panel {
+      background: rgba(10, 15, 30, 0.78) !important;
+      border: 1px solid rgba(255, 255, 255, 0.08) !important;
+      backdrop-filter: blur(16px) !important;
+      box-shadow: 0 14px 45px rgba(0, 0, 0, 0.7) !important;
+    }
+    .panel-title {
+      color: #FFFFFF !important;
+    }
+    .metric-label {
+      color: #94A3B8 !important;
+    }
+    .metric-value {
+      color: #FFFFFF !important;
+    }
+    .metric-row {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+    }
+    .zone-status h4 {
+      color: #E2E8F0 !important;
+    }
+    .zone-item {
+      background: rgba(255, 255, 255, 0.04) !important;
+      border: 1px solid rgba(255, 255, 255, 0.07) !important;
+      color: #CBD5E1 !important;
+    }
+
+    /* Operator Dashboard Preview */
+    .dashboard-preview {
+      background: #070a16 !important;
+      border: 1px solid rgba(255, 255, 255, 0.1) !important;
+      box-shadow: 0 18px 55px rgba(0, 0, 0, 0.85) !important;
+    }
+    .db-topbar {
+      background: #03050c !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+    }
+    .db-logo {
+      color: #38BDF8 !important;
+    }
+    .db-tab {
+      color: #94A3B8 !important;
+    }
+    .db-tab.active {
+      color: #FFFFFF !important;
+      background: rgba(255, 255, 255, 0.08) !important;
+    }
+    .db-sidebar {
+      background: #050711 !important;
+      border-right: 1px solid rgba(255, 255, 255, 0.07) !important;
+    }
+    .db-nav-item {
+      color: #94A3B8 !important;
+    }
+    .db-nav-item:hover, .db-nav-item.active {
+      color: #FFFFFF !important;
+      background: rgba(255, 255, 255, 0.06) !important;
+    }
+    .db-kpi {
+      background: rgba(12, 18, 36, 0.7) !important;
+      border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    }
+    .kpi-label {
+      color: #94A3B8 !important;
+    }
+    .kpi-value {
+      color: #FFFFFF !important;
+    }
+    .db-chart-panel {
+      background: rgba(12, 18, 36, 0.7) !important;
+      border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    }
+    .chart-title {
+      color: #E2E8F0 !important;
+    }
+    .alert-item {
+      background: rgba(255, 255, 255, 0.04) !important;
+      border: 1px solid rgba(255, 255, 255, 0.06) !important;
+      color: #CBD5E1 !important;
+    }
+
+    /* Contact Section */
+    .contact-section {
+      background: rgba(5, 8, 18, 0.85) !important;
+      border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+    }
+    .contact-title {
+      color: #FFFFFF !important;
+    }
+    .contact-desc {
+      color: #94A3B8 !important;
+    }
+    .contact-form {
+      background: rgba(11, 17, 34, 0.8) !important;
+      border: 1px solid rgba(255, 255, 255, 0.1) !important;
+      box-shadow: 0 14px 45px rgba(0, 0, 0, 0.7) !important;
+    }
+    .form-group label {
+      color: #E2E8F0 !important;
+    }
+    .form-group input, .form-group select, .form-group textarea {
+      background: rgba(4, 6, 14, 0.88) !important;
+      border: 1px solid rgba(255, 255, 255, 0.15) !important;
+      color: #FFFFFF !important;
+    }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+      border-color: #38BDF8 !important;
+      box-shadow: 0 0 20px rgba(56, 189, 248, 0.3) !important;
+    }
+
+    /* Footer */
+    footer.site-footer {
+      background: #010204 !important;
+      border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+    }
+    .footer-logo {
+      color: #FFFFFF !important;
+    }
+    .footer-col h4 {
+      color: #FFFFFF !important;
+    }
+    .footer-col a {
+      color: #94A3B8 !important;
+    }
+    .footer-col a:hover {
+      color: #38BDF8 !important;
+    }
+    .footer-badges span {
+      background: rgba(255, 255, 255, 0.05) !important;
+      border: 1px solid rgba(255, 255, 255, 0.09) !important;
+      color: #CBD5E1 !important;
+    }
+    .footer-bottom {
+      border-top: 1px solid rgba(255, 255, 255, 0.06) !important;
+      color: #64748B !important;
+    }
+  </style>
 </head>
 <body>
 

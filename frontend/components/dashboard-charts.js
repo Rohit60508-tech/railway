@@ -33,7 +33,7 @@
       ctx.fillRect(0, 0, W, H);
 
       // Y-axis grid
-      ctx.strokeStyle = 'rgba(0, 0, 0, 0.08)';
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
       ctx.lineWidth = 1;
       [0, 25, 50, 75, 100].forEach(v => {
         const y = PADDING.top + chartH - (v / 100) * chartH;
@@ -42,7 +42,7 @@
         ctx.lineTo(W - PADDING.right, y);
         ctx.stroke();
 
-        ctx.fillStyle = '#64748B';
+        ctx.fillStyle = '#94A3B8';
         ctx.font = '600 9px Inter, sans-serif';
         ctx.textAlign = 'right';
         ctx.fillText(`${v}%`, PADDING.left - 4, y + 3);
@@ -75,7 +75,7 @@
         }
 
         // X label
-        ctx.fillStyle = '#64748B';
+        ctx.fillStyle = '#94A3B8';
         ctx.font = '600 9px Inter, sans-serif';
         ctx.textAlign = 'center';
         ctx.fillText(hours[i] + 'h', x + barW / 2, H - 8);
