@@ -10,7 +10,7 @@
 (function () {
   'use strict';
 
-  const LOGIN_URL = '/frontend/pages/login.html';
+  const LOGIN_URL = 'login.html';
   const SESSION_KEY = 'ir_auth_session';
 
   /** Role → display metadata */
@@ -19,35 +19,35 @@
       label: 'Executive / Admin',
       icon: '🛡️',
       color: '#003366',
-      route: '/frontend/pages/admin-dashboard.html',
+      route: 'admin-dashboard.html',
       permissions: ['admin', 'work-orders', 'control-office', 'surveillance', 'platform-portal'],
     },
     'field-engineer': {
       label: 'Field Engineer',
       icon: '🔧',
       color: '#D97706',
-      route: '/frontend/pages/maintenance-dashboard.html',
+      route: 'maintenance-dashboard.html',
       permissions: ['work-orders'],
     },
     'control-office': {
       label: 'Control Office Controller',
       icon: '🎛️',
       color: '#0056B3',
-      route: '/frontend/pages/control-office.html',
+      route: 'control-office.html',
       permissions: ['control-office'],
     },
     surveillance: {
       label: 'Surveillance Inspector',
       icon: '📡',
       color: '#059669',
-      route: '/frontend/pages/surveillance-dashboard.html',
+      route: 'surveillance-dashboard.html',
       permissions: ['surveillance'],
     },
     'platform-portal': {
       label: 'Platform Portal User',
       icon: '🚉',
       color: '#7C3AED',
-      route: '/frontend/pages/platform-portal.html',
+      route: 'platform-portal.html',
       permissions: ['platform-portal'],
     },
   };

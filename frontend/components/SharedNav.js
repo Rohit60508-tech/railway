@@ -15,35 +15,35 @@
       key: 'admin',
       label: 'Executive Admin',
       icon: '🛡️',
-      href: '/frontend/pages/admin-dashboard.html',
+      href: 'admin-dashboard.html',
       pageMatch: 'admin-dashboard',
     },
     {
       key: 'work-orders',
       label: 'Work Orders',
       icon: '🔧',
-      href: '/frontend/pages/maintenance-dashboard.html',
+      href: 'maintenance-dashboard.html',
       pageMatch: 'maintenance-dashboard',
     },
     {
       key: 'control-office',
       label: 'Control Office',
       icon: '🎛️',
-      href: '/frontend/pages/control-office.html',
+      href: 'control-office.html',
       pageMatch: 'control-office',
     },
     {
       key: 'surveillance',
       label: 'Surveillance',
       icon: '📡',
-      href: '/frontend/pages/surveillance-dashboard.html',
+      href: 'surveillance-dashboard.html',
       pageMatch: 'surveillance-dashboard',
     },
     {
       key: 'platform-portal',
       label: 'Platform Portal',
       icon: '🚉',
-      href: '/frontend/pages/platform-portal.html',
+      href: 'platform-portal.html',
       pageMatch: 'platform-portal',
     },
   ];
@@ -82,7 +82,7 @@
     return `
       <header id="ir-shared-nav" class="snav-header">
         <!-- Brand -->
-        <div class="snav-brand">
+        <a href="../../index.html" class="snav-brand" style="text-decoration: none; color: inherit;" title="Return to IR AI Portal">
           <div class="snav-logo">
             <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" width="28" height="28">
               <circle cx="20" cy="20" r="18" stroke="url(#sn-g1)" stroke-width="2"/>
@@ -104,7 +104,7 @@
             <span class="snav-title">INDIAN RAILWAYS AI COMMAND</span>
             <span class="snav-subtitle">EXECUTIVE ADMINISTRATION &amp; MAINTENANCE PLANNING</span>
           </div>
-        </div>
+        </a>
 
         <!-- Navigation Links -->
         <nav class="snav-links" aria-label="Role navigation">
