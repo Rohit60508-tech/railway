@@ -166,22 +166,39 @@
 
   const CSS = `
     /* ── SharedNav Styles ──────────────────────────────────────── */
+    #shared-nav {
+      display: block !important;
+      width: 100% !important;
+      height: 60px !important;
+      min-height: 60px !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      box-sizing: border-box !important;
+      flex-shrink: 0 !important;
+    }
+
     #ir-shared-nav.snav-header {
-      position: sticky;
-      top: 0;
-      z-index: 9999;
-      height: 60px;
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      width: 100% !important;
+      height: 60px !important;
+      min-height: 60px !important;
+      box-sizing: border-box !important;
+      z-index: 100000 !important;
       padding: 0 24px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 16px;
-      background: rgba(255, 255, 255, 0.97);
-      border-bottom: 1px solid rgba(0, 51, 102, 0.12);
-      box-shadow: 0 2px 16px rgba(0, 51, 102, 0.07), 0 1px 3px rgba(0,0,0,0.04);
+      background: rgba(255, 255, 255, 0.98);
+      border-bottom: 1px solid rgba(0, 51, 102, 0.14);
+      box-shadow: 0 4px 20px rgba(0, 51, 102, 0.08), 0 1px 3px rgba(0, 0, 0, 0.04);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       font-family: 'Calibri', 'Arial', sans-serif;
+      transform: none !important;
     }
 
     /* Brand */
@@ -232,6 +249,12 @@
       gap: 4px;
       flex: 1;
       justify-content: center;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .snav-links::-webkit-scrollbar {
+      display: none;
     }
     .snav-link {
       position: relative;
