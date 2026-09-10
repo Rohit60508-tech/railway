@@ -6,6 +6,7 @@ Using RapidAPI IRCTC Endpoints & COA Real-Time Feed.
 ─────────────────────────────────────────────────────────────────────────────
 """
 
+import os
 import sys
 from pathlib import Path
 from typing import Any, Dict, Optional
