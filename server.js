@@ -18,6 +18,7 @@ const path = require('path');
 const url = require('url');
 
 const { handleAiRequest, API_PREFIX } = require('./backend/api/ai-api');
+const { supabaseAuditService } = require('./backend/services/supabase-client');
 
 const PORT = parseInt(process.env.PORT || '5000', 10);
 const HOST = process.env.HOST || '0.0.0.0';
@@ -60,7 +61,61 @@ const server = http.createServer(async (req, res) => {
   const parsedUrl = url.parse(req.url);
   let pathname = decodeURIComponent(parsedUrl.pathname);
 
-  // 1. API Gateway Route Dispatcher
+  // 1a. Supabase & Dedicated Server Immutable Audit API
+  if (pathname.startsWith('/api/v1/supabase/') || pathname === '/api/v1/audit-logs') {
+    if (pathname === '/api/v1/supabase/status' && req.method === 'GET') {
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify(supabaseAuditService.getStatus()));
+      return;
+    }
+
+    if (pathname === '/api/v1/supabase/verify-integrity' && req.method === 'GET') {
+      const integrity = await supabaseAuditService.verifyIntegrity();
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify(integrity));
+      return;
+    }
+
+    if ((pathname === '/api/v1/supabase/audit-logs' || pathname === '/api/v1/audit-logs') && req.method === 'GET') {
+      const records = await supabaseAuditService.getAuditRecords(100);
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify(records));
+      return;
+    }
+
+    if ((pathname === '/api/v1/supabase/audit-log' || pathname === '/api/v1/audit-logs') && req.method === 'POST') {
+      let body = '';
+      req.on('data', chunk => { body += chunk; });
+      req.on('end', async () => {
+        try {
+          const payload = JSON.parse(body || '{}');
+          const result = await supabaseAuditService.saveActionAuditRecord({
+            entryName: payload.entry_name || payload.event_type || 'SYSTEM_ACTION',
+            eventType: payload.event_type || 'SYSTEM_ACTION',
+            staffId: payload.staff_id || payload.officer_id || 'IR-STAFF-UNKNOWN',
+            userName: payload.user_name || payload.officer_name || 'Indian Railways Operator',
+            userRole: payload.user_role || payload.officer_role || 'CONTROL_OFFICER',
+            userDivision: payload.user_division || 'Northern Railway — Delhi Division',
+            section: payload.section || 'NDLS-CNB-UP',
+            targetEntityId: payload.target_entity_id || payload.block_id || '',
+            reason: payload.reason || '',
+            disruptionScore: payload.disruption_score || 0.0,
+            delayMinutes: payload.delay_minutes || 0,
+            actionPayload: payload.action_payload || payload.details || {},
+            clientIp: req.socket.remoteAddress || '127.0.0.1'
+          });
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify(result));
+        } catch (err) {
+          res.writeHead(400, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ success: false, error: err.message }));
+        }
+      });
+      return;
+    }
+  }
+
+  // 1b. API Gateway Route Dispatcher
   if (pathname.startsWith('/api/v1/ai')) {
     try {
       const handled = await handleAiRequest(req, res);
@@ -75,16 +130,47 @@ const server = http.createServer(async (req, res) => {
     }
   }
 
+  // 1c. Python AI & Live IRCTC Proxy Dispatcher (/api/v1/*)
+  if (pathname.startsWith('/api/v1/')) {
+    const proxyReq = http.request({
+      hostname: '127.0.0.1',
+      port: 5001,
+      path: req.url,
+      method: req.method,
+      headers: { ...req.headers, host: '127.0.0.1:5001' },
+    }, (proxyRes) => {
+      setCorsHeaders(res);
+      res.writeHead(proxyRes.statusCode, proxyRes.headers);
+      proxyRes.pipe(res);
+    });
+    proxyReq.on('error', (err) => {
+      setCorsHeaders(res);
+      res.writeHead(502, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: false, error: { message: 'Python AI backend unavailable', details: err.message } }));
+    });
+    req.pipe(proxyReq);
+    return;
+  }
+
   // 2. Static File Serving
-  // Root '/' redirects to the login portal; original landing page accessible at /index.html
+  // Root '/' redirects directly to the Control Office AI Console
   if (pathname === '/' || pathname === '') {
-    res.writeHead(302, { Location: '/frontend/pages/login.html' });
+    res.writeHead(302, { Location: '/pages/control-office.html' });
     res.end();
     return;
   }
 
+
   const safePath = path.normalize(pathname).replace(/^(\.\.[\/\\])+/, '');
   let filePath = path.join(ROOT_DIR, safePath);
+
+  // Fallback: If not found directly, check inside frontend/ (e.g. /pages/* -> /frontend/pages/*)
+  if (!fs.existsSync(filePath)) {
+    const frontendCandidate = path.join(ROOT_DIR, 'frontend', safePath);
+    if (fs.existsSync(frontendCandidate)) {
+      filePath = frontendCandidate;
+    }
+  }
 
   fs.stat(filePath, (err, stats) => {
     if (err || !stats.isFile()) {

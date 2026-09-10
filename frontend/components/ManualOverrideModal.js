@@ -205,6 +205,46 @@ export class ManualOverrideModal {
 
     const backdrop = document.getElementById('ai-override-modal-backdrop');
     backdrop.style.display = 'flex';
+
+    // Check if user is admin
+    const isAdmin = Boolean(
+      (window.IR_AUTH && (window.IR_AUTH.isAdmin || window.IR_AUTH.role === 'admin')) ||
+      (window.RailwayApp && window.RailwayApp.session?.currentSession?.user?.role === 'ADMIN')
+    );
+
+    let adminBanner = document.getElementById('override-admin-banner');
+    if (!adminBanner) {
+      adminBanner = document.createElement('div');
+      adminBanner.id = 'override-admin-banner';
+      adminBanner.style.cssText = 'background: linear-gradient(135deg, #DC2626, #991B1B); color: #FFF; padding: 6px 12px; border-radius: 6px; margin-bottom: 12px; font-size: 0.75rem; font-weight: 800; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 8px rgba(220,38,38,0.25);';
+      const modalBox = document.querySelector('#ai-override-modal-backdrop > div');
+      if (modalBox) modalBox.insertBefore(adminBanner, modalBox.children[1]);
+    }
+
+    if (isAdmin) {
+      adminBanner.style.display = 'flex';
+      adminBanner.innerHTML = `
+        <span>👑 ADMIN MASTER OVERWRITE ACTIVE</span>
+        <span style="font-size: 0.70rem; background: rgba(255,255,255,0.2); padding: 1px 6px; border-radius: 4px;">UNRESTRICTED</span>
+      `;
+      // Ensure admin options exist in select
+      const select = document.getElementById('override-new-val');
+      if (select && !select.querySelector('option[value="ADMIN_EMERGENCY_FORCE_CHANGE"]')) {
+        const opt1 = document.createElement('option');
+        opt1.value = 'ADMIN_EMERGENCY_FORCE_CHANGE';
+        opt1.textContent = '👑 Admin Force Change (Root System Override)';
+        select.prepend(opt1);
+        select.value = 'ADMIN_EMERGENCY_FORCE_CHANGE';
+      }
+    } else {
+      adminBanner.style.display = 'none';
+    }
+
+    if (window.getActiveLoginUser) {
+      const u = window.getActiveLoginUser();
+      const input = document.getElementById('override-officer-id');
+      if (input) input.value = `${u.staffId || u.id} (${u.name || u.username})`;
+    }
   }
 
   static close() {
@@ -242,6 +282,22 @@ export class ManualOverrideModal {
       localStorage.setItem('ir_ai_override_audit_logs', JSON.stringify(existingLogs.slice(0, 100)));
     } catch (e) {}
 
+    // Dispatch to Supabase / Immutable Server Ledger
+    const isAdmin = Boolean(
+      (window.IR_AUTH && (window.IR_AUTH.isAdmin || window.IR_AUTH.role === 'admin')) ||
+      (window.RailwayApp && window.RailwayApp.session?.currentSession?.user?.role === 'ADMIN')
+    );
+    const entryName = isAdmin ? 'ADMIN_MASTER_OVERRIDE' : 'SUPERVISOR_MANUAL_OVERRIDE';
+
+    if (window.recordImmutableAction) {
+      window.recordImmutableAction(entryName, {
+        eventType: 'OVERRIDE',
+        targetEntityId: targetId,
+        reason: `${reasonCode}: ${reasonText}`,
+        details: { ...logEntry, admin_bypass: isAdmin }
+      });
+    }
+
     this.close();
 
     if (this.currentCallback) {
@@ -249,9 +305,9 @@ export class ManualOverrideModal {
     }
 
     if (window.showToast) {
-      window.showToast(`✅ Manual override logged for ${targetId}: changed to ${newVal}. Audit saved.`, 'info');
+      window.showToast(`✅ Manual override logged for ${targetId}: changed to ${newVal}. Audit saved to Supabase/Immutable Ledger.`, 'info');
     } else {
-      alert(`Manual override successfully logged for ${targetId} by ${officerId}.\nAudit record preserved.`);
+      alert(`Manual override successfully logged for ${targetId} by ${officerId}.\nAudit record preserved in Immutable Ledger.`);
     }
   }
 

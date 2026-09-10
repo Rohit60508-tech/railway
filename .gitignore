@@ -31,3 +31,7 @@ Thumbs.db
 # Logs
 *.log
 logs/
+
+# Backups & Temp Storage
+data/backups/
+data/storage/

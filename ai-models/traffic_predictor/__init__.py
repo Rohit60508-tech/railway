@@ -16,11 +16,12 @@ if str(_SRC_DIR) not in sys.path:
 from .traffic_analyzer import TrafficAnalyzer
 from .forecast_engine import ForecastEngine
 from .corridor_availability import CorridorAvailabilityCalculator
-from .delay_predictor import CascadeDelayPredictor
+from .delay_predictor import DelayPredictor, CascadeDelayPredictor
 
 __all__ = [
     "TrafficAnalyzer",
     "ForecastEngine",
     "CorridorAvailabilityCalculator",
+    "DelayPredictor",
     "CascadeDelayPredictor",
 ]

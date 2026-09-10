@@ -27,6 +27,11 @@ from inference.priority_api import router as priority_router
 from inference.traffic_api import router as traffic_router
 from inference.optimizer_api import router as optimizer_router
 from inference.health_api import router as health_router
+from inference.ingestion_api import router as ingestion_router
+from inference.live_train_api import router as live_train_router
+from inference.advanced_features_api import router as advanced_features_router
+from inference.open_data_api import router as open_data_router
+from inference.storage_server_api import router as storage_server_router
 from shared.logger import get_logger
 
 logger = get_logger("inference_app")
@@ -55,6 +60,11 @@ app.include_router(priority_router)
 app.include_router(traffic_router)
 app.include_router(optimizer_router)
 app.include_router(health_router)
+app.include_router(ingestion_router)
+app.include_router(live_train_router)
+app.include_router(advanced_features_router)
+app.include_router(open_data_router)
+app.include_router(storage_server_router)
 
 
 @app.get("/", summary="Root API Gateway Index")
@@ -86,6 +96,20 @@ async def root_index():
                 "GET  /api/v1/health",
                 "GET  /api/v1/health/models",
                 "GET  /api/v1/health/database",
+            ],
+            "ingestion": [
+                "POST /api/v1/defects/ingest",
+                "POST /api/v1/defects/ingest-batch",
+                "GET  /api/v1/defects",
+                "POST /api/v1/optimize/generate-plan",
+                "GET  /api/v1/optimize/plan/{job_id}",
+                "POST /api/v1/optimize/cluster-spatial",
+            ],
+            "live_tracking": [
+                "GET  /api/v1/live-trains-at-station/{station_code}",
+                "GET  /api/v1/live-running-status/{train_number}",
+                "POST /api/v1/live-corridor-conflicts",
+                "GET  /api/v1/gateway-config",
             ],
         },
         "status": "ONLINE",
