@@ -41,7 +41,7 @@
     },
     {
       key: 'ai-models',
-      label: 'AI MLOps & Weights',
+      label: 'AI MLOps',
       icon: '🧠',
       href: 'ai-model-management.html',
       pageMatch: 'ai-model-management',
@@ -123,27 +123,6 @@
 
         <!-- User Panel -->
         <div class="snav-user-panel">
-          ${auth && (auth.isAdmin || auth.role === 'admin') ? `
-            <span style="background: linear-gradient(135deg, #DC2626, #991B1B); color: #FFFFFF; padding: 3px 10px; border-radius: 14px; font-size: 0.70rem; font-weight: 800; display: inline-flex; align-items: center; gap: 4px; box-shadow: 0 2px 6px rgba(220,38,38,0.25); letter-spacing: 0.3px;" title="Full access to overwrite, change, force-sanction, and manage all features">
-              <span>👑 Master Admin Access (Full Overwrite)</span>
-            </span>
-            <select onchange="window.switchAdminPersona(this.value)" style="background: #FAF6EE; border: 1px solid rgba(0,51,102,0.3); border-radius: 6px; padding: 3px 8px; font-size: 0.72rem; font-weight: 700; color: #003366; cursor: pointer;" title="Switch persona to test or view as different roles">
-              <option value="admin" selected>👑 Admin View</option>
-              <option value="control-office">🎛️ Control Office</option>
-              <option value="field-engineer">🔧 Field Engineer</option>
-              <option value="surveillance">📡 Surveillance</option>
-              <option value="platform-portal">🚉 Platform Portal</option>
-            </select>
-          ` : `
-            <button onclick="window.grantAdminMasterAccess()" style="background: rgba(220,38,38,0.08); color: #DC2626; border: 1px dashed rgba(220,38,38,0.4); padding: 3px 8px; border-radius: 6px; font-size: 0.70rem; font-weight: 700; cursor: pointer;" title="Elevate current user session to Master Admin">
-              👑 Elevate to Admin
-            </button>
-          `}
-
-          <button id="snav-server-btn" title="Dedicated Server Database (/app/data/audit_records.db) - Click to Snapshot" style="background: rgba(0, 51, 102, 0.08); color: #003366; border: 1px solid rgba(0, 51, 102, 0.25); padding: 5px 12px; border-radius: 20px; font-size: 0.72rem; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; transition: all 0.2s;">
-            <span id="snav-server-icon">🖥️</span>
-            <span id="snav-server-text">Server DB</span>
-          </button>
           <div class="snav-status-dot" title="System Online"></div>
           <div class="snav-role-badge" style="--role-color: ${roleColor}">
             <div class="snav-avatar">${initial}</div>
@@ -153,7 +132,7 @@
             </div>
           </div>
           <button class="snav-logout-btn" id="snav-logout-btn" title="Sign Out">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
               <polyline points="16,17 21,12 16,7"/>
               <line x1="21" y1="12" x2="9" y2="12"/>
@@ -187,17 +166,17 @@
       min-height: 60px !important;
       box-sizing: border-box !important;
       z-index: 100000 !important;
-      padding: 0 24px;
+      padding: 0 32px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 16px;
+      gap: 24px;
       background: rgba(255, 255, 255, 0.98);
-      border-bottom: 1px solid rgba(0, 51, 102, 0.14);
-      box-shadow: 0 4px 20px rgba(0, 51, 102, 0.08), 0 1px 3px rgba(0, 0, 0, 0.04);
+      border-bottom: 1px solid rgba(0, 51, 102, 0.12);
+      box-shadow: 0 2px 14px rgba(0, 51, 102, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
-      font-family: 'Calibri', 'Arial', sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       transform: none !important;
     }
 
@@ -207,17 +186,20 @@
       align-items: center;
       gap: 12px;
       flex-shrink: 0;
+      text-decoration: none;
+      cursor: pointer;
     }
     .snav-logo {
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 40px;
-      height: 40px;
-      border-radius: 10px;
+      width: 38px;
+      height: 38px;
+      border-radius: 9px;
       background: linear-gradient(135deg, #f0f5ff 0%, #e8f0fe 100%);
       border: 1px solid rgba(0, 51, 102, 0.15);
-      box-shadow: 0 2px 8px rgba(0, 51, 102, 0.1);
+      box-shadow: 0 2px 8px rgba(0, 51, 102, 0.08);
+      flex-shrink: 0;
     }
     .snav-title-group {
       display: flex;
@@ -225,8 +207,7 @@
       gap: 1px;
     }
     .snav-title {
-      font-family: 'Calibri', 'Arial', sans-serif;
-      font-size: 0.85rem;
+      font-size: 0.88rem;
       font-weight: 800;
       color: #003366;
       letter-spacing: 0.8px;
@@ -235,10 +216,10 @@
     }
     .snav-subtitle {
       font-size: 0.58rem;
-      font-weight: 500;
+      font-weight: 600;
       color: #64748B;
       text-transform: uppercase;
-      letter-spacing: 0.8px;
+      letter-spacing: 0.6px;
       white-space: nowrap;
     }
 
@@ -246,7 +227,7 @@
     .snav-links {
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 8px;
       flex: 1;
       justify-content: center;
       flex-wrap: nowrap;
@@ -261,32 +242,32 @@
       display: flex;
       align-items: center;
       gap: 6px;
-      padding: 6px 12px;
+      padding: 7px 14px;
       border-radius: 8px;
       text-decoration: none;
-      font-size: 0.79rem;
+      font-size: 0.82rem;
       font-weight: 500;
-      color: #475569;
-      transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+      color: #334155;
+      transition: all 0.15s ease;
       white-space: nowrap;
     }
     .snav-link:hover {
       color: #003366;
-      background: rgba(0, 51, 102, 0.07);
+      background: rgba(0, 51, 102, 0.06);
     }
     .snav-link--active {
       color: #003366;
-      background: rgba(0, 51, 102, 0.1);
+      background: rgba(0, 51, 102, 0.09);
       font-weight: 700;
     }
-    .snav-link-icon { font-size: 0.9rem; }
+    .snav-link-icon { font-size: 0.95rem; }
     .snav-link-pip {
       position: absolute;
       bottom: -1px;
       left: 50%;
       transform: translateX(-50%);
-      width: 18px;
-      height: 2px;
+      width: 22px;
+      height: 2.5px;
       border-radius: 2px;
       background: #003366;
     }
@@ -295,16 +276,17 @@
     .snav-user-panel {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 14px;
       flex-shrink: 0;
     }
     .snav-status-dot {
-      width: 7px;
-      height: 7px;
+      width: 8px;
+      height: 8px;
       border-radius: 50%;
       background: #059669;
       box-shadow: 0 0 0 2px rgba(5, 150, 105, 0.25);
       animation: snavPulse 2s ease-in-out infinite;
+      flex-shrink: 0;
     }
     @keyframes snavPulse {
       0%, 100% { box-shadow: 0 0 0 2px rgba(5, 150, 105, 0.25); }
@@ -313,19 +295,19 @@
     .snav-role-badge {
       display: flex;
       align-items: center;
-      gap: 8px;
-      padding: 5px 10px;
+      gap: 9px;
+      padding: 5px 12px;
       border-radius: 8px;
-      background: rgba(0, 51, 102, 0.05);
+      background: rgba(0, 51, 102, 0.04);
       border: 1px solid rgba(0, 51, 102, 0.12);
     }
     .snav-avatar {
       width: 28px;
       height: 28px;
-      border-radius: 50%;
+      border-radius: 7px;
       background: var(--role-color, #003366);
       color: #fff;
-      font-size: 0.75rem;
+      font-size: 0.76rem;
       font-weight: 700;
       display: flex;
       align-items: center;
@@ -338,23 +320,26 @@
       gap: 1px;
     }
     .snav-role-name {
-      font-size: 0.78rem;
+      font-size: 0.80rem;
       font-weight: 700;
       color: #0F172A;
       line-height: 1.2;
+      white-space: nowrap;
     }
     .snav-role-label {
-      font-size: 0.62rem;
+      font-size: 0.60rem;
+      font-weight: 600;
       color: #64748B;
       text-transform: uppercase;
       letter-spacing: 0.5px;
       line-height: 1;
+      white-space: nowrap;
     }
     .snav-logout-btn {
       display: flex;
       align-items: center;
-      gap: 5px;
-      padding: 6px 12px;
+      gap: 6px;
+      padding: 6px 14px;
       border-radius: 7px;
       border: 1px solid rgba(220, 38, 38, 0.25);
       background: rgba(220, 38, 38, 0.04);
@@ -364,6 +349,7 @@
       cursor: pointer;
       transition: all 0.18s;
       font-family: inherit;
+      white-space: nowrap;
     }
     .snav-logout-btn:hover {
       background: rgba(220, 38, 38, 0.1);
@@ -396,50 +382,6 @@
       logoutBtn.addEventListener('click', () => window.IR_AUTH.logout());
     }
 
-    // Wire up Dedicated Server DB Snapshot
-    const serverBtn = document.getElementById('snav-server-btn');
-    const serverText = document.getElementById('snav-server-text');
-    const serverIcon = document.getElementById('snav-server-icon');
-
-    async function checkSharedServerStatus() {
-      try {
-        const res = await fetch('/api/v1/server/telemetry');
-        if (res.ok) {
-          const data = await res.json();
-          if (serverText) {
-            serverText.textContent = `Server DB: ${data.backup_count} Backups`;
-          }
-        }
-      } catch (e) {}
-    }
-
-    if (serverBtn) {
-      serverBtn.addEventListener('click', async () => {
-        serverBtn.disabled = true;
-        if (serverIcon) serverIcon.textContent = '⏳';
-        if (serverText) serverText.textContent = 'Saving Server DB Snapshot...';
-        try {
-          const res = await fetch('/api/v1/storage/backup-now', { method: 'POST' });
-          const json = await res.json();
-          if (res.ok && json.success) {
-            if (serverIcon) serverIcon.textContent = '💾';
-            if (serverText) serverText.textContent = `Saved ${json.filename}`;
-            setTimeout(checkSharedServerStatus, 3000);
-            if (window.refreshCtrlAudit) window.refreshCtrlAudit();
-            if (window.fetchServerTelemetry) window.fetchServerTelemetry();
-          } else {
-            throw new Error(json.detail || 'Backup failed');
-          }
-        } catch (err) {
-          if (serverIcon) serverIcon.textContent = '⚠️';
-          if (serverText) serverText.textContent = 'Server Error';
-          setTimeout(checkSharedServerStatus, 3500);
-        } finally {
-          serverBtn.disabled = false;
-        }
-      });
-      checkSharedServerStatus();
-    }
 
     // Admin Master Overwrite & Persona Switcher Helpers
     window.switchAdminPersona = function(role) {
