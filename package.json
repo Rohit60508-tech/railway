@@ -1,0 +1,24 @@
+{
+  "name": "indian-railways-ai-platform",
+  "version": "1.0.0",
+  "description": "Indian Railways AI Command, Automatic Block Planning & Persistent Cloud Storage Platform (RAKSHA PATH)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node start-server.js",
+    "server": "node server.js",
+    "python": "python ai-models/inference/app.py",
+    "test": "node test_backend_services.js"
+  },
+  "keywords": [
+    "indian-railways",
+    "ai",
+    "block-planning",
+    "cloud-storage",
+    "dedicated-server"
+  ],
+  "author": "Raksha Path Team",
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

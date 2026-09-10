@@ -40,6 +40,13 @@
       pageMatch: 'surveillance-dashboard',
     },
     {
+      key: 'ai-models',
+      label: 'AI MLOps & Weights',
+      icon: '🧠',
+      href: 'ai-model-management.html',
+      pageMatch: 'ai-model-management',
+    },
+    {
       key: 'platform-portal',
       label: 'Platform Portal',
       icon: '🚉',
@@ -53,8 +60,11 @@
   }
 
   function hasPermission(key) {
-    if (!window.IR_AUTH) return false;
-    return window.IR_AUTH.permissions.includes(key);
+    if (!window.IR_AUTH) return true; // Default allow in open environment
+    if (window.IR_AUTH.isAdmin || window.IR_AUTH.role === 'admin' || window.IR_AUTH.role === 'SUPER_ADMIN') {
+      return true; // Admin has 100% unrestricted access to overwrite and change all features
+    }
+    return (window.IR_AUTH.permissions || []).includes(key) || (window.IR_AUTH.permissions || []).includes('ALL');
   }
 
   function buildNav() {
@@ -113,6 +123,27 @@
 
         <!-- User Panel -->
         <div class="snav-user-panel">
+          ${auth && (auth.isAdmin || auth.role === 'admin') ? `
+            <span style="background: linear-gradient(135deg, #DC2626, #991B1B); color: #FFFFFF; padding: 3px 10px; border-radius: 14px; font-size: 0.70rem; font-weight: 800; display: inline-flex; align-items: center; gap: 4px; box-shadow: 0 2px 6px rgba(220,38,38,0.25); letter-spacing: 0.3px;" title="Full access to overwrite, change, force-sanction, and manage all features">
+              <span>👑 Master Admin Access (Full Overwrite)</span>
+            </span>
+            <select onchange="window.switchAdminPersona(this.value)" style="background: #FAF6EE; border: 1px solid rgba(0,51,102,0.3); border-radius: 6px; padding: 3px 8px; font-size: 0.72rem; font-weight: 700; color: #003366; cursor: pointer;" title="Switch persona to test or view as different roles">
+              <option value="admin" selected>👑 Admin View</option>
+              <option value="control-office">🎛️ Control Office</option>
+              <option value="field-engineer">🔧 Field Engineer</option>
+              <option value="surveillance">📡 Surveillance</option>
+              <option value="platform-portal">🚉 Platform Portal</option>
+            </select>
+          ` : `
+            <button onclick="window.grantAdminMasterAccess()" style="background: rgba(220,38,38,0.08); color: #DC2626; border: 1px dashed rgba(220,38,38,0.4); padding: 3px 8px; border-radius: 6px; font-size: 0.70rem; font-weight: 700; cursor: pointer;" title="Elevate current user session to Master Admin">
+              👑 Elevate to Admin
+            </button>
+          `}
+
+          <button id="snav-server-btn" title="Dedicated Server Database (/app/data/audit_records.db) - Click to Snapshot" style="background: rgba(0, 51, 102, 0.08); color: #003366; border: 1px solid rgba(0, 51, 102, 0.25); padding: 5px 12px; border-radius: 20px; font-size: 0.72rem; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; transition: all 0.2s;">
+            <span id="snav-server-icon">🖥️</span>
+            <span id="snav-server-text">Server DB</span>
+          </button>
           <div class="snav-status-dot" title="System Online"></div>
           <div class="snav-role-badge" style="--role-color: ${roleColor}">
             <div class="snav-avatar">${initial}</div>
@@ -341,6 +372,87 @@
     if (logoutBtn && window.IR_AUTH) {
       logoutBtn.addEventListener('click', () => window.IR_AUTH.logout());
     }
+
+    // Wire up Dedicated Server DB Snapshot
+    const serverBtn = document.getElementById('snav-server-btn');
+    const serverText = document.getElementById('snav-server-text');
+    const serverIcon = document.getElementById('snav-server-icon');
+
+    async function checkSharedServerStatus() {
+      try {
+        const res = await fetch('/api/v1/server/telemetry');
+        if (res.ok) {
+          const data = await res.json();
+          if (serverText) {
+            serverText.textContent = `Server DB: ${data.backup_count} Backups`;
+          }
+        }
+      } catch (e) {}
+    }
+
+    if (serverBtn) {
+      serverBtn.addEventListener('click', async () => {
+        serverBtn.disabled = true;
+        if (serverIcon) serverIcon.textContent = '⏳';
+        if (serverText) serverText.textContent = 'Saving Server DB Snapshot...';
+        try {
+          const res = await fetch('/api/v1/storage/backup-now', { method: 'POST' });
+          const json = await res.json();
+          if (res.ok && json.success) {
+            if (serverIcon) serverIcon.textContent = '💾';
+            if (serverText) serverText.textContent = `Saved ${json.filename}`;
+            setTimeout(checkSharedServerStatus, 3000);
+            if (window.refreshCtrlAudit) window.refreshCtrlAudit();
+            if (window.fetchServerTelemetry) window.fetchServerTelemetry();
+          } else {
+            throw new Error(json.detail || 'Backup failed');
+          }
+        } catch (err) {
+          if (serverIcon) serverIcon.textContent = '⚠️';
+          if (serverText) serverText.textContent = 'Server Error';
+          setTimeout(checkSharedServerStatus, 3500);
+        } finally {
+          serverBtn.disabled = false;
+        }
+      });
+      checkSharedServerStatus();
+    }
+
+    // Admin Master Overwrite & Persona Switcher Helpers
+    window.switchAdminPersona = function(role) {
+      const meta = window.IR_AUTH?.roleMeta?.[role];
+      const session = {
+        username: role === 'admin' ? 'admin' : (role + '_user'),
+        role: role,
+        name: role === 'admin' ? 'Chief Controller & Executive Admin' : (meta ? meta.label : role),
+        designation: meta ? meta.label : role,
+        department: 'Indian Railways Operations',
+        division: 'HQ — Northern Railway'
+      };
+      sessionStorage.setItem('ir_auth_session', JSON.stringify(session));
+
+      // Also sync to main-app ir_ai_session so backend immutable audit logs capture the admin identity
+      const mainSession = {
+        user: {
+          staffId: role === 'admin' ? 'ADMIN-ROOT-01' : ('STAFF-' + role.toUpperCase().slice(0, 4)),
+          name: session.name,
+          designation: session.designation,
+          role: role === 'admin' ? 'ADMIN' : (role === 'control-office' ? 'CONTROL_OFFICER' : (role === 'field-engineer' ? 'MAINTENANCE_ENGINEER' : 'SURVEILLANCE_INSPECTOR')),
+          zone: 'NR',
+          division: 'Delhi (DLI)',
+          section: 'NDLS-CNB-UP'
+        },
+        token: 'ir-admin-jwt-' + Date.now(),
+        expiresAt: Date.now() + 24 * 60 * 60 * 1000,
+        isAuthenticated: true
+      };
+      localStorage.setItem('ir_ai_session', JSON.stringify(mainSession));
+      window.location.reload();
+    };
+
+    window.grantAdminMasterAccess = function() {
+      window.switchAdminPersona('admin');
+    };
   }
 
   if (document.readyState === 'loading') {

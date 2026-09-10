@@ -1,0 +1,34 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# DEDICATED PRODUCTION DOCKER COMPOSE
+# Indian Railways AI Platform & Persistent Disk Storage (RAKSHA PATH)
+# Target: AWS EC2, DigitalOcean Droplet, Linode, or Local Docker VPS
+# ─────────────────────────────────────────────────────────────────────────────
+
+version: '3.8'
+
+services:
+  raksha-path-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: raksha_path_dedicated_server
+    restart: always
+    ports:
+      - "5000:5000"
+    environment:
+      - PORT=5000
+      - HOST=0.0.0.0
+      - NODE_ENV=production
+    volumes:
+      # Persistent host storage mount for all SQLite DBs, backups, and uploaded files
+      - raksha_persistent_data:/app/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/api/v1/server/telemetry"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
+volumes:
+  raksha_persistent_data:
+    driver: local

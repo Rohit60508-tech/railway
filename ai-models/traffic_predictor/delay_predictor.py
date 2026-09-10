@@ -17,10 +17,11 @@ _target_file = _SRC_DIR / "delay_predictor.py"
 _spec = importlib.util.spec_from_file_location("traffic_predictor.delay_predictor", str(_target_file))
 if _spec and _spec.loader:
     _mod = importlib.util.module_from_spec(_spec)
-    _spec.loader.exec_module(_mod)
-    CascadeDelayPredictor = _mod.CascadeDelayPredictor
-    __all__ = ["CascadeDelayPredictor"]
+    DelayPredictor = getattr(_mod, "DelayPredictor", None) or getattr(_mod, "CascadeDelayPredictor", None)
+    CascadeDelayPredictor = DelayPredictor
+    __all__ = ["DelayPredictor", "CascadeDelayPredictor"]
 else:
-    class CascadeDelayPredictor:  # type: ignore
+    class DelayPredictor:  # type: ignore
         pass
-    __all__ = ["CascadeDelayPredictor"]
+    CascadeDelayPredictor = DelayPredictor
+    __all__ = ["DelayPredictor", "CascadeDelayPredictor"]
