@@ -1,0 +1,72 @@
+{
+  "service": "traffic-predictor",
+  "version": "1.0.0",
+  "description": "Train traffic density forecasting, corridor slot discovery, and maintenance block impact estimation",
+
+  "time_slot_granularity_minutes": 15,
+  "search_horizon_days": 7,
+  "max_conflicts_allowed": 2,
+
+  "traffic_impact_weights": {
+    "passenger_express": 3.5,
+    "passenger_ordinary": 2.0,
+    "freight_goods": 1.2,
+    "suburban_emu": 4.0,
+    "train_count_weight": 0.35,
+    "delay_minutes_weight": 0.35,
+    "punctuality_loss_weight": 0.30
+  },
+
+  "time_preferences": {
+    "night_bonus": 0.25,
+    "evening_bonus": 0.10,
+    "day_penalty": 0.35,
+    "preferred_night_start_hour": 23,
+    "preferred_night_end_hour": 5,
+    "afternoon_lull_start_hour": 12,
+    "afternoon_lull_end_hour": 15,
+    "morning_peak_hours": [7, 8, 9, 10],
+    "evening_peak_hours": [17, 18, 19, 20]
+  },
+
+  "feasibility_thresholds": {
+    "HIGH_FEASIBILITY": {
+      "max_impact_score": 30.0,
+      "max_conflicts": 0,
+      "label": "Ideal Maintenance Window",
+      "recommendation": "Unrestricted execution approved"
+    },
+    "MODERATE_FEASIBILITY": {
+      "max_impact_score": 60.0,
+      "max_conflicts": 2,
+      "label": "Viable with Train Regulation",
+      "recommendation": "Requires loop siding regulation for freight/slow passenger"
+    },
+    "LOW_FEASIBILITY": {
+      "max_impact_score": 85.0,
+      "max_conflicts": 4,
+      "label": "Severe Traffic Disruption",
+      "recommendation": "Requires Divisional Railway Manager (DRM) sanction"
+    },
+    "INFEASIBLE": {
+      "min_impact_score": 85.0,
+      "label": "Impermissible / Corridor Choke",
+      "recommendation": "Block rejected: conflicts with Rajdhani/Vande Bharat or suburban flow"
+    }
+  },
+
+  "forecasting": {
+    "model_type": "ensemble",
+    "horizon_hours": [6, 12, 24, 48, 168],
+    "confidence_interval_pct": 90,
+    "artifact_path": "artifacts/traffic_forecaster.joblib"
+  },
+
+  "corridor": {
+    "default_block_duration_minutes": 120,
+    "min_block_duration_minutes": 60,
+    "max_block_duration_minutes": 360,
+    "min_headway_buffer_minutes": 15,
+    "clearing_time_minutes": 10
+  }
+}

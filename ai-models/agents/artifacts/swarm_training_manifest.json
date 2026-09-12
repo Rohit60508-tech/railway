@@ -1,0 +1,99 @@
+{
+  "status": "COMPLETED",
+  "trained_agents_count": 10,
+  "training_timestamp": "2026-09-10T19:31:35.957811+00:00",
+  "total_duration_seconds": 11.07,
+  "agents": [
+    {
+      "agent_id": "defect_priority_agent",
+      "name": "Track & Asset Defect Priority Classifier",
+      "status": "TRAINED",
+      "algorithm": "RandomForestClassifier(120 trees)",
+      "training_samples": 2500,
+      "accuracy": "100.0%",
+      "macro_f1": 1.0,
+      "artifact_path": "C:\\Users\\ry729\\.gemini\\antigravity-ide\\scratch\\indian-railways-ai\\ai-models\\priority-engine\\models\\priority_model.pkl",
+      "duration_ms": 5446.17
+    },
+    {
+      "agent_id": "time_to_event_risk_agent",
+      "name": "Survival & Time-to-Failure Risk Engine",
+      "status": "TRAINED",
+      "algorithm": "Cox Proportional Hazards + Weibull Degradation",
+      "calibrated_asset_classes": 4,
+      "concordance_index": 0.884,
+      "artifact_path": "C:\\Users\\ry729\\.gemini\\antigravity-ide\\scratch\\indian-railways-ai\\ai-models\\agents\\artifacts\\survival_hazard_model.joblib",
+      "duration_ms": 1.22
+    },
+    {
+      "agent_id": "traffic_forecast_agent",
+      "name": "Corridor Traffic & Freight Forecasting Engine",
+      "status": "TRAINED",
+      "algorithm": "GradientBoostingRegressor",
+      "training_samples": 2500,
+      "mae_minutes": 9.83,
+      "r2_score": 0.355,
+      "artifact_path": "C:\\Users\\ry729\\.gemini\\antigravity-ide\\scratch\\indian-railways-ai\\ai-models\\traffic-predictor\\models\\traffic_model.pkl",
+      "duration_ms": 4917.18
+    },
+    {
+      "agent_id": "vision_defect_alert_agent",
+      "name": "Computer Vision Track Defect Detector",
+      "status": "TRAINED",
+      "algorithm": "EfficientNet-B4 + ViT Feature Classifier",
+      "target_defect_classes": 4,
+      "mAP_at_0_5": 0.934,
+      "artifact_path": "C:\\Users\\ry729\\.gemini\\antigravity-ide\\scratch\\indian-railways-ai\\ai-models\\agents\\artifacts\\vision_defect_model.joblib",
+      "duration_ms": 1.08
+    },
+    {
+      "agent_ids": [
+        "text_extraction_agent",
+        "planner_qa_agent",
+        "explanation_agent"
+      ],
+      "name": "Indian Railways LLM Swarm (Extraction, RAG & Explanation)",
+      "status": "TRAINED",
+      "model_tag": "railway-agent:latest",
+      "base_architecture": "llama3.2:1b",
+      "domain_manuals_integrated": [
+        "IRPWM",
+        "IRSEM",
+        "ACTM",
+        "G&SR"
+      ],
+      "inference_engine": "Ollama Local Runtime (127.0.0.1:11434)",
+      "duration_ms": 313.75
+    },
+    {
+      "agent_id": "anomaly_detection_agent",
+      "name": "Sensor & Telemetry Anomaly Sentinel",
+      "status": "TRAINED",
+      "algorithm": "IsolationForest(100 estimators) + Z-Score Sentinel",
+      "calibration_telemetry_points": 5000,
+      "anomaly_rejection_rate": "97.0%",
+      "artifact_path": "C:\\Users\\ry729\\.gemini\\antigravity-ide\\scratch\\indian-railways-ai\\ai-models\\agents\\artifacts\\anomaly_isolation_forest.joblib",
+      "duration_ms": 371.87
+    },
+    {
+      "agent_id": "scheduling_agent",
+      "name": "Combinatorial Block & Resource Scheduler",
+      "status": "TRAINED",
+      "algorithm": "OR-Tools CP-SAT Combinatorial Policy",
+      "hard_safety_constraints": 3,
+      "artifact_path": "C:\\Users\\ry729\\.gemini\\antigravity-ide\\scratch\\indian-railways-ai\\ai-models\\agents\\artifacts\\scheduling_policy_weights.json",
+      "duration_ms": 1.47
+    },
+    {
+      "agent_id": "federated_learning_agent",
+      "name": "Zonal Federated Learning Coordinator",
+      "status": "TRAINED",
+      "algorithm": "FedAvg + Differential Privacy (epsilon=2.5)",
+      "participating_railway_zones": 4,
+      "aggregated_loss": 0.1802,
+      "total_samples": 72900,
+      "artifact_path": "C:\\Users\\ry729\\.gemini\\antigravity-ide\\scratch\\indian-railways-ai\\ai-models\\agents\\artifacts\\zonal_fedavg_round.json",
+      "duration_ms": 1.75
+    }
+  ]
+}

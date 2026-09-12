@@ -1,25 +1,31 @@
-"""
-priority_engine package
-─────────────────────────────────────────────────────────────────────────────
-Package alias and forwarding exports for priority-engine.
-Enables standard static analysis (Pyright/Pylance/MyPy) and direct module imports.
-─────────────────────────────────────────────────────────────────────────────
-"""
+# priority-engine/__init__.py
+# Defect Priority & Risk Scoring Engine
+# ─────────────────────────────────────
+# Ranks maintenance work orders by a composite risk score derived from:
+#   - Safety severity and RDSO classification
+#   - Traffic density and train loading
+#   - SLA overdue days and defect age
+#   - Failure probability & asset criticality
+#   - Environmental & weather hazards
 
-import sys
-from pathlib import Path
-
-_SRC_DIR = Path(__file__).resolve().parent.parent / "priority-engine"
-if str(_SRC_DIR) not in sys.path:
-    sys.path.insert(0, str(_SRC_DIR))
-
-from .model_loader import ModelLoader, model_loader
 from .defect_prioritizer import DefectPrioritizer
+from .model_trainer import ModelTrainer
+from .model_loader import ModelLoader, model_loader
 from .urgency_scorer import UrgencyScorer
 
+# Aliases for backwards compatibility
+PriorityEngine = DefectPrioritizer
+RiskScorer = UrgencyScorer
+FeatureExtractor = DefectPrioritizer
+
+__version__ = "1.0.0"
 __all__ = [
+    "DefectPrioritizer",
+    "ModelTrainer",
     "ModelLoader",
     "model_loader",
-    "DefectPrioritizer",
     "UrgencyScorer",
+    "PriorityEngine",
+    "RiskScorer",
+    "FeatureExtractor",
 ]

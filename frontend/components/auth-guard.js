@@ -27,7 +27,6 @@
         'work-orders',
         'control-office',
         'surveillance',
-        'platform-portal',
         'ai-models',
         'OVERWRITE_ANY',
         'OVERWRITE_BLOCKS',
@@ -39,9 +38,30 @@
       ],
     },
     'field-engineer': {
-      label: 'Field Engineer',
+      label: 'Field Engineer (General / SSE)',
       icon: '🔧',
       color: '#D97706',
+      route: 'maintenance-dashboard.html',
+      permissions: ['work-orders'],
+    },
+    'field-tms': {
+      label: 'TMS — Track Maintenance',
+      icon: '🛤️',
+      color: '#F59E0B',
+      route: 'maintenance-dashboard.html',
+      permissions: ['work-orders'],
+    },
+    'field-smms': {
+      label: 'SMMS — Signal & Telecom',
+      icon: '🚦',
+      color: '#0284C7',
+      route: 'maintenance-dashboard.html',
+      permissions: ['work-orders'],
+    },
+    'field-trd': {
+      label: 'TRD — Traction Distribution',
+      icon: '⚡',
+      color: '#EAB308',
       route: 'maintenance-dashboard.html',
       permissions: ['work-orders'],
     },
@@ -58,13 +78,6 @@
       color: '#059669',
       route: 'surveillance-dashboard.html',
       permissions: ['surveillance'],
-    },
-    'platform-portal': {
-      label: 'Platform Portal User',
-      icon: '🚉',
-      color: '#7C3AED',
-      route: 'platform-portal.html',
-      permissions: ['platform-portal'],
     },
   };
 
@@ -84,30 +97,42 @@
   /** Determine which "page key" the current URL corresponds to */
   function getCurrentPageKey() {
     const path = window.location.pathname;
-    if (path.includes('admin-dashboard'))    return 'admin';
+    if (path.includes('admin-dashboard')) return 'admin';
     if (path.includes('maintenance-dashboard')) return 'work-orders';
-    if (path.includes('control-office'))     return 'control-office';
-    if (path.includes('surveillance'))       return 'surveillance';
-    if (path.includes('platform-portal'))    return 'platform-portal';
+    if (path.includes('control-office')) return 'control-office';
+    if (path.includes('surveillance')) return 'surveillance';
     if (path.includes('ai-model-management')) return 'ai-models';
     return null;
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // HIGH-SECURITY PROTOCOL: FORCE LOGOUT ON EVERY PAGE RELOAD / REFRESH
+  // ═══════════════════════════════════════════════════════════════════════════
+  let isReload = false;
+  try {
+    const navEntries = performance.getEntriesByType ? performance.getEntriesByType('navigation') : [];
+    if (navEntries.length > 0 && navEntries[0].type === 'reload') {
+      isReload = true;
+    } else if (window.performance && window.performance.navigation && window.performance.navigation.type === 1) {
+      isReload = true;
+    }
+  } catch (_) {}
+
+  if (isReload) {
+    try {
+      sessionStorage.removeItem(SESSION_KEY);
+      sessionStorage.removeItem('ir_auth_token');
+    } catch (_) {}
+    window.location.replace(LOGIN_URL + '?reason=reload_security');
+    return;
   }
 
   let session = getSession();
 
   if (!session) {
-    // Auto-provision Chief Controller Admin session so all dashboards load data seamlessly
-    session = {
-      username: 'admin',
-      role: 'admin',
-      name: 'Chief Controller & Executive Admin',
-      designation: 'Executive Admin & DOM',
-      department: 'Traffic & Civil Operations',
-      division: 'HQ — Northern Railway',
-    };
-    try {
-      sessionStorage.setItem(SESSION_KEY, JSON.stringify(session));
-    } catch (_) {}
+    const currentPath = encodeURIComponent(window.location.pathname.split('/').pop() || 'admin-dashboard.html');
+    window.location.replace(LOGIN_URL + '?redirect=' + currentPath);
+    return;
   }
 
   const meta = ROLE_META[session.role] || ROLE_META['admin'];

@@ -1,14 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Surveillance & Inspection Center — RAKSHA PATH | Indian Railways AI</title>
-  <meta name="description" content="RAKSHA PATH — Indian Railways AI Maintenance Platform - Automated Track Surveillance, USFD, TRC, Drone, and Patrol Anomaly Ranking." />
+  <meta name="description"
+    content="RAKSHA PATH — Indian Railways AI Maintenance Platform - Automated Track Surveillance, USFD, TRC, Drone, and Patrol Anomaly Ranking." />
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Orbitron:wght@500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Orbitron:wght@500;600;700;800;900&display=swap"
+    rel="stylesheet" />
 
   <!-- Auth guard (runs before page renders) -->
   <script src="../components/auth-guard.js"></script>
@@ -42,7 +46,12 @@
       --font-display: 'Calibri', 'Arial', sans-serif;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
     body {
       background: radial-gradient(circle at 50% 0%, #FFFFFF 0%, #FAF6EE 100%);
       color: #0F172A;
@@ -66,11 +75,13 @@
       top: 0;
       z-index: 100;
     }
+
     .brand-group {
       display: flex;
       align-items: center;
       gap: 14px;
     }
+
     .brand-logo {
       width: 38px;
       height: 38px;
@@ -82,6 +93,7 @@
       font-size: 1.2rem;
       box-shadow: 0 0 15px rgba(0, 51, 102, 0.2);
     }
+
     .brand-title {
       font-family: var(--font-display);
       font-size: 1.1rem;
@@ -89,6 +101,7 @@
       color: #0F172A;
       letter-spacing: 0.8px;
     }
+
     .brand-sub {
       font-size: 0.72rem;
       color: #64748B;
@@ -101,6 +114,7 @@
       align-items: center;
       gap: 16px;
     }
+
     .nav-pill {
       color: #334155;
       text-decoration: none;
@@ -110,7 +124,9 @@
       border-radius: 6px;
       transition: all 0.2s;
     }
-    .nav-pill:hover, .nav-pill.active {
+
+    .nav-pill:hover,
+    .nav-pill.active {
       color: #003366;
       background: rgba(0, 51, 102, 0.08);
       border: 1px solid rgba(0, 51, 102, 0.25);
@@ -130,6 +146,7 @@
       gap: 16px;
       margin-bottom: 28px;
     }
+
     .stream-card {
       background: var(--card-bg);
       border: 1px solid var(--border-cyan);
@@ -140,14 +157,17 @@
       gap: 12px;
       box-shadow: 0 4px 16px rgba(70, 50, 30, 0.05);
     }
+
     .stream-icon {
       font-size: 1.6rem;
     }
+
     .stream-name {
       font-size: 0.8rem;
       font-weight: 700;
       color: #0F172A;
     }
+
     .stream-status {
       font-size: 0.72rem;
       color: #059669;
@@ -164,6 +184,7 @@
       justify-content: space-between;
       margin-bottom: 16px;
     }
+
     .section-title {
       font-family: var(--font-display);
       font-size: 1.25rem;
@@ -190,6 +211,7 @@
       position: relative;
       transition: all 0.2s;
     }
+
     .inspection-card.p1-critical {
       border: 1px solid rgba(220, 38, 38, 0.35);
       background: linear-gradient(90deg, rgba(220, 38, 38, 0.04) 0%, rgba(255, 255, 255, 0.95) 25%);
@@ -202,11 +224,13 @@
       display: inline-flex;
       cursor: help;
     }
+
     .tooltip-icon {
       font-size: 0.82rem;
       color: #003366;
       margin-left: 4px;
     }
+
     .tooltip-bubble {
       visibility: hidden;
       opacity: 0;
@@ -224,10 +248,11 @@
       transform: translateX(-50%);
       font-size: 0.74rem;
       line-height: 1.4;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
       transition: opacity 0.2s ease, visibility 0.2s ease;
       pointer-events: none;
     }
+
     .tooltip-container:hover .tooltip-bubble {
       visibility: visible;
       opacity: 1;
@@ -244,6 +269,7 @@
     }
   </style>
 </head>
+
 <body>
 
   <!-- SharedNav mounts here -->
@@ -305,7 +331,8 @@
     <!-- ═══════════════════ AUDIT OVERRIDE TRAIL ═══════════════════ -->
     <div class="audit-panel">
       <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
-        <div style="font-family: var(--font-display); font-size: 0.95rem; color: #003366; font-weight: 700; display: flex; align-items: center; gap: 8px;">
+        <div
+          style="font-family: var(--font-display); font-size: 0.95rem; color: #003366; font-weight: 700; display: flex; align-items: center; gap: 8px;">
           <span>📋</span>
           <span>Recent Manual Overrides & Regulatory Audit Trail</span>
         </div>
@@ -322,7 +349,8 @@
       </div>
 
       <div id="audit-log-list" style="font-size: 0.8rem; color: #475569;">
-        No manual overrides recorded in current browser session. Overrides made via the "Manual Override" button are logged here with officer IDs and justification codes.
+        No manual overrides recorded in current browser session. Overrides made via the "Manual Override" button are
+        logged here with officer IDs and justification codes.
       </div>
     </div>
 
@@ -468,13 +496,13 @@
 
           <!-- Explainable AI Card -->
           ${AIExplanationCard.render({
-            id: insp.id,
-            summary: insp.summary,
-            detailedReason: insp.detailed,
-            factors: insp.factors,
-            recommendedAction: insp.action,
-            defaultExpanded: insp.category === 'P1'
-          })}
+          id: insp.id,
+          summary: insp.summary,
+          detailedReason: insp.detailed,
+          factors: insp.factors,
+          recommendedAction: insp.action,
+          defaultExpanded: insp.category === 'P1'
+        })}
         `;
 
         container.appendChild(card);
@@ -482,7 +510,7 @@
     }
 
     // Trigger Manual Override Modal
-    window.triggerOverride = function(targetId, currentVal) {
+    window.triggerOverride = function (targetId, currentVal) {
       ManualOverrideModal.open({
         targetId,
         currentVal,
@@ -501,7 +529,7 @@
       });
     };
 
-    window.refreshAuditLogs = function() {
+    window.refreshAuditLogs = function () {
       const logs = ManualOverrideModal.getAuditLogs();
       const container = document.getElementById('audit-log-list');
       if (!logs || logs.length === 0) {
@@ -533,4 +561,5 @@
     window.refreshAuditLogs();
   </script>
 </body>
+
 </html>

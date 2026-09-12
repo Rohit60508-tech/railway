@@ -11,9 +11,17 @@ Unit tests for DefectPrioritizer in /ai-models/priority-engine/:
 ─────────────────────────────────────────────────────────────────────────────
 """
 
+import sys
+from pathlib import Path
+
+TESTS_DIR = Path(__file__).resolve().parent
+AI_MODELS_DIR = TESTS_DIR.parent
+
+if str(AI_MODELS_DIR) not in sys.path:
+    sys.path.insert(0, str(AI_MODELS_DIR))
+
 import os
 import tempfile
-from pathlib import Path
 import pytest
 from sklearn.ensemble import RandomForestClassifier
 

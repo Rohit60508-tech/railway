@@ -32,6 +32,8 @@ from inference.live_train_api import router as live_train_router
 from inference.advanced_features_api import router as advanced_features_router
 from inference.open_data_api import router as open_data_router
 from inference.storage_server_api import router as storage_server_router
+from inference.ollama_api import router as ollama_router
+from inference.agents_api import router as agents_router
 from shared.logger import get_logger
 
 logger = get_logger("inference_app")
@@ -59,12 +61,17 @@ app.add_middleware(
 app.include_router(priority_router)
 app.include_router(traffic_router)
 app.include_router(optimizer_router)
+app.include_router(optimizer_router, prefix=api_config.api_prefix)
 app.include_router(health_router)
 app.include_router(ingestion_router)
+app.include_router(ingestion_router, prefix=api_config.api_prefix)
 app.include_router(live_train_router)
 app.include_router(advanced_features_router)
+app.include_router(advanced_features_router, prefix=api_config.api_prefix)
 app.include_router(open_data_router)
 app.include_router(storage_server_router)
+app.include_router(ollama_router)
+app.include_router(agents_router, prefix=api_config.api_prefix)
 
 
 @app.get("/", summary="Root API Gateway Index")

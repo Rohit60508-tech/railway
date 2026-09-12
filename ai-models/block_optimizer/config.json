@@ -1,0 +1,73 @@
+{
+  "service": "block-optimizer",
+  "version": "1.0.0",
+  "description": "Google OR-Tools CP-SAT multi-department maintenance block optimization and bundling engine",
+
+  "optimization_objective": "MINIMIZE_TRAFFIC_DISRUPTION_AND_MAXIMIZE_PRIORITY",
+  "max_tasks_per_bundle": 5,
+  "buffer_time_minutes": 15,
+  "max_block_duration_minutes": 240,
+
+  "department_compatibility": {
+    "CIVIL": {
+      "CIVIL": 1.0,
+      "TRD_OHE": 0.90,
+      "SIGNALLING": 0.80,
+      "ROLLING_STOCK": 0.40
+    },
+    "TRD_OHE": {
+      "CIVIL": 0.90,
+      "TRD_OHE": 1.0,
+      "SIGNALLING": 0.85,
+      "ROLLING_STOCK": 0.30
+    },
+    "SIGNALLING": {
+      "CIVIL": 0.80,
+      "TRD_OHE": 0.85,
+      "SIGNALLING": 1.0,
+      "ROLLING_STOCK": 0.30
+    },
+    "ROLLING_STOCK": {
+      "CIVIL": 0.40,
+      "TRD_OHE": 0.30,
+      "SIGNALLING": 0.30,
+      "ROLLING_STOCK": 1.0
+    },
+    "ENGINEERING": {
+      "ENGINEERING": 1.0,
+      "TRACTION": 0.90,
+      "S&T": 0.80
+    },
+    "TRACTION": {
+      "ENGINEERING": 0.90,
+      "TRACTION": 1.0,
+      "S&T": 0.85
+    },
+    "S&T": {
+      "ENGINEERING": 0.80,
+      "TRACTION": 0.85,
+      "S&T": 1.0
+    }
+  },
+
+  "constraint_weights": {
+    "priority_coverage": 0.40,
+    "traffic_disruption_penalty": 0.35,
+    "multi_dept_bundling_bonus": 0.15,
+    "crew_utilization": 0.10
+  },
+
+  "bundling_weights": {
+    "same_section": 0.35,
+    "same_department": 0.25,
+    "compatible_departments": 0.25,
+    "shared_resources": 0.15
+  },
+
+  "solver": {
+    "engine": "CP-SAT",
+    "time_limit_seconds": 30,
+    "num_search_workers": 4,
+    "log_search_progress": false
+  }
+}

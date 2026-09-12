@@ -13,9 +13,9 @@
 (function (global) {
   'use strict';
 
-  const STORE_KEY   = 'ir_user_store';
+  const STORE_KEY = 'ir_user_store';
   const VERSION_KEY = 'ir_user_store_v';
-  const STORE_VERSION = '1';
+  const STORE_VERSION = '2';
 
   /** Default seeded users — only written once on first load */
   const DEFAULT_USERS = [
@@ -27,7 +27,7 @@
       role: 'admin',
       email: 'rajesh.kumar@indianrailways.gov.in',
       phone: '+91-98100-11001',
-      division: 'HQ — New Delhi',
+      division: 'HQ — Northern Railway',
       active: true,
       createdAt: Date.now(),
     },
@@ -35,7 +35,7 @@
       id: 'usr-002',
       username: 'engineer1',
       password: 'Eng@456',
-      name: 'Priya Sharma',
+      name: 'Priya Sharma (SSE In-Charge)',
       role: 'field-engineer',
       email: 'priya.sharma@indianrailways.gov.in',
       phone: '+91-98200-22002',
@@ -44,7 +44,43 @@
       createdAt: Date.now(),
     },
     {
-      id: 'usr-003',
+      id: 'usr-003-tms',
+      username: 'tms_engineer',
+      password: 'Tms@789',
+      name: 'Vikram Rathore (SSE / Track TMS)',
+      role: 'field-tms',
+      email: 'vikram.tms@indianrailways.gov.in',
+      phone: '+91-98200-33001',
+      division: 'Northern Railway — Track Maintenance Dept',
+      active: true,
+      createdAt: Date.now(),
+    },
+    {
+      id: 'usr-003-smms',
+      username: 'smms_engineer',
+      password: 'Smms@456',
+      name: 'Alok Verma (SSE / Signal SMMS)',
+      role: 'field-smms',
+      email: 'alok.smms@indianrailways.gov.in',
+      phone: '+91-98200-44002',
+      division: 'Northern Railway — Signal & Telecom Dept',
+      active: true,
+      createdAt: Date.now(),
+    },
+    {
+      id: 'usr-003-trd',
+      username: 'trd_engineer',
+      password: 'Trd@123',
+      name: 'Sanjay Rawat (SSE / Traction TRD)',
+      role: 'field-trd',
+      email: 'sanjay.trd@indianrailways.gov.in',
+      phone: '+91-98200-55003',
+      division: 'Northern Railway — Traction Distribution Dept',
+      active: true,
+      createdAt: Date.now(),
+    },
+    {
+      id: 'usr-004',
       username: 'controller1',
       password: 'Ctrl@789',
       name: 'Suresh Patel',
@@ -56,7 +92,7 @@
       createdAt: Date.now(),
     },
     {
-      id: 'usr-004',
+      id: 'usr-005',
       username: 'inspector1',
       password: 'Insp@321',
       name: 'Meena Iyer',
@@ -67,27 +103,17 @@
       active: true,
       createdAt: Date.now(),
     },
-    {
-      id: 'usr-005',
-      username: 'platform1',
-      password: 'Plat@654',
-      name: 'Arjun Singh',
-      role: 'platform-portal',
-      email: 'arjun.singh@indianrailways.gov.in',
-      phone: '+91-98500-55005',
-      division: 'Eastern Railway — Kolkata Division',
-      active: true,
-      createdAt: Date.now(),
-    },
   ];
 
-  /** Role meta (shared with auth-guard) */
+  /** Role meta (shared with auth-guard & admin panel) */
   const ROLE_META = {
-    'admin':           { label: 'Executive / Admin',              icon: '🛡️', color: '#003366' },
-    'field-engineer':  { label: 'Field Engineer',                 icon: '🔧', color: '#D97706' },
-    'control-office':  { label: 'Control Office Controller',      icon: '🎛️', color: '#0056B3' },
-    'surveillance':    { label: 'Surveillance Inspector',         icon: '📡', color: '#059669' },
-    'platform-portal': { label: 'Platform Portal User',           icon: '🚉', color: '#7C3AED' },
+    'admin': { label: 'Executive / Admin', icon: '🛡️', color: '#003366', dept: 'Chief Controller & Executive Admin' },
+    'field-engineer': { label: 'Field Engineer (General / SSE)', icon: '🔧', color: '#D97706', dept: 'Field Maintenance In-Charge' },
+    'field-tms': { label: 'TMS — Track Maintenance', icon: '🛤️', color: '#F59E0B', dept: 'Track Maintenance Dept (P-Way)' },
+    'field-smms': { label: 'SMMS — Signal & Telecom', icon: '🚦', color: '#0284C7', dept: 'Signal Maintenance Dept (S&T)' },
+    'field-trd': { label: 'TRD — Traction Distribution', icon: '⚡', color: '#EAB308', dept: 'Traction Power & OHE Dept' },
+    'control-office': { label: 'Control Office Controller', icon: '🎛️', color: '#0056B3', dept: 'Section Traffic & Control' },
+    'surveillance': { label: 'Surveillance Inspector', icon: '📡', color: '#059669', dept: 'Safety & Telemetry Specialist' },
   };
 
   /** ── Internal helpers ─────────────────────────────────────────── */

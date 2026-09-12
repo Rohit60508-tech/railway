@@ -1,0 +1,32 @@
+{
+  "round_id": 16,
+  "aggregated_model": "Track_Defect_Priority_v2.4",
+  "global_loss": 0.1802,
+  "differential_privacy": {
+    "epsilon": 2.5,
+    "delta": "1e-5"
+  },
+  "zones_aggregated": [
+    {
+      "zone": "Northern Railway (NR)",
+      "samples": 22400,
+      "local_loss": 0.174
+    },
+    {
+      "zone": "North Central Railway (NCR)",
+      "samples": 18200,
+      "local_loss": 0.181
+    },
+    {
+      "zone": "Western Railway (WR)",
+      "samples": 16900,
+      "local_loss": 0.168
+    },
+    {
+      "zone": "Central Railway (CR)",
+      "samples": 15400,
+      "local_loss": 0.192
+    }
+  ],
+  "completed_at": "2026-09-10T19:31:35.955912+00:00"
+}

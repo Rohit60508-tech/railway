@@ -1,0 +1,32 @@
+{
+  "status": "COMPLETED",
+  "converted_at": "2026-09-10T20:24:43.091267+00:00",
+  "ollama_available": true,
+  "ollama_model": "llama3.2:1b",
+  "total_defects": 1,
+  "total_assets": 0,
+  "total_work_orders": 0,
+  "total_inspections": 0,
+  "total_observations": 0,
+  "total_corridor_windows": 0,
+  "priority_breakdown": {
+    "P1": 0,
+    "P2": 0,
+    "P3": 0,
+    "P4": 0
+  },
+  "department_breakdown": {
+    "CIVIL": 0,
+    "S&T": 0,
+    "TRD_OHE": 0
+  },
+  "detection_sources": [],
+  "artifacts_generated": [
+    "C:\\Users\\ry729\\.gemini\\antigravity-ide\\scratch\\indian-railways-ai\\data\\converted_seeds\\defects_converted.json",
+    "C:\\Users\\ry729\\.gemini\\antigravity-ide\\scratch\\indian-railways-ai\\data\\converted_seeds\\assets_converted.json",
+    "C:\\Users\\ry729\\.gemini\\antigravity-ide\\scratch\\indian-railways-ai\\data\\converted_seeds\\work_orders_converted.json",
+    "C:\\Users\\ry729\\.gemini\\antigravity-ide\\scratch\\indian-railways-ai\\data\\converted_seeds\\inspections_converted.json",
+    "C:\\Users\\ry729\\.gemini\\antigravity-ide\\scratch\\indian-railways-ai\\data\\converted_seeds\\corridor_windows_converted.json",
+    "C:\\Users\\ry729\\.gemini\\antigravity-ide\\scratch\\indian-railways-ai\\database\\seeds\\sql\\02_insert_defects.sql"
+  ]
+}

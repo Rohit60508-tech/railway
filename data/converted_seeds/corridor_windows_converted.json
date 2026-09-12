@@ -1,0 +1,2002 @@
+[
+  {
+    "window_id": "WIN-SEC-A01-2026090700",
+    "section_id": "SEC-A01",
+    "start_time": "2026-09-07 00:00:00",
+    "end_time": "2026-09-07 01:00:00",
+    "scheduled_train_count": "2",
+    "forecast_utilization_percent": "57",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "HIGH"
+  },
+  {
+    "window_id": "WIN-SEC-A01-2026090701",
+    "section_id": "SEC-A01",
+    "start_time": "2026-09-07 01:00:00",
+    "end_time": "2026-09-07 02:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "57",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-A01-2026090702",
+    "section_id": "SEC-A01",
+    "start_time": "2026-09-07 02:00:00",
+    "end_time": "2026-09-07 03:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "57",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-A01-2026090703",
+    "section_id": "SEC-A01",
+    "start_time": "2026-09-07 03:00:00",
+    "end_time": "2026-09-07 04:00:00",
+    "scheduled_train_count": "2",
+    "forecast_utilization_percent": "69",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "HIGH"
+  },
+  {
+    "window_id": "WIN-SEC-A01-2026090704",
+    "section_id": "SEC-A01",
+    "start_time": "2026-09-07 04:00:00",
+    "end_time": "2026-09-07 05:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "69",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-A01-2026090705",
+    "section_id": "SEC-A01",
+    "start_time": "2026-09-07 05:00:00",
+    "end_time": "2026-09-07 06:00:00",
+    "scheduled_train_count": "2",
+    "forecast_utilization_percent": "69",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "HIGH"
+  },
+  {
+    "window_id": "WIN-SEC-A01-2026090706",
+    "section_id": "SEC-A01",
+    "start_time": "2026-09-07 06:00:00",
+    "end_time": "2026-09-07 07:00:00",
+    "scheduled_train_count": "2",
+    "forecast_utilization_percent": "93",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "HIGH"
+  },
+  {
+    "window_id": "WIN-SEC-A01-2026090707",
+    "section_id": "SEC-A01",
+    "start_time": "2026-09-07 07:00:00",
+    "end_time": "2026-09-07 08:00:00",
+    "scheduled_train_count": "2",
+    "forecast_utilization_percent": "93",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "HIGH"
+  },
+  {
+    "window_id": "WIN-SEC-A01-2026090708",
+    "section_id": "SEC-A01",
+    "start_time": "2026-09-07 08:00:00",
+    "end_time": "2026-09-07 09:00:00",
+    "scheduled_train_count": "2",
+    "forecast_utilization_percent": "93",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "HIGH"
+  },
+  {
+    "window_id": "WIN-SEC-A01-2026090709",
+    "section_id": "SEC-A01",
+    "start_time": "2026-09-07 09:00:00",
+    "end_time": "2026-09-07 10:00:00",
+    "scheduled_train_count": "2",
+    "forecast_utilization_percent": "77",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "HIGH"
+  },
+  {
+    "window_id": "WIN-SEC-A01-2026090710",
+    "section_id": "SEC-A01",
+    "start_time": "2026-09-07 10:00:00",
+    "end_time": "2026-09-07 11:00:00",
+    "scheduled_train_count": "2",
+    "forecast_utilization_percent": "77",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "HIGH"
+  },
+  {
+    "window_id": "WIN-SEC-A01-2026090711",
+    "section_id": "SEC-A01",
+    "start_time": "2026-09-07 11:00:00",
+    "end_time": "2026-09-07 12:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "77",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-A01-2026090712",
+    "section_id": "SEC-A01",
+    "start_time": "2026-09-07 12:00:00",
+    "end_time": "2026-09-07 13:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "66",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-A01-2026090713",
+    "section_id": "SEC-A01",
+    "start_time": "2026-09-07 13:00:00",
+    "end_time": "2026-09-07 14:00:00",
+    "scheduled_train_count": "2",
+    "forecast_utilization_percent": "66",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "HIGH"
+  },
+  {
+    "window_id": "WIN-SEC-A01-2026090714",
+    "section_id": "SEC-A01",
+    "start_time": "2026-09-07 14:00:00",
+    "end_time": "2026-09-07 15:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "66",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-A01-2026090715",
+    "section_id": "SEC-A01",
+    "start_time": "2026-09-07 15:00:00",
+    "end_time": "2026-09-07 16:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "78",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-A01-2026090716",
+    "section_id": "SEC-A01",
+    "start_time": "2026-09-07 16:00:00",
+    "end_time": "2026-09-07 17:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "78",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-A01-2026090717",
+    "section_id": "SEC-A01",
+    "start_time": "2026-09-07 17:00:00",
+    "end_time": "2026-09-07 18:00:00",
+    "scheduled_train_count": "2",
+    "forecast_utilization_percent": "78",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "HIGH"
+  },
+  {
+    "window_id": "WIN-SEC-A01-2026090718",
+    "section_id": "SEC-A01",
+    "start_time": "2026-09-07 18:00:00",
+    "end_time": "2026-09-07 19:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "86",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-A01-2026090719",
+    "section_id": "SEC-A01",
+    "start_time": "2026-09-07 19:00:00",
+    "end_time": "2026-09-07 20:00:00",
+    "scheduled_train_count": "2",
+    "forecast_utilization_percent": "86",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "HIGH"
+  },
+  {
+    "window_id": "WIN-SEC-A01-2026090720",
+    "section_id": "SEC-A01",
+    "start_time": "2026-09-07 20:00:00",
+    "end_time": "2026-09-07 21:00:00",
+    "scheduled_train_count": "2",
+    "forecast_utilization_percent": "86",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "HIGH"
+  },
+  {
+    "window_id": "WIN-SEC-A01-2026090721",
+    "section_id": "SEC-A01",
+    "start_time": "2026-09-07 21:00:00",
+    "end_time": "2026-09-07 22:00:00",
+    "scheduled_train_count": "2",
+    "forecast_utilization_percent": "87",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "HIGH"
+  },
+  {
+    "window_id": "WIN-SEC-A01-2026090722",
+    "section_id": "SEC-A01",
+    "start_time": "2026-09-07 22:00:00",
+    "end_time": "2026-09-07 23:00:00",
+    "scheduled_train_count": "2",
+    "forecast_utilization_percent": "87",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "HIGH"
+  },
+  {
+    "window_id": "WIN-SEC-A01-2026090723",
+    "section_id": "SEC-A01",
+    "start_time": "2026-09-07 23:00:00",
+    "end_time": "2026-09-08 00:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "87",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-A02-2026090700",
+    "section_id": "SEC-A02",
+    "start_time": "2026-09-07 00:00:00",
+    "end_time": "2026-09-07 01:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "66",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-A02-2026090701",
+    "section_id": "SEC-A02",
+    "start_time": "2026-09-07 01:00:00",
+    "end_time": "2026-09-07 02:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "66",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-A02-2026090702",
+    "section_id": "SEC-A02",
+    "start_time": "2026-09-07 02:00:00",
+    "end_time": "2026-09-07 03:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "66",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-A02-2026090703",
+    "section_id": "SEC-A02",
+    "start_time": "2026-09-07 03:00:00",
+    "end_time": "2026-09-07 04:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "66",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-A02-2026090704",
+    "section_id": "SEC-A02",
+    "start_time": "2026-09-07 04:00:00",
+    "end_time": "2026-09-07 05:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "66",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-A02-2026090705",
+    "section_id": "SEC-A02",
+    "start_time": "2026-09-07 05:00:00",
+    "end_time": "2026-09-07 06:00:00",
+    "scheduled_train_count": "2",
+    "forecast_utilization_percent": "66",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "HIGH"
+  },
+  {
+    "window_id": "WIN-SEC-A02-2026090706",
+    "section_id": "SEC-A02",
+    "start_time": "2026-09-07 06:00:00",
+    "end_time": "2026-09-07 07:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "76",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-A02-2026090707",
+    "section_id": "SEC-A02",
+    "start_time": "2026-09-07 07:00:00",
+    "end_time": "2026-09-07 08:00:00",
+    "scheduled_train_count": "2",
+    "forecast_utilization_percent": "76",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "HIGH"
+  },
+  {
+    "window_id": "WIN-SEC-A02-2026090708",
+    "section_id": "SEC-A02",
+    "start_time": "2026-09-07 08:00:00",
+    "end_time": "2026-09-07 09:00:00",
+    "scheduled_train_count": "2",
+    "forecast_utilization_percent": "76",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "HIGH"
+  },
+  {
+    "window_id": "WIN-SEC-A02-2026090709",
+    "section_id": "SEC-A02",
+    "start_time": "2026-09-07 09:00:00",
+    "end_time": "2026-09-07 10:00:00",
+    "scheduled_train_count": "2",
+    "forecast_utilization_percent": "90",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "HIGH"
+  },
+  {
+    "window_id": "WIN-SEC-A02-2026090710",
+    "section_id": "SEC-A02",
+    "start_time": "2026-09-07 10:00:00",
+    "end_time": "2026-09-07 11:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "90",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-A02-2026090711",
+    "section_id": "SEC-A02",
+    "start_time": "2026-09-07 11:00:00",
+    "end_time": "2026-09-07 12:00:00",
+    "scheduled_train_count": "2",
+    "forecast_utilization_percent": "90",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "HIGH"
+  },
+  {
+    "window_id": "WIN-SEC-A02-2026090712",
+    "section_id": "SEC-A02",
+    "start_time": "2026-09-07 12:00:00",
+    "end_time": "2026-09-07 13:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "79",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-A02-2026090713",
+    "section_id": "SEC-A02",
+    "start_time": "2026-09-07 13:00:00",
+    "end_time": "2026-09-07 14:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "79",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-A02-2026090714",
+    "section_id": "SEC-A02",
+    "start_time": "2026-09-07 14:00:00",
+    "end_time": "2026-09-07 15:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "79",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-A02-2026090715",
+    "section_id": "SEC-A02",
+    "start_time": "2026-09-07 15:00:00",
+    "end_time": "2026-09-07 16:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "71",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-A02-2026090716",
+    "section_id": "SEC-A02",
+    "start_time": "2026-09-07 16:00:00",
+    "end_time": "2026-09-07 17:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "71",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-A02-2026090717",
+    "section_id": "SEC-A02",
+    "start_time": "2026-09-07 17:00:00",
+    "end_time": "2026-09-07 18:00:00",
+    "scheduled_train_count": "2",
+    "forecast_utilization_percent": "71",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "HIGH"
+  },
+  {
+    "window_id": "WIN-SEC-A02-2026090718",
+    "section_id": "SEC-A02",
+    "start_time": "2026-09-07 18:00:00",
+    "end_time": "2026-09-07 19:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "84",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-A02-2026090719",
+    "section_id": "SEC-A02",
+    "start_time": "2026-09-07 19:00:00",
+    "end_time": "2026-09-07 20:00:00",
+    "scheduled_train_count": "2",
+    "forecast_utilization_percent": "84",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "HIGH"
+  },
+  {
+    "window_id": "WIN-SEC-A02-2026090720",
+    "section_id": "SEC-A02",
+    "start_time": "2026-09-07 20:00:00",
+    "end_time": "2026-09-07 21:00:00",
+    "scheduled_train_count": "2",
+    "forecast_utilization_percent": "84",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "HIGH"
+  },
+  {
+    "window_id": "WIN-SEC-A02-2026090721",
+    "section_id": "SEC-A02",
+    "start_time": "2026-09-07 21:00:00",
+    "end_time": "2026-09-07 22:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "75",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-A02-2026090722",
+    "section_id": "SEC-A02",
+    "start_time": "2026-09-07 22:00:00",
+    "end_time": "2026-09-07 23:00:00",
+    "scheduled_train_count": "2",
+    "forecast_utilization_percent": "75",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "HIGH"
+  },
+  {
+    "window_id": "WIN-SEC-A02-2026090723",
+    "section_id": "SEC-A02",
+    "start_time": "2026-09-07 23:00:00",
+    "end_time": "2026-09-08 00:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "75",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-B01-2026090700",
+    "section_id": "SEC-B01",
+    "start_time": "2026-09-07 00:00:00",
+    "end_time": "2026-09-07 01:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "47",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-B01-2026090701",
+    "section_id": "SEC-B01",
+    "start_time": "2026-09-07 01:00:00",
+    "end_time": "2026-09-07 02:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "47",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-B01-2026090702",
+    "section_id": "SEC-B01",
+    "start_time": "2026-09-07 02:00:00",
+    "end_time": "2026-09-07 03:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "47",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-B01-2026090703",
+    "section_id": "SEC-B01",
+    "start_time": "2026-09-07 03:00:00",
+    "end_time": "2026-09-07 04:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "47",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-B01-2026090704",
+    "section_id": "SEC-B01",
+    "start_time": "2026-09-07 04:00:00",
+    "end_time": "2026-09-07 05:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "47",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-B01-2026090705",
+    "section_id": "SEC-B01",
+    "start_time": "2026-09-07 05:00:00",
+    "end_time": "2026-09-07 06:00:00",
+    "scheduled_train_count": "0",
+    "forecast_utilization_percent": "47",
+    "availability_status": "AVAILABLE",
+    "traffic_impact_level": "LOW"
+  },
+  {
+    "window_id": "WIN-SEC-B01-2026090706",
+    "section_id": "SEC-B01",
+    "start_time": "2026-09-07 06:00:00",
+    "end_time": "2026-09-07 07:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "64",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-B01-2026090707",
+    "section_id": "SEC-B01",
+    "start_time": "2026-09-07 07:00:00",
+    "end_time": "2026-09-07 08:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "64",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-B01-2026090708",
+    "section_id": "SEC-B01",
+    "start_time": "2026-09-07 08:00:00",
+    "end_time": "2026-09-07 09:00:00",
+    "scheduled_train_count": "2",
+    "forecast_utilization_percent": "64",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "HIGH"
+  },
+  {
+    "window_id": "WIN-SEC-B01-2026090709",
+    "section_id": "SEC-B01",
+    "start_time": "2026-09-07 09:00:00",
+    "end_time": "2026-09-07 10:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "71",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-B01-2026090710",
+    "section_id": "SEC-B01",
+    "start_time": "2026-09-07 10:00:00",
+    "end_time": "2026-09-07 11:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "71",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-B01-2026090711",
+    "section_id": "SEC-B01",
+    "start_time": "2026-09-07 11:00:00",
+    "end_time": "2026-09-07 12:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "71",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-B01-2026090712",
+    "section_id": "SEC-B01",
+    "start_time": "2026-09-07 12:00:00",
+    "end_time": "2026-09-07 13:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "50",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-B01-2026090713",
+    "section_id": "SEC-B01",
+    "start_time": "2026-09-07 13:00:00",
+    "end_time": "2026-09-07 14:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "50",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-B01-2026090714",
+    "section_id": "SEC-B01",
+    "start_time": "2026-09-07 14:00:00",
+    "end_time": "2026-09-07 15:00:00",
+    "scheduled_train_count": "2",
+    "forecast_utilization_percent": "50",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "HIGH"
+  },
+  {
+    "window_id": "WIN-SEC-B01-2026090715",
+    "section_id": "SEC-B01",
+    "start_time": "2026-09-07 15:00:00",
+    "end_time": "2026-09-07 16:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "55",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-B01-2026090716",
+    "section_id": "SEC-B01",
+    "start_time": "2026-09-07 16:00:00",
+    "end_time": "2026-09-07 17:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "55",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-B01-2026090717",
+    "section_id": "SEC-B01",
+    "start_time": "2026-09-07 17:00:00",
+    "end_time": "2026-09-07 18:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "55",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-B01-2026090718",
+    "section_id": "SEC-B01",
+    "start_time": "2026-09-07 18:00:00",
+    "end_time": "2026-09-07 19:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "58",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-B01-2026090719",
+    "section_id": "SEC-B01",
+    "start_time": "2026-09-07 19:00:00",
+    "end_time": "2026-09-07 20:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "58",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-B01-2026090720",
+    "section_id": "SEC-B01",
+    "start_time": "2026-09-07 20:00:00",
+    "end_time": "2026-09-07 21:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "58",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-B01-2026090721",
+    "section_id": "SEC-B01",
+    "start_time": "2026-09-07 21:00:00",
+    "end_time": "2026-09-07 22:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "64",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-B01-2026090722",
+    "section_id": "SEC-B01",
+    "start_time": "2026-09-07 22:00:00",
+    "end_time": "2026-09-07 23:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "64",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-B01-2026090723",
+    "section_id": "SEC-B01",
+    "start_time": "2026-09-07 23:00:00",
+    "end_time": "2026-09-08 00:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "64",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-B02-2026090700",
+    "section_id": "SEC-B02",
+    "start_time": "2026-09-07 00:00:00",
+    "end_time": "2026-09-07 01:00:00",
+    "scheduled_train_count": "0",
+    "forecast_utilization_percent": "43",
+    "availability_status": "AVAILABLE",
+    "traffic_impact_level": "LOW"
+  },
+  {
+    "window_id": "WIN-SEC-B02-2026090701",
+    "section_id": "SEC-B02",
+    "start_time": "2026-09-07 01:00:00",
+    "end_time": "2026-09-07 02:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "43",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-B02-2026090702",
+    "section_id": "SEC-B02",
+    "start_time": "2026-09-07 02:00:00",
+    "end_time": "2026-09-07 03:00:00",
+    "scheduled_train_count": "2",
+    "forecast_utilization_percent": "43",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "HIGH"
+  },
+  {
+    "window_id": "WIN-SEC-B02-2026090703",
+    "section_id": "SEC-B02",
+    "start_time": "2026-09-07 03:00:00",
+    "end_time": "2026-09-07 04:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "45",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-B02-2026090704",
+    "section_id": "SEC-B02",
+    "start_time": "2026-09-07 04:00:00",
+    "end_time": "2026-09-07 05:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "45",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-B02-2026090705",
+    "section_id": "SEC-B02",
+    "start_time": "2026-09-07 05:00:00",
+    "end_time": "2026-09-07 06:00:00",
+    "scheduled_train_count": "2",
+    "forecast_utilization_percent": "45",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "HIGH"
+  },
+  {
+    "window_id": "WIN-SEC-B02-2026090706",
+    "section_id": "SEC-B02",
+    "start_time": "2026-09-07 06:00:00",
+    "end_time": "2026-09-07 07:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "62",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-B02-2026090707",
+    "section_id": "SEC-B02",
+    "start_time": "2026-09-07 07:00:00",
+    "end_time": "2026-09-07 08:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "62",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-B02-2026090708",
+    "section_id": "SEC-B02",
+    "start_time": "2026-09-07 08:00:00",
+    "end_time": "2026-09-07 09:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "62",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-B02-2026090709",
+    "section_id": "SEC-B02",
+    "start_time": "2026-09-07 09:00:00",
+    "end_time": "2026-09-07 10:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "63",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-B02-2026090710",
+    "section_id": "SEC-B02",
+    "start_time": "2026-09-07 10:00:00",
+    "end_time": "2026-09-07 11:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "63",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-B02-2026090711",
+    "section_id": "SEC-B02",
+    "start_time": "2026-09-07 11:00:00",
+    "end_time": "2026-09-07 12:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "63",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-B02-2026090712",
+    "section_id": "SEC-B02",
+    "start_time": "2026-09-07 12:00:00",
+    "end_time": "2026-09-07 13:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "57",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-B02-2026090713",
+    "section_id": "SEC-B02",
+    "start_time": "2026-09-07 13:00:00",
+    "end_time": "2026-09-07 14:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "57",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-B02-2026090714",
+    "section_id": "SEC-B02",
+    "start_time": "2026-09-07 14:00:00",
+    "end_time": "2026-09-07 15:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "57",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-B02-2026090715",
+    "section_id": "SEC-B02",
+    "start_time": "2026-09-07 15:00:00",
+    "end_time": "2026-09-07 16:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "49",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-B02-2026090716",
+    "section_id": "SEC-B02",
+    "start_time": "2026-09-07 16:00:00",
+    "end_time": "2026-09-07 17:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "49",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-B02-2026090717",
+    "section_id": "SEC-B02",
+    "start_time": "2026-09-07 17:00:00",
+    "end_time": "2026-09-07 18:00:00",
+    "scheduled_train_count": "2",
+    "forecast_utilization_percent": "49",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "HIGH"
+  },
+  {
+    "window_id": "WIN-SEC-B02-2026090718",
+    "section_id": "SEC-B02",
+    "start_time": "2026-09-07 18:00:00",
+    "end_time": "2026-09-07 19:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "54",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-B02-2026090719",
+    "section_id": "SEC-B02",
+    "start_time": "2026-09-07 19:00:00",
+    "end_time": "2026-09-07 20:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "54",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-B02-2026090720",
+    "section_id": "SEC-B02",
+    "start_time": "2026-09-07 20:00:00",
+    "end_time": "2026-09-07 21:00:00",
+    "scheduled_train_count": "2",
+    "forecast_utilization_percent": "54",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "HIGH"
+  },
+  {
+    "window_id": "WIN-SEC-B02-2026090721",
+    "section_id": "SEC-B02",
+    "start_time": "2026-09-07 21:00:00",
+    "end_time": "2026-09-07 22:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "74",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-B02-2026090722",
+    "section_id": "SEC-B02",
+    "start_time": "2026-09-07 22:00:00",
+    "end_time": "2026-09-07 23:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "74",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-B02-2026090723",
+    "section_id": "SEC-B02",
+    "start_time": "2026-09-07 23:00:00",
+    "end_time": "2026-09-08 00:00:00",
+    "scheduled_train_count": "2",
+    "forecast_utilization_percent": "74",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "HIGH"
+  },
+  {
+    "window_id": "WIN-SEC-C01-2026090700",
+    "section_id": "SEC-C01",
+    "start_time": "2026-09-07 00:00:00",
+    "end_time": "2026-09-07 01:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "32",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-C01-2026090701",
+    "section_id": "SEC-C01",
+    "start_time": "2026-09-07 01:00:00",
+    "end_time": "2026-09-07 02:00:00",
+    "scheduled_train_count": "0",
+    "forecast_utilization_percent": "32",
+    "availability_status": "AVAILABLE",
+    "traffic_impact_level": "LOW"
+  },
+  {
+    "window_id": "WIN-SEC-C01-2026090702",
+    "section_id": "SEC-C01",
+    "start_time": "2026-09-07 02:00:00",
+    "end_time": "2026-09-07 03:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "32",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-C01-2026090703",
+    "section_id": "SEC-C01",
+    "start_time": "2026-09-07 03:00:00",
+    "end_time": "2026-09-07 04:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "16",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-C01-2026090704",
+    "section_id": "SEC-C01",
+    "start_time": "2026-09-07 04:00:00",
+    "end_time": "2026-09-07 05:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "16",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-C01-2026090705",
+    "section_id": "SEC-C01",
+    "start_time": "2026-09-07 05:00:00",
+    "end_time": "2026-09-07 06:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "16",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-C01-2026090706",
+    "section_id": "SEC-C01",
+    "start_time": "2026-09-07 06:00:00",
+    "end_time": "2026-09-07 07:00:00",
+    "scheduled_train_count": "0",
+    "forecast_utilization_percent": "48",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-C01-2026090707",
+    "section_id": "SEC-C01",
+    "start_time": "2026-09-07 07:00:00",
+    "end_time": "2026-09-07 08:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "48",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-C01-2026090708",
+    "section_id": "SEC-C01",
+    "start_time": "2026-09-07 08:00:00",
+    "end_time": "2026-09-07 09:00:00",
+    "scheduled_train_count": "0",
+    "forecast_utilization_percent": "48",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-C01-2026090709",
+    "section_id": "SEC-C01",
+    "start_time": "2026-09-07 09:00:00",
+    "end_time": "2026-09-07 10:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "41",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-C01-2026090710",
+    "section_id": "SEC-C01",
+    "start_time": "2026-09-07 10:00:00",
+    "end_time": "2026-09-07 11:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "41",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-C01-2026090711",
+    "section_id": "SEC-C01",
+    "start_time": "2026-09-07 11:00:00",
+    "end_time": "2026-09-07 12:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "41",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-C01-2026090712",
+    "section_id": "SEC-C01",
+    "start_time": "2026-09-07 12:00:00",
+    "end_time": "2026-09-07 13:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "34",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-C01-2026090713",
+    "section_id": "SEC-C01",
+    "start_time": "2026-09-07 13:00:00",
+    "end_time": "2026-09-07 14:00:00",
+    "scheduled_train_count": "0",
+    "forecast_utilization_percent": "34",
+    "availability_status": "AVAILABLE",
+    "traffic_impact_level": "LOW"
+  },
+  {
+    "window_id": "WIN-SEC-C01-2026090714",
+    "section_id": "SEC-C01",
+    "start_time": "2026-09-07 14:00:00",
+    "end_time": "2026-09-07 15:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "34",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-C01-2026090715",
+    "section_id": "SEC-C01",
+    "start_time": "2026-09-07 15:00:00",
+    "end_time": "2026-09-07 16:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "34",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-C01-2026090716",
+    "section_id": "SEC-C01",
+    "start_time": "2026-09-07 16:00:00",
+    "end_time": "2026-09-07 17:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "34",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-C01-2026090717",
+    "section_id": "SEC-C01",
+    "start_time": "2026-09-07 17:00:00",
+    "end_time": "2026-09-07 18:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "34",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-C01-2026090718",
+    "section_id": "SEC-C01",
+    "start_time": "2026-09-07 18:00:00",
+    "end_time": "2026-09-07 19:00:00",
+    "scheduled_train_count": "0",
+    "forecast_utilization_percent": "43",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-C01-2026090719",
+    "section_id": "SEC-C01",
+    "start_time": "2026-09-07 19:00:00",
+    "end_time": "2026-09-07 20:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "43",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-C01-2026090720",
+    "section_id": "SEC-C01",
+    "start_time": "2026-09-07 20:00:00",
+    "end_time": "2026-09-07 21:00:00",
+    "scheduled_train_count": "0",
+    "forecast_utilization_percent": "43",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-C01-2026090721",
+    "section_id": "SEC-C01",
+    "start_time": "2026-09-07 21:00:00",
+    "end_time": "2026-09-07 22:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "39",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-C01-2026090722",
+    "section_id": "SEC-C01",
+    "start_time": "2026-09-07 22:00:00",
+    "end_time": "2026-09-07 23:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "39",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-C01-2026090723",
+    "section_id": "SEC-C01",
+    "start_time": "2026-09-07 23:00:00",
+    "end_time": "2026-09-08 00:00:00",
+    "scheduled_train_count": "0",
+    "forecast_utilization_percent": "39",
+    "availability_status": "AVAILABLE",
+    "traffic_impact_level": "LOW"
+  },
+  {
+    "window_id": "WIN-SEC-A01-2026090800",
+    "section_id": "SEC-A01",
+    "start_time": "2026-09-08 00:00:00",
+    "end_time": "2026-09-08 01:00:00",
+    "scheduled_train_count": "0",
+    "forecast_utilization_percent": "60",
+    "availability_status": "AVAILABLE",
+    "traffic_impact_level": "LOW"
+  },
+  {
+    "window_id": "WIN-SEC-A01-2026090801",
+    "section_id": "SEC-A01",
+    "start_time": "2026-09-08 01:00:00",
+    "end_time": "2026-09-08 02:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "60",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-A01-2026090802",
+    "section_id": "SEC-A01",
+    "start_time": "2026-09-08 02:00:00",
+    "end_time": "2026-09-08 03:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "60",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-A01-2026090803",
+    "section_id": "SEC-A01",
+    "start_time": "2026-09-08 03:00:00",
+    "end_time": "2026-09-08 04:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "59",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-A01-2026090804",
+    "section_id": "SEC-A01",
+    "start_time": "2026-09-08 04:00:00",
+    "end_time": "2026-09-08 05:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "59",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-A01-2026090805",
+    "section_id": "SEC-A01",
+    "start_time": "2026-09-08 05:00:00",
+    "end_time": "2026-09-08 06:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "59",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-A01-2026090806",
+    "section_id": "SEC-A01",
+    "start_time": "2026-09-08 06:00:00",
+    "end_time": "2026-09-08 07:00:00",
+    "scheduled_train_count": "2",
+    "forecast_utilization_percent": "79",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "HIGH"
+  },
+  {
+    "window_id": "WIN-SEC-A01-2026090807",
+    "section_id": "SEC-A01",
+    "start_time": "2026-09-08 07:00:00",
+    "end_time": "2026-09-08 08:00:00",
+    "scheduled_train_count": "2",
+    "forecast_utilization_percent": "79",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "HIGH"
+  },
+  {
+    "window_id": "WIN-SEC-A01-2026090808",
+    "section_id": "SEC-A01",
+    "start_time": "2026-09-08 08:00:00",
+    "end_time": "2026-09-08 09:00:00",
+    "scheduled_train_count": "2",
+    "forecast_utilization_percent": "79",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "HIGH"
+  },
+  {
+    "window_id": "WIN-SEC-A01-2026090809",
+    "section_id": "SEC-A01",
+    "start_time": "2026-09-08 09:00:00",
+    "end_time": "2026-09-08 10:00:00",
+    "scheduled_train_count": "2",
+    "forecast_utilization_percent": "84",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "HIGH"
+  },
+  {
+    "window_id": "WIN-SEC-A01-2026090810",
+    "section_id": "SEC-A01",
+    "start_time": "2026-09-08 10:00:00",
+    "end_time": "2026-09-08 11:00:00",
+    "scheduled_train_count": "2",
+    "forecast_utilization_percent": "84",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "HIGH"
+  },
+  {
+    "window_id": "WIN-SEC-A01-2026090811",
+    "section_id": "SEC-A01",
+    "start_time": "2026-09-08 11:00:00",
+    "end_time": "2026-09-08 12:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "84",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-A01-2026090812",
+    "section_id": "SEC-A01",
+    "start_time": "2026-09-08 12:00:00",
+    "end_time": "2026-09-08 13:00:00",
+    "scheduled_train_count": "2",
+    "forecast_utilization_percent": "68",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "HIGH"
+  },
+  {
+    "window_id": "WIN-SEC-A01-2026090813",
+    "section_id": "SEC-A01",
+    "start_time": "2026-09-08 13:00:00",
+    "end_time": "2026-09-08 14:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "68",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-A01-2026090814",
+    "section_id": "SEC-A01",
+    "start_time": "2026-09-08 14:00:00",
+    "end_time": "2026-09-08 15:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "68",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-A01-2026090815",
+    "section_id": "SEC-A01",
+    "start_time": "2026-09-08 15:00:00",
+    "end_time": "2026-09-08 16:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "76",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-A01-2026090816",
+    "section_id": "SEC-A01",
+    "start_time": "2026-09-08 16:00:00",
+    "end_time": "2026-09-08 17:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "76",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-A01-2026090817",
+    "section_id": "SEC-A01",
+    "start_time": "2026-09-08 17:00:00",
+    "end_time": "2026-09-08 18:00:00",
+    "scheduled_train_count": "2",
+    "forecast_utilization_percent": "76",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "HIGH"
+  },
+  {
+    "window_id": "WIN-SEC-A01-2026090818",
+    "section_id": "SEC-A01",
+    "start_time": "2026-09-08 18:00:00",
+    "end_time": "2026-09-08 19:00:00",
+    "scheduled_train_count": "2",
+    "forecast_utilization_percent": "93",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "HIGH"
+  },
+  {
+    "window_id": "WIN-SEC-A01-2026090819",
+    "section_id": "SEC-A01",
+    "start_time": "2026-09-08 19:00:00",
+    "end_time": "2026-09-08 20:00:00",
+    "scheduled_train_count": "2",
+    "forecast_utilization_percent": "93",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "HIGH"
+  },
+  {
+    "window_id": "WIN-SEC-A01-2026090820",
+    "section_id": "SEC-A01",
+    "start_time": "2026-09-08 20:00:00",
+    "end_time": "2026-09-08 21:00:00",
+    "scheduled_train_count": "2",
+    "forecast_utilization_percent": "93",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "HIGH"
+  },
+  {
+    "window_id": "WIN-SEC-A01-2026090821",
+    "section_id": "SEC-A01",
+    "start_time": "2026-09-08 21:00:00",
+    "end_time": "2026-09-08 22:00:00",
+    "scheduled_train_count": "2",
+    "forecast_utilization_percent": "81",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "HIGH"
+  },
+  {
+    "window_id": "WIN-SEC-A01-2026090822",
+    "section_id": "SEC-A01",
+    "start_time": "2026-09-08 22:00:00",
+    "end_time": "2026-09-08 23:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "81",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-A01-2026090823",
+    "section_id": "SEC-A01",
+    "start_time": "2026-09-08 23:00:00",
+    "end_time": "2026-09-09 00:00:00",
+    "scheduled_train_count": "2",
+    "forecast_utilization_percent": "81",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "HIGH"
+  },
+  {
+    "window_id": "WIN-SEC-A02-2026090800",
+    "section_id": "SEC-A02",
+    "start_time": "2026-09-08 00:00:00",
+    "end_time": "2026-09-08 01:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "65",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-A02-2026090801",
+    "section_id": "SEC-A02",
+    "start_time": "2026-09-08 01:00:00",
+    "end_time": "2026-09-08 02:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "65",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-A02-2026090802",
+    "section_id": "SEC-A02",
+    "start_time": "2026-09-08 02:00:00",
+    "end_time": "2026-09-08 03:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "65",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-A02-2026090803",
+    "section_id": "SEC-A02",
+    "start_time": "2026-09-08 03:00:00",
+    "end_time": "2026-09-08 04:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "67",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-A02-2026090804",
+    "section_id": "SEC-A02",
+    "start_time": "2026-09-08 04:00:00",
+    "end_time": "2026-09-08 05:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "67",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-A02-2026090805",
+    "section_id": "SEC-A02",
+    "start_time": "2026-09-08 05:00:00",
+    "end_time": "2026-09-08 06:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "67",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-A02-2026090806",
+    "section_id": "SEC-A02",
+    "start_time": "2026-09-08 06:00:00",
+    "end_time": "2026-09-08 07:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "87",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-A02-2026090807",
+    "section_id": "SEC-A02",
+    "start_time": "2026-09-08 07:00:00",
+    "end_time": "2026-09-08 08:00:00",
+    "scheduled_train_count": "2",
+    "forecast_utilization_percent": "87",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "HIGH"
+  },
+  {
+    "window_id": "WIN-SEC-A02-2026090808",
+    "section_id": "SEC-A02",
+    "start_time": "2026-09-08 08:00:00",
+    "end_time": "2026-09-08 09:00:00",
+    "scheduled_train_count": "2",
+    "forecast_utilization_percent": "87",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "HIGH"
+  },
+  {
+    "window_id": "WIN-SEC-A02-2026090809",
+    "section_id": "SEC-A02",
+    "start_time": "2026-09-08 09:00:00",
+    "end_time": "2026-09-08 10:00:00",
+    "scheduled_train_count": "2",
+    "forecast_utilization_percent": "84",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "HIGH"
+  },
+  {
+    "window_id": "WIN-SEC-A02-2026090810",
+    "section_id": "SEC-A02",
+    "start_time": "2026-09-08 10:00:00",
+    "end_time": "2026-09-08 11:00:00",
+    "scheduled_train_count": "2",
+    "forecast_utilization_percent": "84",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "HIGH"
+  },
+  {
+    "window_id": "WIN-SEC-A02-2026090811",
+    "section_id": "SEC-A02",
+    "start_time": "2026-09-08 11:00:00",
+    "end_time": "2026-09-08 12:00:00",
+    "scheduled_train_count": "2",
+    "forecast_utilization_percent": "84",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "HIGH"
+  },
+  {
+    "window_id": "WIN-SEC-A02-2026090812",
+    "section_id": "SEC-A02",
+    "start_time": "2026-09-08 12:00:00",
+    "end_time": "2026-09-08 13:00:00",
+    "scheduled_train_count": "2",
+    "forecast_utilization_percent": "76",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "HIGH"
+  },
+  {
+    "window_id": "WIN-SEC-A02-2026090813",
+    "section_id": "SEC-A02",
+    "start_time": "2026-09-08 13:00:00",
+    "end_time": "2026-09-08 14:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "76",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-A02-2026090814",
+    "section_id": "SEC-A02",
+    "start_time": "2026-09-08 14:00:00",
+    "end_time": "2026-09-08 15:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "76",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-A02-2026090815",
+    "section_id": "SEC-A02",
+    "start_time": "2026-09-08 15:00:00",
+    "end_time": "2026-09-08 16:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "75",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-A02-2026090816",
+    "section_id": "SEC-A02",
+    "start_time": "2026-09-08 16:00:00",
+    "end_time": "2026-09-08 17:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "75",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-A02-2026090817",
+    "section_id": "SEC-A02",
+    "start_time": "2026-09-08 17:00:00",
+    "end_time": "2026-09-08 18:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "75",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-A02-2026090818",
+    "section_id": "SEC-A02",
+    "start_time": "2026-09-08 18:00:00",
+    "end_time": "2026-09-08 19:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "77",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-A02-2026090819",
+    "section_id": "SEC-A02",
+    "start_time": "2026-09-08 19:00:00",
+    "end_time": "2026-09-08 20:00:00",
+    "scheduled_train_count": "2",
+    "forecast_utilization_percent": "77",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "HIGH"
+  },
+  {
+    "window_id": "WIN-SEC-A02-2026090820",
+    "section_id": "SEC-A02",
+    "start_time": "2026-09-08 20:00:00",
+    "end_time": "2026-09-08 21:00:00",
+    "scheduled_train_count": "2",
+    "forecast_utilization_percent": "77",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "HIGH"
+  },
+  {
+    "window_id": "WIN-SEC-A02-2026090821",
+    "section_id": "SEC-A02",
+    "start_time": "2026-09-08 21:00:00",
+    "end_time": "2026-09-08 22:00:00",
+    "scheduled_train_count": "2",
+    "forecast_utilization_percent": "89",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "HIGH"
+  },
+  {
+    "window_id": "WIN-SEC-A02-2026090822",
+    "section_id": "SEC-A02",
+    "start_time": "2026-09-08 22:00:00",
+    "end_time": "2026-09-08 23:00:00",
+    "scheduled_train_count": "2",
+    "forecast_utilization_percent": "89",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "HIGH"
+  },
+  {
+    "window_id": "WIN-SEC-A02-2026090823",
+    "section_id": "SEC-A02",
+    "start_time": "2026-09-08 23:00:00",
+    "end_time": "2026-09-09 00:00:00",
+    "scheduled_train_count": "2",
+    "forecast_utilization_percent": "89",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "HIGH"
+  },
+  {
+    "window_id": "WIN-SEC-B01-2026090800",
+    "section_id": "SEC-B01",
+    "start_time": "2026-09-08 00:00:00",
+    "end_time": "2026-09-08 01:00:00",
+    "scheduled_train_count": "0",
+    "forecast_utilization_percent": "49",
+    "availability_status": "AVAILABLE",
+    "traffic_impact_level": "LOW"
+  },
+  {
+    "window_id": "WIN-SEC-B01-2026090801",
+    "section_id": "SEC-B01",
+    "start_time": "2026-09-08 01:00:00",
+    "end_time": "2026-09-08 02:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "49",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-B01-2026090802",
+    "section_id": "SEC-B01",
+    "start_time": "2026-09-08 02:00:00",
+    "end_time": "2026-09-08 03:00:00",
+    "scheduled_train_count": "2",
+    "forecast_utilization_percent": "49",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "HIGH"
+  },
+  {
+    "window_id": "WIN-SEC-B01-2026090803",
+    "section_id": "SEC-B01",
+    "start_time": "2026-09-08 03:00:00",
+    "end_time": "2026-09-08 04:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "39",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-B01-2026090804",
+    "section_id": "SEC-B01",
+    "start_time": "2026-09-08 04:00:00",
+    "end_time": "2026-09-08 05:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "39",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-B01-2026090805",
+    "section_id": "SEC-B01",
+    "start_time": "2026-09-08 05:00:00",
+    "end_time": "2026-09-08 06:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "39",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-B01-2026090806",
+    "section_id": "SEC-B01",
+    "start_time": "2026-09-08 06:00:00",
+    "end_time": "2026-09-08 07:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "64",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-B01-2026090807",
+    "section_id": "SEC-B01",
+    "start_time": "2026-09-08 07:00:00",
+    "end_time": "2026-09-08 08:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "64",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-B01-2026090808",
+    "section_id": "SEC-B01",
+    "start_time": "2026-09-08 08:00:00",
+    "end_time": "2026-09-08 09:00:00",
+    "scheduled_train_count": "2",
+    "forecast_utilization_percent": "64",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "HIGH"
+  },
+  {
+    "window_id": "WIN-SEC-B01-2026090809",
+    "section_id": "SEC-B01",
+    "start_time": "2026-09-08 09:00:00",
+    "end_time": "2026-09-08 10:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "68",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-B01-2026090810",
+    "section_id": "SEC-B01",
+    "start_time": "2026-09-08 10:00:00",
+    "end_time": "2026-09-08 11:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "68",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-B01-2026090811",
+    "section_id": "SEC-B01",
+    "start_time": "2026-09-08 11:00:00",
+    "end_time": "2026-09-08 12:00:00",
+    "scheduled_train_count": "2",
+    "forecast_utilization_percent": "68",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "HIGH"
+  },
+  {
+    "window_id": "WIN-SEC-B01-2026090812",
+    "section_id": "SEC-B01",
+    "start_time": "2026-09-08 12:00:00",
+    "end_time": "2026-09-08 13:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "51",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-B01-2026090813",
+    "section_id": "SEC-B01",
+    "start_time": "2026-09-08 13:00:00",
+    "end_time": "2026-09-08 14:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "51",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-B01-2026090814",
+    "section_id": "SEC-B01",
+    "start_time": "2026-09-08 14:00:00",
+    "end_time": "2026-09-08 15:00:00",
+    "scheduled_train_count": "0",
+    "forecast_utilization_percent": "51",
+    "availability_status": "AVAILABLE",
+    "traffic_impact_level": "LOW"
+  },
+  {
+    "window_id": "WIN-SEC-B01-2026090815",
+    "section_id": "SEC-B01",
+    "start_time": "2026-09-08 15:00:00",
+    "end_time": "2026-09-08 16:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "58",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-B01-2026090816",
+    "section_id": "SEC-B01",
+    "start_time": "2026-09-08 16:00:00",
+    "end_time": "2026-09-08 17:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "58",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-B01-2026090817",
+    "section_id": "SEC-B01",
+    "start_time": "2026-09-08 17:00:00",
+    "end_time": "2026-09-08 18:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "58",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-B01-2026090818",
+    "section_id": "SEC-B01",
+    "start_time": "2026-09-08 18:00:00",
+    "end_time": "2026-09-08 19:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "78",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-B01-2026090819",
+    "section_id": "SEC-B01",
+    "start_time": "2026-09-08 19:00:00",
+    "end_time": "2026-09-08 20:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "78",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-B01-2026090820",
+    "section_id": "SEC-B01",
+    "start_time": "2026-09-08 20:00:00",
+    "end_time": "2026-09-08 21:00:00",
+    "scheduled_train_count": "2",
+    "forecast_utilization_percent": "78",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "HIGH"
+  },
+  {
+    "window_id": "WIN-SEC-B01-2026090821",
+    "section_id": "SEC-B01",
+    "start_time": "2026-09-08 21:00:00",
+    "end_time": "2026-09-08 22:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "59",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-B01-2026090822",
+    "section_id": "SEC-B01",
+    "start_time": "2026-09-08 22:00:00",
+    "end_time": "2026-09-08 23:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "59",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-B01-2026090823",
+    "section_id": "SEC-B01",
+    "start_time": "2026-09-08 23:00:00",
+    "end_time": "2026-09-09 00:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "59",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-B02-2026090800",
+    "section_id": "SEC-B02",
+    "start_time": "2026-09-08 00:00:00",
+    "end_time": "2026-09-08 01:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "36",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-B02-2026090801",
+    "section_id": "SEC-B02",
+    "start_time": "2026-09-08 01:00:00",
+    "end_time": "2026-09-08 02:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "36",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-B02-2026090802",
+    "section_id": "SEC-B02",
+    "start_time": "2026-09-08 02:00:00",
+    "end_time": "2026-09-08 03:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "36",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-B02-2026090803",
+    "section_id": "SEC-B02",
+    "start_time": "2026-09-08 03:00:00",
+    "end_time": "2026-09-08 04:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "46",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-B02-2026090804",
+    "section_id": "SEC-B02",
+    "start_time": "2026-09-08 04:00:00",
+    "end_time": "2026-09-08 05:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "46",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-B02-2026090805",
+    "section_id": "SEC-B02",
+    "start_time": "2026-09-08 05:00:00",
+    "end_time": "2026-09-08 06:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "46",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-B02-2026090806",
+    "section_id": "SEC-B02",
+    "start_time": "2026-09-08 06:00:00",
+    "end_time": "2026-09-08 07:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "68",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  },
+  {
+    "window_id": "WIN-SEC-B02-2026090807",
+    "section_id": "SEC-B02",
+    "start_time": "2026-09-08 07:00:00",
+    "end_time": "2026-09-08 08:00:00",
+    "scheduled_train_count": "1",
+    "forecast_utilization_percent": "68",
+    "availability_status": "UNAVAILABLE",
+    "traffic_impact_level": "MEDIUM"
+  }
+]

@@ -1,0 +1,44 @@
+{
+  "severity_weights": {
+    "CRITICAL": 90,
+    "HIGH": 65,
+    "MEDIUM": 35,
+    "LOW": 15
+  },
+  "traffic_density_weights": {
+    "HIGH": 25,
+    "MEDIUM": 15,
+    "LOW": 5
+  },
+  "priority_thresholds": {
+    "P1": 75.0,
+    "P2": 55.0,
+    "P3": 30.0
+  },
+  "weights": {
+    "severity_factor": 0.4,
+    "safety_impact_factor": 30.0,
+    "density_factor": 0.5,
+    "overdue_multiplier": 2.5,
+    "max_overdue_penalty": 20.0
+  },
+  "default_tsr_limits": {
+    "CRITICAL": 50,
+    "HIGH": 30,
+    "MEDIUM": null,
+    "LOW": null
+  },
+  "detection_manual_citations": {
+    "USFD": "IRPWM Para 268 & IRS Specification T-12 (Ultrasonic Rail Testing)",
+    "TRC": "IRPWM Para 522 (Track Geometry Recording Car Standards)",
+    "OMS": "IRPWM Para 523 (Dynamic Oscillation Monitoring Thresholds)",
+    "ITMS": "IRPWM Chapter III & Comprehensive Track Inspection Protocol",
+    "Machine vision": "IRS Track Components Manual & Automatic Defect Sizing Spec",
+    "Track patrol": "IRPWM Para 203 (Patrolman & Keyman Visual Inspection)",
+    "Condition monitoring": "IRSEM Part II (Signalling Condition Based Maintenance)",
+    "Field survey": "IR AC Traction Manual (ACTM) Vol II Part I",
+    "Routine patrol": "IRPWM Para 205 (Daily Gang Beat Inspection)",
+    "Drone inspection": "IR Drone Surveillance & Infrastructure Assessment Guidelines",
+    "Bridge sensors": "IR Bridge Manual Para 110 & Structural Health Monitoring"
+  }
+}

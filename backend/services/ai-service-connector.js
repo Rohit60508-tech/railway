@@ -210,6 +210,18 @@ class AIServiceConnector {
     return this.client.getConstraints();
   }
 
+  async post(path, body) {
+    return this.client.post(path, body);
+  }
+
+  async get(path, queryParams = {}) {
+    return this.client.get(path, queryParams);
+  }
+
+  async delete(path) {
+    return this.client.delete(path);
+  }
+
   async validateSchedule(schedule) {
     return this.client.validateSchedule(schedule);
   }
