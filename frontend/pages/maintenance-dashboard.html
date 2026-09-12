@@ -870,7 +870,7 @@
     }
 
     // Step 1: On 1-click Accept & Lock Slot
-    window.acceptWorkOrder = function (woId) {
+    window.acceptWorkOrder = function (woId, suppressToast = false) {
       const idx = activeWorkOrders.findIndex(w => w.id === woId);
       if (idx === -1) return;
 
@@ -882,10 +882,10 @@
         acceptedWorkOrders.unshift(wo);
       }
 
-      if (window.showToast) {
-        window.showToast(`🔒 Work order ${woId} accepted & slot locked! Ready for execution.`, 'success');
-      } else {
-        alert(`✓ Work order ${woId} accepted & slot locked! Card turned green. You can now click "☑ Tick Work Completed".`);
+      if (!suppressToast) {
+        if (window.showToast) {
+          window.showToast(`🔒 Work order ${woId} accepted & slot locked! Ready for execution.`, 'success');
+        }
       }
 
       renderWorkOrders(currentDeptFilter);
@@ -906,8 +906,6 @@
 
       if (window.showToast) {
         window.showToast(`✅ Work order ${woId} marked completed & moved under Closed Requisitions!`, 'success');
-      } else {
-        alert(`✓ Work order ${woId} marked completed! Moved under "Work Completed & Closed Requisitions". Click "Generate Completion Report" to export PDF/CSV.`);
       }
 
       renderWorkOrders(currentDeptFilter);

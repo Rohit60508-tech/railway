@@ -180,11 +180,10 @@ export class BundlingSuggestionCard {
     if (window.acceptWorkOrder) {
       // Find matching tasks in bundle if available
       const activeIds = ['WO-CIVIL-401', 'WO-TRD-112', 'WO-SIG-094', 'WO-CIVIL-419', 'WO-TRD-125'];
-      activeIds.forEach(id => window.acceptWorkOrder(id));
+      activeIds.forEach(id => window.acceptWorkOrder(id, true));
     }
 
     if (window.showToast) window.showToast(`🔒 CP-SAT Bundle ${bundleId} accepted! All tasks moved to Work To Be Done.`, 'success');
-    else alert(`✓ CP-SAT Bundle ${bundleId} accepted & slot locked! Tasks are now in "Work To Be Done / In Progress".`);
   }
 }
 
