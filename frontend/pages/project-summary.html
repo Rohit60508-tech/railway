@@ -14,6 +14,12 @@
     href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Orbitron:wght@500;600;700;800;900&display=swap"
     rel="stylesheet" />
 
+  <!-- Auth guard -->
+  <script src="../components/auth-guard.js"></script>
+
+  <!-- Shared Navigation -->
+  <script src="../components/SharedNav.js"></script>
+
   <!-- Three.js CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
@@ -21,6 +27,7 @@
   <link rel="stylesheet" href="../styles/main.css" />
 
   <style>
+    .summary-header { display: none !important; }
     :root {
       --bg-dark: #FAF6EE;
       --card-bg: rgba(255, 255, 255, 0.92);
@@ -568,6 +575,9 @@
 </head>
 
 <body>
+
+  <!-- SharedNav mounts here -->
+  <div id="shared-nav"></div>
 
   <!-- 3D Background Canvas -->
   <canvas id="bg-canvas"></canvas>
