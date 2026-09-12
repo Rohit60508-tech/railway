@@ -308,18 +308,8 @@
       </div>
     </div>
 
-    <!-- ═══════════════════ MULTI-DEPT BUNDLING SECTION ═══════════════════ -->
-    <div class="section-title">
-      <span>🔗</span>
-      <span>AI Multi-Department Bundling Opportunities (CP-SAT Solver)</span>
-    </div>
-
-    <div id="bundling-cards-container">
-      <!-- Populated dynamically by BundlingSuggestionCard -->
-    </div>
-
     <!-- ═══════════════════ STAGE 1 & 2: WORK ACCEPTED (SLOT LOCKED - TO BE DONE) ═══════════════════ -->
-    <div class="section-title" style="margin-top: 36px; display: flex; align-items: center; justify-content: space-between;">
+    <div class="section-title" style="display: flex; align-items: center; justify-content: space-between;">
       <div style="display: flex; align-items: center; gap: 10px;">
         <span>📌</span>
         <span>Work Accepted &amp; Locked Slots (To Be Done / In Progress)</span>
@@ -362,6 +352,16 @@
 
     <div class="work-orders-grid" id="completed-work-orders-container">
       <!-- Populated dynamically with completed work orders -->
+    </div>
+
+    <!-- ═══════════════════ MULTI-DEPT BUNDLING SECTION ═══════════════════ -->
+    <div class="section-title" style="margin-top: 36px;">
+      <span>🔗</span>
+      <span>AI Multi-Department Bundling Opportunities (CP-SAT Solver)</span>
+    </div>
+
+    <div id="bundling-cards-container">
+      <!-- Populated dynamically by BundlingSuggestionCard -->
     </div>
 
     <!-- ═══════════════════ AUDIT LOGS SECTION ═══════════════════ -->
@@ -825,7 +825,7 @@
           <div class="wo-header">
             <div>
               <div class="wo-title">
-                <span style="color: #065F46; text-decoration: line-through; opacity: 0.85;">${wo.title}</span>
+                <span style="color: #065F46; font-weight: 700;">${wo.title}</span>
                 <span style="background: #059669; color: white; font-size: 0.68rem; padding: 3px 10px; border-radius: 12px; font-weight: 800; text-transform: uppercase;">
                   ✓ WORK COMPLETED &amp; CLOSED
                 </span>
