@@ -1,519 +1,939 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Login — RAKSHA PATH | Indian Railways AI Command</title>
-  <meta name="description" content="Secure access portal for RAKSHA PATH — Indian Railways AI Command & Maintenance Planning Platform." />
+  <title>Access Gateway — RAKSHA PATH | Indian Railways AI Command</title>
+  <meta name="description"
+    content="Official Indian Railways AI-Powered Automatic Block Planning & Corridor Command Access Gateway." />
+
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Orbitron:wght@500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+    rel="stylesheet" />
 
-  <!-- User Store (must load before auth) -->
+  <!-- User Store -->
   <script src="../components/user-store.js"></script>
 
+  <!-- React 18 & ReactDOM 18 (Local bundle with CDN fallback) -->
+  <script src="/node_modules/react/umd/react.production.min.js"></script>
+  <script src="/node_modules/react-dom/umd/react-dom.production.min.js"></script>
+  <script>
+    if (!window.React || !window.ReactDOM) {
+      document.write('<script src="https://unpkg.com/react@18/umd/react.production.min.js"><\/script>');
+      document.write('<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"><\/script>');
+    }
+  </script>
+
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
     :root {
-      --navy:      #003366;
-      --blue:      #0056B3;
-      --blue-l:    #0284C7;
-      --saffron:   #D9531E;
-      --cream:     #FAF6EE;
-      --white:     #FFFFFF;
-      --text:      #0F172A;
-      --text2:     #334155;
-      --muted:     #64748B;
-      --green:     #059669;
-      --gold:      #D97706;
-      --red:       #DC2626;
-      --border:    rgba(0,51,102,0.14);
+      --navy: #003366;
+      --blue: #0056B3;
+      --saffron: #F97316;
+      --saffron-dark: #EA580C;
+      --emerald: #059669;
+      --dark-card: rgba(15, 23, 42, 0.72);
+      --border-card: rgba(255, 255, 255, 0.16);
     }
 
-    html, body { height: 100%; font-family: 'Calibri', 'Arial', sans-serif; background: var(--cream); color: var(--text); overflow: hidden; }
-
-    /* ── Layout ─── */
-    .wrapper { display: flex; height: 100vh; }
-
-    /* ── LEFT PANEL ─── */
-    .lp {
-      width: 400px;
-      flex-shrink: 0;
-      background: linear-gradient(160deg, #001a3a 0%, #003366 50%, #004d99 100%);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      padding: 40px 36px;
-      position: relative;
-      overflow: hidden;
-    }
-    .lp::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: repeating-linear-gradient(90deg, transparent, transparent 38px, rgba(255,255,255,0.025) 38px, rgba(255,255,255,0.025) 40px);
-      pointer-events: none;
-    }
-    .lp::after {
-      content: '';
-      position: absolute;
-      bottom: -80px; right: -80px;
-      width: 280px; height: 280px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(0,86,179,0.35) 0%, transparent 70%);
-      pointer-events: none;
+    html,
+    body {
+      min-height: 100%;
+      height: 100%;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: #F8FAFC;
+      overflow-x: hidden;
+      background-color: #030712;
     }
 
-    /* Brand */
-    .lp-brand { position: relative; z-index: 2; }
-    .lp-logo-row { display: flex; align-items: center; gap: 14px; margin-bottom: 28px; }
-    .lp-logo-box {
-      width: 52px; height: 52px; border-radius: 14px;
-      background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.18);
-      display: flex; align-items: center; justify-content: center;
-      backdrop-filter: blur(8px); box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-    }
-    .lp-title-group .t1 { font-family: 'Calibri', 'Arial', sans-serif; font-size: 0.68rem; font-weight: 800; color: #E2EEFF; letter-spacing: 1.5px; display: block; }
-    .lp-title-group .t2 { font-size: 0.58rem; color: rgba(255,255,255,0.45); text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; display: block; }
-    .lp-headline { font-family: 'Calibri', 'Arial', sans-serif; font-size: 1.5rem; font-weight: 800; color: #fff; line-height: 1.35; margin-bottom: 14px; }
-    .lp-headline em { color: #60A5FA; font-style: normal; }
-    .lp-tagline { font-size: 0.87rem; color: rgba(255,255,255,0.6); line-height: 1.7; }
-
-    /* Features */
-    .lp-features { position: relative; z-index: 2; display: flex; flex-direction: column; gap: 12px; }
-    .lp-feat { display: flex; align-items: center; gap: 12px; }
-    .lp-feat-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-    .lp-feat-txt { font-size: 0.81rem; color: rgba(255,255,255,0.72); }
-
-    /* User list preview */
-    .lp-accounts { position: relative; z-index: 2; }
-    .lp-acc-label { font-size: 0.6rem; font-weight: 700; color: rgba(255,255,255,0.35); text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 10px; }
-    .lp-acc-list { display: flex; flex-direction: column; gap: 7px; }
-    .lp-acc-item {
-      display: flex; align-items: center; gap: 10px;
-      background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 8px; padding: 8px 12px;
-    }
-    .lp-acc-icon { font-size: 1rem; }
-    .lp-acc-info { flex: 1; }
-    .lp-acc-user { font-family: 'Calibri', 'Arial', sans-serif; font-size: 0.75rem; color: rgba(255,255,255,0.9); font-weight: 600; }
-    .lp-acc-role { font-size: 0.62rem; color: rgba(255,255,255,0.45); margin-top: 1px; }
-    .lp-acc-pass { font-family: 'Calibri', 'Arial', sans-serif; font-size: 0.68rem; color: rgba(255,255,255,0.35); }
-    .lp-version { font-size: 0.58rem; color: rgba(255,255,255,0.22); font-family: 'Calibri', 'Arial', sans-serif; margin-top: 14px; }
-
-    /* ── RIGHT PANEL ─── */
-    .rp {
-      flex: 1;
-      display: flex; align-items: center; justify-content: center;
-      padding: 32px;
-      background: var(--white);
-      position: relative;
-      overflow-y: auto;
-    }
-    .rp::before {
-      content: '';
-      position: absolute; inset: 0;
-      background-image: radial-gradient(rgba(0,51,102,0.06) 1px, transparent 1px);
-      background-size: 28px 28px;
-      pointer-events: none;
-    }
-
-    .card {
-      width: 100%;
-      max-width: 420px;
-      position: relative;
-      z-index: 2;
-    }
-
-    /* Card header */
-    .card-hdr { margin-bottom: 32px; }
-    .card-hdr h1 { font-family: 'Calibri', 'Arial', sans-serif; font-size: 1.35rem; font-weight: 800; color: var(--navy); }
-    .card-hdr p { font-size: 0.83rem; color: var(--muted); margin-top: 6px; line-height: 1.6; }
-
-    /* Form inputs */
-    .form-group { margin-bottom: 18px; }
-    .form-label { display: block; font-size: 0.75rem; font-weight: 700; color: var(--text2); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 7px; }
-    .form-input {
-      width: 100%;
-      padding: 12px 16px;
-      border: 1.5px solid var(--border);
-      border-radius: 10px;
-      background: var(--cream);
-      font-size: 0.9rem;
-      font-family: 'Calibri', 'Arial', sans-serif;
-      color: var(--text);
-      outline: none;
-      transition: border-color 0.18s, box-shadow 0.18s, background 0.18s;
-    }
-    .form-input:focus {
-      border-color: var(--blue);
-      box-shadow: 0 0 0 3px rgba(0,86,179,0.12);
-      background: var(--white);
-    }
-
-    /* Password wrapper */
-    .pw-wrap { position: relative; }
-    .pw-toggle {
-      position: absolute;
-      top: 50%; right: 14px;
-      transform: translateY(-50%);
-      background: none;
-      border: none;
-      cursor: pointer;
-      color: var(--muted);
-      padding: 4px;
-      display: flex;
-      align-items: center;
-      transition: color 0.15s;
-    }
-    .pw-toggle:hover { color: var(--navy); }
-
-    /* Error alert */
-    .alert-error {
-      display: none;
-      align-items: center;
-      gap: 8px;
-      padding: 11px 14px;
-      border-radius: 9px;
-      background: rgba(220,38,38,0.07);
-      border: 1px solid rgba(220,38,38,0.22);
-      color: #DC2626;
-      font-size: 0.82rem;
-      font-weight: 500;
-      margin-bottom: 16px;
-    }
-    .alert-error.show { display: flex; }
-
-    /* Alert info for inactive user */
-    .alert-warn {
-      display: none;
-      align-items: center;
-      gap: 8px;
-      padding: 11px 14px;
-      border-radius: 9px;
-      background: rgba(217,119,6,0.07);
-      border: 1px solid rgba(217,119,6,0.25);
-      color: #D97706;
-      font-size: 0.82rem;
-      font-weight: 500;
-      margin-bottom: 16px;
-    }
-    .alert-warn.show { display: flex; }
-
-    /* Submit button */
-    .btn-login {
-      width: 100%;
-      padding: 14px;
-      border: none;
-      border-radius: 11px;
-      background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 100%);
-      color: white;
-      font-size: 0.92rem;
-      font-weight: 700;
-      font-family: 'Calibri', 'Arial', sans-serif;
-      letter-spacing: 0.4px;
-      cursor: pointer;
+    #root {
+      min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-      box-shadow: 0 4px 16px rgba(0,51,102,0.28);
-      transition: transform 0.18s, box-shadow 0.18s;
-      position: relative;
-      overflow: hidden;
     }
-    .btn-login::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 60%); }
-    .btn-login:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,51,102,0.35); }
-    .btn-login:active { transform: translateY(0); }
-    .btn-login:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .spinner { display: none; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.7s linear infinite; }
-    .btn-login.loading .btn-arrow { display: none; }
-    .btn-login.loading .spinner { display: block; }
 
-    /* Role chip (shown after login attempt identifies role) */
-    .role-preview {
-      display: none;
-      align-items: center;
-      gap: 8px;
-      padding: 9px 14px;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      background: rgba(0,51,102,0.04);
-      margin-bottom: 16px;
-      font-size: 0.82rem;
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
     }
-    .role-preview.show { display: flex; }
-    .role-preview-dot { width: 8px; height: 8px; border-radius: 50%; }
 
-    /* Footer note */
-    .login-footer { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border); font-size: 0.72rem; color: var(--muted); text-align: center; line-height: 1.6; }
+    .animate-fade-in {
+      animation: fadeIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
 
-    /* Mobile */
-    @media (max-width: 768px) {
-      .wrapper { flex-direction: column; overflow: auto; }
-      .lp { width: 100%; padding: 24px; }
-      .lp-features, .lp-accounts { display: none; }
-      .rp { padding: 24px 16px; align-items: flex-start; }
-      html, body { overflow: auto; }
+    /* Custom input focus styles */
+    .gov-input:focus {
+      border-color: #F97316 !important;
+      background: rgba(15, 23, 42, 0.85) !important;
+      box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.22), inset 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.5);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 4px;
     }
   </style>
 </head>
+
 <body>
-  <div class="wrapper">
-
-    <!-- ══════════ LEFT PANEL ══════════ -->
-    <aside class="lp">
-      <div class="lp-brand">
-        <div class="lp-logo-row">
-          <div class="lp-logo-box">
-            <svg viewBox="0 0 40 40" fill="none" width="30" height="30">
-              <circle cx="20" cy="20" r="18" stroke="url(#g1)" stroke-width="2"/>
-              <path d="M8 24 L20 10 L32 24 L8 24Z" fill="url(#g1)" opacity="0.9"/>
-              <rect x="14" y="24" width="12" height="6" rx="2" fill="url(#g2)"/>
-              <circle cx="16" cy="32" r="2" fill="#F97316"/><circle cx="24" cy="32" r="2" fill="#F97316"/>
-              <defs>
-                <linearGradient id="g1" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse"><stop stop-color="#60A5FA"/><stop offset="1" stop-color="#93C5FD"/></linearGradient>
-                <linearGradient id="g2" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse"><stop stop-color="#D9531E"/><stop offset="1" stop-color="#E65100"/></linearGradient>
-              </defs>
-            </svg>
-          </div>
-          <div class="lp-title-group">
-            <span class="t1">RAKSHA PATH</span>
-            <span class="t2">Secure Access Portal · Indian Railways</span>
-          </div>
-        </div>
-
-        <h2 class="lp-headline">Intelligent<br/>Rail <em>Operations</em><br/>Platform</h2>
-        <p class="lp-tagline">AI-powered defect prioritization, corridor optimization, and real-time maintenance orchestration.</p>
-      </div>
-
-      <div class="lp-features">
-        <div class="lp-feat"><div class="lp-feat-dot" style="background:#34D399"></div><span class="lp-feat-txt">Role-isolated secure dashboards</span></div>
-        <div class="lp-feat"><div class="lp-feat-dot" style="background:#60A5FA"></div><span class="lp-feat-txt">CP-SAT solver for block scheduling</span></div>
-        <div class="lp-feat"><div class="lp-feat-dot" style="background:#FBB43A"></div><span class="lp-feat-txt">Real-time TDMS telemetry feeds</span></div>
-        <div class="lp-feat"><div class="lp-feat-dot" style="background:#F87171"></div><span class="lp-feat-txt">Admin user management &amp; audit</span></div>
-      </div>
-
-      <div class="lp-accounts" id="lp-accounts">
-        <div class="lp-acc-label">Demo Credentials</div>
-        <div class="lp-acc-list" id="lp-acc-list"><!-- JS renders --></div>
-        <p class="lp-version">RAKSHA PATH v2.4.1 · Build 2026.09 · Protected</p>
-      </div>
-    </aside>
-
-    <!-- ══════════ RIGHT PANEL ══════════ -->
-    <main class="rp">
-      <div class="card">
-        <div class="card-hdr">
-          <h1>Sign In</h1>
-          <p>Enter your assigned credentials to access your role dashboard. Contact admin for account issues.</p>
-        </div>
-
-        <form id="login-form" novalidate autocomplete="off">
-
-          <!-- Username -->
-          <div class="form-group">
-            <label class="form-label" for="f-username">Username</label>
-            <input type="text" id="f-username" class="form-input" placeholder="e.g. admin" autocomplete="off" spellcheck="false" />
-          </div>
-
-          <!-- Password -->
-          <div class="form-group">
-            <label class="form-label" for="f-password">Password</label>
-            <div class="pw-wrap">
-              <input type="password" id="f-password" class="form-input" placeholder="Enter password" autocomplete="current-password" style="padding-right:44px" />
-              <button type="button" class="pw-toggle" id="pw-toggle" tabindex="-1" title="Toggle visibility">
-                <svg id="eye-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-              </button>
-            </div>
-          </div>
-
-          <!-- Role preview (auto-populates on focus-out from username) -->
-          <div class="role-preview" id="role-preview">
-            <div class="role-preview-dot" id="role-preview-dot"></div>
-            <span id="role-preview-text"></span>
-          </div>
-
-          <!-- Errors -->
-          <div class="alert-error" id="alert-error">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-            <span id="alert-error-txt">Invalid username or password.</span>
-          </div>
-          <div class="alert-warn" id="alert-warn">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-            <span id="alert-warn-txt">Your account has been deactivated. Contact admin.</span>
-          </div>
-
-          <!-- Submit -->
-          <button type="submit" class="btn-login" id="btn-login">
-            <svg class="btn-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12,8 16,12 12,16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
-            <div class="spinner"></div>
-            <span>Sign In to Dashboard</span>
-          </button>
-
-        </form>
-
-        <div class="login-footer">
-          Access is restricted to authorised Indian Railways personnel only.<br/>
-          For account issues, contact your Divisional IT Administrator.
-        </div>
-      </div>
-    </main>
-
-  </div>
+  <div id="root"></div>
 
   <script>
-    'use strict';
+    (function () {
+      'use strict';
 
-    const SESSION_KEY = 'ir_auth_session';
+      // ═══════════════════════════════════════════════════════════════════════
+      // HIGH-SECURITY PROTOCOL: PURGE SESSION ON PAGE RELOAD / REFRESH
+      // ═══════════════════════════════════════════════════════════════════════
+      const SESSION_KEY = 'ir_auth_session';
+      const TOKEN_KEY = 'ir_auth_token';
 
-    const ROLE_ROUTES = {
-      'admin':           'admin-dashboard.html',
-      'field-engineer':  'maintenance-dashboard.html',
-      'control-office':  'control-office.html',
-      'surveillance':    'surveillance-dashboard.html',
-      'platform-portal': 'platform-portal.html',
-    };
-
-    const ROLE_META = window.IR_UserStore.getRoleMeta();
-
-    // If already logged in, skip to dashboard
-    (function checkSession() {
       try {
-        const s = JSON.parse(sessionStorage.getItem(SESSION_KEY) || 'null');
-        if (s && s.role && ROLE_ROUTES[s.role]) {
-          const redir = new URLSearchParams(window.location.search).get('redirect');
-          window.location.replace(redir || ROLE_ROUTES[s.role]);
+        const navEntries = performance.getEntriesByType ? performance.getEntriesByType('navigation') : [];
+        const isReload = (navEntries.length > 0 && navEntries[0].type === 'reload') ||
+                         (window.performance && window.performance.navigation && window.performance.navigation.type === 1);
+        if (isReload) {
+          sessionStorage.removeItem(SESSION_KEY);
+          sessionStorage.removeItem(TOKEN_KEY);
         }
       } catch (_) {}
-    })();
 
-    // Populate demo credentials in left panel
-    (function renderCreds() {
-      const DEMO = [
-        { icon: '🛡️', user: 'admin',       pass: 'Admin@123', role: 'Executive / Admin' },
-        { icon: '🔧', user: 'engineer1',    pass: 'Eng@456',   role: 'Field Engineer' },
-        { icon: '🎛️', user: 'controller1',  pass: 'Ctrl@789',  role: 'Control Office' },
-        { icon: '📡', user: 'inspector1',   pass: 'Insp@321',  role: 'Surveillance' },
-        { icon: '🚉', user: 'platform1',    pass: 'Plat@654',  role: 'Platform Portal' },
+      const urlParams = new URLSearchParams(window.location.search);
+      const isReloadSecurity = urlParams.get('reason') === 'reload_security';
+      const redirectUrl = urlParams.get('redirect') || null;
+
+      // 1. Primary Command Authorities Catalog
+      const MAIN_ROLES = [
+        {
+          key: 'admin',
+          label: 'Executive / Admin',
+          icon: '🛡️',
+          color: '#38BDF8',
+          dept: 'Chief Controller & Executive Admin - DOM',
+          route: 'admin-dashboard.html',
+          desc: 'High-speed corridor oversight, policy overrides, AI model retraining & user governance'
+        },
+        {
+          key: 'field-maintenance-group',
+          label: 'Field Engineer (Maintenance)',
+          icon: '🔧',
+          color: '#FBBF24',
+          dept: 'Track (TMS), Signal (SMMS) & Traction (TRD)',
+          isMaintenanceGroup: true,
+          desc: 'Track possessions, ultrasonic flaw verifications, gang dispatch & work order completion'
+        },
+        {
+          key: 'control-office',
+          label: 'Control Office Controller',
+          icon: '🎛️',
+          color: '#60A5FA',
+          dept: 'Section Controller · Traffic & Operations',
+          route: 'control-office.html',
+          desc: 'Real-time automatic block granting, train sequencing & overhead traction power isolation'
+        },
+        {
+          key: 'surveillance',
+          label: 'Surveillance Inspector',
+          icon: '📡',
+          color: '#34D399',
+          dept: 'Track Safety & Telemetry Specialist',
+          route: 'surveillance-dashboard.html',
+          desc: 'Optical drone video analytics, vibration accelerometers & intrusion detection telemetry'
+        }
       ];
-      const list = document.getElementById('lp-acc-list');
-      if (!list) return;
-      list.innerHTML = DEMO.map(d => `
-        <div class="lp-acc-item">
-          <span class="lp-acc-icon">${d.icon}</span>
-          <div class="lp-acc-info">
-            <div class="lp-acc-user">${d.user}</div>
-            <div class="lp-acc-role">${d.role}</div>
-          </div>
-          <span class="lp-acc-pass">${d.pass}</span>
-        </div>`).join('');
-    })();
 
-    // DOM refs
-    const form       = document.getElementById('login-form');
-    const usernameEl = document.getElementById('f-username');
-    const passwordEl = document.getElementById('f-password');
-    const toggleBtn  = document.getElementById('pw-toggle');
-    const eyeIcon    = document.getElementById('eye-icon');
-    const rolePreview= document.getElementById('role-preview');
-    const roleDot    = document.getElementById('role-preview-dot');
-    const roleTxt    = document.getElementById('role-preview-text');
-    const errBox     = document.getElementById('alert-error');
-    const errTxt     = document.getElementById('alert-error-txt');
-    const warnBox    = document.getElementById('alert-warn');
-    const btnLogin   = document.getElementById('btn-login');
+      // 2. Specialized Maintenance Engineering Departments
+      const MAINTENANCE_DEPARTMENTS = [
+        {
+          key: 'field-tms',
+          label: 'TMS — Track Maintenance Dept',
+          shortLabel: 'TMS (Track / P-Way)',
+          icon: '🛤️',
+          color: '#F59E0B',
+          dept: 'Track Maintenance System (P-Way, Gang & Machines)',
+          route: 'maintenance-dashboard.html',
+          roleFilter: ['field-tms', 'field-engineer', 'admin']
+        },
+        {
+          key: 'field-smms',
+          label: 'SMMS — Signal & Telecom Dept',
+          shortLabel: 'SMMS (Signal & S&T)',
+          icon: '🚦',
+          color: '#0284C7',
+          dept: 'Signal Maintenance Management System (Interlocking & Points)',
+          route: 'maintenance-dashboard.html',
+          roleFilter: ['field-smms', 'field-engineer', 'admin']
+        },
+        {
+          key: 'field-trd',
+          label: 'TRD — Traction Distribution Dept',
+          shortLabel: 'TRD (Traction & OHE)',
+          icon: '⚡',
+          color: '#EAB308',
+          dept: 'Traction Power Supply & Overhead Equipment (OHE)',
+          route: 'maintenance-dashboard.html',
+          roleFilter: ['field-trd', 'field-engineer', 'admin']
+        },
+        {
+          key: 'field-engineer',
+          label: 'Senior Section Engineer (In-Charge)',
+          shortLabel: 'Field Engineer (General / SSE)',
+          icon: '🔧',
+          color: '#D97706',
+          dept: 'Multi-Disciplinary Maintenance & Section In-Charge',
+          route: 'maintenance-dashboard.html',
+          roleFilter: ['field-engineer', 'admin']
+        }
+      ];
 
-    function showError(msg) { errTxt.textContent = msg; errBox.classList.add('show'); warnBox.classList.remove('show'); }
-    function showWarn(msg)  { document.getElementById('alert-warn-txt').textContent = msg; warnBox.classList.add('show'); errBox.classList.remove('show'); }
-    function clearAlerts()  { errBox.classList.remove('show'); warnBox.classList.remove('show'); }
+      const { useState, useEffect, createElement: e } = window.React;
 
-    // Password toggle
-    let pwVisible = false;
-    toggleBtn.addEventListener('click', () => {
-      pwVisible = !pwVisible;
-      passwordEl.type = pwVisible ? 'text' : 'password';
-      eyeIcon.innerHTML = pwVisible
-        ? '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>'
-        : '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
-    });
+      function RoleLoginApp() {
+        // View modes: 'main' | 'maintenance' | 'form'
+        const [viewMode, setViewMode] = useState('main');
+        const [selectedRole, setSelectedRole] = useState(null);
+        const [username, setUsername] = useState('');
+        const [password, setPassword] = useState('');
+        const [showPassword, setShowPassword] = useState(false);
+        const [error, setError] = useState('');
+        const [success, setSuccess] = useState('');
+        const [loading, setLoading] = useState(false);
 
-    // Show role hint when username is entered
-    usernameEl.addEventListener('blur', () => {
-      const val = usernameEl.value.trim();
-      if (!val) { rolePreview.classList.remove('show'); return; }
-      const user = window.IR_UserStore.findByUsername(val);
-      if (user && ROLE_META[user.role]) {
-        const m = ROLE_META[user.role];
-        roleDot.style.background = m.color;
-        roleTxt.textContent = m.icon + '  ' + m.label;
-        rolePreview.classList.add('show');
-      } else {
-        rolePreview.classList.remove('show');
+        const handleSelectMainRole = (role) => {
+          if (role.isMaintenanceGroup) {
+            setViewMode('maintenance');
+            setError('');
+            return;
+          }
+          setSelectedRole(role);
+          setViewMode('form');
+          setUsername('');
+          setPassword('');
+          setError('');
+          setSuccess('');
+        };
+
+        const handleSelectMaintenanceDept = (dept) => {
+          setSelectedRole(dept);
+          setViewMode('form');
+          setUsername('');
+          setPassword('');
+          setError('');
+          setSuccess('');
+        };
+
+        const handleBack = () => {
+          if (viewMode === 'form') {
+            if (selectedRole && selectedRole.key.startsWith('field-')) {
+              setViewMode('maintenance');
+            } else {
+              setViewMode('main');
+            }
+            setSelectedRole(null);
+          } else if (viewMode === 'maintenance') {
+            setViewMode('main');
+          }
+          setUsername('');
+          setPassword('');
+          setError('');
+          setSuccess('');
+        };
+
+        const handleSubmit = (ev) => {
+          if (ev) ev.preventDefault();
+          setError('');
+          setSuccess('');
+
+          if (!selectedRole) {
+            setError('Please select an operational access role first.');
+            return;
+          }
+          if (!username.trim()) {
+            setError('Please enter your official username or Employee ID.');
+            return;
+          }
+          if (!password) {
+            setError('Please enter your password.');
+            return;
+          }
+
+          setLoading(true);
+
+          setTimeout(() => {
+            try {
+              let user = null;
+              if (window.IR_UserStore && typeof window.IR_UserStore.authenticate === 'function') {
+                user = window.IR_UserStore.authenticate(username.trim(), password);
+              }
+
+              if (!user) {
+                setError('Invalid credentials. Please verify your username and password.');
+                setLoading(false);
+                return;
+              }
+
+              // Verify role permission
+              const allowedRoles = selectedRole.roleFilter || [selectedRole.key, 'admin'];
+              if (!allowedRoles.includes(user.role) && user.role !== 'admin') {
+                setError(`Officer account '${user.username}' is assigned to role '${user.role}', which does not match '${selectedRole.label}'.`);
+                setLoading(false);
+                return;
+              }
+
+              // Create session payload
+              const sessionData = {
+                username: user.username,
+                role: user.role,
+                name: user.name || selectedRole.label,
+                division: user.division || 'Northern Zone',
+                loginTime: Date.now()
+              };
+
+              sessionStorage.setItem(SESSION_KEY, JSON.stringify(sessionData));
+              sessionStorage.setItem(TOKEN_KEY, 'ir_tok_' + Math.random().toString(36).substring(2));
+
+              setSuccess(`Access Authorized: Welcome, ${sessionData.name}. Launching Command Console...`);
+
+              // Redirect
+              const targetRoute = redirectUrl || selectedRole.route;
+              setTimeout(() => {
+                window.location.replace(targetRoute);
+              }, 450);
+
+            } catch (err) {
+              setError(err.message || 'Authentication error encountered.');
+              setLoading(false);
+            }
+          }, 320);
+        };
+
+        // Outer background container
+        return e('div', {
+          style: {
+            minHeight: '100vh',
+            width: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '16px',
+            backgroundImage: "linear-gradient(135deg, rgba(3, 7, 18, 0.70) 0%, rgba(15, 23, 42, 0.50) 50%, rgba(3, 7, 18, 0.80) 100%), url('../vande_bharat_bg.jpg'), url('/frontend/vande_bharat_bg.jpg'), url('/vande_bharat_bg.jpg')",
+            backgroundPosition: 'center',
+            backgroundSize: 'cover',
+            backgroundRepeat: 'no-repeat',
+            backgroundAttachment: 'fixed',
+            position: 'relative'
+          }
+        },
+          // Center Frosted Glass Card
+          e('div', {
+            className: 'animate-fade-in',
+            style: {
+              width: '100%',
+              maxWidth: '510px',
+              background: 'rgba(15, 23, 42, 0.72)',
+              backdropFilter: 'blur(28px)',
+              WebkitBackdropFilter: 'blur(28px)',
+              borderRadius: '20px',
+              border: '1px solid rgba(255, 255, 255, 0.16)',
+              boxShadow: '0 25px 50px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.20)',
+              padding: '26px 28px',
+              color: '#F8FAFC',
+              position: 'relative'
+            }
+          },
+
+            // High-Security Reload Logout Notification
+            isReloadSecurity && e('div', {
+              style: {
+                marginBottom: '14px',
+                padding: '9px 12px',
+                borderRadius: '10px',
+                background: 'rgba(249, 115, 22, 0.16)',
+                border: '1px solid rgba(249, 115, 22, 0.45)',
+                color: '#FDBA74',
+                fontSize: '0.74rem',
+                lineHeight: '1.35',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px'
+              }
+            },
+              e('span', { style: { fontSize: '1.05rem', flexShrink: 0 } }, '🔒'),
+              e('div', null,
+                e('strong', { style: { color: '#FED7AA', display: 'block' } }, 'High-Security Automatic Logout'),
+                'Session terminated upon page refresh as per Railway Security Protocol. Please select your role to sign in.'
+              )
+            ),
+
+            // ═════════════════════════════════════════════════════════════════
+            // SCREEN 1: PRIMARY ROLE SELECTION
+            // ═════════════════════════════════════════════════════════════════
+            viewMode === 'main' && e('div', null,
+              // Top Badge
+              e('div', { style: { textAlign: 'center', marginBottom: '18px' } },
+                e('div', {
+                  style: {
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    fontSize: '0.68rem',
+                    fontWeight: '800',
+                    color: '#F97316',
+                    letterSpacing: '1px',
+                    textTransform: 'uppercase',
+                    background: 'rgba(249, 115, 22, 0.15)',
+                    border: '1px solid rgba(249, 115, 22, 0.35)',
+                    padding: '4px 12px',
+                    borderRadius: '16px',
+                    boxShadow: '0 2px 6px rgba(249, 115, 22, 0.12)'
+                  }
+                },
+                  e('span', null, '🛡️'),
+                  e('span', null, 'Indian Railways Access Gateway')
+                ),
+                e('h1', {
+                  style: {
+                    fontSize: '1.45rem',
+                    fontWeight: '800',
+                    color: '#FFFFFF',
+                    marginTop: '10px',
+                    letterSpacing: '0.2px'
+                  }
+                }, 'Select Access Role'),
+                e('p', {
+                  style: {
+                    fontSize: '0.80rem',
+                    color: '#CBD5E1',
+                    marginTop: '4px',
+                    lineHeight: '1.4'
+                  }
+                }, 'Choose your operational command authority to enter the platform.')
+              ),
+
+              // Role Cards List
+              e('div', { style: { display: 'flex', flexDirection: 'column', gap: '9px' } },
+                MAIN_ROLES.map(r => e('div', {
+                  key: r.key,
+                  onClick: () => handleSelectMainRole(r),
+                  style: {
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    padding: '12px 14px',
+                    borderRadius: '12px',
+                    background: 'rgba(255, 255, 255, 0.08)',
+                    border: '1px solid rgba(255, 255, 255, 0.13)',
+                    cursor: 'pointer',
+                    transition: 'all 0.18s cubic-bezier(0.16, 1, 0.3, 1)',
+                    position: 'relative',
+                    overflow: 'hidden'
+                  },
+                  onMouseEnter: (ev) => {
+                    ev.currentTarget.style.background = 'rgba(255, 255, 255, 0.15)';
+                    ev.currentTarget.style.borderColor = r.color;
+                    ev.currentTarget.style.transform = 'translateY(-2px)';
+                    ev.currentTarget.style.boxShadow = '0 8px 20px rgba(0, 0, 0, 0.35)';
+                  },
+                  onMouseLeave: (ev) => {
+                    ev.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)';
+                    ev.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.13)';
+                    ev.currentTarget.style.transform = 'none';
+                    ev.currentTarget.style.boxShadow = 'none';
+                  }
+                },
+                  e('div', { style: { display: 'flex', alignItems: 'center', gap: '12px', minWidth: 0, flex: 1 } },
+                    e('div', {
+                      style: {
+                        width: '38px',
+                        height: '38px',
+                        borderRadius: '10px',
+                        background: 'rgba(255, 255, 255, 0.12)',
+                        border: '1px solid rgba(255, 255, 255, 0.20)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '1.2rem',
+                        flexShrink: 0
+                      }
+                    }, r.icon),
+                    e('div', { style: { minWidth: 0, flex: 1, overflow: 'hidden' } },
+                      e('div', {
+                        style: {
+                          fontSize: '0.90rem',
+                          fontWeight: '700',
+                          color: '#FFFFFF',
+                          whiteSpace: 'nowrap',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis'
+                        }
+                      }, r.label),
+                      e('div', {
+                        style: {
+                          fontSize: '0.71rem',
+                          color: '#94A3B8',
+                          marginTop: '2px',
+                          whiteSpace: 'nowrap',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis'
+                        }
+                      }, r.dept)
+                    )
+                  ),
+                  e('div', {
+                    style: {
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '4px',
+                      fontSize: '0.76rem',
+                      fontWeight: '700',
+                      color: '#60A5FA',
+                      flexShrink: 0,
+                      whiteSpace: 'nowrap',
+                      marginLeft: '12px'
+                    }
+                  },
+                    e('span', null, 'Sign In'),
+                    e('span', { style: { fontSize: '0.88rem', lineHeight: '1' } }, '→')
+                  )
+                ))
+              )
+            ),
+
+            // ═════════════════════════════════════════════════════════════════
+            // SCREEN 1B: MAINTENANCE TEAMS (TMS, SMMS, TRD, GENERAL SSE)
+            // ═════════════════════════════════════════════════════════════════
+            viewMode === 'maintenance' && e('div', { className: 'animate-fade-in' },
+              // Header with Back Button
+              e('div', {
+                style: {
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  marginBottom: '16px'
+                }
+              },
+                e('button', {
+                  type: 'button',
+                  onClick: handleBack,
+                  style: {
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '5px',
+                    background: 'rgba(255, 255, 255, 0.1)',
+                    border: '1px solid rgba(255, 255, 255, 0.2)',
+                    borderRadius: '8px',
+                    padding: '5px 10px',
+                    color: '#E2E8F0',
+                    fontWeight: '700',
+                    fontSize: '0.74rem',
+                    cursor: 'pointer',
+                    transition: 'all 0.15s ease'
+                  },
+                  onMouseEnter: (ev) => ev.currentTarget.style.background = 'rgba(255, 255, 255, 0.18)',
+                  onMouseLeave: (ev) => ev.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)'
+                },
+                  e('span', null, '←'),
+                  e('span', null, 'Back to Access Roles')
+                ),
+                e('div', {
+                  style: {
+                    padding: '4px 11px',
+                    borderRadius: '16px',
+                    background: 'rgba(245, 158, 11, 0.15)',
+                    border: '1px solid rgba(245, 158, 11, 0.4)',
+                    color: '#FBBF24',
+                    fontWeight: '700',
+                    fontSize: '0.74rem'
+                  }
+                }, '🔧 Maintenance Wing')
+              ),
+
+              e('div', { style: { marginBottom: '16px', textAlign: 'center' } },
+                e('h2', {
+                  style: {
+                    fontSize: '1.30rem',
+                    fontWeight: '800',
+                    color: '#FFFFFF',
+                    letterSpacing: '0.2px'
+                  }
+                }, 'Select Maintenance Department'),
+                e('p', {
+                  style: {
+                    fontSize: '0.78rem',
+                    color: '#CBD5E1',
+                    marginTop: '3px',
+                    lineHeight: '1.4'
+                  }
+                }, 'Choose your specialized field engineering authority:')
+              ),
+
+              // Department Cards
+              e('div', { style: { display: 'flex', flexDirection: 'column', gap: '9px' } },
+                MAINTENANCE_DEPARTMENTS.map(d => e('div', {
+                  key: d.key,
+                  onClick: () => handleSelectMaintenanceDept(d),
+                  style: {
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    padding: '12px 14px',
+                    borderRadius: '12px',
+                    background: 'rgba(255, 255, 255, 0.08)',
+                    border: '1px solid rgba(255, 255, 255, 0.13)',
+                    cursor: 'pointer',
+                    transition: 'all 0.18s cubic-bezier(0.16, 1, 0.3, 1)',
+                    position: 'relative'
+                  },
+                  onMouseEnter: (ev) => {
+                    ev.currentTarget.style.background = 'rgba(255, 255, 255, 0.15)';
+                    ev.currentTarget.style.borderColor = d.color;
+                    ev.currentTarget.style.transform = 'translateY(-2px)';
+                    ev.currentTarget.style.boxShadow = '0 8px 20px rgba(0, 0, 0, 0.35)';
+                  },
+                  onMouseLeave: (ev) => {
+                    ev.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)';
+                    ev.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.13)';
+                    ev.currentTarget.style.transform = 'none';
+                    ev.currentTarget.style.boxShadow = 'none';
+                  }
+                },
+                  e('div', { style: { display: 'flex', alignItems: 'center', gap: '12px', minWidth: 0, flex: 1 } },
+                    e('div', {
+                      style: {
+                        width: '38px',
+                        height: '38px',
+                        borderRadius: '10px',
+                        background: 'rgba(255, 255, 255, 0.12)',
+                        border: '1px solid rgba(255, 255, 255, 0.20)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '1.2rem',
+                        flexShrink: 0
+                      }
+                    }, d.icon),
+                    e('div', { style: { minWidth: 0, flex: 1, overflow: 'hidden' } },
+                      e('div', {
+                        style: {
+                          fontSize: '0.90rem',
+                          fontWeight: '700',
+                          color: '#FFFFFF',
+                          whiteSpace: 'nowrap',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis'
+                        }
+                      }, d.label),
+                      e('div', {
+                        style: {
+                          fontSize: '0.70rem',
+                          color: '#94A3B8',
+                          marginTop: '2px',
+                          whiteSpace: 'nowrap',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis'
+                        }
+                      }, d.dept)
+                    )
+                  ),
+                  e('div', {
+                    style: {
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '4px',
+                      fontSize: '0.76rem',
+                      fontWeight: '700',
+                      color: '#60A5FA',
+                      flexShrink: 0,
+                      whiteSpace: 'nowrap',
+                      marginLeft: '12px'
+                    }
+                  },
+                    e('span', null, 'Sign In'),
+                    e('span', { style: { fontSize: '0.88rem', lineHeight: '1' } }, '→')
+                  )
+                ))
+              )
+            ),
+
+            // ═════════════════════════════════════════════════════════════════
+            // SCREEN 2: SIGN IN FORM (CLEAN, NO DEMO INFORMATION)
+            // ═════════════════════════════════════════════════════════════════
+            viewMode === 'form' && selectedRole && e('div', { className: 'animate-fade-in' },
+              // Header with Back Button and Selected Role Badge
+              e('div', {
+                style: {
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  marginBottom: '16px'
+                }
+              },
+                e('button', {
+                  type: 'button',
+                  onClick: handleBack,
+                  style: {
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '5px',
+                    background: 'rgba(255, 255, 255, 0.1)',
+                    border: '1px solid rgba(255, 255, 255, 0.2)',
+                    borderRadius: '8px',
+                    padding: '5px 10px',
+                    color: '#E2E8F0',
+                    fontWeight: '700',
+                    fontSize: '0.74rem',
+                    cursor: 'pointer',
+                    transition: 'all 0.15s ease'
+                  },
+                  onMouseEnter: (ev) => ev.currentTarget.style.background = 'rgba(255, 255, 255, 0.18)',
+                  onMouseLeave: (ev) => ev.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)'
+                },
+                  e('span', null, '←'),
+                  e('span', null, 'Change Authority')
+                ),
+                e('div', {
+                  style: {
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    padding: '4px 11px',
+                    borderRadius: '16px',
+                    background: 'rgba(255, 255, 255, 0.12)',
+                    border: '1px solid ' + selectedRole.color,
+                    color: '#FFFFFF',
+                    fontWeight: '700',
+                    fontSize: '0.74rem'
+                  }
+                },
+                  e('span', null, selectedRole.icon),
+                  e('span', null, selectedRole.shortLabel || selectedRole.label)
+                )
+              ),
+
+              // Title and Department text
+              e('div', { style: { marginBottom: '16px' } },
+                e('h2', {
+                  style: {
+                    fontSize: '1.30rem',
+                    fontWeight: '800',
+                    color: '#FFFFFF',
+                    letterSpacing: '0.2px'
+                  }
+                }, `Sign In as ${selectedRole.shortLabel || selectedRole.label}`),
+                e('p', {
+                  style: {
+                    fontSize: '0.78rem',
+                    color: '#94A3B8',
+                    marginTop: '3px',
+                    lineHeight: '1.4'
+                  }
+                }, `Enter your authorized credentials for ${selectedRole.dept}.`)
+              ),
+
+              // Official Form (Clean, without demo credentials)
+              e('form', { onSubmit: handleSubmit },
+                // Username Input
+                e('div', { style: { marginBottom: '12px' } },
+                  e('label', {
+                    style: {
+                      display: 'block',
+                      fontSize: '0.70rem',
+                      fontWeight: '700',
+                      color: '#CBD5E1',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.7px',
+                      marginBottom: '6px'
+                    }
+                  }, 'Username / Employee ID'),
+                  e('input', {
+                    type: 'text',
+                    className: 'gov-input',
+                    value: username,
+                    onChange: (ev) => setUsername(ev.target.value),
+                    placeholder: 'Enter official username / employee ID',
+                    autoFocus: true,
+                    style: {
+                      width: '100%',
+                      padding: '10px 14px',
+                      borderRadius: '10px',
+                      border: '1px solid rgba(255, 255, 255, 0.22)',
+                      background: 'rgba(15, 23, 42, 0.65)',
+                      fontSize: '0.88rem',
+                      color: '#FFFFFF',
+                      outline: 'none',
+                      boxShadow: 'inset 0 2px 4px rgba(0, 0, 0, 0.3)',
+                      fontFamily: 'inherit'
+                    }
+                  })
+                ),
+
+                // Password Input
+                e('div', { style: { marginBottom: '16px' } },
+                  e('label', {
+                    style: {
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      fontSize: '0.70rem',
+                      fontWeight: '700',
+                      color: '#CBD5E1',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.7px',
+                      marginBottom: '6px'
+                    }
+                  },
+                    e('span', null, 'Password'),
+                    e('button', {
+                      type: 'button',
+                      onClick: () => setShowPassword(!showPassword),
+                      style: {
+                        background: 'transparent',
+                        border: 'none',
+                        color: '#94A3B8',
+                        cursor: 'pointer',
+                        fontSize: '0.70rem',
+                        fontWeight: '600'
+                      }
+                    }, showPassword ? 'Hide' : 'Show')
+                  ),
+                  e('input', {
+                    type: showPassword ? 'text' : 'password',
+                    className: 'gov-input',
+                    value: password,
+                    onChange: (ev) => setPassword(ev.target.value),
+                    placeholder: 'Enter official password',
+                    style: {
+                      width: '100%',
+                      padding: '10px 14px',
+                      borderRadius: '10px',
+                      border: '1px solid rgba(255, 255, 255, 0.22)',
+                      background: 'rgba(15, 23, 42, 0.65)',
+                      fontSize: '0.88rem',
+                      color: '#FFFFFF',
+                      outline: 'none',
+                      boxShadow: 'inset 0 2px 4px rgba(0, 0, 0, 0.3)',
+                      fontFamily: 'inherit'
+                    }
+                  })
+                ),
+
+                // Error message
+                error && e('div', {
+                  style: {
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    padding: '10px 12px',
+                    borderRadius: '9px',
+                    background: 'rgba(220, 38, 38, 0.22)',
+                    border: '1px solid rgba(220, 38, 38, 0.45)',
+                    color: '#FCA5A5',
+                    fontSize: '0.78rem',
+                    fontWeight: '600',
+                    marginBottom: '14px'
+                  }
+                },
+                  e('span', null, '⚠️'),
+                  e('span', null, error)
+                ),
+
+                // Success message
+                success && e('div', {
+                  style: {
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    padding: '10px 12px',
+                    borderRadius: '9px',
+                    background: 'rgba(16, 185, 129, 0.22)',
+                    border: '1px solid rgba(16, 185, 129, 0.45)',
+                    color: '#6EE7B7',
+                    fontSize: '0.78rem',
+                    fontWeight: '600',
+                    marginBottom: '14px'
+                  }
+                },
+                  e('span', null, '✓'),
+                  e('span', null, success)
+                ),
+
+                // Submit Button
+                e('button', {
+                  type: 'submit',
+                  disabled: loading,
+                  style: {
+                    width: '100%',
+                    padding: '11px',
+                    borderRadius: '10px',
+                    border: 'none',
+                    background: 'linear-gradient(135deg, #F97316 0%, #EA580C 100%)',
+                    color: '#FFFFFF',
+                    fontSize: '0.90rem',
+                    fontWeight: '800',
+                    cursor: loading ? 'not-allowed' : 'pointer',
+                    boxShadow: '0 6px 20px rgba(249, 115, 22, 0.35)',
+                    letterSpacing: '0.3px',
+                    transition: 'all 0.18s ease'
+                  },
+                  onMouseEnter: (ev) => {
+                    if (!loading) ev.currentTarget.style.boxShadow = '0 8px 24px rgba(249, 115, 22, 0.55)';
+                  },
+                  onMouseLeave: (ev) => {
+                    ev.currentTarget.style.boxShadow = '0 6px 20px rgba(249, 115, 22, 0.35)';
+                  }
+                },
+                  loading ? 'Authenticating Officer Credentials...' : `Sign In to Corridor Command →`
+                )
+              )
+            ),
+
+            // Card Footer
+            e('div', {
+              style: {
+                marginTop: '18px',
+                paddingTop: '14px',
+                borderTop: '1px solid rgba(255, 255, 255, 0.09)',
+                textAlign: 'center',
+                fontSize: '0.68rem',
+                color: '#94A3B8',
+                lineHeight: '1.5'
+              }
+            },
+              e('div', null, 'Access restricted to authorized Indian Railways personnel.'),
+              e('div', { style: { color: '#64748B', marginTop: '2px' } }, 'RAKSHA PATH v2.4.1 · High-Speed Corridor Command')
+            )
+          )
+        );
       }
-    });
 
-    // Submit
-    form.addEventListener('submit', e => {
-      e.preventDefault();
-      clearAlerts();
-
-      const username = usernameEl.value.trim();
-      const password = passwordEl.value;
-
-      if (!username) { showError('Please enter your username.'); usernameEl.focus(); return; }
-      if (!password) { showError('Please enter your password.');  passwordEl.focus(); return; }
-
-      btnLogin.classList.add('loading');
-      btnLogin.disabled = true;
-
-      setTimeout(() => {
-        // Check if user exists first (to distinguish wrong user vs wrong password)
-        const found = window.IR_UserStore.findByUsername(username);
-        if (!found) {
-          btnLogin.classList.remove('loading'); btnLogin.disabled = false;
-          showError('No account found with that username.');
-          usernameEl.focus();
-          return;
-        }
-        if (!found.active) {
-          btnLogin.classList.remove('loading'); btnLogin.disabled = false;
-          showWarn('Your account has been deactivated. Contact your divisional admin.');
-          return;
-        }
-
-        const authUser = window.IR_UserStore.authenticate(username, password);
-        if (!authUser) {
-          btnLogin.classList.remove('loading'); btnLogin.disabled = false;
-          showError('Incorrect password. Please try again.');
-          passwordEl.value = '';
-          passwordEl.focus();
-          return;
-        }
-
-        // Success — write session
-        const session = { role: authUser.role, name: authUser.name, userId: authUser.id, loginTime: Date.now() };
-        sessionStorage.setItem(SESSION_KEY, JSON.stringify(session));
-
-        const redir = new URLSearchParams(window.location.search).get('redirect');
-        window.location.replace(redir || ROLE_ROUTES[authUser.role]);
-      }, 500);
-    });
-
-    // Animate cards in
-    setTimeout(() => {
-      document.querySelectorAll('.lp-acc-item').forEach((item, i) => {
-        item.style.opacity = '0';
-        item.style.transform = 'translateX(-8px)';
-        item.style.transition = 'opacity 0.3s ease ' + (i * 0.08) + 's, transform 0.3s ease ' + (i * 0.08) + 's';
-        requestAnimationFrame(() => requestAnimationFrame(() => {
-          item.style.opacity = '1'; item.style.transform = 'translateX(0)';
-        }));
-      });
-    }, 100);
+      // Mount React Application into #root
+      const rootElement = document.getElementById('root');
+      if (window.ReactDOM.createRoot) {
+        window.ReactDOM.createRoot(rootElement).render(e(RoleLoginApp));
+      } else if (window.ReactDOM.render) {
+        window.ReactDOM.render(e(RoleLoginApp), rootElement);
+      }
+    })();
   </script>
 </body>
+
 </html>

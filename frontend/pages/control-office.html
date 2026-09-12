@@ -1,14 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Divisional Control Office — RAKSHA PATH | Indian Railways AI</title>
-  <meta name="description" content="RAKSHA PATH — Indian Railways AI Maintenance Platform - Section Controller & DOM Corridor Traffic Optimization Console." />
+  <meta name="description"
+    content="RAKSHA PATH — Indian Railways AI Maintenance Platform - Section Controller & DOM Corridor Traffic Optimization Console." />
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Orbitron:wght@500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Orbitron:wght@500;600;700;800;900&display=swap"
+    rel="stylesheet" />
 
   <!-- Auth guard (runs before page renders) -->
   <script src="../components/auth-guard.js"></script>
@@ -47,7 +51,12 @@
       --font-display: 'Calibri', 'Arial', sans-serif;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
     body {
       background: radial-gradient(circle at 50% 0%, #FFFFFF 0%, #FAF6EE 100%);
       color: #0F172A;
@@ -71,11 +80,13 @@
       top: 0;
       z-index: 100;
     }
+
     .brand-group {
       display: flex;
       align-items: center;
       gap: 14px;
     }
+
     .brand-logo {
       width: 38px;
       height: 38px;
@@ -87,6 +98,7 @@
       font-size: 1.2rem;
       box-shadow: 0 2px 10px rgba(0, 51, 102, 0.25);
     }
+
     .brand-title {
       font-family: var(--font-display);
       font-size: 1.1rem;
@@ -94,6 +106,7 @@
       color: #0F172A;
       letter-spacing: 0.8px;
     }
+
     .brand-sub {
       font-size: 0.72rem;
       color: #64748B;
@@ -106,6 +119,7 @@
       align-items: center;
       gap: 16px;
     }
+
     .nav-pill {
       color: #334155;
       text-decoration: none;
@@ -115,7 +129,9 @@
       border-radius: 6px;
       transition: all 0.2s;
     }
-    .nav-pill:hover, .nav-pill.active {
+
+    .nav-pill:hover,
+    .nav-pill.active {
       color: #003366;
       background: rgba(0, 51, 102, 0.08);
       border: 1px solid rgba(0, 51, 102, 0.25);
@@ -138,12 +154,14 @@
       margin-bottom: 28px;
       box-shadow: 0 4px 16px rgba(220, 38, 38, 0.06);
     }
+
     .alert-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
       margin-bottom: 8px;
     }
+
     .alert-title {
       font-size: 0.95rem;
       font-weight: 700;
@@ -160,8 +178,11 @@
       grid-template-columns: 1fr 1fr;
       gap: 24px;
     }
+
     @media (max-width: 1024px) {
-      .ctrl-grid { grid-template-columns: 1fr; }
+      .ctrl-grid {
+        grid-template-columns: 1fr;
+      }
     }
 
     .panel-card {
@@ -171,6 +192,7 @@
       padding: 22px;
       box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
     }
+
     .panel-title {
       font-family: var(--font-display);
       font-size: 1.1rem;
@@ -191,10 +213,12 @@
       margin-bottom: 14px;
       transition: all 0.2s;
     }
+
     .slot-item:hover {
       background: #FAF6EE;
       border-color: rgba(0, 51, 102, 0.35);
     }
+
     .slot-item.top-ranked {
       border: 1px solid rgba(5, 150, 105, 0.45);
       background: #F0FDF4;
@@ -208,6 +232,7 @@
       padding: 16px;
       margin-bottom: 14px;
     }
+
     .alternative-box {
       background: #F0FDF4;
       border: 1px dashed rgba(5, 150, 105, 0.4);
@@ -225,10 +250,12 @@
       display: inline-flex;
       cursor: help;
     }
+
     .tooltip-wrap:hover .tooltip-box {
       visibility: visible;
       opacity: 1;
     }
+
     .tooltip-box {
       visibility: hidden;
       opacity: 0;
@@ -245,13 +272,14 @@
       transform: translateX(-50%);
       font-size: 0.74rem;
       line-height: 1.4;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
       transition: opacity 0.2s ease, visibility 0.2s ease;
       pointer-events: none;
     }
   </style>
 
 </head>
+
 <body>
 
   <!-- SharedNav mounts here -->
@@ -265,73 +293,106 @@
           <span>🚨</span>
           <span>CRITICAL TRAIN CONFLICT DETECTED BY AI TRAFFIC ENGINE</span>
         </div>
-        <span style="font-family: var(--font-mono); font-size: 0.76rem; background: rgba(220, 38, 38, 0.1); color: #DC2626; border: 1px solid rgba(220, 38, 38, 0.25); padding: 2px 8px; border-radius: 4px; font-weight: 700;">
+        <span
+          style="font-family: var(--font-mono); font-size: 0.76rem; background: rgba(220, 38, 38, 0.1); color: #DC2626; border: 1px solid rgba(220, 38, 38, 0.25); padding: 2px 8px; border-radius: 4px; font-weight: 700;">
           COLLISION WARNING #904
         </span>
       </div>
       <p style="font-size: 0.85rem; color: #991B1B; line-height: 1.4; margin: 0;">
-        Manual block request <strong>REQ-PWAY-904</strong> on <em>NDLS-GZB-DN (KM 12-16)</em> scheduled for <strong>08:30 – 10:30</strong> overlaps with scheduled path of <strong>12002 Shatabdi Express</strong> and suburban EMU peak flow (Estimated delay: <strong>210 mins</strong> | Choke Penalty: <strong>91.4/100</strong>).
+        Manual block request <strong>REQ-PWAY-904</strong> on <em>NDLS-GZB-DN (KM 12-16)</em> scheduled for
+        <strong>08:30 – 10:30</strong> overlaps with scheduled path of <strong>12002 Shatabdi Express</strong> and
+        suburban EMU peak flow (Estimated delay: <strong>210 mins</strong> | Choke Penalty: <strong>91.4/100</strong>).
       </p>
     </div>
 
     <!-- ═══════════════════ DEDICATED CLOUD SERVER & PERSISTENT DISK STORAGE BAR ═══════════════════ -->
-    <div style="background: linear-gradient(135deg, #0B192C 0%, #003366 100%); color: #FFFFFF; border-radius: 10px; padding: 14px 20px; margin-bottom: 22px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px; box-shadow: 0 4px 18px rgba(0, 51, 102, 0.3); border: 1px solid rgba(255,255,255,0.18);">
+    <div
+      style="background: linear-gradient(135deg, #0B192C 0%, #003366 100%); color: #FFFFFF; border-radius: 10px; padding: 14px 20px; margin-bottom: 22px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px; box-shadow: 0 4px 18px rgba(0, 51, 102, 0.3); border: 1px solid rgba(255,255,255,0.18);">
       <div style="display: flex; align-items: center; gap: 14px;">
-        <div style="font-size: 1.7rem; background: rgba(255,255,255,0.12); width: 46px; height: 46px; border-radius: 8px; display: flex; align-items: center; justify-content: center;">🖥️</div>
+        <div
+          style="font-size: 1.7rem; background: rgba(255,255,255,0.12); width: 46px; height: 46px; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+          🖥️</div>
         <div>
           <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-            <span style="font-weight: 700; font-size: 0.96rem; letter-spacing: 0.3px;">Dedicated Cloud Server &amp; Persistent Disk Storage</span>
-            <span id="server-mode-badge" style="font-size: 0.68rem; background: #059669; color: #FFF; padding: 2px 10px; border-radius: 12px; font-weight: 700; font-family: var(--font-mono); display: inline-flex; align-items: center; gap: 5px;">
-              <span style="width: 6px; height: 6px; border-radius: 50%; background: #FFF; display: inline-block;"></span> DEDICATED VPS / CONTAINER (Non-Serverless)
+            <span style="font-weight: 700; font-size: 0.96rem; letter-spacing: 0.3px;">Dedicated Cloud Server &amp;
+              Persistent Disk Storage</span>
+            <span id="server-mode-badge"
+              style="font-size: 0.68rem; background: #059669; color: #FFF; padding: 2px 10px; border-radius: 12px; font-weight: 700; font-family: var(--font-mono); display: inline-flex; align-items: center; gap: 5px;">
+              <span
+                style="width: 6px; height: 6px; border-radius: 50%; background: #FFF; display: inline-block;"></span>
+              DEDICATED VPS / CONTAINER (Non-Serverless)
             </span>
           </div>
           <div id="server-telemetry-summary" style="font-size: 0.74rem; color: #CBD5E1; margin-top: 3px;">
-            Target: <strong style="color: #FFF;">Railway / Render / AWS EC2</strong> | Disk Volume: <strong style="color: #6EE7B7;">/app/data</strong> | Snapshots: <strong id="server-backup-count" style="color: #6EE7B7;">2</strong> | Uptime: <span id="server-uptime-val" style="font-family: var(--font-mono); color: #E2E8F0;">Active</span>
+            Target: <strong style="color: #FFF;">Railway / Render / AWS EC2</strong> | Disk Volume: <strong
+              style="color: #6EE7B7;">/app/data</strong> | Snapshots: <strong id="server-backup-count"
+              style="color: #6EE7B7;">2</strong> | Uptime: <span id="server-uptime-val"
+              style="font-family: var(--font-mono); color: #E2E8F0;">Active</span>
           </div>
         </div>
       </div>
       <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-        <button id="btn-disk-backup" onclick="window.createDiskBackup()" style="background: #D97706; color: #FFFFFF; border: none; padding: 8px 18px; border-radius: 6px; font-weight: 700; font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; gap: 6px; box-shadow: 0 2px 8px rgba(217,119,6,0.35); transition: all 0.2s;">
+        <button id="btn-disk-backup" onclick="window.createDiskBackup()"
+          style="background: #D97706; color: #FFFFFF; border: none; padding: 8px 18px; border-radius: 6px; font-weight: 700; font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; gap: 6px; box-shadow: 0 2px 8px rgba(217,119,6,0.35); transition: all 0.2s;">
           <span id="backup-spinner" style="display: none;">⏳</span>
           <span id="backup-btn-label">💾 Create Instant Disk Backup</span>
         </button>
-        <a href="http://localhost:5000/api/v1/server/telemetry" target="_blank" style="color: #93C5FD; font-size: 0.74rem; text-decoration: underline; padding: 4px 6px;">
+        <a href="http://localhost:5000/api/v1/server/telemetry" target="_blank"
+          style="color: #93C5FD; font-size: 0.74rem; text-decoration: underline; padding: 4px 6px;">
           Server Telemetry ↗
         </a>
       </div>
     </div>
 
     <!-- ═══════════════════ STANDOUT AI FEATURE SUITE NAV ═══════════════════ -->
-    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 22px; background: #FFFFFF; border: 1px solid rgba(195, 178, 150, 0.45); padding: 10px 16px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
+    <div
+      style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 22px; background: #FFFFFF; border: 1px solid rgba(195, 178, 150, 0.45); padding: 10px 16px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
       <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-        <button class="standout-nav-tab active" data-tab="tab-realtime" onclick="window.switchStandoutTab('tab-realtime')" style="padding: 7px 14px; border-radius: 6px; font-size: 0.78rem; font-weight: 700; cursor: pointer; border: 1px solid #003366; background: #003366; color: #FFFFFF; transition: all 0.2s;">
+        <button class="standout-nav-tab active" data-tab="tab-realtime"
+          onclick="window.switchStandoutTab('tab-realtime')"
+          style="padding: 7px 14px; border-radius: 6px; font-size: 0.78rem; font-weight: 700; cursor: pointer; border: 1px solid #003366; background: #003366; color: #FFFFFF; transition: all 0.2s;">
           🎛️ Real-Time Ops
         </button>
-        <button class="standout-nav-tab" data-tab="tab-string-diagram" onclick="window.switchStandoutTab('tab-string-diagram')" style="padding: 7px 14px; border-radius: 6px; font-size: 0.78rem; font-weight: 700; cursor: pointer; border: 1px solid rgba(0, 51, 102, 0.25); background: #FAF6EE; color: #003366; transition: all 0.2s;">
+        <button class="standout-nav-tab" data-tab="tab-string-diagram"
+          onclick="window.switchStandoutTab('tab-string-diagram')"
+          style="padding: 7px 14px; border-radius: 6px; font-size: 0.78rem; font-weight: 700; cursor: pointer; border: 1px solid rgba(0, 51, 102, 0.25); background: #FAF6EE; color: #003366; transition: all 0.2s;">
           📈 Digital Twin (Marey Chart)
         </button>
-        <button class="standout-nav-tab" data-tab="tab-tsr-simulator" onclick="window.switchStandoutTab('tab-tsr-simulator')" style="padding: 7px 14px; border-radius: 6px; font-size: 0.78rem; font-weight: 700; cursor: pointer; border: 1px solid rgba(0, 51, 102, 0.25); background: #FAF6EE; color: #003366; transition: all 0.2s;">
+        <button class="standout-nav-tab" data-tab="tab-tsr-simulator"
+          onclick="window.switchStandoutTab('tab-tsr-simulator')"
+          style="padding: 7px 14px; border-radius: 6px; font-size: 0.78rem; font-weight: 700; cursor: pointer; border: 1px solid rgba(0, 51, 102, 0.25); background: #FAF6EE; color: #003366; transition: all 0.2s;">
           ⏱️ TSR Trade-off Simulator
         </button>
-        <button class="standout-nav-tab" data-tab="tab-freight-windows" onclick="window.switchStandoutTab('tab-freight-windows')" style="padding: 7px 14px; border-radius: 6px; font-size: 0.78rem; font-weight: 700; cursor: pointer; border: 1px solid rgba(0, 51, 102, 0.25); background: #FAF6EE; color: #003366; transition: all 0.2s;">
+        <button class="standout-nav-tab" data-tab="tab-freight-windows"
+          onclick="window.switchStandoutTab('tab-freight-windows')"
+          style="padding: 7px 14px; border-radius: 6px; font-size: 0.78rem; font-weight: 700; cursor: pointer; border: 1px solid rgba(0, 51, 102, 0.25); background: #FAF6EE; color: #003366; transition: all 0.2s;">
           ⚡ Freight Micro-Windows
         </button>
-        <button class="standout-nav-tab" data-tab="tab-machine-balancer" onclick="window.switchStandoutTab('tab-machine-balancer')" style="padding: 7px 14px; border-radius: 6px; font-size: 0.78rem; font-weight: 700; cursor: pointer; border: 1px solid rgba(0, 51, 102, 0.25); background: #FAF6EE; color: #003366; transition: all 0.2s;">
+        <button class="standout-nav-tab" data-tab="tab-machine-balancer"
+          onclick="window.switchStandoutTab('tab-machine-balancer')"
+          style="padding: 7px 14px; border-radius: 6px; font-size: 0.78rem; font-weight: 700; cursor: pointer; border: 1px solid rgba(0, 51, 102, 0.25); background: #FAF6EE; color: #003366; transition: all 0.2s;">
           🚜 Track Machine Balancer
         </button>
-        <button class="standout-nav-tab" data-tab="tab-yield-scorecard" onclick="window.switchStandoutTab('tab-yield-scorecard')" style="padding: 7px 14px; border-radius: 6px; font-size: 0.78rem; font-weight: 700; cursor: pointer; border: 1px solid rgba(0, 51, 102, 0.25); background: #FAF6EE; color: #003366; transition: all 0.2s;">
+        <button class="standout-nav-tab" data-tab="tab-yield-scorecard"
+          onclick="window.switchStandoutTab('tab-yield-scorecard')"
+          style="padding: 7px 14px; border-radius: 6px; font-size: 0.78rem; font-weight: 700; cursor: pointer; border: 1px solid rgba(0, 51, 102, 0.25); background: #FAF6EE; color: #003366; transition: all 0.2s;">
           📊 Post-Block Yield &amp; DRR
         </button>
-        <button class="standout-nav-tab" data-tab="tab-emergency-reroute" onclick="window.switchStandoutTab('tab-emergency-reroute')" style="padding: 7px 14px; border-radius: 6px; font-size: 0.78rem; font-weight: 700; cursor: pointer; border: 1px solid rgba(0, 51, 102, 0.25); background: #FAF6EE; color: #003366; transition: all 0.2s;">
+        <button class="standout-nav-tab" data-tab="tab-emergency-reroute"
+          onclick="window.switchStandoutTab('tab-emergency-reroute')"
+          style="padding: 7px 14px; border-radius: 6px; font-size: 0.78rem; font-weight: 700; cursor: pointer; border: 1px solid rgba(0, 51, 102, 0.25); background: #FAF6EE; color: #003366; transition: all 0.2s;">
           🚨 Emergency Reroute &amp; EDFC
         </button>
-        <button class="standout-nav-tab" data-tab="tab-multi-horizon" onclick="window.switchStandoutTab('tab-multi-horizon')" style="padding: 7px 14px; border-radius: 6px; font-size: 0.78rem; font-weight: 700; cursor: pointer; border: 1px solid rgba(0, 51, 102, 0.25); background: #FAF6EE; color: #003366; transition: all 0.2s;">
+        <button class="standout-nav-tab" data-tab="tab-multi-horizon"
+          onclick="window.switchStandoutTab('tab-multi-horizon')"
+          style="padding: 7px 14px; border-radius: 6px; font-size: 0.78rem; font-weight: 700; cursor: pointer; border: 1px solid rgba(0, 51, 102, 0.25); background: #FAF6EE; color: #003366; transition: all 0.2s;">
           📅 Multi-Horizon Planner
         </button>
       </div>
 
       <div style="display: flex; align-items: center; gap: 8px;">
-        <button onclick="window.switchStandoutTab('all')" style="padding: 6px 12px; border-radius: 6px; font-size: 0.74rem; font-weight: 700; cursor: pointer; border: 1px dashed #003366; background: #FFFFFF; color: #003366;">
+        <button onclick="window.switchStandoutTab('all')"
+          style="padding: 6px 12px; border-radius: 6px; font-size: 0.74rem; font-weight: 700; cursor: pointer; border: 1px dashed #003366; background: #FFFFFF; color: #003366;">
           👁️ Show All Modules
         </button>
       </div>
@@ -339,511 +400,311 @@
 
     <!-- TAB 1: REAL-TIME OPS & CORE DECISION SUITE -->
     <div id="tab-realtime" class="standout-tab-view">
-    <div class="ctrl-grid">
+      <div class="ctrl-grid">
 
-<!-- ═══════════════════ LEFT COLUMN: RECOMMENDED SLOTS ═══════════════════ -->
-      <div class="panel-card">
-        <div class="panel-title" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
-          <span>AI-Recommended Block Windows (Feasibility Ranked)</span>
-          <div style="display: flex; align-items: center; gap: 6px;">
-            <span style="font-size: 0.72rem; color: #003366; font-family: var(--font-mono); font-weight: 700;">NDLS-CNB-UP Corridor</span>
-            <span style="font-size: 0.68rem; background: #ECFDF5; color: #059669; border: 1px solid rgba(5,150,105,0.3); padding: 2px 6px; border-radius: 4px; font-weight: 700;">🛰️ Live Headways</span>
+        <!-- ═══════════════════ LEFT COLUMN: RECOMMENDED SLOTS ═══════════════════ -->
+        <div class="panel-card">
+          <div class="panel-title"
+            style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+            <span>AI-Recommended Block Windows (Feasibility Ranked)</span>
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <span
+                style="font-size: 0.72rem; color: #003366; font-family: var(--font-mono); font-weight: 700;">NDLS-CNB-UP
+                Corridor</span>
+              <span
+                style="font-size: 0.68rem; background: #ECFDF5; color: #059669; border: 1px solid rgba(5,150,105,0.3); padding: 2px 6px; border-radius: 4px; font-weight: 700;">🛰️
+                Live Headways</span>
+            </div>
+          </div>
+
+          <div id="recommended-slots-list">
+            <!-- Populated dynamically with SlotFeasibilityIndicator & TrafficImpactMeter -->
           </div>
         </div>
 
-        <div id="recommended-slots-list">
-          <!-- Populated dynamically with SlotFeasibilityIndicator & TrafficImpactMeter -->
+        <!-- ═══════════════════ RIGHT COLUMN: CONFLICTS & ALTERNATIVES ═══════════════════ -->
+        <div class="panel-card">
+          <div class="panel-title"
+            style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span>Active Conflict Analysis &amp; AI Alternatives</span>
+              <span
+                style="font-size: 0.68rem; background: #FAF6EE; border: 1px solid #C3B296; color: #003366; padding: 2px 6px; border-radius: 4px; font-weight: 700;">🗄️
+                Local DB: audit_records.db</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <span style="font-size: 0.72rem; color: #D9531E; font-family: var(--font-mono); font-weight: 700;">Live
+                Disruption Engine</span>
+              <button onclick="window.openSubmitWindowModal()"
+                style="background: #003366; color: #FFFFFF; border: none; padding: 4px 10px; border-radius: 5px; font-size: 0.72rem; font-weight: 700; cursor: pointer; box-shadow: 0 1px 4px rgba(0,51,102,0.2);">➕
+                Request Window (Local DB)</button>
+              <button onclick="window.fetchLiveConflicts(); window.fetchLiveRecommendedSlots();"
+                title="Re-evaluate with Live Train API"
+                style="background: #FAF6EE; color: #003366; border: 1px solid #C3B296; padding: 3px 8px; border-radius: 5px; font-size: 0.72rem; font-weight: 700; cursor: pointer;">↻
+                Live API</button>
+            </div>
+          </div>
+
+          <div id="conflicts-alternatives-list">
+            <!-- Populated dynamically with AI Warnings and Suggested Alternatives -->
+          </div>
         </div>
+
       </div>
 
-      <!-- ═══════════════════ RIGHT COLUMN: CONFLICTS & ALTERNATIVES ═══════════════════ -->
-      <div class="panel-card">
-        <div class="panel-title" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
-          <div style="display: flex; align-items: center; gap: 8px;">
-            <span>Active Conflict Analysis &amp; AI Alternatives</span>
-            <span style="font-size: 0.68rem; background: #FAF6EE; border: 1px solid #C3B296; color: #003366; padding: 2px 6px; border-radius: 4px; font-weight: 700;">🗄️ Local DB: audit_records.db</span>
-          </div>
-          <div style="display: flex; align-items: center; gap: 6px;">
-            <span style="font-size: 0.72rem; color: #D9531E; font-family: var(--font-mono); font-weight: 700;">Live Disruption Engine</span>
-            <button onclick="window.openSubmitWindowModal()" style="background: #003366; color: #FFFFFF; border: none; padding: 4px 10px; border-radius: 5px; font-size: 0.72rem; font-weight: 700; cursor: pointer; box-shadow: 0 1px 4px rgba(0,51,102,0.2);">➕ Request Window (Local DB)</button>
-            <button onclick="window.fetchLiveConflicts(); window.fetchLiveRecommendedSlots();" title="Re-evaluate with Live Train API" style="background: #FAF6EE; color: #003366; border: 1px solid #C3B296; padding: 3px 8px; border-radius: 5px; font-size: 0.72rem; font-weight: 700; cursor: pointer;">↻ Live API</button>
-          </div>
-        </div>
+      <!-- ═══════════════════ LIVE API INTEGRATION & COMMAND CENTER ═══════════════════ -->
+      <div style="margin-top: 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
 
-        <div id="conflicts-alternatives-list">
-          <!-- Populated dynamically with AI Warnings and Suggested Alternatives -->
-        </div>
-      </div>
-
-    </div>
-
-    <!-- ═══════════════════ LIVE API INTEGRATION & COMMAND CENTER ═══════════════════ -->
-    <div style="margin-top: 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
-
-      <!-- PANEL 1: LIVE TRAIN TRACKING & STATION FEED (RAPIDAPI / IRCTC) -->
-      <div class="panel-card" style="border-top: 4px solid #003366;">
-        <div class="panel-title">
-          <div style="display: flex; align-items: center; gap: 8px;">
-            <span>🛰️ Live Train Movement & Location Tracking</span>
-          </div>
-          <span id="gateway-provider-badge" style="font-size: 0.72rem; background: #ECFDF5; color: #059669; border: 1px solid rgba(5,150,105,0.3); padding: 3px 8px; border-radius: 4px; font-weight: 700; font-family: var(--font-mono);">
-            ● RapidAPI IRCTC Live
-          </span>
-        </div>
-
-        <!-- Station Selector & Controls -->
-        <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; background: #FAF6EE; padding: 10px 14px; border-radius: 8px; border: 1px solid rgba(195, 178, 150, 0.45);">
-          <div style="display: flex; align-items: center; gap: 8px;">
-            <label style="font-size: 0.78rem; font-weight: 700; color: #003366;">Station:</label>
-            <select id="live-station-select" onchange="window.fetchLiveStationTrains()" style="padding: 5px 10px; border: 1px solid #C3B296; border-radius: 6px; font-size: 0.8rem; font-weight: 600; background: #FFFFFF; color: #0F172A;">
-              <option value="NDLS">NDLS — New Delhi Central</option>
-              <option value="CNB">CNB — Kanpur Central</option>
-              <option value="PRYJ">PRYJ — Prayagraj Junction</option>
-              <option value="GZB">GZB — Ghaziabad Junction</option>
-              <option value="DLI">DLI — Old Delhi Junction</option>
-            </select>
+        <!-- PANEL 1: LIVE TRAIN TRACKING & STATION FEED (RAPIDAPI / IRCTC) -->
+        <div class="panel-card" style="border-top: 4px solid #003366;">
+          <div class="panel-title">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span>🛰️ Live Train Movement & Location Tracking</span>
+            </div>
+            <span id="gateway-provider-badge"
+              style="font-size: 0.72rem; background: #ECFDF5; color: #059669; border: 1px solid rgba(5,150,105,0.3); padding: 3px 8px; border-radius: 4px; font-weight: 700; font-family: var(--font-mono);">
+              ● RapidAPI IRCTC Live
+            </span>
           </div>
 
-          <div style="display: flex; align-items: center; gap: 8px;">
-            <label style="font-size: 0.78rem; font-weight: 700; color: #003366;">Window:</label>
-            <select id="live-hours-select" onchange="window.fetchLiveStationTrains()" style="padding: 5px 10px; border: 1px solid #C3B296; border-radius: 6px; font-size: 0.8rem; font-weight: 600; background: #FFFFFF; color: #0F172A;">
-              <option value="2">Next 2 Hours</option>
-              <option value="4" selected>Next 4 Hours</option>
-              <option value="8">Next 8 Hours</option>
-            </select>
-            <button onclick="window.fetchLiveStationTrains()" style="background: #003366; color: #FFFFFF; border: none; padding: 5px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; cursor: pointer;">↻ Refresh</button>
-          </div>
-        </div>
-
-        <!-- Live Trains List Container -->
-        <div id="live-trains-table-container" style="max-height: 280px; overflow-y: auto; border: 1px solid rgba(195,178,150,0.3); border-radius: 6px;">
-          <div style="text-align: center; padding: 20px; color: #64748B; font-size: 0.82rem;">Loading live train movements from RapidAPI...</div>
-        </div>
-
-        <!-- GPS Live Train Running Status Lookup -->
-        <div style="margin-top: 16px; padding-top: 14px; border-top: 1px dashed rgba(195,178,150,0.6);">
-          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-            <span style="font-size: 0.82rem; font-weight: 700; color: #003366;">📍 Track Train GPS Location:</span>
-            <input id="gps-train-no" type="text" placeholder="e.g. 22436, 12004, 12302" value="22436" style="padding: 5px 10px; border: 1px solid #C3B296; border-radius: 6px; font-size: 0.8rem; width: 140px; font-weight: 600;" />
-            <button onclick="window.fetchLiveTrainGPS()" style="background: #0056B3; color: #FFFFFF; border: none; padding: 5px 12px; border-radius: 6px; font-size: 0.76rem; font-weight: 700; cursor: pointer;">Locate Train</button>
-          </div>
-          <div id="gps-status-result" style="font-size: 0.78rem; background: #FAF6EE; padding: 8px 12px; border-radius: 6px; border: 1px solid rgba(195,178,150,0.35); color: #0F172A;">
-            Ready to query live running status.
-          </div>
-        </div>
-      </div>
-
-      <!-- PANEL 2: SPATIAL CP-SAT MEGA-BLOCK BUNDLER -->
-      <div class="panel-card" style="border-top: 4px solid #059669;">
-        <div class="panel-title">
-          <div style="display: flex; align-items: center; gap: 8px;">
-            <span>⚡ Multi-Department Spatial Mega-Block Bundler</span>
-          </div>
-          <span style="font-size: 0.72rem; background: #ECFDF5; color: #059669; border: 1px solid rgba(5,150,105,0.4); padding: 3px 8px; border-radius: 4px; font-weight: 700; font-family: var(--font-mono);">
-            Google OR-Tools CP-SAT (v9.15)
-          </span>
-        </div>
-
-        <p style="font-size: 0.8rem; color: #475569; margin-bottom: 12px; line-height: 1.4;">
-          Combines disjoint Civil (P-Way), Signal (S&T), and Electrical (TRD OHE) work orders into optimal unified corridor possessions using <strong>Google OR-Tools CP-SAT</strong> constraint programming, cutting track closure by <strong>≥ 25%</strong>.
-        </p>
-
-        <!-- SECTION SELECTION & CONTROLS -->
-        <div style="background: #FAF6EE; padding: 12px 14px; border-radius: 8px; border: 1px solid rgba(195, 178, 150, 0.45); margin-bottom: 12px;">
-          <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px;">
-            <div style="display: flex; align-items: center; gap: 8px; flex: 1; min-width: 260px;">
-              <label style="font-size: 0.78rem; font-weight: 700; color: #003366; white-space: nowrap;">Corridor Section:</label>
-              <select id="spatial-section-select" onchange="window.handleSpatialSectionChange()" style="flex: 1; padding: 6px 10px; border: 1px solid #C3B296; border-radius: 6px; font-size: 0.78rem; font-weight: 600; background: #FFFFFF; color: #0F172A;">
-                <optgroup label="High-Density Corridors (Trunk Routes)">
-                  <option value="NDLS-CNB-UP" selected>NDLS-CNB-UP (Delhi - Kanpur UP)</option>
-                  <option value="NDLS-CNB-DN">NDLS-CNB-DN (Kanpur - Delhi DN)</option>
-                  <option value="CNB-PRYJ-UP">CNB-PRYJ-UP (Kanpur - Prayagraj UP)</option>
-                  <option value="PRYJ-DDU-UP">PRYJ-DDU-UP (Prayagraj - Pt. Deen Dayal Upadhyaya UP)</option>
-                  <option value="DDU-HWH-UP">DDU-HWH-UP (DDU - Howrah Trunk UP)</option>
-                  <option value="NDLS-AGC-UP">NDLS-AGC-UP (Delhi - Agra Cantt UP)</option>
-                  <option value="AGC-GWL-UP">AGC-GWL-UP (Agra - Gwalior UP)</option>
-                  <option value="GWL-BPL-UP">GWL-BPL-UP (Gwalior - Bhopal UP)</option>
-                  <option value="CSMT-KAD-UP">CSMT-KAD-UP (Mumbai CSMT - Kalyan UP)</option>
-                  <option value="KAD-PUNE-UP">KAD-PUNE-UP (Kalyan - Pune Bhor Ghat)</option>
-                  <option value="HWH-BBS-UP">HWH-BBS-UP (Howrah - Bhubaneswar UP)</option>
-                  <option value="MAS-BZA-UP">MAS-BZA-UP (Chennai Central - Vijayawada UP)</option>
-                  <option value="SBC-MYS-UP">SBC-MYS-UP (Bengaluru - Mysuru UP)</option>
-                  <option value="LKO-BSB-UP">LKO-BSB-UP (Lucknow - Varanasi UP)</option>
-                </optgroup>
-                <optgroup label="Any Indian Railways Section">
-                  <option value="CUSTOM">✏️ Check Any Section / Station Pair...</option>
-                </optgroup>
+          <!-- Station Selector & Controls -->
+          <div
+            style="display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; background: #FAF6EE; padding: 10px 14px; border-radius: 8px; border: 1px solid rgba(195, 178, 150, 0.45);">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <label style="font-size: 0.78rem; font-weight: 700; color: #003366;">Station:</label>
+              <select id="live-station-select" onchange="window.fetchLiveStationTrains()"
+                style="padding: 5px 10px; border: 1px solid #C3B296; border-radius: 6px; font-size: 0.8rem; font-weight: 600; background: #FFFFFF; color: #0F172A;">
+                <option value="NDLS">NDLS — New Delhi Central</option>
+                <option value="CNB">CNB — Kanpur Central</option>
+                <option value="PRYJ">PRYJ — Prayagraj Junction</option>
+                <option value="GZB">GZB — Ghaziabad Junction</option>
+                <option value="DLI">DLI — Old Delhi Junction</option>
               </select>
             </div>
 
             <div style="display: flex; align-items: center; gap: 8px;">
-              <button id="spatial-custom-toggle-btn" onclick="window.toggleSpatialCustomPanel()" style="background: #FFFFFF; color: #003366; border: 1px solid #C3B296; padding: 6px 12px; border-radius: 6px; font-size: 0.74rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 4px;">
-                <span>🔍 Any Section / Station Pair</span>
-              </button>
-              <button onclick="window.runSpatialClustering()" style="background: #059669; color: #FFFFFF; border: none; padding: 7px 18px; border-radius: 6px; font-size: 0.78rem; font-weight: 700; cursor: pointer; box-shadow: 0 2px 8px rgba(5,150,105,0.25); display: flex; align-items: center; gap: 5px;">
-                <span>⚡ Run CP-SAT 2km Bundling</span>
-              </button>
+              <label style="font-size: 0.78rem; font-weight: 700; color: #003366;">Window:</label>
+              <select id="live-hours-select" onchange="window.fetchLiveStationTrains()"
+                style="padding: 5px 10px; border: 1px solid #C3B296; border-radius: 6px; font-size: 0.8rem; font-weight: 600; background: #FFFFFF; color: #0F172A;">
+                <option value="2">Next 2 Hours</option>
+                <option value="4" selected>Next 4 Hours</option>
+                <option value="8">Next 8 Hours</option>
+              </select>
+              <button onclick="window.fetchLiveStationTrains()"
+                style="background: #003366; color: #FFFFFF; border: none; padding: 5px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; cursor: pointer;">↻
+                Refresh</button>
             </div>
           </div>
 
-          <!-- COLLAPSIBLE CUSTOM SECTION / STATION-TO-STATION BUILDER -->
-          <div id="spatial-custom-panel" style="display: none; margin-top: 10px; padding: 10px 12px; background: #FFFFFF; border: 1px solid rgba(5,150,105,0.3); border-radius: 6px;">
-            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
-              <span style="font-size: 0.72rem; font-weight: 800; color: #003366; text-transform: uppercase; letter-spacing: 0.5px;">
-                📍 Custom Section & Bounding Station Evaluator
-              </span>
-              <span style="font-size: 0.68rem; color: #64748B;">Enter any 2 stations or custom section code</span>
-            </div>
+          <!-- Live Trains List Container -->
+          <div id="live-trains-table-container"
+            style="max-height: 280px; overflow-y: auto; border: 1px solid rgba(195,178,150,0.3); border-radius: 6px;">
+            <div style="text-align: center; padding: 20px; color: #64748B; font-size: 0.82rem;">Loading live train
+              movements from RapidAPI...</div>
+          </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr 90px 85px 85px; gap: 8px; margin-bottom: 8px;">
-              <div>
-                <label style="font-size: 0.68rem; color: #475569; font-weight: 700; display: block; margin-bottom: 2px;">From Station:</label>
-                <input id="spatial-from-station" list="ir-all-stations" placeholder="e.g. NDLS / HWH" style="width: 100%; padding: 5px 8px; border: 1px solid #CBD5E1; border-radius: 4px; font-size: 0.74rem; font-weight: 600; text-transform: uppercase;" />
-              </div>
-              <div>
-                <label style="font-size: 0.68rem; color: #475569; font-weight: 700; display: block; margin-bottom: 2px;">To Station:</label>
-                <input id="spatial-to-station" list="ir-all-stations" placeholder="e.g. CNB / PUNE" style="width: 100%; padding: 5px 8px; border: 1px solid #CBD5E1; border-radius: 4px; font-size: 0.74rem; font-weight: 600; text-transform: uppercase;" />
-              </div>
-              <div>
-                <label style="font-size: 0.68rem; color: #475569; font-weight: 700; display: block; margin-bottom: 2px;">Line:</label>
-                <select id="spatial-line-select" style="width: 100%; padding: 5px 6px; border: 1px solid #CBD5E1; border-radius: 4px; font-size: 0.74rem; font-weight: 600;">
-                  <option value="UP">UP</option>
-                  <option value="DN">DN</option>
-                  <option value="3L">3L</option>
-                  <option value="4L">4L</option>
+          <!-- GPS Live Train Running Status Lookup -->
+          <div style="margin-top: 16px; padding-top: 14px; border-top: 1px dashed rgba(195,178,150,0.6);">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+              <span style="font-size: 0.82rem; font-weight: 700; color: #003366;">📍 Track Train GPS Location:</span>
+              <input id="gps-train-no" type="text" placeholder="e.g. 22436, 12004, 12302" value="22436"
+                style="padding: 5px 10px; border: 1px solid #C3B296; border-radius: 6px; font-size: 0.8rem; width: 140px; font-weight: 600;" />
+              <button onclick="window.fetchLiveTrainGPS()"
+                style="background: #0056B3; color: #FFFFFF; border: none; padding: 5px 12px; border-radius: 6px; font-size: 0.76rem; font-weight: 700; cursor: pointer;">Locate
+                Train</button>
+            </div>
+            <div id="gps-status-result"
+              style="font-size: 0.78rem; background: #FAF6EE; padding: 8px 12px; border-radius: 6px; border: 1px solid rgba(195,178,150,0.35); color: #0F172A;">
+              Ready to query live running status.
+            </div>
+          </div>
+        </div>
+
+        <!-- PANEL 2: SPATIAL CP-SAT MEGA-BLOCK BUNDLER -->
+        <div class="panel-card" style="border-top: 4px solid #059669;">
+          <div class="panel-title">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span>⚡ Multi-Department Spatial Mega-Block Bundler</span>
+            </div>
+            <span
+              style="font-size: 0.72rem; background: #ECFDF5; color: #059669; border: 1px solid rgba(5,150,105,0.4); padding: 3px 8px; border-radius: 4px; font-weight: 700; font-family: var(--font-mono);">
+              Google OR-Tools CP-SAT (v9.15)
+            </span>
+          </div>
+
+          <p style="font-size: 0.8rem; color: #475569; margin-bottom: 12px; line-height: 1.4;">
+            Combines disjoint Civil (P-Way), Signal (S&T), and Electrical (TRD OHE) work orders into optimal unified
+            corridor possessions using <strong>Google OR-Tools CP-SAT</strong> constraint programming, cutting track
+            closure by <strong>≥ 25%</strong>.
+          </p>
+
+          <!-- SECTION SELECTION & CONTROLS -->
+          <div
+            style="background: #FAF6EE; padding: 12px 14px; border-radius: 8px; border: 1px solid rgba(195, 178, 150, 0.45); margin-bottom: 12px;">
+            <div
+              style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px;">
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1; min-width: 260px;">
+                <label style="font-size: 0.78rem; font-weight: 700; color: #003366; white-space: nowrap;">Corridor
+                  Section:</label>
+                <select id="spatial-section-select" onchange="window.handleSpatialSectionChange()"
+                  style="flex: 1; padding: 6px 10px; border: 1px solid #C3B296; border-radius: 6px; font-size: 0.78rem; font-weight: 600; background: #FFFFFF; color: #0F172A;">
+                  <optgroup label="High-Density Corridors (Trunk Routes)">
+                    <option value="NDLS-CNB-UP" selected>NDLS-CNB-UP (Delhi - Kanpur UP)</option>
+                    <option value="NDLS-CNB-DN">NDLS-CNB-DN (Kanpur - Delhi DN)</option>
+                    <option value="CNB-PRYJ-UP">CNB-PRYJ-UP (Kanpur - Prayagraj UP)</option>
+                    <option value="PRYJ-DDU-UP">PRYJ-DDU-UP (Prayagraj - Pt. Deen Dayal Upadhyaya UP)</option>
+                    <option value="DDU-HWH-UP">DDU-HWH-UP (DDU - Howrah Trunk UP)</option>
+                    <option value="NDLS-AGC-UP">NDLS-AGC-UP (Delhi - Agra Cantt UP)</option>
+                    <option value="AGC-GWL-UP">AGC-GWL-UP (Agra - Gwalior UP)</option>
+                    <option value="GWL-BPL-UP">GWL-BPL-UP (Gwalior - Bhopal UP)</option>
+                    <option value="CSMT-KAD-UP">CSMT-KAD-UP (Mumbai CSMT - Kalyan UP)</option>
+                    <option value="KAD-PUNE-UP">KAD-PUNE-UP (Kalyan - Pune Bhor Ghat)</option>
+                    <option value="HWH-BBS-UP">HWH-BBS-UP (Howrah - Bhubaneswar UP)</option>
+                    <option value="MAS-BZA-UP">MAS-BZA-UP (Chennai Central - Vijayawada UP)</option>
+                    <option value="SBC-MYS-UP">SBC-MYS-UP (Bengaluru - Mysuru UP)</option>
+                    <option value="LKO-BSB-UP">LKO-BSB-UP (Lucknow - Varanasi UP)</option>
+                  </optgroup>
+                  <optgroup label="Any Indian Railways Section">
+                    <option value="CUSTOM">✏️ Check Any Section / Station Pair...</option>
+                  </optgroup>
                 </select>
               </div>
-              <div>
-                <label style="font-size: 0.68rem; color: #475569; font-weight: 700; display: block; margin-bottom: 2px;">From KM:</label>
-                <input id="spatial-start-km" type="number" step="0.1" placeholder="e.g. 120" style="width: 100%; padding: 5px 6px; border: 1px solid #CBD5E1; border-radius: 4px; font-size: 0.74rem;" />
+
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <button id="spatial-custom-toggle-btn" onclick="window.toggleSpatialCustomPanel()"
+                  style="background: #FFFFFF; color: #003366; border: 1px solid #C3B296; padding: 6px 12px; border-radius: 6px; font-size: 0.74rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+                  <span>🔍 Any Section / Station Pair</span>
+                </button>
+                <button onclick="window.runSpatialClustering()"
+                  style="background: #059669; color: #FFFFFF; border: none; padding: 7px 18px; border-radius: 6px; font-size: 0.78rem; font-weight: 700; cursor: pointer; box-shadow: 0 2px 8px rgba(5,150,105,0.25); display: flex; align-items: center; gap: 5px;">
+                  <span>⚡ Run CP-SAT 2km Bundling</span>
+                </button>
               </div>
-              <div>
-                <label style="font-size: 0.68rem; color: #475569; font-weight: 700; display: block; margin-bottom: 2px;">To KM:</label>
-                <input id="spatial-end-km" type="number" step="0.1" placeholder="e.g. 160" style="width: 100%; padding: 5px 6px; border: 1px solid #CBD5E1; border-radius: 4px; font-size: 0.74rem;" />
+            </div>
+
+            <!-- COLLAPSIBLE CUSTOM SECTION / STATION-TO-STATION BUILDER -->
+            <div id="spatial-custom-panel"
+              style="display: none; margin-top: 10px; padding: 10px 12px; background: #FFFFFF; border: 1px solid rgba(5,150,105,0.3); border-radius: 6px;">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                <span
+                  style="font-size: 0.72rem; font-weight: 800; color: #003366; text-transform: uppercase; letter-spacing: 0.5px;">
+                  📍 Custom Section & Bounding Station Evaluator
+                </span>
+                <span style="font-size: 0.68rem; color: #64748B;">Enter any 2 stations or custom section code</span>
+              </div>
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr 90px 85px 85px; gap: 8px; margin-bottom: 8px;">
+                <div>
+                  <label
+                    style="font-size: 0.68rem; color: #475569; font-weight: 700; display: block; margin-bottom: 2px;">From
+                    Station:</label>
+                  <input id="spatial-from-station" list="ir-all-stations" placeholder="e.g. NDLS / HWH"
+                    style="width: 100%; padding: 5px 8px; border: 1px solid #CBD5E1; border-radius: 4px; font-size: 0.74rem; font-weight: 600; text-transform: uppercase;" />
+                </div>
+                <div>
+                  <label
+                    style="font-size: 0.68rem; color: #475569; font-weight: 700; display: block; margin-bottom: 2px;">To
+                    Station:</label>
+                  <input id="spatial-to-station" list="ir-all-stations" placeholder="e.g. CNB / PUNE"
+                    style="width: 100%; padding: 5px 8px; border: 1px solid #CBD5E1; border-radius: 4px; font-size: 0.74rem; font-weight: 600; text-transform: uppercase;" />
+                </div>
+                <div>
+                  <label
+                    style="font-size: 0.68rem; color: #475569; font-weight: 700; display: block; margin-bottom: 2px;">Line:</label>
+                  <select id="spatial-line-select"
+                    style="width: 100%; padding: 5px 6px; border: 1px solid #CBD5E1; border-radius: 4px; font-size: 0.74rem; font-weight: 600;">
+                    <option value="UP">UP</option>
+                    <option value="DN">DN</option>
+                    <option value="3L">3L</option>
+                    <option value="4L">4L</option>
+                  </select>
+                </div>
+                <div>
+                  <label
+                    style="font-size: 0.68rem; color: #475569; font-weight: 700; display: block; margin-bottom: 2px;">From
+                    KM:</label>
+                  <input id="spatial-start-km" type="number" step="0.1" placeholder="e.g. 120"
+                    style="width: 100%; padding: 5px 6px; border: 1px solid #CBD5E1; border-radius: 4px; font-size: 0.74rem;" />
+                </div>
+                <div>
+                  <label
+                    style="font-size: 0.68rem; color: #475569; font-weight: 700; display: block; margin-bottom: 2px;">To
+                    KM:</label>
+                  <input id="spatial-end-km" type="number" step="0.1" placeholder="e.g. 160"
+                    style="width: 100%; padding: 5px 6px; border: 1px solid #CBD5E1; border-radius: 4px; font-size: 0.74rem;" />
+                </div>
+              </div>
+
+              <!-- Quick Preset Corridor Chips -->
+              <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+                <span style="font-size: 0.68rem; color: #64748B; font-weight: 700;">Quick Pairs:</span>
+                <button onclick="window.selectQuickSection('NDLS', 'ALJN', 'UP', 0.0, 126.1)"
+                  style="font-size: 0.66rem; background: #F1F5F9; border: 1px solid #CBD5E1; border-radius: 4px; padding: 2px 7px; cursor: pointer; color: #003366; font-weight: 600;">NDLS
+                  ⇄ ALJN</button>
+                <button onclick="window.selectQuickSection('ALJN', 'TDL', 'UP', 126.1, 204.3)"
+                  style="font-size: 0.66rem; background: #F1F5F9; border: 1px solid #CBD5E1; border-radius: 4px; padding: 2px 7px; cursor: pointer; color: #003366; font-weight: 600;">ALJN
+                  ⇄ TDL</button>
+                <button onclick="window.selectQuickSection('TDL', 'CNB', 'UP', 204.3, 435.0)"
+                  style="font-size: 0.66rem; background: #F1F5F9; border: 1px solid #CBD5E1; border-radius: 4px; padding: 2px 7px; cursor: pointer; color: #003366; font-weight: 600;">TDL
+                  ⇄ CNB</button>
+                <button onclick="window.selectQuickSection('PRYJ', 'DDU', 'UP', 435.0, 600.0)"
+                  style="font-size: 0.66rem; background: #F1F5F9; border: 1px solid #CBD5E1; border-radius: 4px; padding: 2px 7px; cursor: pointer; color: #003366; font-weight: 600;">PRYJ
+                  ⇄ DDU</button>
+                <button onclick="window.selectQuickSection('CSMT', 'PUNE', 'UP', 0.0, 192.0)"
+                  style="font-size: 0.66rem; background: #F1F5F9; border: 1px solid #CBD5E1; border-radius: 4px; padding: 2px 7px; cursor: pointer; color: #003366; font-weight: 600;">CSMT
+                  ⇄ PUNE</button>
+                <button onclick="window.selectQuickSection('HWH', 'BBS', 'UP', 0.0, 438.0)"
+                  style="font-size: 0.66rem; background: #F1F5F9; border: 1px solid #CBD5E1; border-radius: 4px; padding: 2px 7px; cursor: pointer; color: #003366; font-weight: 600;">HWH
+                  ⇄ BBS</button>
+                <button onclick="window.selectQuickSection('MAS', 'BZA', 'UP', 0.0, 431.0)"
+                  style="font-size: 0.66rem; background: #F1F5F9; border: 1px solid #CBD5E1; border-radius: 4px; padding: 2px 7px; cursor: pointer; color: #003366; font-weight: 600;">MAS
+                  ⇄ BZA</button>
               </div>
             </div>
+          </div>
 
-            <!-- Quick Preset Corridor Chips -->
-            <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
-              <span style="font-size: 0.68rem; color: #64748B; font-weight: 700;">Quick Pairs:</span>
-              <button onclick="window.selectQuickSection('NDLS', 'ALJN', 'UP', 0.0, 126.1)" style="font-size: 0.66rem; background: #F1F5F9; border: 1px solid #CBD5E1; border-radius: 4px; padding: 2px 7px; cursor: pointer; color: #003366; font-weight: 600;">NDLS ⇄ ALJN</button>
-              <button onclick="window.selectQuickSection('ALJN', 'TDL', 'UP', 126.1, 204.3)" style="font-size: 0.66rem; background: #F1F5F9; border: 1px solid #CBD5E1; border-radius: 4px; padding: 2px 7px; cursor: pointer; color: #003366; font-weight: 600;">ALJN ⇄ TDL</button>
-              <button onclick="window.selectQuickSection('TDL', 'CNB', 'UP', 204.3, 435.0)" style="font-size: 0.66rem; background: #F1F5F9; border: 1px solid #CBD5E1; border-radius: 4px; padding: 2px 7px; cursor: pointer; color: #003366; font-weight: 600;">TDL ⇄ CNB</button>
-              <button onclick="window.selectQuickSection('PRYJ', 'DDU', 'UP', 435.0, 600.0)" style="font-size: 0.66rem; background: #F1F5F9; border: 1px solid #CBD5E1; border-radius: 4px; padding: 2px 7px; cursor: pointer; color: #003366; font-weight: 600;">PRYJ ⇄ DDU</button>
-              <button onclick="window.selectQuickSection('CSMT', 'PUNE', 'UP', 0.0, 192.0)" style="font-size: 0.66rem; background: #F1F5F9; border: 1px solid #CBD5E1; border-radius: 4px; padding: 2px 7px; cursor: pointer; color: #003366; font-weight: 600;">CSMT ⇄ PUNE</button>
-              <button onclick="window.selectQuickSection('HWH', 'BBS', 'UP', 0.0, 438.0)" style="font-size: 0.66rem; background: #F1F5F9; border: 1px solid #CBD5E1; border-radius: 4px; padding: 2px 7px; cursor: pointer; color: #003366; font-weight: 600;">HWH ⇄ BBS</button>
-              <button onclick="window.selectQuickSection('MAS', 'BZA', 'UP', 0.0, 431.0)" style="font-size: 0.66rem; background: #F1F5F9; border: 1px solid #CBD5E1; border-radius: 4px; padding: 2px 7px; cursor: pointer; color: #003366; font-weight: 600;">MAS ⇄ BZA</button>
+          <!-- DATALIST FOR INDIAN RAILWAYS STATIONS -->
+          <datalist id="ir-all-stations">
+            <option value="NDLS">New Delhi (NDLS)</option>
+            <option value="CNB">Kanpur Central (CNB)</option>
+            <option value="PRYJ">Prayagraj / Allahabad (PRYJ)</option>
+            <option value="DDU">Pt. Deen Dayal Upadhyaya (DDU)</option>
+            <option value="HWH">Howrah Jn (HWH)</option>
+            <option value="CSMT">Mumbai CSMT (CSMT)</option>
+            <option value="KAD">Kalyan Jn (KAD)</option>
+            <option value="PUNE">Pune Jn (PUNE)</option>
+            <option value="MAS">Chennai Central (MAS)</option>
+            <option value="BZA">Vijayawada Jn (BZA)</option>
+            <option value="SBC">KSR Bengaluru (SBC)</option>
+            <option value="MYS">Mysuru Jn (MYS)</option>
+            <option value="GZB">Ghaziabad (GZB)</option>
+            <option value="ALJN">Aligarh Jn (ALJN)</option>
+            <option value="TDL">Tundla Jn (TDL)</option>
+            <option value="ETW">Etawah Jn (ETW)</option>
+            <option value="AGC">Agra Cantt (AGC)</option>
+            <option value="GWL">Gwalior Jn (GWL)</option>
+            <option value="BPL">Bhopal Jn (BPL)</option>
+            <option value="NGP">Nagpur Jn (NGP)</option>
+            <option value="LKO">Lucknow Charbagh (LKO)</option>
+            <option value="BSB">Varanasi Jn (BSB)</option>
+            <option value="ADI">Ahmedabad Jn (ADI)</option>
+            <option value="BBS">Bhubaneswar (BBS)</option>
+            <option value="PNBE">Patna Jn (PNBE)</option>
+            <option value="GKP">Gorakhpur Jn (GKP)</option>
+            <option value="JAT">Jammu Tawi (JAT)</option>
+            <option value="BCT">Mumbai Central (BCT)</option>
+          </datalist>
+
+          <!-- Clustered Mega-Blocks Output -->
+          <div id="spatial-clusters-result" style="max-height: 380px; overflow-y: auto;">
+            <div
+              style="text-align: center; padding: 30px; color: #64748B; font-size: 0.82rem; background: #FAF6EE; border-radius: 8px; border: 1px dashed rgba(195,178,150,0.6);">
+              Click <strong>"Run CP-SAT 2km Bundling"</strong> to optimize cross-department possessions.
             </div>
           </div>
         </div>
 
-        <!-- DATALIST FOR INDIAN RAILWAYS STATIONS -->
-        <datalist id="ir-all-stations">
-          <option value="NDLS">New Delhi (NDLS)</option>
-          <option value="CNB">Kanpur Central (CNB)</option>
-          <option value="PRYJ">Prayagraj / Allahabad (PRYJ)</option>
-          <option value="DDU">Pt. Deen Dayal Upadhyaya (DDU)</option>
-          <option value="HWH">Howrah Jn (HWH)</option>
-          <option value="CSMT">Mumbai CSMT (CSMT)</option>
-          <option value="KAD">Kalyan Jn (KAD)</option>
-          <option value="PUNE">Pune Jn (PUNE)</option>
-          <option value="MAS">Chennai Central (MAS)</option>
-          <option value="BZA">Vijayawada Jn (BZA)</option>
-          <option value="SBC">KSR Bengaluru (SBC)</option>
-          <option value="MYS">Mysuru Jn (MYS)</option>
-          <option value="GZB">Ghaziabad (GZB)</option>
-          <option value="ALJN">Aligarh Jn (ALJN)</option>
-          <option value="TDL">Tundla Jn (TDL)</option>
-          <option value="ETW">Etawah Jn (ETW)</option>
-          <option value="AGC">Agra Cantt (AGC)</option>
-          <option value="GWL">Gwalior Jn (GWL)</option>
-          <option value="BPL">Bhopal Jn (BPL)</option>
-          <option value="NGP">Nagpur Jn (NGP)</option>
-          <option value="LKO">Lucknow Charbagh (LKO)</option>
-          <option value="BSB">Varanasi Jn (BSB)</option>
-          <option value="ADI">Ahmedabad Jn (ADI)</option>
-          <option value="BBS">Bhubaneswar (BBS)</option>
-          <option value="PNBE">Patna Jn (PNBE)</option>
-          <option value="GKP">Gorakhpur Jn (GKP)</option>
-          <option value="JAT">Jammu Tawi (JAT)</option>
-          <option value="BCT">Mumbai Central (BCT)</option>
-        </datalist>
-
-        <!-- Clustered Mega-Blocks Output -->
-        <div id="spatial-clusters-result" style="max-height: 380px; overflow-y: auto;">
-          <div style="text-align: center; padding: 30px; color: #64748B; font-size: 0.82rem; background: #FAF6EE; border-radius: 8px; border: 1px dashed rgba(195,178,150,0.6);">
-            Click <strong>"Run CP-SAT 2km Bundling"</strong> to optimize cross-department possessions.
-          </div>
-        </div>
       </div>
-
-    </div>
-
-    <!-- ═══════════════════ GIS SATELLITE & METEOROLOGY TELEMETRY (MAPBOX & OPENWEATHER) ═══════════════════ -->
-    <div style="margin-top: 24px; display: grid; grid-template-columns: 1.25fr 0.75fr; gap: 24px;">
-
-      <!-- MAPBOX GL JS CORRIDOR SATELLITE MAP -->
-      <div class="panel-card" style="border-top: 4px solid #0056B3; padding: 0; overflow: hidden; display: flex; flex-direction: column;">
-        <div style="padding: 14px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border-cyan); background: rgba(250, 246, 238, 0.98);">
-          <div style="display: flex; align-items: center; gap: 8px;">
-            <span style="font-size: 1.1rem;">🗺️</span>
-            <strong style="color: #003366; font-size: 0.92rem;">Corridor GIS & Satellite Photogrammetry (Mapbox GL JS)</strong>
-          </div>
-          <div style="display: flex; align-items: center; gap: 8px;">
-            <span style="font-size: 0.7rem; background: #EFF6FF; color: #0056B3; border: 1px solid rgba(0,86,179,0.3); padding: 2px 8px; border-radius: 4px; font-weight: 700; font-family: var(--font-mono);">
-              ● Mapbox Live Token
-            </span>
-            <select id="map-style-select" onchange="window.changeMapboxStyle(this.value)" style="padding: 4px 8px; border: 1px solid #C3B296; border-radius: 4px; font-size: 0.74rem; font-weight: 600; background: #FFF; color: #0F172A;">
-              <option value="mapbox://styles/mapbox/satellite-streets-v12" selected>Satellite HD</option>
-              <option value="mapbox://styles/mapbox/outdoors-v12">Railways / Outdoors</option>
-              <option value="mapbox://styles/mapbox/navigation-night-v1">Night Operations</option>
-            </select>
-          </div>
-        </div>
-        <div id="mapbox-corridor-map" style="width: 100%; height: 350px; position: relative;">
-          <!-- Mapbox GL JS Canvas mounts here -->
-        </div>
-        <div style="padding: 10px 16px; background: #FAF6EE; border-top: 1px solid rgba(195,178,150,0.3); font-size: 0.74rem; color: #475569; display: flex; justify-content: space-between; align-items: center;">
-          <span>Corridor: <strong>Golden Quadrilateral HDN-1 (New Delhi – Kanpur Central Trunk)</strong></span>
-          <span id="map-status-info" style="font-family: var(--font-mono); font-size: 0.72rem; color: #003366;">Active Linear Referencing Active</span>
-        </div>
-      </div>
-
-      <!-- OPENWEATHERMAP & IRPWM 602 RAIL TEMPERATURE -->
-      <div class="panel-card" style="border-top: 4px solid #D97706; display: flex; flex-direction: column; justify-content: space-between;">
-        <div>
-          <div class="panel-title" style="margin-bottom: 12px;">
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <span>⛅ Live Meteorology & Track Buckling Safety</span>
-            </div>
-            <span id="weather-source-badge" style="font-size: 0.7rem; background: #FFFBEB; color: #D97706; border: 1px solid rgba(217,119,6,0.3); padding: 2px 8px; border-radius: 4px; font-weight: 700; font-family: var(--font-mono);">
-              ● OpenWeather Live
-            </span>
-          </div>
-
-          <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 14px; background: #FAF6EE; padding: 8px 12px; border-radius: 6px; border: 1px solid rgba(195,178,150,0.4);">
-            <div style="display: flex; align-items: center; gap: 6px;">
-              <label style="font-size: 0.78rem; font-weight: 700; color: #003366;">Junction:</label>
-              <select id="weather-station-select" onchange="window.fetchLiveStationWeather(this.value)" style="padding: 4px 8px; border: 1px solid #C3B296; border-radius: 6px; font-size: 0.78rem; font-weight: 600; background: #FFF; color: #0F172A;">
-                <option value="NDLS">NDLS — New Delhi</option>
-                <option value="CNB">CNB — Kanpur Central</option>
-                <option value="PRYJ">PRYJ — Prayagraj</option>
-                <option value="GZB">GZB — Ghaziabad</option>
-                <option value="DLI">DLI — Old Delhi</option>
-                <option value="BSB">BSB — Varanasi</option>
-                <option value="HWH">HWH — Howrah</option>
-              </select>
-            </div>
-            <button onclick="window.fetchLiveStationWeather()" style="background: #D97706; color: #FFF; border: none; padding: 5px 12px; border-radius: 5px; font-size: 0.74rem; font-weight: 700; cursor: pointer;">↻ Refresh</button>
-          </div>
-
-          <!-- Dynamic Weather Content -->
-          <div id="weather-telemetry-container">
-            <div style="text-align: center; padding: 20px; color: #64748B; font-size: 0.8rem;">Loading live meteorological feed...</div>
-          </div>
-        </div>
-
-        <div style="background: #FFFBEB; border: 1px solid rgba(217,119,6,0.25); border-radius: 6px; padding: 10px 12px; font-size: 0.74rem; color: #92400E; margin-top: 14px; line-height: 1.4;">
-          <strong>IRPWM Para 602 Safety Compliance:</strong> Rail temperature ($T_r$) runs $12^\circ\text{C} - 18^\circ\text{C}$ above ambient. If $T_r > 55^\circ\text{C}$, deep screening and track lifting are prohibited to avert catastrophic sun kinks.
-        </div>
-      </div>
-
-    </div>
-
-    <!-- PANEL 3: MULTI-SYSTEM DEFECT INGESTION (TMS / SMMS / TDMS) & CORRIDOR CONFLICTS -->
-    <div style="margin-top: 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
-
-      <!-- TMS/SMMS/TDMS Ingestion Form -->
-      <div class="panel-card" style="border-top: 4px solid #D97706;">
-        <div class="panel-title">
-          <div style="display: flex; align-items: center; gap: 8px;">
-            <span>📥 Defect Ingestion & IRPWM 2020 Auto-Triage</span>
-          </div>
-          <span style="font-size: 0.72rem; background: #FFFBEB; color: #D97706; border: 1px solid rgba(217,119,6,0.3); padding: 3px 8px; border-radius: 4px; font-weight: 700; font-family: var(--font-mono);">
-            TMS • SMMS • TDMS
-          </span>
-        </div>
-
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
-          <div>
-            <label style="font-size: 0.75rem; font-weight: 700; color: #003366; display: block; margin-bottom: 4px;">Source System:</label>
-            <select id="ingest-source" style="width: 100%; padding: 6px; border: 1px solid #C3B296; border-radius: 6px; font-size: 0.78rem;">
-              <option value="TMS">TMS (Track Management System - Civil)</option>
-              <option value="SMMS">SMMS (Signal Maintenance - S&T)</option>
-              <option value="TDMS">TDMS (Traction Distribution - Electrical)</option>
-            </select>
-          </div>
-          <div>
-            <label style="font-size: 0.75rem; font-weight: 700; color: #003366; display: block; margin-bottom: 4px;">Department:</label>
-            <select id="ingest-dept" style="width: 100%; padding: 6px; border: 1px solid #C3B296; border-radius: 6px; font-size: 0.78rem;">
-              <option value="Engineering">Engineering (Civil / P-Way)</option>
-              <option value="Signal">Signal (S&T / Interlocking)</option>
-              <option value="Electrical">Electrical (TRD OHE)</option>
-            </select>
-          </div>
-        </div>
-
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
-          <div>
-            <label style="font-size: 0.75rem; font-weight: 700; color: #003366; display: block; margin-bottom: 4px;">Start KM:</label>
-            <input id="ingest-start-km" type="number" step="0.1" value="142.5" style="width: 100%; padding: 6px; border: 1px solid #C3B296; border-radius: 6px; font-size: 0.78rem;" />
-          </div>
-          <div>
-            <label style="font-size: 0.75rem; font-weight: 700; color: #003366; display: block; margin-bottom: 4px;">End KM:</label>
-            <input id="ingest-end-km" type="number" step="0.1" value="143.8" style="width: 100%; padding: 6px; border: 1px solid #C3B296; border-radius: 6px; font-size: 0.78rem;" />
-          </div>
-        </div>
-
-        <div style="margin-bottom: 10px;">
-          <label style="font-size: 0.75rem; font-weight: 700; color: #003366; display: block; margin-bottom: 4px;">Defect Description:</label>
-          <input id="ingest-desc" type="text" value="Ultrasonic Flaw Transverse Crack" style="width: 100%; padding: 6px; border: 1px solid #C3B296; border-radius: 6px; font-size: 0.78rem;" />
-        </div>
-
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px;">
-          <div>
-            <label style="font-size: 0.75rem; font-weight: 700; color: #003366; display: block; margin-bottom: 4px;">Criticality (1-10):</label>
-            <input id="ingest-crit" type="number" min="1" max="10" value="9" style="width: 100%; padding: 6px; border: 1px solid #C3B296; border-radius: 6px; font-size: 0.78rem;" />
-          </div>
-          <div>
-            <label style="font-size: 0.75rem; font-weight: 700; color: #003366; display: block; margin-bottom: 4px;">Days Overdue:</label>
-            <input id="ingest-overdue" type="number" min="0" value="8" style="width: 100%; padding: 6px; border: 1px solid #C3B296; border-radius: 6px; font-size: 0.78rem;" />
-          </div>
-        </div>
-
-        <button onclick="window.submitDefectIngestion()" style="width: 100%; background: #D97706; color: #FFFFFF; border: none; padding: 9px; border-radius: 6px; font-size: 0.82rem; font-weight: 700; cursor: pointer;">
-          📥 Ingest Defect & Calculate Priority SLA
-        </button>
-
-        <div id="ingest-response-card" style="margin-top: 12px; display: none; padding: 10px; background: #FAF6EE; border-radius: 6px; border: 1px solid rgba(195,178,150,0.45); font-size: 0.78rem;"></div>
-      </div>
-
-      <!-- Corridor Conflict Evaluator -->
-      <div class="panel-card" style="border-top: 4px solid #DC2626;">
-        <div class="panel-title">
-          <div style="display: flex; align-items: center; gap: 8px;">
-            <span>🛡️ Corridor Conflict & Delay Simulation</span>
-          </div>
-          <span style="font-size: 0.72rem; background: #FEF2F2; color: #DC2626; border: 1px solid rgba(220,38,38,0.3); padding: 3px 8px; border-radius: 4px; font-weight: 700; font-family: var(--font-mono);">
-            Live Timetable Matcher
-          </span>
-        </div>
-
-        <p style="font-size: 0.8rem; color: #475569; margin-bottom: 14px; line-height: 1.4;">
-          Test any planned maintenance possession window against real-time passenger train paths to predict choke delays before granting possession.
-        </p>
-
-        <!-- Nearest 2 Stations & Block Section Selection -->
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
-          <div>
-            <label style="font-size: 0.75rem; font-weight: 700; color: #003366; display: flex; align-items: center; gap: 4px; margin-bottom: 4px;">
-              <span>🚉 Nearest Station A (From):</span>
-            </label>
-            <select id="conflict-station-from" onchange="window.onConflictStationChange()" style="width: 100%; padding: 6px 8px; border: 1px solid #C3B296; border-radius: 6px; font-size: 0.78rem; background: #FFFFFF; font-weight: 600; color: #0F172A;">
-              <option value="NDLS">NDLS - New Delhi (KM 0.0)</option>
-              <option value="GZB">GZB - Ghaziabad Jn (KM 25.4)</option>
-              <option value="KRJ">KRJ - Khurja Jn (KM 83.2)</option>
-              <option value="ALJN" selected>ALJN - Aligarh Jn (KM 126.1)</option>
-              <option value="HRS">HRS - Hathras Jn (KM 156.4)</option>
-              <option value="TDL">TDL - Tundla Jn (KM 204.3)</option>
-              <option value="ETW">ETW - Etawah Jn (KM 296.0)</option>
-              <option value="PHD">PHD - Phaphund (KM 352.0)</option>
-              <option value="CNB">CNB - Kanpur Central (KM 435.0)</option>
-            </select>
-          </div>
-          <div>
-            <label style="font-size: 0.75rem; font-weight: 700; color: #003366; display: flex; align-items: center; gap: 4px; margin-bottom: 4px;">
-              <span>🚉 Nearest Station B (To):</span>
-            </label>
-            <select id="conflict-station-to" onchange="window.onConflictStationChange()" style="width: 100%; padding: 6px 8px; border: 1px solid #C3B296; border-radius: 6px; font-size: 0.78rem; background: #FFFFFF; font-weight: 600; color: #0F172A;">
-              <option value="NDLS">NDLS - New Delhi (KM 0.0)</option>
-              <option value="GZB">GZB - Ghaziabad Jn (KM 25.4)</option>
-              <option value="KRJ">KRJ - Khurja Jn (KM 83.2)</option>
-              <option value="ALJN">ALJN - Aligarh Jn (KM 126.1)</option>
-              <option value="HRS">HRS - Hathras Jn (KM 156.4)</option>
-              <option value="TDL" selected>TDL - Tundla Jn (KM 204.3)</option>
-              <option value="ETW">ETW - Etawah Jn (KM 296.0)</option>
-              <option value="PHD">PHD - Phaphund (KM 352.0)</option>
-              <option value="CNB">CNB - Kanpur Central (KM 435.0)</option>
-            </select>
-          </div>
-        </div>
-
-        <!-- Track KM Pole / Chainage Span -->
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
-          <div>
-            <label style="font-size: 0.75rem; font-weight: 700; color: #003366; display: block; margin-bottom: 4px;">
-              📍 Start KM / Pole No.:
-            </label>
-            <input id="conflict-start-km" type="text" value="142/10" placeholder="e.g. 142/10 or 142.5" style="width: 100%; padding: 6px 8px; border: 1px solid #C3B296; border-radius: 6px; font-size: 0.78rem; font-family: var(--font-mono); font-weight: 600;" />
-          </div>
-          <div>
-            <label style="font-size: 0.75rem; font-weight: 700; color: #003366; display: block; margin-bottom: 4px;">
-              📍 End KM / Pole No.:
-            </label>
-            <input id="conflict-end-km" type="text" value="145/20" placeholder="e.g. 145/20 or 145.8" style="width: 100%; padding: 6px 8px; border: 1px solid #C3B296; border-radius: 6px; font-size: 0.78rem; font-family: var(--font-mono); font-weight: 600;" />
-          </div>
-        </div>
-
-        <!-- Time & Duration -->
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px;">
-          <div>
-            <label style="font-size: 0.75rem; font-weight: 700; color: #003366; display: block; margin-bottom: 4px;">Proposed Start:</label>
-            <input id="conflict-start-time" type="datetime-local" style="width: 100%; padding: 6px; border: 1px solid #C3B296; border-radius: 6px; font-size: 0.78rem;" />
-          </div>
-          <div>
-            <label style="font-size: 0.75rem; font-weight: 700; color: #003366; display: block; margin-bottom: 4px;">Duration (Minutes):</label>
-            <input id="conflict-duration" type="number" value="120" step="15" min="30" max="480" style="width: 100%; padding: 6px; border: 1px solid #C3B296; border-radius: 6px; font-size: 0.78rem;" />
-          </div>
-        </div>
-
-        <!-- Location Badge Preview -->
-        <div id="conflict-location-badge" style="margin-bottom: 12px; padding: 6px 10px; background: #EEF2F6; border-radius: 5px; border: 1px dashed #003366; font-size: 0.73rem; color: #003366; font-weight: 600; display: flex; align-items: center; justify-content: space-between;">
-          <span>📍 Block: <strong id="lbl-block-section">ALJN ➔ TDL</strong></span>
-          <span>Pole: <strong id="lbl-km-pole">142/10 – 145/20</strong> (~3.3 KM)</span>
-        </div>
-
-        <button onclick="window.runLiveCorridorConflictTest()" style="width: 100%; background: #DC2626; color: #FFFFFF; border: none; padding: 9px; border-radius: 6px; font-size: 0.82rem; font-weight: 700; cursor: pointer; transition: all 0.2s ease;">
-          🔍 Evaluate Live Conflict Impact
-        </button>
-
-        <div id="corridor-conflict-output" style="margin-top: 12px; font-size: 0.78rem; background: #FAF6EE; padding: 12px; border-radius: 6px; border: 1px solid rgba(195,178,150,0.45); color: #0F172A;">
-          Select block section stations, KM pole span, and click evaluate to simulate collision impact against live trains.
-        </div>
-      </div>
-
-    </div>
-
-    <!-- ═══════════════════ AUDIT LOGS SECTION ═══════════════════ -->
-    <div style="background: #FFFFFF; border: 1px solid rgba(195, 178, 150, 0.45); border-radius: 10px; padding: 18px; margin-top: 24px; box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);">
-      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 10px;">
-        <div>
-          <div style="display: flex; align-items: center; gap: 8px;">
-            <h3 style="font-family: var(--font-display); font-size: 0.95rem; color: #003366; font-weight: 700; margin: 0;">
-              📋 Supabase & Server Database: Immutable Operational Action Ledger
-            </h3>
-            <span style="font-size: 0.7rem; background: #ECFDF5; color: #059669; border: 1px solid rgba(5,150,105,0.3); padding: 2px 8px; border-radius: 4px; font-weight: 700;">
-              🔒 Cryptographically Sealed (SHA-256)
-            </span>
-          </div>
-          <div style="font-size: 0.74rem; color: #64748B; margin-top: 2px;" id="current-login-user-chip">
-            Loading active operator session...
-          </div>
-        </div>
-        <div style="display: flex; align-items: center; gap: 8px;">
-          <button onclick="window.verifyAuditChainIntegrity()" style="background: #059669; color: #FFFFFF; border: none; padding: 4px 12px; border-radius: 4px; font-size: 0.75rem; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 5px;">
-            <span>🛡️ Verify Immutability</span>
-          </button>
-          <button onclick="window.createDiskBackup()" style="background:#003366; color:#FFFFFF; border:none; padding:4px 12px; border-radius:4px; font-size:0.75rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:5px;">
-            <span>💾 Save Snapshot</span>
-          </button>
-          <button onclick="window.refreshCtrlAudit()" style="background:#FAF6EE; border:1px solid rgba(0,51,102,0.3); color:#003366; padding:4px 12px; border-radius:4px; font-size:0.75rem; font-weight:600; cursor:pointer;">Refresh</button>
-        </div>
-      </div>
-      <div id="chain-integrity-alert" style="display: none; margin-bottom: 10px; padding: 8px 12px; border-radius: 6px; font-size: 0.76rem;"></div>
-      <div id="ctrl-audit-log-container" style="font-size: 0.8rem; color: #475569;">
-        No manual block overrides recorded in current shift.
-      </div>
-    </div>
     </div>
     <!-- END OF TAB 1: REAL-TIME OPS -->
 
@@ -854,41 +715,61 @@
           <div style="display: flex; align-items: center; gap: 10px;">
             <span style="font-size: 1.1rem;">📈</span>
             <div>
-              <div style="font-size: 0.95rem; font-weight: 700; color: #003366;">Digital Twin Section Viewer & String Diagram (Time-Distance Marey Graph)</div>
-              <div style="font-size: 0.72rem; color: #64748B;">Corridor KM 0.0 (NDLS) to KM 435.0 (CNB) with multi-train path projection, defect hotspots, and recommended shadow block windows</div>
+              <div style="font-size: 0.95rem; font-weight: 700; color: #003366;">Digital Twin Section Viewer & String
+                Diagram (Time-Distance Marey Graph)</div>
+              <div style="font-size: 0.72rem; color: #64748B;">Corridor KM 0.0 (NDLS) to KM 435.0 (CNB) with multi-train
+                path projection, defect hotspots, and recommended shadow block windows</div>
             </div>
           </div>
           <div style="display: flex; align-items: center; gap: 8px;">
-            <select id="diagram-section-select" onchange="window.initStringDiagram(this.value)" style="padding: 5px 10px; border-radius: 6px; border: 1px solid #C3B296; font-size: 0.78rem; font-weight: 700; color: #003366;">
+            <select id="diagram-section-select" onchange="window.initStringDiagram(this.value)"
+              style="padding: 5px 10px; border-radius: 6px; border: 1px solid #C3B296; font-size: 0.78rem; font-weight: 700; color: #003366;">
               <option value="NDLS-CNB-UP">NDLS-CNB-UP (Delhi to Kanpur Up Line)</option>
               <option value="NDLS-CNB-DN">NDLS-CNB-DN (Kanpur to Delhi Down Line)</option>
             </select>
-            <span id="string-diagram-status" style="font-size: 0.72rem; padding: 4px 8px; border-radius: 4px; font-weight: 700; background: #FAF6EE; color: #003366; font-family: var(--font-mono);">
+            <span id="string-diagram-status"
+              style="font-size: 0.72rem; padding: 4px 8px; border-radius: 4px; font-weight: 700; background: #FAF6EE; color: #003366; font-family: var(--font-mono);">
               Synchronizing...
             </span>
           </div>
         </div>
 
         <!-- Legend -->
-        <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 12px; background: #FAF6EE; padding: 8px 14px; border-radius: 6px; font-size: 0.74rem;">
+        <div
+          style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 12px; background: #FAF6EE; padding: 8px 14px; border-radius: 6px; font-size: 0.74rem;">
           <span style="font-weight: 700; color: #003366;">Diagram Legend:</span>
-          <span style="display: inline-flex; align-items: center; gap: 4px;"><span style="width: 14px; height: 3px; background: #0056B3; display: inline-block;"></span> Vande Bharat</span>
-          <span style="display: inline-flex; align-items: center; gap: 4px;"><span style="width: 14px; height: 3px; background: #DC2626; display: inline-block;"></span> Rajdhani Exp</span>
-          <span style="display: inline-flex; align-items: center; gap: 4px;"><span style="width: 14px; height: 3px; background: #D97706; display: inline-block;"></span> Shatabdi Exp</span>
-          <span style="display: inline-flex; align-items: center; gap: 4px;"><span style="width: 14px; height: 3px; background: #7C3AED; display: inline-block;"></span> Superfast</span>
-          <span style="display: inline-flex; align-items: center; gap: 4px;"><span style="width: 14px; height: 2px; border-top: 2px dashed #475569; display: inline-block;"></span> Freight / Goods</span>
-          <span style="display: inline-flex; align-items: center; gap: 4px;"><span style="width: 14px; height: 10px; background: rgba(124, 58, 237, 0.25); border: 1px dashed #7C3AED; display: inline-block;"></span> Shadow Possession Box</span>
-          <span style="display: inline-flex; align-items: center; gap: 4px;"><span style="width: 8px; height: 8px; border-radius: 50%; background: #DC2626; display: inline-block;"></span> Defect Hotspot (IMR/Fracture)</span>
+          <span style="display: inline-flex; align-items: center; gap: 4px;"><span
+              style="width: 14px; height: 3px; background: #0056B3; display: inline-block;"></span> Vande Bharat</span>
+          <span style="display: inline-flex; align-items: center; gap: 4px;"><span
+              style="width: 14px; height: 3px; background: #DC2626; display: inline-block;"></span> Rajdhani Exp</span>
+          <span style="display: inline-flex; align-items: center; gap: 4px;"><span
+              style="width: 14px; height: 3px; background: #D97706; display: inline-block;"></span> Shatabdi Exp</span>
+          <span style="display: inline-flex; align-items: center; gap: 4px;"><span
+              style="width: 14px; height: 3px; background: #7C3AED; display: inline-block;"></span> Superfast</span>
+          <span style="display: inline-flex; align-items: center; gap: 4px;"><span
+              style="width: 14px; height: 2px; border-top: 2px dashed #475569; display: inline-block;"></span> Freight /
+            Goods</span>
+          <span style="display: inline-flex; align-items: center; gap: 4px;"><span
+              style="width: 14px; height: 10px; background: rgba(124, 58, 237, 0.25); border: 1px dashed #7C3AED; display: inline-block;"></span>
+            Shadow Possession Box</span>
+          <span style="display: inline-flex; align-items: center; gap: 4px;"><span
+              style="width: 8px; height: 8px; border-radius: 50%; background: #DC2626; display: inline-block;"></span>
+            Defect Hotspot (IMR/Fracture)</span>
         </div>
 
         <!-- Canvas Container -->
         <div style="position: relative; width: 100%; overflow-x: auto; background: #FFFFFF; border-radius: 8px;">
-          <canvas id="string-diagram-canvas" style="width: 100%; height: 520px; display: block; cursor: crosshair;"></canvas>
+          <canvas id="string-diagram-canvas"
+            style="width: 100%; height: 520px; display: block; cursor: crosshair;"></canvas>
         </div>
 
-        <div style="margin-top: 10px; font-size: 0.72rem; color: #64748B; display: flex; align-items: center; justify-content: space-between;">
-          <span>💡 <em>Hover cursor over any trajectory line or red defect marker to view real-time train number, timetable ETA, and defect severity details.</em></span>
-          <button onclick="window.initStringDiagram('NDLS-CNB-UP')" style="background: #FAF6EE; border: 1px solid rgba(0,51,102,0.3); color: #003366; padding: 3px 8px; border-radius: 4px; font-size: 0.72rem; font-weight: 600; cursor: pointer;">↻ Redraw Marey Graph</button>
+        <div
+          style="margin-top: 10px; font-size: 0.72rem; color: #64748B; display: flex; align-items: center; justify-content: space-between;">
+          <span>💡 <em>Hover cursor over any trajectory line or red defect marker to view real-time train number,
+              timetable ETA, and defect severity details.</em></span>
+          <button onclick="window.initStringDiagram('NDLS-CNB-UP')"
+            style="background: #FAF6EE; border: 1px solid rgba(0,51,102,0.3); color: #003366; padding: 3px 8px; border-radius: 4px; font-size: 0.72rem; font-weight: 600; cursor: pointer;">↻
+            Redraw Marey Graph</button>
         </div>
       </div>
     </div>
@@ -900,19 +781,26 @@
           <div style="display: flex; align-items: center; gap: 10px;">
             <span style="font-size: 1.1rem;">⏱️</span>
             <div>
-              <div style="font-size: 0.95rem; font-weight: 700; color: #003366;">Dynamic Speed Restriction (PSR/TSR) Economic Trade-Off Simulator</div>
-              <div style="font-size: 0.72rem; color: #64748B;">IRPWM Para 204 & 602 Optimization: Immediate Block Possession vs Cumulative Delay of Deferred Defect Deterioration</div>
+              <div style="font-size: 0.95rem; font-weight: 700; color: #003366;">Dynamic Speed Restriction (PSR/TSR)
+                Economic Trade-Off Simulator</div>
+              <div style="font-size: 0.72rem; color: #64748B;">IRPWM Para 204 & 602 Optimization: Immediate Block
+                Possession vs Cumulative Delay of Deferred Defect Deterioration</div>
             </div>
           </div>
-          <span style="font-size: 0.72rem; background: #ECFDF5; color: #059669; border: 1px solid rgba(5,150,105,0.3); padding: 3px 8px; border-radius: 4px; font-weight: 700; font-family: var(--font-mono);">
+          <span
+            style="font-size: 0.72rem; background: #ECFDF5; color: #059669; border: 1px solid rgba(5,150,105,0.3); padding: 3px 8px; border-radius: 4px; font-weight: 700; font-family: var(--font-mono);">
             Punctuality ROI Engine
           </span>
         </div>
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 12px; margin-bottom: 14px; background: #FAF6EE; padding: 14px; border-radius: 8px;">
+        <div
+          style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 12px; margin-bottom: 14px; background: #FAF6EE; padding: 14px; border-radius: 8px;">
           <div>
-            <label style="font-size: 0.74rem; font-weight: 700; color: #003366; display: block; margin-bottom: 4px;">Track Defect Type:</label>
-            <select id="tsr-defect-type" onchange="window.simulateTSRTradeoff()" style="width: 100%; padding: 6px; border: 1px solid #C3B296; border-radius: 6px; font-size: 0.76rem;">
+            <label
+              style="font-size: 0.74rem; font-weight: 700; color: #003366; display: block; margin-bottom: 4px;">Track
+              Defect Type:</label>
+            <select id="tsr-defect-type" onchange="window.simulateTSRTradeoff()"
+              style="width: 100%; padding: 6px; border: 1px solid #C3B296; border-radius: 6px; font-size: 0.76rem;">
               <option value="Ultrasonic Flaw (IMR)">Ultrasonic Flaw (IMR Rail Flaw)</option>
               <option value="Rail Surface Fatigue (Squat)">Rail Surface Fatigue (Squat/Corrugation)</option>
               <option value="Weld Defect / Cupped Weld">Weld Defect / Cupped Weld</option>
@@ -922,33 +810,56 @@
           </div>
 
           <div>
-            <label style="font-size: 0.74rem; font-weight: 700; color: #003366; display: block; margin-bottom: 4px;">Imposed TSR Speed (km/h):</label>
-            <input id="tsr-speed" type="number" value="30" min="15" max="60" step="5" oninput="window.simulateTSRTradeoff()" style="width: 100%; padding: 6px; border: 1px solid #C3B296; border-radius: 6px; font-size: 0.76rem;" />
+            <label
+              style="font-size: 0.74rem; font-weight: 700; color: #003366; display: block; margin-bottom: 4px;">Imposed
+              TSR Speed (km/h):</label>
+            <input id="tsr-speed" type="number" value="30" min="15" max="60" step="5"
+              oninput="window.simulateTSRTradeoff()"
+              style="width: 100%; padding: 6px; border: 1px solid #C3B296; border-radius: 6px; font-size: 0.76rem;" />
           </div>
 
           <div>
-            <label style="font-size: 0.74rem; font-weight: 700; color: #003366; display: block; margin-bottom: 4px;">Restriction Length (KM):</label>
-            <input id="tsr-length" type="number" value="2.5" min="0.5" max="15.0" step="0.5" oninput="window.simulateTSRTradeoff()" style="width: 100%; padding: 6px; border: 1px solid #C3B296; border-radius: 6px; font-size: 0.76rem;" />
+            <label
+              style="font-size: 0.74rem; font-weight: 700; color: #003366; display: block; margin-bottom: 4px;">Restriction
+              Length (KM):</label>
+            <input id="tsr-length" type="number" value="2.5" min="0.5" max="15.0" step="0.5"
+              oninput="window.simulateTSRTradeoff()"
+              style="width: 100%; padding: 6px; border: 1px solid #C3B296; border-radius: 6px; font-size: 0.76rem;" />
           </div>
 
           <div>
-            <label style="font-size: 0.74rem; font-weight: 700; color: #003366; display: block; margin-bottom: 4px;">Deferral Period (Days):</label>
-            <input id="tsr-deferral-days" type="number" value="7" min="1" max="30" oninput="window.simulateTSRTradeoff()" style="width: 100%; padding: 6px; border: 1px solid #C3B296; border-radius: 6px; font-size: 0.76rem;" />
+            <label
+              style="font-size: 0.74rem; font-weight: 700; color: #003366; display: block; margin-bottom: 4px;">Deferral
+              Period (Days):</label>
+            <input id="tsr-deferral-days" type="number" value="7" min="1" max="30"
+              oninput="window.simulateTSRTradeoff()"
+              style="width: 100%; padding: 6px; border: 1px solid #C3B296; border-radius: 6px; font-size: 0.76rem;" />
           </div>
         </div>
 
         <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 14px;">
           <div>
-            <label style="font-size: 0.74rem; font-weight: 700; color: #003366; display: block; margin-bottom: 4px;">Corridor Permissible Speed (km/h):</label>
-            <input id="tsr-corridor-speed" type="number" value="130" min="60" max="160" oninput="window.simulateTSRTradeoff()" style="width: 100%; padding: 6px; border: 1px solid #C3B296; border-radius: 6px; font-size: 0.76rem;" />
+            <label
+              style="font-size: 0.74rem; font-weight: 700; color: #003366; display: block; margin-bottom: 4px;">Corridor
+              Permissible Speed (km/h):</label>
+            <input id="tsr-corridor-speed" type="number" value="130" min="60" max="160"
+              oninput="window.simulateTSRTradeoff()"
+              style="width: 100%; padding: 6px; border: 1px solid #C3B296; border-radius: 6px; font-size: 0.76rem;" />
           </div>
           <div>
-            <label style="font-size: 0.74rem; font-weight: 700; color: #003366; display: block; margin-bottom: 4px;">Daily Section Train Density (Trains/Day):</label>
-            <input id="tsr-density" type="number" value="48" min="10" max="120" oninput="window.simulateTSRTradeoff()" style="width: 100%; padding: 6px; border: 1px solid #C3B296; border-radius: 6px; font-size: 0.76rem;" />
+            <label
+              style="font-size: 0.74rem; font-weight: 700; color: #003366; display: block; margin-bottom: 4px;">Daily
+              Section Train Density (Trains/Day):</label>
+            <input id="tsr-density" type="number" value="48" min="10" max="120" oninput="window.simulateTSRTradeoff()"
+              style="width: 100%; padding: 6px; border: 1px solid #C3B296; border-radius: 6px; font-size: 0.76rem;" />
           </div>
           <div>
-            <label style="font-size: 0.74rem; font-weight: 700; color: #003366; display: block; margin-bottom: 4px;">Immediate Block Possession (Minutes):</label>
-            <input id="tsr-block-duration" type="number" value="120" min="30" max="360" step="15" oninput="window.simulateTSRTradeoff()" style="width: 100%; padding: 6px; border: 1px solid #C3B296; border-radius: 6px; font-size: 0.76rem;" />
+            <label
+              style="font-size: 0.74rem; font-weight: 700; color: #003366; display: block; margin-bottom: 4px;">Immediate
+              Block Possession (Minutes):</label>
+            <input id="tsr-block-duration" type="number" value="120" min="30" max="360" step="15"
+              oninput="window.simulateTSRTradeoff()"
+              style="width: 100%; padding: 6px; border: 1px solid #C3B296; border-radius: 6px; font-size: 0.76rem;" />
           </div>
         </div>
 
@@ -965,17 +876,22 @@
           <div style="display: flex; align-items: center; gap: 10px;">
             <span style="font-size: 1.1rem;">⚡</span>
             <div>
-              <div style="font-size: 0.95rem; font-weight: 700; color: #003366;">Goods Train Forecast "Opportunistic Windowing"</div>
-              <div style="font-size: 0.72rem; color: #64748B;">Auto-detects dynamic 30–50 min micro-possession gaps created by freight turnaround buffers, rake loading, and siding delays</div>
+              <div style="font-size: 0.95rem; font-weight: 700; color: #003366;">Goods Train Forecast "Opportunistic
+                Windowing"</div>
+              <div style="font-size: 0.72rem; color: #64748B;">Auto-detects dynamic 30–50 min micro-possession gaps
+                created by freight turnaround buffers, rake loading, and siding delays</div>
             </div>
           </div>
-          <button onclick="window.loadOpportunisticWindows('NDLS-CNB-UP')" style="background: #D97706; color: #FFFFFF; border: none; padding: 5px 12px; border-radius: 5px; font-size: 0.74rem; font-weight: 700; cursor: pointer;">
+          <button onclick="window.loadOpportunisticWindows('NDLS-CNB-UP')"
+            style="background: #D97706; color: #FFFFFF; border: none; padding: 5px 12px; border-radius: 5px; font-size: 0.74rem; font-weight: 700; cursor: pointer;">
             ↻ Scan Live Freight Gaps
           </button>
         </div>
 
         <p style="font-size: 0.78rem; color: #475569; margin-bottom: 14px; line-height: 1.4;">
-          Unlike fixed passenger timetables, freight movements dynamically fluctuate. When rakes enter ICD Dadri, Singrauli coal sidings, or Tundla sorting yards, temporary micro-windows open up. Section crews can claim these windows instantaneously for non-disruptive, high-value tasks.
+          Unlike fixed passenger timetables, freight movements dynamically fluctuate. When rakes enter ICD Dadri,
+          Singrauli coal sidings, or Tundla sorting yards, temporary micro-windows open up. Section crews can claim
+          these windows instantaneously for non-disruptive, high-value tasks.
         </p>
 
         <div id="opportunistic-windows-feed">
@@ -991,20 +907,25 @@
           <div style="display: flex; align-items: center; gap: 10px;">
             <span style="font-size: 1.1rem;">🚜</span>
             <div>
-              <div style="font-size: 0.95rem; font-weight: 700; color: #003366;">AI Track Machine & Resource Fleet Balancer</div>
-              <div style="font-size: 0.72rem; color: #64748B;">Real-time tracking of heavy machinery (BCM, CSM, 09-3X Tampers, Tower Wagons) & transit physics (v ≤ 40 km/h) to prevent ghost blocks</div>
+              <div style="font-size: 0.95rem; font-weight: 700; color: #003366;">AI Track Machine & Resource Fleet
+                Balancer</div>
+              <div style="font-size: 0.72rem; color: #64748B;">Real-time tracking of heavy machinery (BCM, CSM, 09-3X
+                Tampers, Tower Wagons) & transit physics (v ≤ 40 km/h) to prevent ghost blocks</div>
             </div>
           </div>
-          <span style="font-size: 0.72rem; background: #F5F3FF; color: #7C3AED; border: 1px solid rgba(124,58,237,0.3); padding: 3px 8px; border-radius: 4px; font-weight: 700; font-family: var(--font-mono);">
+          <span
+            style="font-size: 0.72rem; background: #F5F3FF; color: #7C3AED; border: 1px solid rgba(124,58,237,0.3); padding: 3px 8px; border-radius: 4px; font-weight: 700; font-family: var(--font-mono);">
             Ghost-Block Prevention Shield
           </span>
         </div>
 
         <!-- Fleet Table -->
         <div style="overflow-x: auto; margin-bottom: 20px;">
-          <table style="width: 100%; border-collapse: collapse; background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 8px;">
+          <table
+            style="width: 100%; border-collapse: collapse; background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 8px;">
             <thead>
-              <tr style="background: #FAF6EE; border-bottom: 2px solid rgba(0,51,102,0.15); font-size: 0.74rem; color: #003366; text-transform: uppercase;">
+              <tr
+                style="background: #FAF6EE; border-bottom: 2px solid rgba(0,51,102,0.15); font-size: 0.74rem; color: #003366; text-transform: uppercase;">
                 <th style="padding: 10px; text-align: left;">Machine ID</th>
                 <th style="padding: 10px; text-align: left;">Equipment Type</th>
                 <th style="padding: 10px; text-align: left;">Stabling Siding Depot</th>
@@ -1027,18 +948,28 @@
 
           <div style="display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 12px; align-items: end;">
             <div>
-              <label style="font-size: 0.74rem; font-weight: 700; color: #003366; display: block; margin-bottom: 4px;">Target Machine:</label>
-              <select id="reach-machine-select" style="width: 100%; padding: 6px; border: 1px solid #C3B296; border-radius: 6px; font-size: 0.76rem;"></select>
+              <label
+                style="font-size: 0.74rem; font-weight: 700; color: #003366; display: block; margin-bottom: 4px;">Target
+                Machine:</label>
+              <select id="reach-machine-select"
+                style="width: 100%; padding: 6px; border: 1px solid #C3B296; border-radius: 6px; font-size: 0.76rem;"></select>
             </div>
             <div>
-              <label style="font-size: 0.74rem; font-weight: 700; color: #003366; display: block; margin-bottom: 4px;">Target Possession Location (KM):</label>
-              <input id="reach-target-km" type="number" step="0.1" value="142.8" style="width: 100%; padding: 6px; border: 1px solid #C3B296; border-radius: 6px; font-size: 0.76rem;" />
+              <label
+                style="font-size: 0.74rem; font-weight: 700; color: #003366; display: block; margin-bottom: 4px;">Target
+                Possession Location (KM):</label>
+              <input id="reach-target-km" type="number" step="0.1" value="142.8"
+                style="width: 100%; padding: 6px; border: 1px solid #C3B296; border-radius: 6px; font-size: 0.76rem;" />
             </div>
             <div>
-              <label style="font-size: 0.74rem; font-weight: 700; color: #003366; display: block; margin-bottom: 4px;">Scheduled Possession Hour:</label>
-              <input id="reach-start-hour" type="number" value="2.0" step="0.5" style="width: 100%; padding: 6px; border: 1px solid #C3B296; border-radius: 6px; font-size: 0.76rem;" />
+              <label
+                style="font-size: 0.74rem; font-weight: 700; color: #003366; display: block; margin-bottom: 4px;">Scheduled
+                Possession Hour:</label>
+              <input id="reach-start-hour" type="number" value="2.0" step="0.5"
+                style="width: 100%; padding: 6px; border: 1px solid #C3B296; border-radius: 6px; font-size: 0.76rem;" />
             </div>
-            <button onclick="window.calculateMachineReach()" style="background: #003366; color: #FFFFFF; border: none; padding: 7px 16px; border-radius: 6px; font-size: 0.78rem; font-weight: 700; cursor: pointer;">
+            <button onclick="window.calculateMachineReach()"
+              style="background: #003366; color: #FFFFFF; border: none; padding: 7px 16px; border-radius: 6px; font-size: 0.78rem; font-weight: 700; cursor: pointer;">
               Evaluate Transit Feasibility
             </button>
           </div>
@@ -1055,11 +986,14 @@
           <div style="display: flex; align-items: center; gap: 10px;">
             <span style="font-size: 1.1rem;">📊</span>
             <div>
-              <div style="font-size: 0.95rem; font-weight: 700; color: #003366;">Automated Post-Block Yield & Burst Scorecard</div>
-              <div style="font-size: 0.72rem; color: #64748B;">Departmental Reliability Rating (DRR) closed-loop scoring modifying future AI block priority weights</div>
+              <div style="font-size: 0.95rem; font-weight: 700; color: #003366;">Automated Post-Block Yield & Burst
+                Scorecard</div>
+              <div style="font-size: 0.72rem; color: #64748B;">Departmental Reliability Rating (DRR) closed-loop scoring
+                modifying future AI block priority weights</div>
             </div>
           </div>
-          <button onclick="window.loadYieldScorecard()" style="background: #FAF6EE; border: 1px solid rgba(0,51,102,0.3); color: #003366; padding: 4px 10px; border-radius: 4px; font-size: 0.74rem; font-weight: 700; cursor: pointer;">
+          <button onclick="window.loadYieldScorecard()"
+            style="background: #FAF6EE; border: 1px solid rgba(0,51,102,0.3); color: #003366; padding: 4px 10px; border-radius: 4px; font-size: 0.74rem; font-weight: 700; cursor: pointer;">
             ↻ Refresh Scorecard
           </button>
         </div>
@@ -1077,36 +1011,52 @@
           <div style="display: flex; align-items: center; gap: 10px;">
             <span style="font-size: 1.1rem;">🚨</span>
             <div>
-              <div style="font-size: 0.95rem; font-weight: 700; color: #DC2626;">Emergency Block Impact & Freight Rerouting Assistant</div>
-              <div style="font-size: 0.72rem; color: #64748B;">Instantaneous upstream passenger regulation & Eastern Dedicated Freight Corridor (EDFC) bypass optimization</div>
+              <div style="font-size: 0.95rem; font-weight: 700; color: #DC2626;">Emergency Block Impact & Freight
+                Rerouting Assistant</div>
+              <div style="font-size: 0.72rem; color: #64748B;">Instantaneous upstream passenger regulation & Eastern
+                Dedicated Freight Corridor (EDFC) bypass optimization</div>
             </div>
           </div>
-          <span style="font-size: 0.72rem; background: #FEF2F2; color: #DC2626; border: 1px solid rgba(220,38,38,0.3); padding: 3px 8px; border-radius: 4px; font-weight: 700; font-family: var(--font-mono);">
+          <span
+            style="font-size: 0.72rem; background: #FEF2F2; color: #DC2626; border: 1px solid rgba(220,38,38,0.3); padding: 3px 8px; border-radius: 4px; font-weight: 700; font-family: var(--font-mono);">
             Disaster Recovery AI
           </span>
         </div>
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 12px; margin-bottom: 14px; background: #FAF6EE; padding: 14px; border-radius: 8px; align-items: end;">
+        <div
+          style="display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 12px; margin-bottom: 14px; background: #FAF6EE; padding: 14px; border-radius: 8px; align-items: end;">
           <div>
-            <label style="font-size: 0.74rem; font-weight: 700; color: #003366; display: block; margin-bottom: 4px;">Incident Nature:</label>
-            <select id="emer-incident-type" style="width: 100%; padding: 6px; border: 1px solid #C3B296; border-radius: 6px; font-size: 0.76rem;">
+            <label
+              style="font-size: 0.74rem; font-weight: 700; color: #003366; display: block; margin-bottom: 4px;">Incident
+              Nature:</label>
+            <select id="emer-incident-type"
+              style="width: 100%; padding: 6px; border: 1px solid #C3B296; border-radius: 6px; font-size: 0.76rem;">
               <option value="Rail Fracture (Severe Ultrasonic Break)">Rail Fracture (IMR Rail Snapped)</option>
-              <option value="OHE Catenary Wire Snap / Pantograph Entanglement">OHE Catenary Wire Snap (No Power)</option>
-              <option value="Electronic Interlocking Solid-State Relay Failure">Electronic Interlocking Relay Failure</option>
+              <option value="OHE Catenary Wire Snap / Pantograph Entanglement">OHE Catenary Wire Snap (No Power)
+              </option>
+              <option value="Electronic Interlocking Solid-State Relay Failure">Electronic Interlocking Relay Failure
+              </option>
             </select>
           </div>
 
           <div>
-            <label style="font-size: 0.74rem; font-weight: 700; color: #003366; display: block; margin-bottom: 4px;">Fracture Location (KM):</label>
-            <input id="emer-km" type="number" step="0.1" value="142.8" style="width: 100%; padding: 6px; border: 1px solid #C3B296; border-radius: 6px; font-size: 0.76rem;" />
+            <label
+              style="font-size: 0.74rem; font-weight: 700; color: #003366; display: block; margin-bottom: 4px;">Fracture
+              Location (KM):</label>
+            <input id="emer-km" type="number" step="0.1" value="142.8"
+              style="width: 100%; padding: 6px; border: 1px solid #C3B296; border-radius: 6px; font-size: 0.76rem;" />
           </div>
 
           <div>
-            <label style="font-size: 0.74rem; font-weight: 700; color: #003366; display: block; margin-bottom: 4px;">Est. Rectification Time (Mins):</label>
-            <input id="emer-duration" type="number" value="180" step="15" min="30" max="720" style="width: 100%; padding: 6px; border: 1px solid #C3B296; border-radius: 6px; font-size: 0.76rem;" />
+            <label
+              style="font-size: 0.74rem; font-weight: 700; color: #003366; display: block; margin-bottom: 4px;">Est.
+              Rectification Time (Mins):</label>
+            <input id="emer-duration" type="number" value="180" step="15" min="30" max="720"
+              style="width: 100%; padding: 6px; border: 1px solid #C3B296; border-radius: 6px; font-size: 0.76rem;" />
           </div>
 
-          <button onclick="window.simulateEmergencyReroute()" style="background: #DC2626; color: #FFFFFF; border: none; padding: 7px 16px; border-radius: 6px; font-size: 0.78rem; font-weight: 700; cursor: pointer;">
+          <button onclick="window.simulateEmergencyReroute()"
+            style="background: #DC2626; color: #FFFFFF; border: none; padding: 7px 16px; border-radius: 6px; font-size: 0.78rem; font-weight: 700; cursor: pointer;">
             ⚡ Run Emergency Reroute Plan
           </button>
         </div>
@@ -1124,16 +1074,20 @@
           <div style="display: flex; align-items: center; gap: 10px;">
             <span style="font-size: 1.1rem;">📅</span>
             <div>
-              <div style="font-size: 0.95rem; font-weight: 700; color: #003366;">Multi-Horizon Tactical & Strategic Corridor Planner</div>
-              <div style="font-size: 0.72rem; color: #64748B;">Bridging 24-Hour Real-Time Dispatch, 7-Day Tactical Window Allocations, and 30-Day Heavy Machine Overhaul Campaigns</div>
+              <div style="font-size: 0.95rem; font-weight: 700; color: #003366;">Multi-Horizon Tactical & Strategic
+                Corridor Planner</div>
+              <div style="font-size: 0.72rem; color: #64748B;">Bridging 24-Hour Real-Time Dispatch, 7-Day Tactical
+                Window Allocations, and 30-Day Heavy Machine Overhaul Campaigns</div>
             </div>
           </div>
 
           <div style="display: flex; align-items: center; gap: 8px;">
-            <button onclick="window.loadMultiHorizonPlan('weekly')" style="padding: 5px 12px; border-radius: 5px; font-size: 0.74rem; font-weight: 700; cursor: pointer; border: 1px solid #003366; background: #003366; color: #FFFFFF;">
+            <button onclick="window.loadMultiHorizonPlan('weekly')"
+              style="padding: 5px 12px; border-radius: 5px; font-size: 0.74rem; font-weight: 700; cursor: pointer; border: 1px solid #003366; background: #003366; color: #FFFFFF;">
               7-Day Tactical
             </button>
-            <button onclick="window.loadMultiHorizonPlan('monthly')" style="padding: 5px 12px; border-radius: 5px; font-size: 0.74rem; font-weight: 700; cursor: pointer; border: 1px solid #C3B296; background: #FAF6EE; color: #003366;">
+            <button onclick="window.loadMultiHorizonPlan('monthly')"
+              style="padding: 5px 12px; border-radius: 5px; font-size: 0.74rem; font-weight: 700; cursor: pointer; border: 1px solid #C3B296; background: #FAF6EE; color: #003366;">
               30-Day Strategic Campaigns
             </button>
           </div>
@@ -1261,7 +1215,7 @@
       }
     }
 
-    window.refreshConflictsPanels = async function() {
+    window.refreshConflictsPanels = async function () {
       const btn = document.getElementById('refresh-conflicts-btn');
       if (btn) {
         btn.innerHTML = '<span class="spin">↻</span> Loading...';
@@ -1361,8 +1315,8 @@
         const statusBadge = dbStatus === 'ALTERNATIVE_APPLIED'
           ? `<span style="background:#ECFDF5; color:#059669; border:1px solid rgba(5,150,105,0.3); padding:2px 7px; border-radius:4px; font-size:0.68rem; font-weight:700;">✓ ALT APPLIED</span>`
           : dbStatus === 'FORCE_SANCTIONED'
-          ? `<span style="background:#FEF3C7; color:#B45309; border:1px solid rgba(180,83,9,0.3); padding:2px 7px; border-radius:4px; font-size:0.68rem; font-weight:700;">⚡ FORCE SANCTIONED</span>`
-          : `<span style="background:#FEF2F2; color:#DC2626; border:1px solid rgba(220,38,38,0.3); padding:2px 7px; border-radius:4px; font-size:0.68rem; font-weight:700;">● PENDING</span>`;
+            ? `<span style="background:#FEF3C7; color:#B45309; border:1px solid rgba(180,83,9,0.3); padding:2px 7px; border-radius:4px; font-size:0.68rem; font-weight:700;">⚡ FORCE SANCTIONED</span>`
+            : `<span style="background:#FEF2F2; color:#DC2626; border:1px solid rgba(220,38,38,0.3); padding:2px 7px; border-radius:4px; font-size:0.68rem; font-weight:700;">● PENDING</span>`;
 
         // Show applied alt if available
         const appliedAltNote = (dbStatus === 'ALTERNATIVE_APPLIED' && item.appliedAlternative)
@@ -1455,14 +1409,14 @@
           const parsed = JSON.parse(raw);
           if (parsed && parsed.user) return parsed.user;
         }
-      } catch (_) {}
+      } catch (_) { }
       try {
         const storeRaw = localStorage.getItem('ir_user_store');
         if (storeRaw) {
           const users = JSON.parse(storeRaw);
           if (Array.isArray(users) && users.length > 0) return users[0];
         }
-      } catch (_) {}
+      } catch (_) { }
       return {
         staffId: 'IR-SSE-84920',
         name: 'Rajesh Kumar Verma',
@@ -1480,7 +1434,7 @@
       chip.innerHTML = `👤 Active Operator: <strong>${u.name || u.username}</strong> [Staff ID: <code>${u.staffId || u.id}</code>] • ${u.designation || u.role || 'Section Controller'} (${u.division || 'Delhi Division'})`;
     }
 
-    window.sanctionSlot = async function(slotId, windowTime) {
+    window.sanctionSlot = async function (slotId, windowTime) {
       const activeUser = getActiveLoginUser();
       const entryName = 'SANCTION_BLOCK_POSSESSION';
 
@@ -1513,7 +1467,7 @@
       }
     };
 
-    window.applyAlternativeSlot = async function(conflictId, altWindow) {
+    window.applyAlternativeSlot = async function (conflictId, altWindow) {
       const activeUser = getActiveLoginUser();
       const entryName = 'APPLY_ALTERNATIVE_SLOT';
 
@@ -1567,7 +1521,7 @@
       }
     };
 
-    window.forceSanctionConflict = async function(conflictId) {
+    window.forceSanctionConflict = async function (conflictId) {
       const activeUser = getActiveLoginUser();
       if (!confirm(`Force Sanction maintenance window ${conflictId}?\n\nThis will override all AI conflict warnings and sanction the originally requested window.\n\nOperator: ${activeUser.name || 'Indian Railways Operator'}\n\nProceed?`)) return;
 
@@ -1620,7 +1574,7 @@
       }
     };
 
-    window.overrideBlock = function(targetId, currentVal) {
+    window.overrideBlock = function (targetId, currentVal) {
       const activeUser = getActiveLoginUser();
 
       ManualOverrideModal.open({
@@ -1665,7 +1619,7 @@
       });
     };
 
-    window.verifyAuditChainIntegrity = async function() {
+    window.verifyAuditChainIntegrity = async function () {
       const alertBox = document.getElementById('chain-integrity-alert');
       if (!alertBox) return;
       alertBox.style.display = 'block';
@@ -1699,7 +1653,7 @@
       }
     };
 
-    window.refreshCtrlAudit = async function() {
+    window.refreshCtrlAudit = async function () {
       updateLoginUserChip();
       const container = document.getElementById('ctrl-audit-log-container');
       if (!container) return;
@@ -1760,12 +1714,12 @@
     // ═════════════════════════════════════════════════════════════════════════
     // DEDICATED SERVER TELEMETRY & PERSISTENT DISK STORAGE CLIENT
     // ═════════════════════════════════════════════════════════════════════════
-    window.fetchServerTelemetry = async function() {
+    window.fetchServerTelemetry = async function () {
       try {
         const res = await fetch('/api/v1/server/telemetry');
         if (!res.ok) return;
         const data = await res.json();
-        
+
         const badge = document.getElementById('server-mode-badge');
         const backupCount = document.getElementById('server-backup-count');
         const uptimeVal = document.getElementById('server-uptime-val');
@@ -1781,7 +1735,7 @@
       }
     };
 
-    window.createDiskBackup = async function() {
+    window.createDiskBackup = async function () {
       const btn = document.getElementById('btn-disk-backup');
       const spinner = document.getElementById('backup-spinner');
       const label = document.getElementById('backup-btn-label');
@@ -1796,7 +1750,7 @@
         if (!res.ok || !json.success) throw new Error(json.detail || 'Backup creation failed');
 
         if (label) label.textContent = `✅ Saved ${json.filename} (${json.records_persisted} records)`;
-        
+
         // Auto trigger download of JSON snapshot to client device
         const a = document.createElement('a');
         a.href = json.download_url;
@@ -1829,7 +1783,7 @@
     // LIVE RAPIDAPI / IRCTC & AI COMMAND CENTER CLIENT LOGIC
     // ═════════════════════════════════════════════════════════════════════════
 
-    window.fetchLiveStationTrains = async function() {
+    window.fetchLiveStationTrains = async function () {
       const stn = document.getElementById('live-station-select').value;
       const hours = document.getElementById('live-hours-select').value;
       const container = document.getElementById('live-trains-table-container');
@@ -1846,10 +1800,10 @@
 
         const rows = data.trains.map(t => {
           const delay = parseInt(t.delay_minutes || 0);
-          const delayBadge = delay === 0 
+          const delayBadge = delay === 0
             ? '<span style="color:#059669; font-weight:700;">RT (On Time)</span>'
             : '<span style="color:#DC2626; font-weight:700;">+' + delay + ' min</span>';
-          
+
           return `
             <tr style="border-bottom: 1px solid rgba(195,178,150,0.25); font-size: 0.78rem;">
               <td style="padding: 8px 10px; font-weight: 700; color: #003366; font-family: var(--font-mono);">${t.train_number}</td>
@@ -1884,7 +1838,7 @@
       }
     };
 
-    window.fetchLiveTrainGPS = async function() {
+    window.fetchLiveTrainGPS = async function () {
       const trainNo = document.getElementById('gps-train-no').value.trim();
       const output = document.getElementById('gps-status-result');
       if (!trainNo) return;
@@ -1910,7 +1864,7 @@
       }
     };
 
-    window.handleSpatialSectionChange = function() {
+    window.handleSpatialSectionChange = function () {
       const val = document.getElementById('spatial-section-select').value;
       const customPanel = document.getElementById('spatial-custom-panel');
       if (val === 'CUSTOM') {
@@ -1919,7 +1873,7 @@
       }
     };
 
-    window.toggleSpatialCustomPanel = function() {
+    window.toggleSpatialCustomPanel = function () {
       const panel = document.getElementById('spatial-custom-panel');
       const isHidden = panel.style.display === 'none' || !panel.style.display;
       panel.style.display = isHidden ? 'block' : 'none';
@@ -1928,7 +1882,7 @@
       }
     };
 
-    window.selectQuickSection = function(from, to, line, startKm, endKm) {
+    window.selectQuickSection = function (from, to, line, startKm, endKm) {
       document.getElementById('spatial-from-station').value = from;
       document.getElementById('spatial-to-station').value = to;
       document.getElementById('spatial-line-select').value = line;
@@ -1939,7 +1893,7 @@
       window.runSpatialClustering();
     };
 
-    window.runSpatialClustering = async function() {
+    window.runSpatialClustering = async function () {
       let sec = document.getElementById('spatial-section-select').value;
       const customPanel = document.getElementById('spatial-custom-panel');
       const fromStn = (document.getElementById('spatial-from-station').value || '').trim().toUpperCase();
@@ -2042,7 +1996,7 @@
       }
     };
 
-    window.submitDefectIngestion = async function() {
+    window.submitDefectIngestion = async function () {
       const source = document.getElementById('ingest-source').value;
       const dept = document.getElementById('ingest-dept').value;
       const startKm = parseFloat(document.getElementById('ingest-start-km').value);
@@ -2108,7 +2062,7 @@
       'CNB': 435.0
     };
 
-    window.onConflictStationChange = function() {
+    window.onConflictStationChange = function () {
       const stFrom = document.getElementById('conflict-station-from')?.value || 'ALJN';
       const stTo = document.getElementById('conflict-station-to')?.value || 'TDL';
 
@@ -2151,7 +2105,7 @@
       return isNaN(num) ? fallback : num;
     }
 
-    window.runLiveCorridorConflictTest = async function() {
+    window.runLiveCorridorConflictTest = async function () {
       const stFrom = document.getElementById('conflict-station-from')?.value || 'ALJN';
       const stTo = document.getElementById('conflict-station-to')?.value || 'TDL';
       const rawStartKm = document.getElementById('conflict-start-km')?.value || '142/10';
@@ -2267,7 +2221,7 @@
       }
     };
 
-    window.adminForceSanctionCorridor = async function(stFrom, stTo, kmPole, startTime, duration) {
+    window.adminForceSanctionCorridor = async function (stFrom, stTo, kmPole, startTime, duration) {
       const activeUser = getActiveLoginUser();
       const confirmed = confirm(`👑 ADMIN MASTER OVERWRITE:\n\nForce Sanction Block Possession between ${stFrom} and ${stTo} (KM ${kmPole}) for ${duration} minutes starting at ${startTime}?\n\nThis will overrule passenger collision warnings under DRM / Admin executive emergency powers.`);
       if (!confirmed) return;
@@ -2299,260 +2253,21 @@
       }
     };
 
-    // ═════════════════════════════════════════════════════════════════════════
-    // MAPBOX GL JS & LEAFLET DUAL-ENGINE GIS & WEATHER TELEMETRY CLIENT
-    // ═════════════════════════════════════════════════════════════════════════
-    let mapboxInstance = null;
-    let leafletInstance = null;
-    let MAPBOX_TOKEN = window.MAPBOX_TOKEN || window.MAPBOX_ACCESS_TOKEN || '';
-
-    const CORRIDOR_JUNCTIONS = [
-      { code: 'NDLS', name: 'New Delhi (KM 0.0)', coords: [77.2195, 28.6427], color: '#DC2626' },
-      { code: 'GZB', name: 'Ghaziabad Jn (KM 25.4)', coords: [77.4334, 28.6678], color: '#0056B3' },
-      { code: 'ALJN', name: 'Aligarh Jn (KM 126.1)', coords: [78.0772, 27.8974], color: '#0056B3' },
-      { code: 'TDL', name: 'Tundla Jn (KM 204.3)', coords: [78.2435, 27.2076], color: '#0056B3' },
-      { code: 'CNB', name: 'Kanpur Central (KM 435.0)', coords: [80.3507, 26.4547], color: '#059669' },
-      { code: 'PRYJ', name: 'Prayagraj Jn (KM 628.0)', coords: [81.8463, 25.4358], color: '#D97706' },
-    ];
-
-    window.initMapboxCorridor = async function(retryCount = 0) {
-      const container = document.getElementById('mapbox-corridor-map');
-      if (!container) return;
-
-      if (!MAPBOX_TOKEN) {
-        try {
-          const res = await fetch('/api/v1/mapbox-token');
-          if (res.ok) {
-            const data = await res.json();
-            if (data && data.token) MAPBOX_TOKEN = data.token;
-          }
-        } catch (e) {}
-      }
-
-      if (!MAPBOX_TOKEN) {
-        window.initLeafletFallback();
-        return;
-      }
-
-      // 1. Check if Mapbox GL JS is loaded & supported
-      if (typeof mapboxgl === 'undefined') {
-        if (retryCount < 20) {
-          setTimeout(() => window.initMapboxCorridor(retryCount + 1), 200);
-          return;
-        }
-        console.warn('Mapbox GL JS CDN delayed. Activating Leaflet Satellite fallback.');
-        window.initLeafletFallback();
-        return;
-      }
-
-      // 2. Check WebGL support
-      if (!mapboxgl.supported || !mapboxgl.supported()) {
-        console.warn('WebGL hardware acceleration disabled. Activating Leaflet Satellite fallback.');
-        window.initLeafletFallback();
-        return;
-      }
-
-      try {
-        mapboxgl.accessToken = MAPBOX_TOKEN;
-        mapboxInstance = new mapboxgl.Map({
-          container: 'mapbox-corridor-map',
-          style: 'mapbox://styles/mapbox/satellite-streets-v12',
-          center: [78.8, 27.1],
-          zoom: 6.4,
-          pitch: 20,
-        });
-
-        mapboxInstance.addControl(new mapboxgl.NavigationControl(), 'top-right');
-
-        mapboxInstance.on('load', () => {
-          document.getElementById('map-status-info').innerHTML = '● Mapbox GL JS 3D Photogrammetry (WebGL Active)';
-
-          // Draw Golden Quadrilateral Trunk Track Line
-          mapboxInstance.addSource('hdn-corridor-line', {
-            type: 'geojson',
-            data: {
-              type: 'Feature',
-              geometry: {
-                type: 'LineString',
-                coordinates: CORRIDOR_JUNCTIONS.map(j => j.coords),
-              },
-            },
-          });
-
-          mapboxInstance.addLayer({
-            id: 'hdn-corridor-layer',
-            type: 'line',
-            source: 'hdn-corridor-line',
-            layout: { 'line-join': 'round', 'line-cap': 'round' },
-            paint: {
-              'line-color': '#38BDF8',
-              'line-width': 4,
-            },
-          });
-
-          // Markers
-          CORRIDOR_JUNCTIONS.forEach(j => {
-            const el = document.createElement('div');
-            el.style.cssText = `background: ${j.color}; color: #FFF; font-weight: 800; font-size: 10px; padding: 3px 6px; border-radius: 4px; box-shadow: 0 2px 6px rgba(0,0,0,0.3); border: 1px solid #FFF; cursor: pointer; font-family: sans-serif;`;
-            el.innerText = j.code;
-
-            new mapboxgl.Marker(el)
-              .setLngLat(j.coords)
-              .setPopup(new mapboxgl.Popup({ offset: 15 }).setHTML(`<strong>${j.name}</strong><br><span style="font-size:11px; color:#475569;">HDN-1 Golden Corridor</span>`))
-              .addTo(mapboxInstance);
-          });
-
-          setTimeout(() => mapboxInstance.resize(), 500);
-        });
-
-        mapboxInstance.on('error', (e) => {
-          console.warn('Mapbox GL error encountered:', e);
-          if (!leafletInstance) window.initLeafletFallback();
-        });
-      } catch (err) {
-        console.error('Mapbox GL initialization exception:', err);
-        window.initLeafletFallback();
-      }
-    };
-
-    window.initLeafletFallback = function() {
-      if (typeof L === 'undefined') {
-        console.warn('Leaflet not loaded yet.');
-        return;
-      }
-      const container = document.getElementById('mapbox-corridor-map');
-      if (!container || leafletInstance) return;
-
-      container.innerHTML = '';
-      leafletInstance = L.map('mapbox-corridor-map').setView([27.1, 78.8], 7);
-
-      // Add Mapbox satellite tiles via Leaflet
-      L.tileLayer(
-        `https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v12/tiles/512/{z}/{x}/{y}?access_token=${MAPBOX_TOKEN}`,
-        {
-          attribution: '© Mapbox © OpenStreetMap',
-          tileSize: 512,
-          zoomOffset: -1,
-          maxZoom: 18,
-        }
-      ).addTo(leafletInstance);
-
-      // Track line
-      const latlngs = CORRIDOR_JUNCTIONS.map(j => [j.coords[1], j.coords[0]]);
-      L.polyline(latlngs, { color: '#38BDF8', weight: 4, opacity: 0.85 }).addTo(leafletInstance);
-
-      // Markers
-      CORRIDOR_JUNCTIONS.forEach(j => {
-        const icon = L.divIcon({
-          className: 'custom-div-icon',
-          html: `<div style="background:${j.color}; color:#FFF; font-weight:800; font-size:10px; padding:3px 6px; border-radius:4px; border:1px solid #FFF; box-shadow:0 2px 6px rgba(0,0,0,0.3); font-family:sans-serif; text-align:center;">${j.code}</div>`,
-          iconSize: [40, 20],
-          iconAnchor: [20, 10],
-        });
-        L.marker([j.coords[1], j.coords[0]], { icon })
-          .bindPopup(`<strong>${j.name}</strong><br><span style="font-size:11px; color:#475569;">HDN-1 Golden Corridor</span>`)
-          .addTo(leafletInstance);
-      });
-
-      document.getElementById('map-status-info').innerHTML = '● Mapbox Satellite Photogrammetry Active (Leaflet Engine)';
-      setTimeout(() => leafletInstance.invalidateSize(), 400);
-    };
-
-    window.changeMapboxStyle = function(styleUrl) {
-      if (mapboxInstance) {
-        mapboxInstance.setStyle(styleUrl);
-      } else if (leafletInstance) {
-        // Change style in leaflet if active
-        const styleId = styleUrl.includes('outdoors') ? 'outdoors-v12' : (styleUrl.includes('night') ? 'navigation-night-v1' : 'satellite-streets-v12');
-        leafletInstance.eachLayer(layer => {
-          if (layer instanceof L.TileLayer) {
-            leafletInstance.removeLayer(layer);
-          }
-        });
-        L.tileLayer(
-          `https://api.mapbox.com/styles/v1/mapbox/${styleId}/tiles/512/{z}/{x}/{y}?access_token=${MAPBOX_TOKEN}`,
-          { tileSize: 512, zoomOffset: -1, maxZoom: 18 }
-        ).addTo(leafletInstance);
-      }
-    };
-
-    window.fetchLiveStationWeather = async function(stn) {
-      const sel = document.getElementById('weather-station-select');
-      const stationCode = stn || (sel ? sel.value : 'NDLS');
-      const container = document.getElementById('weather-telemetry-container');
-      const badge = document.getElementById('weather-source-badge');
-      if (!container) return;
-
-      container.innerHTML = '<div style="text-align: center; padding: 20px; color: #003366; font-size: 0.8rem;">Querying live meteorological telemetry for ' + stationCode + '...</div>';
-
-      try {
-        const res = await fetch('/api/v1/live-weather/' + stationCode);
-        const data = await res.json();
-
-        if (badge) {
-          badge.innerText = '● ' + (data.source ? data.source.replace(' API', '') : 'Live Weather');
-          badge.style.background = '#ECFDF5';
-          badge.style.color = '#059669';
-        }
-
-        const railTemp = Number(data.rail_surface_temperature_c).toFixed(1);
-        const ambientTemp = Number(data.ambient_temperature_c).toFixed(1);
-        const feelsLike = Number(data.feels_like_c).toFixed(1);
-        const risk = data.irpwm_buckling_risk || 'LOW';
-        const riskColor = risk === 'CRITICAL' ? '#DC2626' : (risk === 'MODERATE' ? '#D97706' : '#059669');
-        const riskBg = risk === 'CRITICAL' ? '#FEF2F2' : (risk === 'MODERATE' ? '#FFFBEB' : '#ECFDF5');
-
-        container.innerHTML = `
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
-            <div style="background: #FAF6EE; padding: 10px 12px; border-radius: 6px; border: 1px solid rgba(195,178,150,0.3);">
-              <div style="font-size: 0.72rem; color: #64748B; font-weight: 600;">Ambient Air Temp</div>
-              <div style="font-size: 1.4rem; font-weight: 800; color: #003366; font-family: var(--font-mono);">${ambientTemp}°C</div>
-              <div style="font-size: 0.7rem; color: #475569;">Feels like: ${feelsLike}°C</div>
-            </div>
-
-            <div style="background: ${riskBg}; padding: 10px 12px; border-radius: 6px; border: 1px solid ${riskColor}40;">
-              <div style="font-size: 0.72rem; color: #64748B; font-weight: 600;">Rail Surface Temp (Tr)</div>
-              <div style="font-size: 1.4rem; font-weight: 800; color: ${riskColor}; font-family: var(--font-mono);">${railTemp}°C</div>
-              <div style="font-size: 0.7rem; font-weight: 700; color: ${riskColor};">Risk: ${risk}</div>
-            </div>
-          </div>
-
-          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; font-size: 0.74rem; background: #FAF6EE; padding: 8px 10px; border-radius: 6px; border: 1px solid rgba(195,178,150,0.3);">
-            <div>💧 Humidity: <strong>${data.humidity_percent}%</strong></div>
-            <div>💨 Wind: <strong>${data.wind_speed_kmh} km/h</strong></div>
-            <div>🌫️ Vis: <strong>${data.visibility_meters}m</strong></div>
-          </div>
-
-          <div style="margin-top: 10px; display: flex; align-items: center; justify-content: space-between; font-size: 0.74rem;">
-            <span>Live Condition: <strong>${data.description || data.condition}</strong></span>
-            <span style="background: ${data.maintenance_permissible ? '#ECFDF5' : '#FEF2F2'}; color: ${data.maintenance_permissible ? '#059669' : '#DC2626'}; padding: 2px 8px; border-radius: 4px; font-weight: 700; border: 1px solid ${data.maintenance_permissible ? '#05966930' : '#DC262630'};">
-              ${data.maintenance_permissible ? '✓ Maintenance Permitted' : '⚠️ Buckling Hazard: Blocks Suspended'}
-            </span>
-          </div>
-        `;
-      } catch (err) {
-        container.innerHTML = '<span style="color:#DC2626; font-size:0.75rem;">Failed to fetch live weather: ' + err.message + '</span>';
-      }
-    };
-
     function initDashboard() {
       try { renderRecommendedSlots(); } catch (e) { console.warn('Slots render notice:', e); }
-      try { fetchLiveRecommendedSlots(); } catch (e) {}
+      try { fetchLiveRecommendedSlots(); } catch (e) { }
       try { renderConflictsAndAlternatives(); } catch (e) { console.warn('Conflicts render notice:', e); }
-      try { fetchLiveConflicts(); } catch (e) {}
-      try { if (window.refreshCtrlAudit) window.refreshCtrlAudit(); } catch (e) {}
-      try { if (window.fetchLiveStationTrains) window.fetchLiveStationTrains(); } catch (e) {}
-      try { if (window.fetchLiveTrainGPS) window.fetchLiveTrainGPS(); } catch (e) {}
-      try { if (window.runSpatialClustering) window.runSpatialClustering(); } catch (e) {}
-      try { if (window.fetchLiveStationWeather) window.fetchLiveStationWeather(); } catch (e) {}
-      try { if (window.initMapboxCorridor) window.initMapboxCorridor(); } catch (e) {}
-      try { if (window.simulateTSRTradeoff) window.simulateTSRTradeoff(); } catch (e) {}
-      try { if (window.loadOpportunisticWindows) window.loadOpportunisticWindows('NDLS-CNB-UP'); } catch (e) {}
-      try { if (window.loadResourceFleet) window.loadResourceFleet(); } catch (e) {}
-      try { if (window.loadYieldScorecard) window.loadYieldScorecard(); } catch (e) {}
-      try { if (window.simulateEmergencyReroute) window.simulateEmergencyReroute(); } catch (e) {}
-      try { if (window.loadMultiHorizonPlan) window.loadMultiHorizonPlan('weekly'); } catch (e) {}
-      try { if (window.fetchServerTelemetry) window.fetchServerTelemetry(); } catch (e) {}
+      try { fetchLiveConflicts(); } catch (e) { }
+      try { if (window.fetchLiveStationTrains) window.fetchLiveStationTrains(); } catch (e) { }
+      try { if (window.fetchLiveTrainGPS) window.fetchLiveTrainGPS(); } catch (e) { }
+      try { if (window.runSpatialClustering) window.runSpatialClustering(); } catch (e) { }
+      try { if (window.simulateTSRTradeoff) window.simulateTSRTradeoff(); } catch (e) { }
+      try { if (window.loadOpportunisticWindows) window.loadOpportunisticWindows('NDLS-CNB-UP'); } catch (e) { }
+      try { if (window.loadResourceFleet) window.loadResourceFleet(); } catch (e) { }
+      try { if (window.loadYieldScorecard) window.loadYieldScorecard(); } catch (e) { }
+      try { if (window.simulateEmergencyReroute) window.simulateEmergencyReroute(); } catch (e) { }
+      try { if (window.loadMultiHorizonPlan) window.loadMultiHorizonPlan('weekly'); } catch (e) { }
+      try { if (window.fetchServerTelemetry) window.fetchServerTelemetry(); } catch (e) { }
     }
 
     // Immediate initial execution
@@ -2581,20 +2296,27 @@
     ">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
         <div>
-          <div style="font-size:0.68rem;color:#003366;font-weight:800;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:2px;">🗄️ Local Database — audit_records.db</div>
+          <div
+            style="font-size:0.68rem;color:#003366;font-weight:800;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:2px;">
+            🗄️ Local Database — audit_records.db</div>
           <div style="font-size:1.05rem;font-weight:800;color:#0F172A;">➕ Submit Maintenance Window Request</div>
         </div>
-        <button onclick="document.getElementById('submit-window-modal').style.display='none'" style="background:none;border:none;font-size:1.2rem;cursor:pointer;color:#64748B;padding:4px;">✕</button>
+        <button onclick="document.getElementById('submit-window-modal').style.display='none'"
+          style="background:none;border:none;font-size:1.2rem;cursor:pointer;color:#64748B;padding:4px;">✕</button>
       </div>
 
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
         <div>
-          <label style="font-size:0.74rem;font-weight:700;color:#003366;display:block;margin-bottom:4px;">Section ID</label>
-          <input id="swm-section" type="text" placeholder="e.g. NDLS-GZB-DN" value="NDLS-GZB-DN" style="width:100%;padding:7px 10px;border:1px solid #C3B296;border-radius:6px;font-size:0.82rem;box-sizing:border-box;" />
+          <label style="font-size:0.74rem;font-weight:700;color:#003366;display:block;margin-bottom:4px;">Section
+            ID</label>
+          <input id="swm-section" type="text" placeholder="e.g. NDLS-GZB-DN" value="NDLS-GZB-DN"
+            style="width:100%;padding:7px 10px;border:1px solid #C3B296;border-radius:6px;font-size:0.82rem;box-sizing:border-box;" />
         </div>
         <div>
-          <label style="font-size:0.74rem;font-weight:700;color:#003366;display:block;margin-bottom:4px;">Department</label>
-          <select id="swm-dept" style="width:100%;padding:7px 10px;border:1px solid #C3B296;border-radius:6px;font-size:0.82rem;background:#FFF;box-sizing:border-box;">
+          <label
+            style="font-size:0.74rem;font-weight:700;color:#003366;display:block;margin-bottom:4px;">Department</label>
+          <select id="swm-dept"
+            style="width:100%;padding:7px 10px;border:1px solid #C3B296;border-radius:6px;font-size:0.82rem;background:#FFF;box-sizing:border-box;">
             <option>Civil (P-Way)</option>
             <option>Electrical (TRD / OHE)</option>
             <option>Signal &amp; Telecom</option>
@@ -2604,38 +2326,55 @@
           </select>
         </div>
         <div>
-          <label style="font-size:0.74rem;font-weight:700;color:#003366;display:block;margin-bottom:4px;">Station From (Code)</label>
-          <input id="swm-stn-from" type="text" placeholder="e.g. NDLS" value="NDLS" style="width:100%;padding:7px 10px;border:1px solid #C3B296;border-radius:6px;font-size:0.82rem;box-sizing:border-box;" />
+          <label style="font-size:0.74rem;font-weight:700;color:#003366;display:block;margin-bottom:4px;">Station From
+            (Code)</label>
+          <input id="swm-stn-from" type="text" placeholder="e.g. NDLS" value="NDLS"
+            style="width:100%;padding:7px 10px;border:1px solid #C3B296;border-radius:6px;font-size:0.82rem;box-sizing:border-box;" />
         </div>
         <div>
-          <label style="font-size:0.74rem;font-weight:700;color:#003366;display:block;margin-bottom:4px;">Station To (Code)</label>
-          <input id="swm-stn-to" type="text" placeholder="e.g. GZB" value="GZB" style="width:100%;padding:7px 10px;border:1px solid #C3B296;border-radius:6px;font-size:0.82rem;box-sizing:border-box;" />
+          <label style="font-size:0.74rem;font-weight:700;color:#003366;display:block;margin-bottom:4px;">Station To
+            (Code)</label>
+          <input id="swm-stn-to" type="text" placeholder="e.g. GZB" value="GZB"
+            style="width:100%;padding:7px 10px;border:1px solid #C3B296;border-radius:6px;font-size:0.82rem;box-sizing:border-box;" />
         </div>
         <div>
-          <label style="font-size:0.74rem;font-weight:700;color:#003366;display:block;margin-bottom:4px;">Start KM Pole</label>
-          <input id="swm-km-start" type="number" placeholder="e.g. 12.0" value="12.0" style="width:100%;padding:7px 10px;border:1px solid #C3B296;border-radius:6px;font-size:0.82rem;box-sizing:border-box;" />
+          <label style="font-size:0.74rem;font-weight:700;color:#003366;display:block;margin-bottom:4px;">Start KM
+            Pole</label>
+          <input id="swm-km-start" type="number" placeholder="e.g. 12.0" value="12.0"
+            style="width:100%;padding:7px 10px;border:1px solid #C3B296;border-radius:6px;font-size:0.82rem;box-sizing:border-box;" />
         </div>
         <div>
-          <label style="font-size:0.74rem;font-weight:700;color:#003366;display:block;margin-bottom:4px;">End KM Pole</label>
-          <input id="swm-km-end" type="number" placeholder="e.g. 16.0" value="16.0" style="width:100%;padding:7px 10px;border:1px solid #C3B296;border-radius:6px;font-size:0.82rem;box-sizing:border-box;" />
+          <label style="font-size:0.74rem;font-weight:700;color:#003366;display:block;margin-bottom:4px;">End KM
+            Pole</label>
+          <input id="swm-km-end" type="number" placeholder="e.g. 16.0" value="16.0"
+            style="width:100%;padding:7px 10px;border:1px solid #C3B296;border-radius:6px;font-size:0.82rem;box-sizing:border-box;" />
         </div>
         <div>
-          <label style="font-size:0.74rem;font-weight:700;color:#003366;display:block;margin-bottom:4px;">Window Start Time</label>
-          <input id="swm-start-time" type="time" value="09:00" style="width:100%;padding:7px 10px;border:1px solid #C3B296;border-radius:6px;font-size:0.82rem;box-sizing:border-box;" />
+          <label style="font-size:0.74rem;font-weight:700;color:#003366;display:block;margin-bottom:4px;">Window Start
+            Time</label>
+          <input id="swm-start-time" type="time" value="09:00"
+            style="width:100%;padding:7px 10px;border:1px solid #C3B296;border-radius:6px;font-size:0.82rem;box-sizing:border-box;" />
         </div>
         <div>
-          <label style="font-size:0.74rem;font-weight:700;color:#003366;display:block;margin-bottom:4px;">Window End Time</label>
-          <input id="swm-end-time" type="time" value="11:00" style="width:100%;padding:7px 10px;border:1px solid #C3B296;border-radius:6px;font-size:0.82rem;box-sizing:border-box;" />
+          <label style="font-size:0.74rem;font-weight:700;color:#003366;display:block;margin-bottom:4px;">Window End
+            Time</label>
+          <input id="swm-end-time" type="time" value="11:00"
+            style="width:100%;padding:7px 10px;border:1px solid #C3B296;border-radius:6px;font-size:0.82rem;box-sizing:border-box;" />
         </div>
       </div>
 
       <div style="margin-bottom:12px;">
-        <label style="font-size:0.74rem;font-weight:700;color:#003366;display:block;margin-bottom:4px;">Work Description</label>
-        <input id="swm-work-desc" type="text" placeholder="e.g. Ultrasonic testing (USFD) at KM 12-16" style="width:100%;padding:7px 10px;border:1px solid #C3B296;border-radius:6px;font-size:0.82rem;box-sizing:border-box;" />
+        <label style="font-size:0.74rem;font-weight:700;color:#003366;display:block;margin-bottom:4px;">Work
+          Description</label>
+        <input id="swm-work-desc" type="text" placeholder="e.g. Ultrasonic testing (USFD) at KM 12-16"
+          style="width:100%;padding:7px 10px;border:1px solid #C3B296;border-radius:6px;font-size:0.82rem;box-sizing:border-box;" />
       </div>
 
-      <div style="background:#FAF6EE;border:1px solid rgba(195,178,150,0.5);border-radius:6px;padding:8px 12px;font-size:0.72rem;color:#64748B;margin-bottom:16px;">
-        ℹ️ Request will be saved to <strong>local SQLite database</strong> (audit_records.db) and <strong>immediately evaluated</strong> for train conflicts using the <strong>Live Train API</strong>. The cards will refresh automatically.
+      <div
+        style="background:#FAF6EE;border:1px solid rgba(195,178,150,0.5);border-radius:6px;padding:8px 12px;font-size:0.72rem;color:#64748B;margin-bottom:16px;">
+        ℹ️ Request will be saved to <strong>local SQLite database</strong> (audit_records.db) and <strong>immediately
+          evaluated</strong> for train conflicts using the <strong>Live Train API</strong>. The cards will refresh
+        automatically.
       </div>
 
       <div style="display:flex;align-items:center;gap:8px;">
@@ -2654,11 +2393,11 @@
 
 
   <script>
-    window.openSubmitWindowModal = function() {
+    window.openSubmitWindowModal = function () {
       document.getElementById('submit-window-modal').style.display = 'flex';
     };
 
-    window.submitWindowRequest = async function() {
+    window.submitWindowRequest = async function () {
       const btn = document.getElementById('swm-submit-btn');
       btn.textContent = '⏳ Saving...';
       btn.disabled = true;
@@ -2678,11 +2417,11 @@
       const [eh, em] = endTime.split(':').map(Number);
       const duration = Math.max(30, ((eh * 60 + em) - (sh * 60 + sm)));
 
-      const labelPart = startTime.replace(':','') <= '0600' ? 'Early Morning'
+      const labelPart = startTime.replace(':', '') <= '0600' ? 'Early Morning'
         : startTime <= '09:00' ? 'Morning Peak'
-        : startTime <= '12:00' ? 'Mid-Day'
-        : startTime <= '16:00' ? 'Afternoon Lull'
-        : 'Evening Peak';
+          : startTime <= '12:00' ? 'Mid-Day'
+            : startTime <= '16:00' ? 'Afternoon Lull'
+              : 'Evening Peak';
 
       const payload = {
         section_id: section || `${stnFrom}-${stnTo}-DN`,
@@ -2725,4 +2464,5 @@
     };
   </script>
 </body>
+
 </html>

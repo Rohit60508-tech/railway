@@ -1,0 +1,62 @@
+[
+  {
+    "observation_id": "OBS-003",
+    "inspection_id": "INSP-003",
+    "work_order_id": "WO-TMS-2026-0003",
+    "severity": "HIGH",
+    "description": "Documentation / quality observation",
+    "status": "OPEN",
+    "due_date": "2026-09-22",
+    "owner": "Maintenance Cell"
+  },
+  {
+    "observation_id": "OBS-010",
+    "inspection_id": "INSP-010",
+    "work_order_id": "WO-TMS-2026-0010",
+    "severity": "MEDIUM",
+    "description": "Documentation / quality observation",
+    "status": "OPEN",
+    "due_date": "2026-09-20",
+    "owner": "Maintenance Cell"
+  },
+  {
+    "observation_id": "OBS-017",
+    "inspection_id": "INSP-017",
+    "work_order_id": "WO-TMS-2026-0017",
+    "severity": "HIGH",
+    "description": "Documentation / quality observation",
+    "status": "OPEN",
+    "due_date": "2026-09-19",
+    "owner": "Maintenance Cell"
+  },
+  {
+    "observation_id": "OBS-020",
+    "inspection_id": "INSP-020",
+    "work_order_id": "WO-TMS-2026-0020",
+    "severity": "LOW",
+    "description": "Documentation / quality observation",
+    "status": "OPEN",
+    "due_date": "2026-09-22",
+    "owner": "Maintenance Cell"
+  },
+  {
+    "observation_id": "OBS-024",
+    "inspection_id": "INSP-024",
+    "work_order_id": "WO-TMS-2026-0024",
+    "severity": "MEDIUM",
+    "description": "Documentation / quality observation",
+    "status": "OPEN",
+    "due_date": "2026-09-18",
+    "owner": "Maintenance Cell"
+  },
+  {
+    "observation_id": "OBS-035",
+    "inspection_id": "INSP-035",
+    "work_order_id": "WO-TDMS-2026-0035",
+    "severity": "LOW",
+    "description": "Documentation / quality observation",
+    "status": "OPEN",
+    "due_date": "2026-09-20",
+    "owner": "Maintenance Cell"
+  }
+]

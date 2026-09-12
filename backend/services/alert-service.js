@@ -241,12 +241,48 @@ class AlertService extends EventEmitter {
       list = list.filter((a) => a.severity === filters.severity);
     }
 
-    if (filters.sectionId) {
-      list = list.filter((a) => a.sectionId === filters.sectionId);
-    }
-
     return list.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
   }
+
+  /**
+   * Simulates immediate emergency SMS and Email notification dispatch
+   * via Indian Railways C-DOT SMS Gateway & NIC Centralized Mail Server.
+   *
+   * @param {object} dispatchData
+   * @param {string} dispatchData.defectId
+   * @param {string} dispatchData.section
+   * @param {string} dispatchData.defectType
+   * @param {string} dispatchData.recipients
+   */
+  dispatchEmergencySmsEmail(dispatchData) {
+    const dispatchId = `DISP-${Date.now()}-${crypto.randomBytes(2).toString('hex').toUpperCase()}`;
+    const timestamp = new Date().toISOString();
+
+    const smsMessage = `[IR-EMERGENCY P1 ALERT] Defect ${dispatchData.defectId || 'DEF-901'} on Section ${dispatchData.section || 'NDLS-CNB-UP'} (${dispatchData.defectType || 'USFD Rail Flaw'}). TSR 30km/h enforced. Immediate clamping required.`;
+    const emailSubject = `[URGENT P1 SAFETY INCIDENT] ${dispatchData.defectId} - ${dispatchData.section}`;
+
+    const dispatchLog = {
+      dispatchId,
+      timestamp,
+      defectId: dispatchData.defectId || 'DEF-901',
+      section: dispatchData.section || 'NDLS-CNB-UP',
+      priority: 'P1 EMERGENCY',
+      recipients: [
+        { role: 'Section Controller', phone: '+91-9876543210', email: 'ctrl.delhi@nr.railnet.gov.in', smsStatus: 'DELIVERED (CDOT-GW-01)', emailStatus: 'SENT (NIC-MAIL-02)' },
+        { role: 'Senior Divisional Engineer (Sr.DEN)', phone: '+91-9812345678', email: 'srden.co.dli@nr.railnet.gov.in', smsStatus: 'DELIVERED (CDOT-GW-01)', emailStatus: 'SENT (NIC-MAIL-02)' },
+        { role: 'Assistant Executive Engineer (AXEN)', phone: '+91-9898765432', email: 'axen.pway.aljn@nr.railnet.gov.in', smsStatus: 'DELIVERED (CDOT-GW-01)', emailStatus: 'SENT (NIC-MAIL-02)' }
+      ],
+      smsGateway: 'C-DOT Sovereign Telecom Gateway (IR-CDOT-GW)',
+      emailGateway: 'NIC RailNet Centralised Mail Exchange',
+      smsContent: smsMessage,
+      emailSubject
+    };
+
+    console.log(`\x1b[31m[EMERGENCY SMS/EMAIL DISPATCH] Dispatched alert for ${dispatchData.defectId} to 3 Engineering Officers.\x1b[0m`);
+    this.emit('emergency_dispatch_sent', dispatchLog);
+    return dispatchLog;
+  }
+
 
   /**
    * Persists active alerts snapshot to disk safely.

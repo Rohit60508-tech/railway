@@ -221,6 +221,18 @@ class AIApiClient {
     return this._request('GET', AI_CONFIG.endpoints.optimizerConstraints);
   }
 
+  async post(path, body) {
+    return this._request('POST', path, body);
+  }
+
+  async get(path, queryParams = {}) {
+    return this._request('GET', path, null, queryParams);
+  }
+
+  async delete(path) {
+    return this._request('DELETE', path);
+  }
+
   /**
    * Validates a proposed schedule against operational rules.
    * POST /api/v1/optimize/validate

@@ -69,6 +69,32 @@ class BlockOptimizerService {
   async validateSchedule(schedule) {
     return this.connector.validateSchedule(schedule);
   }
+
+  /**
+   * Saves a planned block schedule to persistent database storage.
+   */
+  async saveBlockSchedule(blockData) {
+    return this.connector.post('/api/v1/optimize/save-block', blockData);
+  }
+
+  /**
+   * Fetches saved maintenance block schedules from persistent storage.
+   */
+  async getSavedBlocks(section = null, status = null) {
+    let endpoint = '/api/v1/optimize/saved-blocks';
+    const params = [];
+    if (section) params.push(`section=${encodeURIComponent(section)}`);
+    if (status) params.push(`status=${encodeURIComponent(status)}`);
+    if (params.length > 0) endpoint += `?${params.join('&')}`;
+    return this.connector.get(endpoint);
+  }
+
+  /**
+   * Deletes a saved maintenance block schedule from database.
+   */
+  async deleteSavedBlock(blockId) {
+    return this.connector.delete(`/api/v1/optimize/delete-block/${encodeURIComponent(blockId)}`);
+  }
 }
 
 const blockOptimizerService = new BlockOptimizerService();
@@ -77,3 +103,4 @@ module.exports = {
   BlockOptimizerService,
   blockOptimizerService,
 };
+

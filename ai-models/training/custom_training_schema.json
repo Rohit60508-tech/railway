@@ -1,0 +1,100 @@
+{
+  "schema_version": "1.0.0",
+  "dataset_name": "User Custom Railway Inspection & Defect Dataset",
+  "description": "User-defined schema structure for training Indian Railways AI agents with custom fields.",
+  "target_column": "defect_severity_level",
+  "task_type": "classification",
+  "columns": [
+    {
+      "name": "asset_code",
+      "type": "categorical",
+      "description": "Custom asset identifier or equipment tag"
+    },
+    {
+      "name": "defect_type",
+      "type": "categorical",
+      "description": "Flaw description e.g. Transverse Crack, Weld Slag, Missing ERC"
+    },
+    {
+      "name": "measurement_value_mm",
+      "type": "numeric",
+      "description": "Direct physical measurement such as crack length, gap or wear in mm"
+    },
+    {
+      "name": "track_section_speed",
+      "type": "numeric",
+      "description": "Permitted sectional speed in km/h"
+    },
+    {
+      "name": "annual_traffic_gmt",
+      "type": "numeric",
+      "description": "Gross Million Tonnes carried per year"
+    },
+    {
+      "name": "dynamic_vibration_g",
+      "type": "numeric",
+      "description": "OMS or onboard accelerometer peak oscillation in g"
+    },
+    {
+      "name": "rail_temperature_c",
+      "type": "numeric",
+      "description": "Rail surface temperature during inspection"
+    },
+    {
+      "name": "inspection_method",
+      "type": "categorical",
+      "description": "Detection source: USFD, Drone, OMS, Trackman Patrol, ITMS"
+    },
+    {
+      "name": "defect_severity_level",
+      "type": "target",
+      "description": "Target label to predict: P1 (Emergency), P2 (Urgent), P3 (Routine), P4 (Monitored)"
+    }
+  ],
+  "sample_records": [
+    {
+      "asset_code": "RL-60KG-UP-102",
+      "defect_type": "Transverse_Flaw_IMR",
+      "measurement_value_mm": 4.8,
+      "track_section_speed": 130,
+      "annual_traffic_gmt": 44.5,
+      "dynamic_vibration_g": 0.42,
+      "rail_temperature_c": 52.0,
+      "inspection_method": "USFD",
+      "defect_severity_level": "P1"
+    },
+    {
+      "asset_code": "ERC-MK3-DN-84",
+      "defect_type": "Missing_Clip",
+      "measurement_value_mm": 1.0,
+      "track_section_speed": 110,
+      "annual_traffic_gmt": 36.0,
+      "dynamic_vibration_g": 0.28,
+      "rail_temperature_c": 44.0,
+      "inspection_method": "Drone",
+      "defect_severity_level": "P2"
+    },
+    {
+      "asset_code": "BLST-TRK-77",
+      "defect_type": "Ballast_Void",
+      "measurement_value_mm": 35.0,
+      "track_section_speed": 100,
+      "annual_traffic_gmt": 28.0,
+      "dynamic_vibration_g": 0.22,
+      "rail_temperature_c": 38.0,
+      "inspection_method": "OMS",
+      "defect_severity_level": "P3"
+    },
+    {
+      "asset_code": "OHE-DRP-201",
+      "defect_type": "Loose_Dropper",
+      "measurement_value_mm": 12.0,
+      "track_section_speed": 120,
+      "annual_traffic_gmt": 32.0,
+      "dynamic_vibration_g": 0.15,
+      "rail_temperature_c": 41.0,
+      "inspection_method": "Trackman Patrol",
+      "defect_severity_level": "P4"
+    }
+  ]
+}

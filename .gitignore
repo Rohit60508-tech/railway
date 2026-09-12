@@ -35,3 +35,7 @@ logs/
 # Backups & Temp Storage
 data/backups/
 data/storage/
+dist/
+frontend/dist/
+*.egg-info/
+scratch/

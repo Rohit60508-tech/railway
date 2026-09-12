@@ -1,0 +1,16 @@
+{
+  "solver": "OR-Tools CP-SAT",
+  "objective_coefficients": {
+    "disruption_penalty": -15.0,
+    "p1_emergency_bonus": 100.0,
+    "p2_urgent_bonus": 60.0,
+    "shadow_block_bundling_saving_bonus": 45.0,
+    "headway_violation_penalty": -500.0
+  },
+  "hard_constraints": [
+    "headway_buffer_minutes >= 15",
+    "civil_power_block_must_coincide_with_ohe_cut",
+    "station_loop_capacity <= max_stabling_tracks"
+  ],
+  "calibrated_at": "2026-09-10T19:31:35.951897+00:00"
+}

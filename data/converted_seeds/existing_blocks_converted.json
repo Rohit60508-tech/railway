@@ -1,0 +1,242 @@
+[
+  {
+    "block_id": "BDMS-2026-001",
+    "section_id": "SEC-C01",
+    "planned_start": "2026-10-01 13:00:00",
+    "planned_end": "2026-10-01 14:30:00",
+    "departments": "S&T",
+    "status": "APPROVED",
+    "block_type": "Traffic Block",
+    "purpose": "Preventive maintenance"
+  },
+  {
+    "block_id": "BDMS-2026-002",
+    "section_id": "SEC-A01",
+    "planned_start": "2026-09-21 03:00:00",
+    "planned_end": "2026-09-21 04:00:00",
+    "departments": "TRACTION, ENGINEERING",
+    "status": "APPROVED",
+    "block_type": "Traffic + Power Block",
+    "purpose": "Signalling maintenance"
+  },
+  {
+    "block_id": "BDMS-2026-003",
+    "section_id": "SEC-A01",
+    "planned_start": "2026-09-17 13:00:00",
+    "planned_end": "2026-09-17 14:00:00",
+    "departments": "ENGINEERING",
+    "status": "REQUESTED",
+    "block_type": "Traffic Block",
+    "purpose": "Signalling maintenance"
+  },
+  {
+    "block_id": "BDMS-2026-004",
+    "section_id": "SEC-B02",
+    "planned_start": "2026-09-24 14:00:00",
+    "planned_end": "2026-09-24 16:00:00",
+    "departments": "ENGINEERING",
+    "status": "REQUESTED",
+    "block_type": "Traffic + Power Block",
+    "purpose": "Defect repair"
+  },
+  {
+    "block_id": "BDMS-2026-005",
+    "section_id": "SEC-B01",
+    "planned_start": "2026-09-24 11:00:00",
+    "planned_end": "2026-09-24 12:30:00",
+    "departments": "ENGINEERING",
+    "status": "REQUESTED",
+    "block_type": "Traffic + Power Block",
+    "purpose": "Defect repair"
+  },
+  {
+    "block_id": "BDMS-2026-006",
+    "section_id": "SEC-B01",
+    "planned_start": "2026-10-03 11:00:00",
+    "planned_end": "2026-10-03 12:00:00",
+    "departments": "TRACTION",
+    "status": "COMPLETED",
+    "block_type": "Traffic Block",
+    "purpose": "OHE maintenance"
+  },
+  {
+    "block_id": "BDMS-2026-007",
+    "section_id": "SEC-A01",
+    "planned_start": "2026-09-22 04:00:00",
+    "planned_end": "2026-09-22 06:00:00",
+    "departments": "TRACTION",
+    "status": "REQUESTED",
+    "block_type": "Traffic Block",
+    "purpose": "OHE maintenance"
+  },
+  {
+    "block_id": "BDMS-2026-008",
+    "section_id": "SEC-B01",
+    "planned_start": "2026-09-12 01:00:00",
+    "planned_end": "2026-09-12 02:00:00",
+    "departments": "S&T, ENGINEERING",
+    "status": "APPROVED",
+    "block_type": "Traffic Block",
+    "purpose": "Preventive maintenance"
+  },
+  {
+    "block_id": "BDMS-2026-009",
+    "section_id": "SEC-B01",
+    "planned_start": "2026-10-01 10:00:00",
+    "planned_end": "2026-10-01 11:30:00",
+    "departments": "ENGINEERING",
+    "status": "APPROVED",
+    "block_type": "Traffic Block",
+    "purpose": "Defect repair"
+  },
+  {
+    "block_id": "BDMS-2026-010",
+    "section_id": "SEC-A01",
+    "planned_start": "2026-09-15 04:00:00",
+    "planned_end": "2026-09-15 06:00:00",
+    "departments": "ENGINEERING, TRACTION",
+    "status": "APPROVED",
+    "block_type": "Traffic Block",
+    "purpose": "Signalling maintenance"
+  },
+  {
+    "block_id": "BDMS-2026-011",
+    "section_id": "SEC-A01",
+    "planned_start": "2026-09-16 11:00:00",
+    "planned_end": "2026-09-16 12:00:00",
+    "departments": "TRACTION, S&T",
+    "status": "REQUESTED",
+    "block_type": "Traffic Block",
+    "purpose": "Preventive maintenance"
+  },
+  {
+    "block_id": "BDMS-2026-012",
+    "section_id": "SEC-A01",
+    "planned_start": "2026-09-25 00:00:00",
+    "planned_end": "2026-09-25 01:00:00",
+    "departments": "ENGINEERING",
+    "status": "COMPLETED",
+    "block_type": "Traffic + Power Block",
+    "purpose": "Signalling maintenance"
+  },
+  {
+    "block_id": "BDMS-2026-013",
+    "section_id": "SEC-C01",
+    "planned_start": "2026-09-10 04:00:00",
+    "planned_end": "2026-09-10 05:00:00",
+    "departments": "S&T, ENGINEERING",
+    "status": "REQUESTED",
+    "block_type": "Traffic + Power Block",
+    "purpose": "Defect repair"
+  },
+  {
+    "block_id": "BDMS-2026-014",
+    "section_id": "SEC-A02",
+    "planned_start": "2026-09-27 21:00:00",
+    "planned_end": "2026-09-27 23:00:00",
+    "departments": "S&T",
+    "status": "REQUESTED",
+    "block_type": "Traffic + Power Block",
+    "purpose": "Defect repair"
+  },
+  {
+    "block_id": "BDMS-2026-015",
+    "section_id": "SEC-A02",
+    "planned_start": "2026-09-12 14:00:00",
+    "planned_end": "2026-09-12 15:00:00",
+    "departments": "ENGINEERING",
+    "status": "APPROVED",
+    "block_type": "Traffic Block",
+    "purpose": "Signalling maintenance"
+  },
+  {
+    "block_id": "BDMS-2026-016",
+    "section_id": "SEC-C01",
+    "planned_start": "2026-09-14 00:00:00",
+    "planned_end": "2026-09-14 01:30:00",
+    "departments": "S&T",
+    "status": "COMPLETED",
+    "block_type": "Traffic Block",
+    "purpose": "OHE maintenance"
+  },
+  {
+    "block_id": "BDMS-2026-017",
+    "section_id": "SEC-B01",
+    "planned_start": "2026-09-11 11:00:00",
+    "planned_end": "2026-09-11 13:00:00",
+    "departments": "S&T",
+    "status": "APPROVED",
+    "block_type": "Traffic + Power Block",
+    "purpose": "Defect repair"
+  },
+  {
+    "block_id": "BDMS-2026-018",
+    "section_id": "SEC-C01",
+    "planned_start": "2026-10-04 01:00:00",
+    "planned_end": "2026-10-04 03:00:00",
+    "departments": "TRACTION",
+    "status": "COMPLETED",
+    "block_type": "Traffic Block",
+    "purpose": "Preventive maintenance"
+  },
+  {
+    "block_id": "BDMS-2026-019",
+    "section_id": "SEC-B02",
+    "planned_start": "2026-09-25 03:00:00",
+    "planned_end": "2026-09-25 05:00:00",
+    "departments": "S&T",
+    "status": "APPROVED",
+    "block_type": "Traffic Block",
+    "purpose": "Preventive maintenance"
+  },
+  {
+    "block_id": "BDMS-2026-020",
+    "section_id": "SEC-A02",
+    "planned_start": "2026-09-11 00:00:00",
+    "planned_end": "2026-09-11 01:00:00",
+    "departments": "S&T",
+    "status": "REQUESTED",
+    "block_type": "Traffic Block",
+    "purpose": "Signalling maintenance"
+  },
+  {
+    "block_id": "BDMS-2026-021",
+    "section_id": "SEC-A02",
+    "planned_start": "2026-09-13 04:00:00",
+    "planned_end": "2026-09-13 05:00:00",
+    "departments": "ENGINEERING, S&T",
+    "status": "REQUESTED",
+    "block_type": "Traffic Block",
+    "purpose": "Signalling maintenance"
+  },
+  {
+    "block_id": "BDMS-2026-022",
+    "section_id": "SEC-A01",
+    "planned_start": "2026-09-17 03:00:00",
+    "planned_end": "2026-09-17 04:30:00",
+    "departments": "ENGINEERING",
+    "status": "REQUESTED",
+    "block_type": "Traffic + Power Block",
+    "purpose": "OHE maintenance"
+  },
+  {
+    "block_id": "BDMS-2026-023",
+    "section_id": "SEC-B02",
+    "planned_start": "2026-09-19 14:00:00",
+    "planned_end": "2026-09-19 16:00:00",
+    "departments": "TRACTION",
+    "status": "APPROVED",
+    "block_type": "Traffic Block",
+    "purpose": "Defect repair"
+  },
+  {
+    "block_id": "BDMS-2026-024",
+    "section_id": "SEC-B02",
+    "planned_start": "2026-09-18 03:00:00",
+    "planned_end": "2026-09-18 05:00:00",
+    "departments": "ENGINEERING, TRACTION",
+    "status": "COMPLETED",
+    "block_type": "Traffic + Power Block",
+    "purpose": "Signalling maintenance"
+  }
+]

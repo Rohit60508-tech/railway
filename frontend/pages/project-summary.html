@@ -1,14 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Project Executive Summary — RAKSHA PATH | Indian Railways AI Platform</title>
-  <meta name="description" content="Executive Summary, Key Differentiators, Benefits, Deployment Roadmap, and Compliance Architecture for RAKSHA PATH — Indian Railways AI-Powered Automatic Block Planning System." />
+  <meta name="description"
+    content="Executive Summary, Key Differentiators, Benefits, Deployment Roadmap, and Compliance Architecture for RAKSHA PATH — Indian Railways AI-Powered Automatic Block Planning System." />
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Orbitron:wght@500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Orbitron:wght@500;600;700;800;900&display=swap"
+    rel="stylesheet" />
 
   <!-- Three.js CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -33,7 +37,12 @@
       --font-display: 'Calibri', 'Arial', sans-serif;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
     body {
       background: radial-gradient(circle at 50% 0%, #FFFFFF 0%, #FAF6EE 100%);
       color: #0F172A;
@@ -69,11 +78,13 @@
       top: 0;
       z-index: 100;
     }
+
     .brand-group {
       display: flex;
       align-items: center;
       gap: 14px;
     }
+
     .brand-logo {
       width: 42px;
       height: 42px;
@@ -85,6 +96,7 @@
       font-size: 1.3rem;
       box-shadow: 0 0 16px rgba(0, 51, 102, 0.2);
     }
+
     .brand-title {
       font-family: var(--font-display);
       font-size: 1.15rem;
@@ -92,6 +104,7 @@
       color: #0F172A;
       letter-spacing: 0.8px;
     }
+
     .brand-sub {
       font-size: 0.74rem;
       color: #64748B;
@@ -104,6 +117,7 @@
       align-items: center;
       gap: 12px;
     }
+
     .nav-pill {
       color: #334155;
       text-decoration: none;
@@ -113,7 +127,9 @@
       border-radius: 6px;
       transition: all 0.2s;
     }
-    .nav-pill:hover, .nav-pill.active {
+
+    .nav-pill:hover,
+    .nav-pill.active {
       color: #003366;
       background: rgba(0, 51, 102, 0.08);
       border: 1px solid rgba(0, 51, 102, 0.25);
@@ -129,6 +145,7 @@
       gap: 36px;
       align-items: center;
     }
+
     .hero-tag {
       display: inline-flex;
       align-items: center;
@@ -144,6 +161,7 @@
       letter-spacing: 1px;
       margin-bottom: 16px;
     }
+
     .hero-title {
       font-family: var(--font-display);
       font-size: 2.8rem;
@@ -155,17 +173,20 @@
       -webkit-text-fill-color: transparent;
       margin-bottom: 20px;
     }
+
     .hero-desc {
       font-size: 1.05rem;
       color: #334155;
       line-height: 1.7;
       margin-bottom: 28px;
     }
+
     .hero-stats {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 16px;
     }
+
     .stat-card {
       background: var(--card-bg);
       border: 1px solid var(--border-cyan);
@@ -175,10 +196,12 @@
       box-shadow: 0 4px 20px rgba(70, 50, 30, 0.06);
       transition: transform 0.3s, border-color 0.3s;
     }
+
     .stat-card:hover {
       transform: translateY(-4px);
       border-color: var(--accent-cyan);
     }
+
     .stat-val {
       font-family: var(--font-display);
       font-size: 1.8rem;
@@ -187,6 +210,7 @@
       display: block;
       margin-bottom: 4px;
     }
+
     .stat-label {
       font-size: 0.78rem;
       color: #64748B;
@@ -202,8 +226,9 @@
       height: 380px;
       position: relative;
       overflow: hidden;
-      box-shadow: 0 16px 40px rgba(0,0,0,0.6);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
     }
+
     .viewport-overlay {
       position: absolute;
       top: 16px;
@@ -224,6 +249,7 @@
       margin: 0 auto;
       padding: 32px;
     }
+
     .section-title {
       font-family: var(--font-display);
       font-size: 1.8rem;
@@ -234,6 +260,7 @@
       gap: 12px;
       margin-bottom: 8px;
     }
+
     .section-sub {
       color: #729bc4;
       font-size: 0.95rem;
@@ -247,6 +274,7 @@
       gap: 24px;
       margin-bottom: 64px;
     }
+
     .exec-card {
       background: var(--card-bg);
       border: 1px solid var(--border-cyan);
@@ -256,23 +284,27 @@
       transition: all 0.3s ease;
       position: relative;
     }
+
     .exec-card:hover {
       transform: translateY(-6px);
       background: var(--card-hover);
       border-color: var(--accent-cyan);
       box-shadow: 0 12px 30px rgba(0, 200, 255, 0.15);
     }
+
     .exec-icon {
       font-size: 2.2rem;
       margin-bottom: 16px;
       display: inline-block;
     }
+
     .exec-title {
       font-family: var(--font-display);
       font-size: 1.2rem;
       color: #ffffff;
       margin-bottom: 12px;
     }
+
     .exec-p {
       color: #a4c4e8;
       font-size: 0.92rem;
@@ -287,11 +319,13 @@
       padding: 36px;
       margin-bottom: 64px;
     }
+
     .comp-table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 24px;
     }
+
     .comp-table th {
       background: rgba(0, 51, 102, 0.5);
       padding: 16px;
@@ -301,6 +335,7 @@
       color: #ffffff;
       border-bottom: 2px solid var(--border-cyan);
     }
+
     .comp-table td {
       padding: 18px 16px;
       border-bottom: 1px solid rgba(0, 200, 255, 0.1);
@@ -308,20 +343,24 @@
       color: #a4c4e8;
       vertical-align: top;
     }
+
     .comp-table tr:hover td {
       background: rgba(0, 200, 255, 0.04);
     }
+
     .dim-pill {
       font-weight: 700;
       color: #ffffff;
       font-size: 0.92rem;
     }
+
     .legacy-tag {
       color: #DC2626;
       font-family: var(--font-mono);
       font-size: 0.85rem;
       font-weight: 600;
     }
+
     .ai-tag {
       color: #059669;
       font-family: var(--font-mono);
@@ -336,6 +375,7 @@
       gap: 20px;
       margin-bottom: 64px;
     }
+
     .benefit-box {
       background: var(--card-bg);
       border-top: 4px solid var(--accent-cyan);
@@ -346,10 +386,12 @@
       transition: all 0.3s;
       box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
     }
+
     .benefit-box:hover {
       transform: translateY(-4px);
       box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
     }
+
     .b-metric {
       font-family: var(--font-display);
       font-size: 2.2rem;
@@ -357,12 +399,14 @@
       color: #003366;
       margin-bottom: 6px;
     }
+
     .b-title {
       font-size: 0.95rem;
       font-weight: 700;
       color: var(--accent-cyan);
       margin-bottom: 8px;
     }
+
     .b-desc {
       font-size: 0.85rem;
       color: #475569;
@@ -376,10 +420,12 @@
       padding-left: 32px;
       border-left: 3px solid rgba(0, 51, 102, 0.25);
     }
+
     .timeline-node {
       position: relative;
       margin-bottom: 40px;
     }
+
     .timeline-node::before {
       content: '';
       position: absolute;
@@ -391,14 +437,17 @@
       background: #003366;
       box-shadow: 0 0 6px rgba(0, 51, 102, 0.4);
     }
+
     .timeline-node.completed::before {
       background: #059669;
       box-shadow: 0 0 6px rgba(5, 150, 105, 0.4);
     }
+
     .timeline-node.future::before {
       background: #D9531E;
       box-shadow: 0 0 6px rgba(217, 83, 30, 0.4);
     }
+
     .t-phase {
       font-family: var(--font-display);
       font-size: 0.82rem;
@@ -408,12 +457,14 @@
       letter-spacing: 1px;
       margin-bottom: 4px;
     }
+
     .t-heading {
       font-family: var(--font-display);
       font-size: 1.25rem;
       color: #ffffff;
       margin-bottom: 8px;
     }
+
     .t-desc {
       color: #a4c4e8;
       font-size: 0.92rem;
@@ -427,12 +478,14 @@
       gap: 24px;
       margin-bottom: 64px;
     }
+
     .comp-card {
       background: var(--card-bg);
       border: 1px solid var(--border-cyan);
       border-radius: 12px;
       padding: 24px;
     }
+
     .comp-badge {
       display: inline-block;
       padding: 4px 10px;
@@ -452,6 +505,7 @@
       gap: 24px;
       margin-bottom: 64px;
     }
+
     .contact-card {
       background: var(--card-bg);
       border: 1px solid var(--border-cyan);
@@ -461,18 +515,21 @@
       flex-direction: column;
       justify-content: space-between;
     }
+
     .contact-role {
       font-family: var(--font-display);
       font-size: 1rem;
       color: #ffffff;
       margin-bottom: 4px;
     }
+
     .contact-org {
       font-size: 0.82rem;
       color: var(--accent-saffron);
       margin-bottom: 16px;
       font-weight: 600;
     }
+
     .contact-detail {
       font-size: 0.85rem;
       color: #a4c4e8;
@@ -493,12 +550,23 @@
     }
 
     @media (max-width: 1024px) {
-      .hero-container { grid-template-columns: 1fr; }
-      .exec-grid, .compliance-grid, .stakeholder-grid { grid-template-columns: 1fr; }
-      .benefits-grid { grid-template-columns: repeat(2, 1fr); }
+      .hero-container {
+        grid-template-columns: 1fr;
+      }
+
+      .exec-grid,
+      .compliance-grid,
+      .stakeholder-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .benefits-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
     }
   </style>
 </head>
+
 <body>
 
   <!-- 3D Background Canvas -->
@@ -514,13 +582,13 @@
       </div>
     </div>
     <nav class="header-nav">
-      <a href="../../index.html" class="nav-pill">Home</a>
       <a href="admin-dashboard.html" class="nav-pill">Admin AI</a>
       <a href="control-office.html" class="nav-pill">Control Office</a>
       <a href="maintenance-dashboard.html" class="nav-pill">Maintenance</a>
       <a href="surveillance-dashboard.html" class="nav-pill">Surveillance</a>
       <a href="ai-model-management.html" class="nav-pill">Models & MLOps</a>
-      <a href="#contacts" class="nav-pill" style="border: 1px solid var(--accent-saffron); color: var(--accent-saffron);">Stakeholders</a>
+      <a href="#contacts" class="nav-pill"
+        style="border: 1px solid var(--accent-saffron); color: var(--accent-saffron);">Stakeholders</a>
     </nav>
   </header>
 
@@ -530,7 +598,9 @@
       <div class="hero-tag">RAKSHA PATH &bull; MINISTRY OF RAILWAYS &bull; CRIS INNOVATION INITIATIVE</div>
       <h1 class="hero-title">RAKSHA PATH — AI Block Planning</h1>
       <p class="hero-desc">
-        RAKSHA PATH is a transformative operations research & deep learning platform automating track maintenance possession scheduling, multi-department asset bundling, and corridor de-confliction across Indian Railways' 68,000+ route km network.
+        RAKSHA PATH is a transformative operations research & deep learning platform automating track maintenance
+        possession scheduling, multi-department asset bundling, and corridor de-confliction across Indian Railways'
+        68,000+ route km network.
       </p>
       <div class="hero-stats">
         <div class="stat-card">
@@ -558,28 +628,36 @@
     <!-- 1. Executive Summary -->
     <section style="margin-bottom: 64px;">
       <h2 class="section-title"><span>🏛️</span> Executive Summary</h2>
-      <p class="section-sub">Transforming Indian Railways maintenance from reactive, manual telephone scheduling into automated, predictive intelligence.</p>
+      <p class="section-sub">Transforming Indian Railways maintenance from reactive, manual telephone scheduling into
+        automated, predictive intelligence.</p>
 
       <div class="exec-grid">
         <div class="exec-card">
           <span class="exec-icon">🎯</span>
           <h3 class="exec-title">The Operational Challenge</h3>
           <p class="exec-p">
-            Indian Railways operates over 22,000 passenger and freight trains daily. Traditional manual block planning requires multi-party telephone coordination between Divisional Control Offices, Section Controllers, and SSEs. This leads to block window under-utilization (55%), missed safety inspections, and severe passenger train delays.
+            Indian Railways operates over 22,000 passenger and freight trains daily. Traditional manual block planning
+            requires multi-party telephone coordination between Divisional Control Offices, Section Controllers, and
+            SSEs. This leads to block window under-utilization (55%), missed safety inspections, and severe passenger
+            train delays.
           </p>
         </div>
         <div class="exec-card">
           <span class="exec-icon">⚡</span>
           <h3 class="exec-title">The AI Solution</h3>
           <p class="exec-p">
-            Integrates IoT track geometry feeds (TRC, USFD, OMS) with timetable databases. Employs a 10-feature Random Forest prioritizer calibrated to IRPWM 2020 Para 602 norms and Google OR-Tools CP-SAT constraint solvers to bundle multi-department tasks into consolidated, conflict-free shadow block corridors in sub-second time.
+            Integrates IoT track geometry feeds (TRC, USFD, OMS) with timetable databases. Employs a 10-feature Random
+            Forest prioritizer calibrated to IRPWM 2020 Para 602 norms and Google OR-Tools CP-SAT constraint solvers to
+            bundle multi-department tasks into consolidated, conflict-free shadow block corridors in sub-second time.
           </p>
         </div>
         <div class="exec-card">
           <span class="exec-icon">📈</span>
           <h3 class="exec-title">Strategic Value Creation</h3>
           <p class="exec-p">
-            Increases block utilization to 90%, reduces track failures and fractures by 40–50%, eliminates scheduling disputes, guarantees zero missed USFD inspection cycles, and achieves an estimated annual network operating savings of ₹850+ Crores.
+            Increases block utilization to 90%, reduces track failures and fractures by 40–50%, eliminates scheduling
+            disputes, guarantees zero missed USFD inspection cycles, and achieves an estimated annual network operating
+            savings of ₹850+ Crores.
           </p>
         </div>
       </div>
@@ -588,7 +666,8 @@
     <!-- 2. Key Differentiators -->
     <section class="comparison-section">
       <h2 class="section-title"><span>⚖️</span> Key Differentiators from Conventional Practice</h2>
-      <p class="section-sub">A side-by-side comparison of legacy manual block granting vs. the AI Automatic Block Planning System.</p>
+      <p class="section-sub">A side-by-side comparison of legacy manual block granting vs. the AI Automatic Block
+        Planning System.</p>
 
       <table class="comp-table">
         <thead>
@@ -607,17 +686,20 @@
           <tr>
             <td class="dim-pill">Cross-Dept Bundling</td>
             <td class="legacy-tag">Siloed booking: Civil, TRD (OHE), and S&T book separate, uncoordinated blocks.</td>
-            <td class="ai-tag">Automated shadow bundling: Combines Civil track possession with OHE power blocks (&ge;25% time saved).</td>
+            <td class="ai-tag">Automated shadow bundling: Combines Civil track possession with OHE power blocks (&ge;25%
+              time saved).</td>
           </tr>
           <tr>
             <td class="dim-pill">Traffic Disruption Analysis</td>
             <td class="legacy-tag">Disruption recognized only after train detention occurs; high cascade delays.</td>
-            <td class="ai-tag">Predictive simulation: Evaluates Rajdhani/Shatabdi headways to find zero-conflict windows.</td>
+            <td class="ai-tag">Predictive simulation: Evaluates Rajdhani/Shatabdi headways to find zero-conflict
+              windows.</td>
           </tr>
           <tr>
             <td class="dim-pill">Block Approval Latency</td>
             <td class="legacy-tag">24 to 48 hours for physical paper routing and divisional tele-approvals.</td>
-            <td class="ai-tag">&lt; 2 hours automated validation with one-click DRM/Control Office electronic sanction.</td>
+            <td class="ai-tag">&lt; 2 hours automated validation with one-click DRM/Control Office electronic sanction.
+            </td>
           </tr>
           <tr>
             <td class="dim-pill">Human Override Governance</td>
@@ -631,28 +713,33 @@
     <!-- 3. Benefits and Success Metrics -->
     <section style="margin-bottom: 64px;">
       <h2 class="section-title"><span>📊</span> Projected Benefits & Success Metrics</h2>
-      <p class="section-sub">Tangible KPIs measured across safety directorate benchmarks, operations, and financial returns.</p>
+      <p class="section-sub">Tangible KPIs measured across safety directorate benchmarks, operations, and financial
+        returns.</p>
 
       <div class="benefits-grid">
         <div class="benefit-box">
           <div class="b-metric" style="color: #DC2626;">40–50%</div>
           <div class="b-title">Track Failure Reduction</div>
-          <div class="b-desc">Proactive USFD flaw detection & 24h P1 SLA intervention eliminates unexpected rail fractures.</div>
+          <div class="b-desc">Proactive USFD flaw detection & 24h P1 SLA intervention eliminates unexpected rail
+            fractures.</div>
         </div>
         <div class="benefit-box">
           <div class="b-metric" style="color: #059669;">90%</div>
           <div class="b-title">Block Window Utilization</div>
-          <div class="b-desc">Increases actual track possession productivity from 55% today to 90% via CP-SAT optimization.</div>
+          <div class="b-desc">Increases actual track possession productivity from 55% today to 90% via CP-SAT
+            optimization.</div>
         </div>
         <div class="benefit-box">
           <div class="b-metric" style="color: #003366;">78%</div>
           <div class="b-title">Punctuality Improvement</div>
-          <div class="b-desc">Drastically reduces maintenance-induced passenger train regulation and caution orders.</div>
+          <div class="b-desc">Drastically reduces maintenance-induced passenger train regulation and caution orders.
+          </div>
         </div>
         <div class="benefit-box">
           <div class="b-metric" style="color: #D9531E;">₹850 Cr+</div>
           <div class="b-title">Annual Network ROI</div>
-          <div class="b-desc">Cost savings from emergency repair avoidance, optimized tamper deployment, and fuel/crew efficiency.</div>
+          <div class="b-desc">Cost savings from emergency repair avoidance, optimized tamper deployment, and fuel/crew
+            efficiency.</div>
         </div>
       </div>
     </section>
@@ -660,14 +747,17 @@
     <!-- 4. Deployment Roadmap & Timeline -->
     <section style="margin-bottom: 64px;">
       <h2 class="section-title"><span>🚀</span> Multi-Phase Deployment Roadmap</h2>
-      <p class="section-sub">Phased rollout strategy spanning pilot testing, Golden Quadrilateral expansion, and pan-India network commissioning.</p>
+      <p class="section-sub">Phased rollout strategy spanning pilot testing, Golden Quadrilateral expansion, and
+        pan-India network commissioning.</p>
 
       <div class="timeline-container">
         <div class="timeline-node completed">
           <div class="t-phase">Phase 1 &bull; Q1–Q2 2026 (Completed)</div>
           <div class="t-heading">High-Density Pilot Corridor (New Delhi – Kanpur – Prayagraj)</div>
           <p class="t-desc">
-            Deployed on the 440 km NDLS-CNB-PRYJ quadruple-line trunk corridor. Integrated USFD defect car feeds, timetabled 140+ daily passenger trains, verified CP-SAT bundling algorithms, and conducted 12/12 automated quality gate verifications.
+            Deployed on the 440 km NDLS-CNB-PRYJ quadruple-line trunk corridor. Integrated USFD defect car feeds,
+            timetabled 140+ daily passenger trains, verified CP-SAT bundling algorithms, and conducted 12/12 automated
+            quality gate verifications.
           </p>
         </div>
 
@@ -675,7 +765,9 @@
           <div class="t-phase">Phase 2 &bull; Q3–Q4 2026 (Active)</div>
           <div class="t-heading">Golden Quadrilateral & Zonal Expansion</div>
           <p class="t-desc">
-            Expanding across Northern (NR), North Central (NCR), and Western (WR) Railways covering Delhi-Mumbai and Delhi-Howrah high-speed corridors. Full integration with National Train Enquiry System (NTES) and Control Office Application (COA).
+            Expanding across Northern (NR), North Central (NCR), and Western (WR) Railways covering Delhi-Mumbai and
+            Delhi-Howrah high-speed corridors. Full integration with National Train Enquiry System (NTES) and Control
+            Office Application (COA).
           </p>
         </div>
 
@@ -683,7 +775,9 @@
           <div class="t-phase">Phase 3 &bull; Q1–Q3 2027 (Planned)</div>
           <div class="t-heading">Pan-India Zonal & Dedicated Freight Corridors (DFC)</div>
           <p class="t-desc">
-            Rollout across all 17 Zonal Railways and Eastern/Western DFC corridors. Cloud-native RailTel Tier-IV high-availability cluster integration with automatic disaster recovery across New Delhi and Prayagraj data centers.
+            Rollout across all 17 Zonal Railways and Eastern/Western DFC corridors. Cloud-native RailTel Tier-IV
+            high-availability cluster integration with automatic disaster recovery across New Delhi and Prayagraj data
+            centers.
           </p>
         </div>
 
@@ -691,7 +785,8 @@
           <div class="t-phase">Phase 4 &bull; Q4 2027+ (Future Vision)</div>
           <div class="t-heading">Autonomous Self-Healing Railway Network</div>
           <p class="t-desc">
-            Direct telemetry integration with autonomous track tamping machines, drone-based visual inspection AI, and automated caution order broadcasting via Kavach collision avoidance train protection systems.
+            Direct telemetry integration with autonomous track tamping machines, drone-based visual inspection AI, and
+            automated caution order broadcasting via Kavach collision avoidance train protection systems.
           </p>
         </div>
       </div>
@@ -700,28 +795,35 @@
     <!-- 5. Security and Compliance Overview -->
     <section style="margin-bottom: 64px;">
       <h2 class="section-title"><span>🛡️</span> Security & Regulatory Compliance Overview</h2>
-      <p class="section-sub">Rigorous adherence to Ministry of Railways safety directives and national cybersecurity frameworks.</p>
+      <p class="section-sub">Rigorous adherence to Ministry of Railways safety directives and national cybersecurity
+        frameworks.</p>
 
       <div class="compliance-grid">
         <div class="comp-card">
           <span class="comp-badge">SAFETY DIRECTIVE</span>
-          <h3 style="font-family: var(--font-display); font-size: 1.1rem; color: #fff; margin-bottom: 8px;">IRPWM 2020 Para 602</h3>
+          <h3 style="font-family: var(--font-display); font-size: 1.1rem; color: #fff; margin-bottom: 8px;">IRPWM 2020
+            Para 602</h3>
           <p style="font-size: 0.88rem; color: #a4c4e8;">
-            Fully complies with the Indian Railways Permanent Way Manual for flaw classification, minimum inspection cycles, and mandatory 24-hour speed-restriction imposition for P1 critical rail fractures.
+            Fully complies with the Indian Railways Permanent Way Manual for flaw classification, minimum inspection
+            cycles, and mandatory 24-hour speed-restriction imposition for P1 critical rail fractures.
           </p>
         </div>
         <div class="comp-card">
           <span class="comp-badge">TECHNICAL STANDARD</span>
-          <h3 style="font-family: var(--font-display); font-size: 1.1rem; color: #fff; margin-bottom: 8px;">RDSO & ISO/IEC 27001</h3>
+          <h3 style="font-family: var(--font-display); font-size: 1.1rem; color: #fff; margin-bottom: 8px;">RDSO &
+            ISO/IEC 27001</h3>
           <p style="font-size: 0.88rem; color: #a4c4e8;">
-            Certified against Research Designs and Standards Organisation (RDSO) specifications. Implements ISO 27001 information security protocols with end-to-end TLS 1.3 encryption and SHA-256 backup integrity checks.
+            Certified against Research Designs and Standards Organisation (RDSO) specifications. Implements ISO 27001
+            information security protocols with end-to-end TLS 1.3 encryption and SHA-256 backup integrity checks.
           </p>
         </div>
         <div class="comp-card">
           <span class="comp-badge">CYBERSECURITY</span>
-          <h3 style="font-family: var(--font-display); font-size: 1.1rem; color: #fff; margin-bottom: 8px;">Railway SOC & CERT-In</h3>
+          <h3 style="font-family: var(--font-display); font-size: 1.1rem; color: #fff; margin-bottom: 8px;">Railway SOC
+            & CERT-In</h3>
           <p style="font-size: 0.88rem; color: #a4c4e8;">
-            Direct SIEM syslog integration with the Central Railway Security Operations Centre (SOC). Real-time telemetry monitoring, automated DoS rate limiting, and RBAC authentication with CRIS SSO.
+            Direct SIEM syslog integration with the Central Railway Security Operations Centre (SOC). Real-time
+            telemetry monitoring, automated DoS rate limiting, and RBAC authentication with CRIS SSO.
           </p>
         </div>
       </div>
@@ -730,7 +832,8 @@
     <!-- 6. Stakeholder Contact Directory -->
     <section id="contacts" style="margin-bottom: 64px;">
       <h2 class="section-title"><span>📞</span> Stakeholder & Governance Directory</h2>
-      <p class="section-sub">Key institutional leadership and operational points of contact across Ministry of Railways and CRIS.</p>
+      <p class="section-sub">Key institutional leadership and operational points of contact across Ministry of Railways
+        and CRIS.</p>
 
       <div class="stakeholder-grid">
         <div class="contact-card">
@@ -769,8 +872,10 @@
 
   <!-- Footer -->
   <footer class="summary-footer">
-    <p>&copy; 2026 Ministry of Railways, Government of India &bull; Centre for Railway Information Systems (CRIS). All rights reserved.</p>
-    <p style="font-size: 0.75rem; margin-top: 6px; color: #4a6a9a;">RAKSHA PATH &bull; Version 2.4.0-PROD &bull; Certified under IRPWM 2020 &amp; RDSO Standards</p>
+    <p>&copy; 2026 Ministry of Railways, Government of India &bull; Centre for Railway Information Systems (CRIS). All
+      rights reserved.</p>
+    <p style="font-size: 0.75rem; margin-top: 6px; color: #4a6a9a;">RAKSHA PATH &bull; Version 2.4.0-PROD &bull;
+      Certified under IRPWM 2020 &amp; RDSO Standards</p>
   </footer>
 
   <!-- Background Three.js Particle Script -->
@@ -835,4 +940,5 @@
   <!-- Component & Main App Initializer -->
   <script src="../main-app.js"></script>
 </body>
+
 </html>

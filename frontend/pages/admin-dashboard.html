@@ -1,15 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Executive Admin AI Dashboard — RAKSHA PATH | Indian Railways</title>
-  <meta name="description" content="RAKSHA PATH — Indian Railways AI Maintenance Platform - Executive Admin Command Center for defect prioritization, traffic disruption analysis, and block scheduling." />
+  <meta name="description"
+    content="RAKSHA PATH — Indian Railways AI Maintenance Platform - Executive Admin Command Center for defect prioritization, traffic disruption analysis, and block scheduling." />
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Orbitron:wght@500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Orbitron:wght@500;600;700;800;900&display=swap"
+    rel="stylesheet" />
 
   <!-- Auth guard (runs before page renders) -->
   <script src="../components/auth-guard.js"></script>
@@ -53,9 +57,28 @@
       padding: 0;
       font-family: 'Calibri', 'Arial', sans-serif !important;
     }
-    button, input, select, textarea, th, td, h1, h2, h3, h4, h5, h6, span, p, a, div, label, table {
+
+    button,
+    input,
+    select,
+    textarea,
+    th,
+    td,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    span,
+    p,
+    a,
+    div,
+    label,
+    table {
       font-family: 'Calibri', 'Arial', sans-serif !important;
     }
+
     body {
       background: radial-gradient(circle at 50% 0%, #FFFFFF 0%, #FAF6EE 100%);
       color: #0F172A;
@@ -79,11 +102,13 @@
       top: 0;
       z-index: 100;
     }
+
     .brand-group {
       display: flex;
       align-items: center;
       gap: 14px;
     }
+
     .brand-logo {
       width: 38px;
       height: 38px;
@@ -95,6 +120,7 @@
       font-size: 1.2rem;
       box-shadow: 0 0 15px rgba(0, 51, 102, 0.2);
     }
+
     .brand-title {
       font-family: var(--font-display);
       font-size: 1.1rem;
@@ -102,6 +128,7 @@
       color: #0F172A;
       letter-spacing: 0.8px;
     }
+
     .brand-sub {
       font-size: 0.72rem;
       color: #64748B;
@@ -114,6 +141,7 @@
       align-items: center;
       gap: 16px;
     }
+
     .nav-pill {
       color: #334155;
       text-decoration: none;
@@ -123,7 +151,9 @@
       border-radius: 6px;
       transition: all 0.2s;
     }
-    .nav-pill:hover, .nav-pill.active {
+
+    .nav-pill:hover,
+    .nav-pill.active {
       color: #003366;
       background: rgba(0, 51, 102, 0.08);
       border: 1px solid rgba(0, 51, 102, 0.25);
@@ -144,12 +174,19 @@
       margin-bottom: 28px;
       width: 100%;
     }
+
     @media (max-width: 1100px) {
-      .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+      .kpi-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
     }
+
     @media (max-width: 640px) {
-      .kpi-grid { grid-template-columns: 1fr; }
+      .kpi-grid {
+        grid-template-columns: 1fr;
+      }
     }
+
     .kpi-card {
       background: var(--card-bg);
       border: 1px solid var(--border-cyan);
@@ -165,19 +202,33 @@
       box-sizing: border-box;
       transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
+
     .kpi-card:hover {
       transform: translateY(-2px);
       box-shadow: 0 6px 24px rgba(70, 50, 30, 0.08);
     }
+
     .kpi-card::before {
       content: '';
       position: absolute;
-      top: 0; left: 0; right: 0; height: 3px;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
       background: var(--accent-cyan);
     }
-    .kpi-card.danger::before { background: var(--accent-red); }
-    .kpi-card.success::before { background: var(--accent-green); }
-    .kpi-card.warning::before { background: var(--accent-gold); }
+
+    .kpi-card.danger::before {
+      background: var(--accent-red);
+    }
+
+    .kpi-card.success::before {
+      background: var(--accent-green);
+    }
+
+    .kpi-card.warning::before {
+      background: var(--accent-gold);
+    }
 
     .kpi-label {
       font-family: var(--font-mono);
@@ -188,6 +239,7 @@
       font-weight: 700;
       margin-bottom: 6px;
     }
+
     .kpi-val {
       font-family: var(--font-mono);
       font-size: 1.85rem;
@@ -199,6 +251,7 @@
       margin: 4px 0 6px 0;
       line-height: 1.2;
     }
+
     .kpi-badge {
       display: inline-flex;
       align-items: center;
@@ -211,16 +264,19 @@
       line-height: 1;
       white-space: nowrap;
     }
+
     .kpi-badge.urgent {
       background: rgba(220, 38, 38, 0.1);
       color: #DC2626;
       border: 1px solid rgba(220, 38, 38, 0.25);
     }
+
     .kpi-badge.warning {
       background: rgba(217, 83, 30, 0.1);
       color: #D9531E;
       border: 1px solid rgba(217, 83, 30, 0.25);
     }
+
     .kpi-delta {
       font-size: 0.76rem;
       font-weight: 600;
@@ -236,12 +292,14 @@
       justify-content: space-between;
       margin-bottom: 16px;
     }
+
     .section-title-group h2 {
       font-family: var(--font-display);
       font-size: 1.25rem;
       color: #0F172A;
       letter-spacing: 0.5px;
     }
+
     .section-title-group p {
       font-size: 0.8rem;
       color: #64748B;
@@ -253,6 +311,7 @@
       align-items: center;
       gap: 12px;
     }
+
     .btn-reprioritize {
       display: inline-flex;
       align-items: center;
@@ -269,10 +328,12 @@
       box-shadow: 0 2px 10px rgba(0, 51, 102, 0.25);
       transition: all 0.25s ease;
     }
+
     .btn-reprioritize:hover {
       transform: translateY(-1px);
       box-shadow: 0 4px 14px rgba(0, 51, 102, 0.35);
     }
+
     .btn-reprioritize:active {
       transform: translateY(1px);
     }
@@ -287,20 +348,25 @@
       margin-bottom: 28px;
     }
 
-    .table-container, .table-responsive {
+    .table-container,
+    .table-responsive {
       width: 100%;
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
       border-radius: 8px;
     }
-    .ai-table, .admin-table {
+
+    .ai-table,
+    .admin-table {
       width: 100%;
       border-collapse: separate;
       border-spacing: 0;
       font-size: 0.84rem;
       text-align: left;
     }
-    .ai-table th, .admin-table th {
+
+    .ai-table th,
+    .admin-table th {
       background: #F6F1E5;
       color: #334155;
       font-family: var(--font-mono);
@@ -313,34 +379,79 @@
       white-space: nowrap;
       vertical-align: middle;
     }
-    .ai-table th:first-child, .admin-table th:first-child {
+
+    .ai-table th:first-child,
+    .admin-table th:first-child {
       border-top-left-radius: 8px;
     }
-    .ai-table th:last-child, .admin-table th:last-child {
+
+    .ai-table th:last-child,
+    .admin-table th:last-child {
       border-top-right-radius: 8px;
     }
-    .ai-table td, .admin-table td {
+
+    .ai-table td,
+    .admin-table td {
       padding: 12px 14px;
       border-bottom: 1px solid rgba(195, 178, 150, 0.28);
       vertical-align: middle;
       color: #0F172A;
       line-height: 1.45;
     }
-    .ai-table tbody tr:hover td, .admin-table tbody tr:hover td {
+
+    .ai-table tbody tr:hover td,
+    .admin-table tbody tr:hover td {
       background: rgba(0, 51, 102, 0.025);
     }
-    .ai-table tbody tr:last-child td, .admin-table tbody tr:last-child td {
+
+    .ai-table tbody tr:last-child td,
+    .admin-table tbody tr:last-child td {
       border-bottom: none;
     }
 
     /* Column Sizing and Alignments for Defects Table */
-    #defects-table th:nth-child(1), #defects-table td:nth-child(1) { width: 14%; white-space: nowrap; }
-    #defects-table th:nth-child(2), #defects-table td:nth-child(2) { width: 11%; white-space: nowrap; }
-    #defects-table th:nth-child(3), #defects-table td:nth-child(3) { width: 22%; }
-    #defects-table th:nth-child(4), #defects-table td:nth-child(4) { width: 13%; text-align: center; white-space: nowrap; }
-    #defects-table th:nth-child(5), #defects-table td:nth-child(5) { width: 9%; text-align: center; white-space: nowrap; }
-    #defects-table th:nth-child(6), #defects-table td:nth-child(6) { width: 25%; }
-    #defects-table th:nth-child(7), #defects-table td:nth-child(7) { width: 6%; text-align: center; white-space: nowrap; }
+    #defects-table th:nth-child(1),
+    #defects-table td:nth-child(1) {
+      width: 14%;
+      white-space: nowrap;
+    }
+
+    #defects-table th:nth-child(2),
+    #defects-table td:nth-child(2) {
+      width: 11%;
+      white-space: nowrap;
+    }
+
+    #defects-table th:nth-child(3),
+    #defects-table td:nth-child(3) {
+      width: 22%;
+    }
+
+    #defects-table th:nth-child(4),
+    #defects-table td:nth-child(4) {
+      width: 13%;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    #defects-table th:nth-child(5),
+    #defects-table td:nth-child(5) {
+      width: 9%;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    #defects-table th:nth-child(6),
+    #defects-table td:nth-child(6) {
+      width: 25%;
+    }
+
+    #defects-table th:nth-child(7),
+    #defects-table td:nth-child(7) {
+      width: 6%;
+      text-align: center;
+      white-space: nowrap;
+    }
 
     /* Centered element alignment inside table cells */
     #defects-table td:nth-child(4) .tooltip-wrap,
@@ -351,13 +462,48 @@
     }
 
     /* Column Sizing and Alignments for Proposed Blocks Table */
-    #blocks-table th:nth-child(1), #blocks-table td:nth-child(1) { width: 18%; white-space: nowrap; }
-    #blocks-table th:nth-child(2), #blocks-table td:nth-child(2) { width: 16%; white-space: nowrap; }
-    #blocks-table th:nth-child(3), #blocks-table td:nth-child(3) { width: 18%; }
-    #blocks-table th:nth-child(4), #blocks-table td:nth-child(4) { width: 16%; text-align: center; white-space: nowrap; }
-    #blocks-table th:nth-child(5), #blocks-table td:nth-child(5) { width: 11%; text-align: center; white-space: nowrap; }
-    #blocks-table th:nth-child(6), #blocks-table td:nth-child(6) { width: 13%; }
-    #blocks-table th:nth-child(7), #blocks-table td:nth-child(7) { width: 8%; text-align: center; white-space: nowrap; }
+    #blocks-table th:nth-child(1),
+    #blocks-table td:nth-child(1) {
+      width: 18%;
+      white-space: nowrap;
+    }
+
+    #blocks-table th:nth-child(2),
+    #blocks-table td:nth-child(2) {
+      width: 16%;
+      white-space: nowrap;
+    }
+
+    #blocks-table th:nth-child(3),
+    #blocks-table td:nth-child(3) {
+      width: 18%;
+    }
+
+    #blocks-table th:nth-child(4),
+    #blocks-table td:nth-child(4) {
+      width: 16%;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    #blocks-table th:nth-child(5),
+    #blocks-table td:nth-child(5) {
+      width: 11%;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    #blocks-table th:nth-child(6),
+    #blocks-table td:nth-child(6) {
+      width: 13%;
+    }
+
+    #blocks-table th:nth-child(7),
+    #blocks-table td:nth-child(7) {
+      width: 8%;
+      text-align: center;
+      white-space: nowrap;
+    }
 
     #blocks-table td:nth-child(4) .ai-slot-feasibility,
     #blocks-table td:nth-child(5) .ai-confidence-indicator,
@@ -372,10 +518,12 @@
       display: inline-flex;
       cursor: help;
     }
+
     .tooltip-wrap:hover .tooltip-box {
       visibility: visible;
       opacity: 1;
     }
+
     .tooltip-box {
       visibility: hidden;
       opacity: 0;
@@ -392,7 +540,7 @@
       transform: translateX(-50%);
       font-size: 0.73rem;
       line-height: 1.4;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
       transition: opacity 0.2s ease, visibility 0.2s ease;
       pointer-events: none;
     }
@@ -413,6 +561,7 @@
       transition: all 0.2s ease;
       white-space: nowrap;
     }
+
     .btn-override-sm:hover {
       background: rgba(217, 83, 30, 0.18);
       border-color: #D9531E;
@@ -437,29 +586,34 @@
       align-items: center;
       gap: 12px;
     }
+
     /* ── User Management Panel ─────────────────────────────────── */
     .um-section {
       margin-top: 36px;
-      border-top: 2px solid rgba(0,51,102,0.1);
+      border-top: 2px solid rgba(0, 51, 102, 0.1);
       padding-top: 28px;
     }
+
     .um-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
       margin-bottom: 18px;
     }
+
     .um-title-group h2 {
       font-size: 1.25rem;
       color: #0F172A;
       font-weight: 700;
       letter-spacing: 0.3px;
     }
+
     .um-title-group p {
       font-size: 0.82rem;
       color: #64748B;
       margin-top: 3px;
     }
+
     .btn-add-user {
       display: inline-flex;
       align-items: center;
@@ -473,13 +627,30 @@
       font-weight: 700;
       cursor: pointer;
       transition: transform 0.15s, box-shadow 0.15s;
-      box-shadow: 0 2px 10px rgba(0,51,102,0.22);
+      box-shadow: 0 2px 10px rgba(0, 51, 102, 0.22);
     }
-    .btn-add-user:hover { transform: translateY(-1px); box-shadow: 0 5px 16px rgba(0,51,102,0.3); }
+
+    .btn-add-user:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 5px 16px rgba(0, 51, 102, 0.3);
+    }
 
     /* User Table */
-    .um-table-wrap { overflow-x: auto; border-radius: 10px; border: 1px solid var(--border-cyan); box-shadow: 0 2px 10px rgba(15,23,42,0.03); }
-    .um-table { width: 100%; border-collapse: separate; border-spacing: 0; background: var(--card-bg); font-size: 0.84rem; }
+    .um-table-wrap {
+      overflow-x: auto;
+      border-radius: 10px;
+      border: 1px solid var(--border-cyan);
+      box-shadow: 0 2px 10px rgba(15, 23, 42, 0.03);
+    }
+
+    .um-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      background: var(--card-bg);
+      font-size: 0.84rem;
+    }
+
     .um-table th {
       font-size: 0.78rem;
       text-transform: uppercase;
@@ -492,17 +663,54 @@
       background: #F6F1E5;
       white-space: nowrap;
     }
-    .um-table td { padding: 13px 18px; font-size: 0.84rem; border-bottom: 1px solid rgba(195,178,150,0.22); vertical-align: middle; }
-    .um-table tr:last-child td { border-bottom: none; }
-    .um-table tr:hover td { background: rgba(0,51,102,0.025); }
+
+    .um-table td {
+      padding: 13px 18px;
+      font-size: 0.84rem;
+      border-bottom: 1px solid rgba(195, 178, 150, 0.22);
+      vertical-align: middle;
+    }
+
+    .um-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .um-table tr:hover td {
+      background: rgba(0, 51, 102, 0.025);
+    }
 
     /* User table column widths */
-    .um-table th:nth-child(1), .um-table td:nth-child(1) { width: 24%; }
-    .um-table th:nth-child(2), .um-table td:nth-child(2) { width: 14%; }
-    .um-table th:nth-child(3), .um-table td:nth-child(3) { width: 20%; }
-    .um-table th:nth-child(4), .um-table td:nth-child(4) { width: 22%; }
-    .um-table th:nth-child(5), .um-table td:nth-child(5) { width: 10%; text-align: center; }
-    .um-table th:nth-child(6), .um-table td:nth-child(6) { width: 10%; text-align: center; }
+    .um-table th:nth-child(1),
+    .um-table td:nth-child(1) {
+      width: 24%;
+    }
+
+    .um-table th:nth-child(2),
+    .um-table td:nth-child(2) {
+      width: 14%;
+    }
+
+    .um-table th:nth-child(3),
+    .um-table td:nth-child(3) {
+      width: 20%;
+    }
+
+    .um-table th:nth-child(4),
+    .um-table td:nth-child(4) {
+      width: 22%;
+    }
+
+    .um-table th:nth-child(5),
+    .um-table td:nth-child(5) {
+      width: 10%;
+      text-align: center;
+    }
+
+    .um-table th:nth-child(6),
+    .um-table td:nth-child(6) {
+      width: 10%;
+      text-align: center;
+    }
 
     .um-table td:nth-child(5) .um-status-chip,
     .um-table td:nth-child(6) .um-actions {
@@ -511,104 +719,298 @@
     }
 
     .um-avatar {
-      width: 34px; height: 34px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 0.82rem; font-weight: 700; color: white;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: white;
       flex-shrink: 0;
     }
-    .um-name-cell { display: flex; align-items: center; gap: 12px; }
-    .um-name { font-weight: 700; color: #0F172A; font-size: 0.88rem; }
-    .um-email { font-size: 0.76rem; color: #64748B; margin-top: 1px; }
-    .um-user-chip { font-size: 0.82rem; color: #003366; font-weight: 700; background: rgba(0,51,102,0.06); padding: 2px 7px; border-radius: 4px; }
+
+    .um-name-cell {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .um-name {
+      font-weight: 700;
+      color: #0F172A;
+      font-size: 0.88rem;
+    }
+
+    .um-email {
+      font-size: 0.76rem;
+      color: #64748B;
+      margin-top: 1px;
+    }
+
+    .um-user-chip {
+      font-size: 0.82rem;
+      color: #003366;
+      font-weight: 700;
+      background: rgba(0, 51, 102, 0.06);
+      padding: 2px 7px;
+      border-radius: 4px;
+    }
+
     .um-role-badge {
-      display: inline-flex; align-items: center; gap: 5px;
-      padding: 4px 10px; border-radius: 20px;
-      font-size: 0.74rem; font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.74rem;
+      font-weight: 700;
       border: 1px solid;
     }
+
     .um-status-chip {
-      display: inline-flex; align-items: center; gap: 5px;
-      padding: 4px 10px; border-radius: 20px;
-      font-size: 0.74rem; font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.74rem;
+      font-weight: 700;
     }
-    .um-status-active   { background: rgba(5,150,105,0.09);  color: #059669; border: 1px solid rgba(5,150,105,0.25); }
-    .um-status-inactive { background: rgba(100,116,139,0.09); color: #64748B; border: 1px solid rgba(100,116,139,0.25); }
-    .um-actions { display: flex; align-items: center; gap: 6px; }
+
+    .um-status-active {
+      background: rgba(5, 150, 105, 0.09);
+      color: #059669;
+      border: 1px solid rgba(5, 150, 105, 0.25);
+    }
+
+    .um-status-inactive {
+      background: rgba(100, 116, 139, 0.09);
+      color: #64748B;
+      border: 1px solid rgba(100, 116, 139, 0.25);
+    }
+
+    .um-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
     .um-btn {
-      padding: 5px 12px; border-radius: 6px; border: 1px solid rgba(195,178,150,0.4);
-      background: #FFFFFF; font-size: 0.76rem; font-weight: 700;
-      cursor: pointer; transition: all 0.15s;
-      display: inline-flex; align-items: center; gap: 4px;
+      padding: 5px 12px;
+      border-radius: 6px;
+      border: 1px solid rgba(195, 178, 150, 0.4);
+      background: #FFFFFF;
+      font-size: 0.76rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
     }
-    .um-btn-edit:hover  { border-color: #0056B3; color: #0056B3; background: rgba(0,86,179,0.06); }
-    .um-btn-toggle:hover { border-color: #D97706; color: #D97706; background: rgba(217,119,6,0.06); }
-    .um-btn-del:hover   { border-color: #DC2626; color: #DC2626; background: rgba(220,38,38,0.06); }
-    .um-btn-del { color: #DC2626; border-color: rgba(220,38,38,0.25); }
+
+    .um-btn-edit:hover {
+      border-color: #0056B3;
+      color: #0056B3;
+      background: rgba(0, 86, 179, 0.06);
+    }
+
+    .um-btn-toggle:hover {
+      border-color: #D97706;
+      color: #D97706;
+      background: rgba(217, 119, 6, 0.06);
+    }
+
+    .um-btn-del:hover {
+      border-color: #DC2626;
+      color: #DC2626;
+      background: rgba(220, 38, 38, 0.06);
+    }
+
+    .um-btn-del {
+      color: #DC2626;
+      border-color: rgba(220, 38, 38, 0.25);
+    }
 
     /* ── User Modal ─────────────────────────────────────────────── */
     .um-modal-overlay {
       display: none;
-      position: fixed; inset: 0; z-index: 10000;
-      background: rgba(15,23,42,0.55); backdrop-filter: blur(4px);
-      align-items: center; justify-content: center;
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      background: rgba(15, 23, 42, 0.55);
+      backdrop-filter: blur(4px);
+      align-items: center;
+      justify-content: center;
     }
-    .um-modal-overlay.open { display: flex; }
+
+    .um-modal-overlay.open {
+      display: flex;
+    }
+
     .um-modal {
-      background: #FFFFFF; border-radius: 16px;
-      width: 100%; max-width: 520px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.18);
+      background: #FFFFFF;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 520px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
       overflow: hidden;
-      animation: modalIn 0.22s cubic-bezier(0.34,1.56,0.64,1);
+      animation: modalIn 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
-    @keyframes modalIn { from { opacity:0; transform: scale(0.94) translateY(12px); } to { opacity:1; transform: none; } }
+
+    @keyframes modalIn {
+      from {
+        opacity: 0;
+        transform: scale(0.94) translateY(12px);
+      }
+
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
     .um-modal-header {
-      display: flex; align-items: center; justify-content: space-between;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       padding: 20px 24px;
-      border-bottom: 1px solid rgba(0,51,102,0.1);
+      border-bottom: 1px solid rgba(0, 51, 102, 0.1);
     }
-    .um-modal-header h3 { font-family: var(--font-display); font-size: 1rem; color: #0F172A; font-weight: 700; }
+
+    .um-modal-header h3 {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      color: #0F172A;
+      font-weight: 700;
+    }
+
     .um-modal-close {
-      width: 30px; height: 30px; border-radius: 50%; border: none;
-      background: rgba(0,51,102,0.06); cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.1rem; color: #64748B; transition: background 0.15s;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(0, 51, 102, 0.06);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      color: #64748B;
+      transition: background 0.15s;
     }
-    .um-modal-close:hover { background: rgba(220,38,38,0.1); color: #DC2626; }
-    .um-modal-body { padding: 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-    .um-field { display: flex; flex-direction: column; gap: 6px; }
-    .um-field.full-width { grid-column: span 2; }
-    .um-field label { font-size: 0.72rem; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.7px; }
-    .um-field input, .um-field select {
-      padding: 9px 12px; border: 1.5px solid rgba(0,51,102,0.14);
-      border-radius: 8px; font-size: 0.84rem; font-family: var(--font-main);
-      color: #0F172A; background: #FAF6EE; outline: none;
+
+    .um-modal-close:hover {
+      background: rgba(220, 38, 38, 0.1);
+      color: #DC2626;
+    }
+
+    .um-modal-body {
+      padding: 24px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .um-field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .um-field.full-width {
+      grid-column: span 2;
+    }
+
+    .um-field label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #475569;
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+    }
+
+    .um-field input,
+    .um-field select {
+      padding: 9px 12px;
+      border: 1.5px solid rgba(0, 51, 102, 0.14);
+      border-radius: 8px;
+      font-size: 0.84rem;
+      font-family: var(--font-main);
+      color: #0F172A;
+      background: #FAF6EE;
+      outline: none;
       transition: border-color 0.15s, box-shadow 0.15s;
     }
-    .um-field input:focus, .um-field select:focus {
-      border-color: #0056B3; box-shadow: 0 0 0 3px rgba(0,86,179,0.1); background: white;
+
+    .um-field input:focus,
+    .um-field select:focus {
+      border-color: #0056B3;
+      box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.1);
+      background: white;
     }
+
     .um-modal-footer {
-      display: flex; align-items: center; justify-content: flex-end; gap: 10px;
-      padding: 16px 24px; border-top: 1px solid rgba(0,51,102,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      padding: 16px 24px;
+      border-top: 1px solid rgba(0, 51, 102, 0.08);
     }
+
     .um-modal-cancel {
-      padding: 9px 18px; border-radius: 8px; border: 1px solid rgba(0,51,102,0.18);
-      background: transparent; color: #475569; font-size: 0.82rem; font-weight: 600;
-      cursor: pointer; font-family: var(--font-main); transition: all 0.15s;
+      padding: 9px 18px;
+      border-radius: 8px;
+      border: 1px solid rgba(0, 51, 102, 0.18);
+      background: transparent;
+      color: #475569;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: var(--font-main);
+      transition: all 0.15s;
     }
-    .um-modal-cancel:hover { background: rgba(0,51,102,0.05); }
+
+    .um-modal-cancel:hover {
+      background: rgba(0, 51, 102, 0.05);
+    }
+
     .um-modal-save {
-      padding: 9px 22px; border-radius: 8px; border: none;
+      padding: 9px 22px;
+      border-radius: 8px;
+      border: none;
       background: linear-gradient(135deg, #003366, #0056B3);
-      color: white; font-size: 0.82rem; font-weight: 700;
-      cursor: pointer; font-family: var(--font-main);
-      box-shadow: 0 3px 10px rgba(0,51,102,0.25); transition: all 0.15s;
+      color: white;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: var(--font-main);
+      box-shadow: 0 3px 10px rgba(0, 51, 102, 0.25);
+      transition: all 0.15s;
     }
-    .um-modal-save:hover { transform: translateY(-1px); box-shadow: 0 5px 14px rgba(0,51,102,0.35); }
-    .um-modal-err { grid-column: span 2; font-size: 0.78rem; color: #DC2626; font-weight: 500; display: none; }
-    .um-modal-err.show { display: block; }
+
+    .um-modal-save:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 5px 14px rgba(0, 51, 102, 0.35);
+    }
+
+    .um-modal-err {
+      grid-column: span 2;
+      font-size: 0.78rem;
+      color: #DC2626;
+      font-weight: 500;
+      display: none;
+    }
+
+    .um-modal-err.show {
+      display: block;
+    }
   </style>
 </head>
+
 <body>
 
   <!-- SharedNav mounts here -->
@@ -726,7 +1128,9 @@
         <h3 style="font-family: 'Calibri', 'Arial', sans-serif; font-size: 0.95rem; color: #003366; font-weight: 700;">
           📋 Regulatory Audit Trail (Manual AI Overrides)
         </h3>
-        <button onclick="window.refreshAdminAudit()" style="background:#FAF6EE; border:1px solid rgba(0,51,102,0.3); color:#003366; font-weight:600; padding:4px 12px; border-radius:4px; font-size:0.75rem; cursor:pointer;">Refresh Log</button>
+        <button onclick="window.refreshAdminAudit()"
+          style="background:#FAF6EE; border:1px solid rgba(0,51,102,0.3); color:#003366; font-weight:600; padding:4px 12px; border-radius:4px; font-size:0.75rem; cursor:pointer;">Refresh
+          Log</button>
       </div>
       <div id="admin-audit-log-container" style="font-size: 0.8rem; color: #475569;">
         No overrides logged in this session.
@@ -908,13 +1312,13 @@
           </td>
           <td>
             ${AIExplanationCard.render({
-              id: item.id,
-              summary: item.summary,
-              detailedReason: item.detailed,
-              factors: item.factors,
-              recommendedAction: item.action,
-              defaultExpanded: false
-            })}
+          id: item.id,
+          summary: item.summary,
+          detailedReason: item.detailed,
+          factors: item.factors,
+          recommendedAction: item.action,
+          defaultExpanded: false
+        })}
           </td>
           <td>
             <button class="btn-override-sm" onclick="window.overrideItem('${item.id}', '${item.category} (${item.score})')">
@@ -973,7 +1377,7 @@
       });
     }
 
-    window.overrideItem = function(targetId, currentVal) {
+    window.overrideItem = function (targetId, currentVal) {
       ManualOverrideModal.open({
         targetId,
         currentVal,
@@ -990,7 +1394,7 @@
       });
     };
 
-    window.refreshAdminAudit = function() {
+    window.refreshAdminAudit = function () {
       const logs = ManualOverrideModal.getAuditLogs();
       const container = document.getElementById('admin-audit-log-container');
       if (!logs || logs.length === 0) {
@@ -1038,32 +1442,23 @@
     window.refreshAdminAudit();
   </script>
 
-  <!-- ═══════════════════ USER MANAGEMENT PANEL ═══════════════════ -->
-  <div class="um-section" id="um-section">
-    <div class="um-header">
-      <div class="um-title-group">
-        <h2>👤 User Management</h2>
-        <p>View, edit, activate/deactivate, and add platform user accounts</p>
+    <!-- ═══════════════════ SECTION 5: PERSONNEL ACCESS & CREDENTIAL GOVERNANCE ═══════════════════ -->
+    <div class="card-panel" style="margin-top: 20px; display: flex; align-items: center; justify-content: space-between; padding: 20px 24px; background: #FFFFFF; border-left: 4px solid #003366; border-radius: 12px; box-shadow: 0 4px 20px rgba(70, 50, 30, 0.05);">
+      <div>
+        <div style="display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 1rem; color: #003366;">
+          <span>🔐</span>
+          <span>Personnel Credentials &amp; Access Governance</span>
+          <span style="font-size: 0.68rem; padding: 2px 8px; border-radius: 12px; background: rgba(0, 51, 102, 0.08); color: #003366; font-weight: 700;">RBAC Protected</span>
+        </div>
+        <p style="font-size: 0.80rem; color: #64748B; margin-top: 4px;">
+          Credentials and role authorizations for Track (TMS), Signal (SMMS), Traction (TRD), Control, and Surveillance personnel are securely protected and managed on-demand.
+        </p>
       </div>
-      <button class="btn-add-user" id="um-add-btn">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        Add User
+      <button onclick="window.openUserCredentialsModal()" style="display: inline-flex; align-items: center; gap: 8px; padding: 10px 22px; border-radius: 8px; border: none; background: #003366; color: #FFFFFF; font-weight: 700; font-size: 0.82rem; cursor: pointer; box-shadow: 0 3px 10px rgba(0, 51, 102, 0.25); transition: all 0.15s; white-space: nowrap;">
+        <span>🔐</span>
+        <span>Manage Personnel Credentials</span>
       </button>
     </div>
-    <div class="um-table-wrap">
-      <table class="um-table">
-        <thead><tr>
-          <th>User</th>
-          <th>Username</th>
-          <th>Role</th>
-          <th>Division</th>
-          <th>Status</th>
-          <th>Actions</th>
-        </tr></thead>
-        <tbody id="um-tbody"><!-- JS renders --></tbody>
-      </table>
-    </div>
-  </div>
 
   </main><!-- /admin-container -->
 
@@ -1083,20 +1478,25 @@
         </div>
         <div class="um-field">
           <label for="um-f-username">Username</label>
-          <input type="text" id="um-f-username" placeholder="admin" maxlength="32" spellcheck="false" autocomplete="off" />
+          <input type="text" id="um-f-username" placeholder="admin" maxlength="32" spellcheck="false"
+            autocomplete="off" />
         </div>
         <div class="um-field">
-          <label for="um-f-password">Password <span style="color:#94a3b8;font-weight:400;text-transform:none;letter-spacing:0">(leave blank to keep current)</span></label>
+          <label for="um-f-password">Password <span
+              style="color:#94a3b8;font-weight:400;text-transform:none;letter-spacing:0">(leave blank to keep
+              current)</span></label>
           <input type="text" id="um-f-password" placeholder="New password" maxlength="64" autocomplete="off" />
         </div>
         <div class="um-field">
-          <label for="um-f-role">Role</label>
+          <label for="um-f-role">Role & Department</label>
           <select id="um-f-role">
             <option value="admin">🛡️ Executive / Admin</option>
-            <option value="field-engineer">🔧 Field Engineer</option>
+            <option value="field-engineer">🔧 Field Engineer (General / SSE)</option>
+            <option value="field-tms">🛤️ TMS — Track Maintenance Dept (P-Way)</option>
+            <option value="field-smms">🚦 SMMS — Signal & Telecom Dept (S&T)</option>
+            <option value="field-trd">⚡ TRD — Traction Distribution Dept (OHE)</option>
             <option value="control-office">🎛️ Control Office Controller</option>
             <option value="surveillance">📡 Surveillance Inspector</option>
-            <option value="platform-portal">🚉 Platform Portal User</option>
           </select>
         </div>
         <div class="um-field">
@@ -1131,48 +1531,93 @@
     (function () {
       'use strict';
 
-      const store     = window.IR_UserStore;
+      const store = window.IR_UserStore;
       const ROLE_META = store.getRoleMeta();
 
-      const tbody       = document.getElementById('um-tbody');
-      const overlay     = document.getElementById('um-modal-overlay');
-      const modalTitle  = document.getElementById('um-modal-title');
-      const closeBtn    = document.getElementById('um-modal-close');
-      const cancelBtn   = document.getElementById('um-modal-cancel');
-      const saveBtn     = document.getElementById('um-modal-save');
-      const modalErr    = document.getElementById('um-modal-err');
-      const addBtn      = document.getElementById('um-add-btn');
+      const tbody = document.getElementById('um-tbody');
+      const overlay = document.getElementById('um-modal-overlay');
+      const modalTitle = document.getElementById('um-modal-title');
+      const closeBtn = document.getElementById('um-modal-close');
+      const cancelBtn = document.getElementById('um-modal-cancel');
+      const saveBtn = document.getElementById('um-modal-save');
+      const modalErr = document.getElementById('um-modal-err');
+      const addBtn = document.getElementById('um-add-btn');
 
       // Fields
-      const fId       = document.getElementById('um-edit-id');
-      const fName     = document.getElementById('um-f-name');
+      const fId = document.getElementById('um-edit-id');
+      const fName = document.getElementById('um-f-name');
       const fUsername = document.getElementById('um-f-username');
       const fPassword = document.getElementById('um-f-password');
-      const fRole     = document.getElementById('um-f-role');
-      const fEmail    = document.getElementById('um-f-email');
-      const fPhone    = document.getElementById('um-f-phone');
+      const fRole = document.getElementById('um-f-role');
+      const fEmail = document.getElementById('um-f-email');
+      const fPhone = document.getElementById('um-f-phone');
       const fDivision = document.getElementById('um-f-division');
-      const fActive   = document.getElementById('um-f-active');
+      const fActive = document.getElementById('um-f-active');
 
       let editingId = null;
 
       function roleBadgeStyle(role) {
         const m = ROLE_META[role] || {};
         const c = m.color || '#334155';
-        const hex2rgba = (h, a) => `rgba(${parseInt(h.slice(1,3),16)},${parseInt(h.slice(3,5),16)},${parseInt(h.slice(5,7),16)},${a})`;
-        return `style="color:${c};background:${hex2rgba(c,0.09)};border-color:${hex2rgba(c,0.25)}"`;
+        const hex2rgba = (h, a) => `rgba(${parseInt(h.slice(1, 3), 16)},${parseInt(h.slice(3, 5), 16)},${parseInt(h.slice(5, 7), 16)},${a})`;
+        return `style="color:${c};background:${hex2rgba(c, 0.09)};border-color:${hex2rgba(c, 0.25)}"`;
+      }
+
+      let currentRoleFilter = 'all';
+      let currentSearchQuery = '';
+
+      const searchInput = document.getElementById('um-search-input');
+      const filterTabs = document.getElementById('um-filter-tabs');
+
+      if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+          currentSearchQuery = e.target.value.toLowerCase().trim();
+          renderTable();
+        });
+      }
+
+      if (filterTabs) {
+        filterTabs.addEventListener('click', (e) => {
+          const btn = e.target.closest('.um-filter-btn');
+          if (!btn) return;
+          filterTabs.querySelectorAll('.um-filter-btn').forEach(b => {
+            b.style.background = '#FFF';
+            b.style.color = '#0F172A';
+            b.style.borderColor = 'rgba(0,51,102,0.2)';
+          });
+          btn.style.background = '#003366';
+          btn.style.color = '#FFF';
+          btn.style.borderColor = '#003366';
+          currentRoleFilter = btn.dataset.role || 'all';
+          renderTable();
+        });
       }
 
       function renderTable() {
-        const users = store.getAll();
+        let users = store.getAll();
+
+        if (currentRoleFilter !== 'all') {
+          users = users.filter(u => u.role === currentRoleFilter);
+        }
+
+        if (currentSearchQuery) {
+          users = users.filter(u => 
+            (u.name || '').toLowerCase().includes(currentSearchQuery) ||
+            (u.username || '').toLowerCase().includes(currentSearchQuery) ||
+            (u.division || '').toLowerCase().includes(currentSearchQuery) ||
+            (u.role || '').toLowerCase().includes(currentSearchQuery) ||
+            (u.email || '').toLowerCase().includes(currentSearchQuery)
+          );
+        }
+
         if (!users.length) {
-          tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:24px;color:#64748B;">No users found.</td></tr>';
+          tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:24px;color:#64748B;">No officers found matching active filters.</td></tr>';
           return;
         }
         tbody.innerHTML = users.map(u => {
-          const meta   = ROLE_META[u.role] || {};
-          const initials = (u.name || u.username).split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase();
-          const color  = meta.color || '#334155';
+          const meta = ROLE_META[u.role] || {};
+          const initials = (u.name || u.username).split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase();
+          const color = meta.color || '#334155';
           return `
             <tr data-uid="${u.id}">
               <td>
@@ -1201,7 +1646,7 @@
                   <button class="um-btn um-btn-toggle" onclick="umToggle('${u.id}')" title="${u.active ? 'Deactivate' : 'Activate'}">
                     ${u.active ? '⏸' : '▶'}
                   </button>
-                  <button class="um-btn um-btn-del" onclick="umDelete('${u.id}')" title="Delete user">
+                  <button class="um-btn um-btn-del" onclick="umDelete('${u.id}')" title="Delete officer account">
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3,6 5,6 21,6"/><path d="M19,6l-1,14H6L5,6"/><path d="M10,11v6"/><path d="M14,11v6"/><path d="M9,6V4h6v2"/></svg>
                   </button>
                 </div>
@@ -1213,15 +1658,15 @@
       function openModal(user) {
         editingId = user ? user.id : null;
         modalTitle.textContent = user ? 'Edit User' : 'Add New User';
-        fId.value        = user ? user.id : '';
-        fName.value      = user ? (user.name || '') : '';
-        fUsername.value  = user ? user.username : '';
-        fPassword.value  = '';
-        fRole.value      = user ? user.role : 'field-engineer';
-        fEmail.value     = user ? (user.email || '') : '';
-        fPhone.value     = user ? (user.phone || '') : '';
-        fDivision.value  = user ? (user.division || '') : '';
-        fActive.checked  = user ? user.active : true;
+        fId.value = user ? user.id : '';
+        fName.value = user ? (user.name || '') : '';
+        fUsername.value = user ? user.username : '';
+        fPassword.value = '';
+        fRole.value = user ? user.role : 'field-engineer';
+        fEmail.value = user ? (user.email || '') : '';
+        fPhone.value = user ? (user.phone || '') : '';
+        fDivision.value = user ? (user.division || '') : '';
+        fActive.checked = user ? user.active : true;
         modalErr.classList.remove('show');
         overlay.classList.add('open');
         fName.focus();
@@ -1230,16 +1675,16 @@
       function closeModal() { overlay.classList.remove('open'); editingId = null; }
 
       // Actions exposed globally
-      window.umEdit = function(id) {
+      window.umEdit = function (id) {
         const u = store.getAll().find(x => x.id === id);
         if (u) openModal(u);
       };
-      window.umToggle = function(id) {
+      window.umToggle = function (id) {
         const r = store.toggleActive(id);
         if (r.ok) renderTable();
         else alert(r.error);
       };
-      window.umDelete = function(id) {
+      window.umDelete = function (id) {
         const u = store.getAll().find(x => x.id === id);
         if (!u) return;
         if (!confirm(`Delete user "${u.name || u.username}"? This cannot be undone.`)) return;
@@ -1261,13 +1706,13 @@
         modalErr.classList.remove('show');
 
         const fields = {
-          name:     fName.value.trim(),
+          name: fName.value.trim(),
           username: fUsername.value.trim(),
-          role:     fRole.value,
-          email:    fEmail.value.trim(),
-          phone:    fPhone.value.trim(),
+          role: fRole.value,
+          email: fEmail.value.trim(),
+          phone: fPhone.value.trim(),
           division: fDivision.value.trim(),
-          active:   fActive.checked,
+          active: fActive.checked,
         };
 
         if (fPassword.value.trim()) fields.password = fPassword.value.trim();
@@ -1282,18 +1727,25 @@
 
         if (!result.ok) { modalErr.textContent = result.error; modalErr.classList.add('show'); return; }
         closeModal();
-        renderTable();
+        if (typeof renderTable === 'function') renderTable();
+        const credModalTbody = document.getElementById('ir-cred-tbody');
+        if (credModalTbody && typeof window.openUserCredentialsModal === 'function') {
+          const credSearch = document.getElementById('ir-cred-search');
+          // If modal is currently open, re-render its table
+          if (document.getElementById('ir-cred-modal')?.classList.contains('open')) {
+            window.openUserCredentialsModal();
+          }
+        }
       });
 
       // Initial render (only for admin role)
       if (window.IR_AUTH && window.IR_AUTH.role === 'admin') {
-        renderTable();
-        document.getElementById('um-section').style.display = 'block';
-      } else {
-        document.getElementById('um-section').style.display = 'none';
+        const umSec = document.getElementById('um-section');
+        if (umSec) umSec.style.display = 'block';
       }
 
     })();
   </script>
 </body>
+
 </html>

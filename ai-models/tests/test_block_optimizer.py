@@ -10,7 +10,18 @@ Unit tests for BlockConstraintSolver and BundlingEngine in /ai-models/block-opti
 ─────────────────────────────────────────────────────────────────────────────
 """
 
-import pytest
+import sys
+from pathlib import Path
+
+TESTS_DIR = Path(__file__).resolve().parent
+AI_MODELS_DIR = TESTS_DIR.parent
+
+for sub in ["block-optimizer", "priority-engine", "traffic-predictor", "inference"]:
+    p = str(AI_MODELS_DIR / sub)
+    if p not in sys.path:
+        sys.path.insert(0, p)
+if str(AI_MODELS_DIR) not in sys.path:
+    sys.path.insert(0, str(AI_MODELS_DIR))
 
 from block_optimizer.bundling_engine import BundlingEngine
 from block_optimizer.constraint_solver import BlockConstraintSolver

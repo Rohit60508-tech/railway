@@ -788,6 +788,39 @@ async function handleAiRequest(req, res, next) {
       return true;
     }
 
+    // ── Endpoint 6b: POST /api/v1/ai/optimize/save-block
+    if (method === 'POST' && pathname === `${API_PREFIX}/optimize/save-block`) {
+      const body = await parseJsonBody(req);
+      try {
+        const result = await blockOptimizerService.saveBlockSchedule(body);
+        return sendSuccess(res, result, { service: 'block-optimizer-db' }, rateHeaders);
+      } catch (err) {
+        return sendError(res, 500, 'SAVE_BLOCK_FAILED', err.message, null, rateHeaders);
+      }
+    }
+
+    // ── Endpoint 6c: GET /api/v1/ai/optimize/saved-blocks
+    if (method === 'GET' && pathname === `${API_PREFIX}/optimize/saved-blocks`) {
+      try {
+        const result = await blockOptimizerService.getSavedBlocks(query.section, query.status);
+        return sendSuccess(res, result, { service: 'block-optimizer-db' }, rateHeaders);
+      } catch (err) {
+        return sendError(res, 500, 'FETCH_BLOCKS_FAILED', err.message, null, rateHeaders);
+      }
+    }
+
+    // ── Endpoint 6d: DELETE /api/v1/ai/optimize/delete-block/:blockId
+    const deleteBlockMatch = pathname.match(new RegExp(`^${API_PREFIX}/optimize/delete-block/([^/]+)$`));
+    if (method === 'DELETE' && deleteBlockMatch) {
+      const blockId = decodeURIComponent(deleteBlockMatch[1]);
+      try {
+        const result = await blockOptimizerService.deleteSavedBlock(blockId);
+        return sendSuccess(res, result, { service: 'block-optimizer-db' }, rateHeaders);
+      } catch (err) {
+        return sendError(res, 500, 'DELETE_BLOCK_FAILED', err.message, null, rateHeaders);
+      }
+    }
+
     // ── Endpoint 7: GET /api/v1/ai/models/info
     if (method === 'GET' && pathname === `${API_PREFIX}/models/info`) {
       await Controllers.getModelsInfo(req, res, query, rateHeaders);
