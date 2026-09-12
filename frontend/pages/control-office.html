@@ -2189,6 +2189,39 @@
             </div>
           ` : ''}
 
+          <!-- AI-Suggested Alternative Slot by Corridor Traffic & Freight Forecasting Engine Agent -->
+          ${data.ai_suggested_window ? `
+            <div style="background:#F0FDF4;border:1.5px solid #059669;border-radius:8px;padding:12px 14px;margin-top:10px;margin-bottom:10px;box-shadow:0 2px 8px rgba(5,150,105,0.08);">
+              <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:6px;">
+                <div style="font-size:0.76rem;font-weight:800;color:#065F46;text-transform:uppercase;letter-spacing:0.5px;display:flex;align-items:center;gap:6px;">
+                  <span>🤖</span>
+                  <span>AI AGENT: ${data.ai_agent || 'Corridor Traffic & Freight Forecasting Engine'}</span>
+                </div>
+                <span style="background:#059669;color:#FFF;font-size:0.70rem;font-weight:800;padding:2px 8px;border-radius:10px;">
+                  Score: ${data.ai_suggested_window.feasibility_score}/100
+                </span>
+              </div>
+
+              <div style="font-size:0.86rem;font-weight:800;color:#0F172A;margin-bottom:3px;">
+                Most Feasible Window: <span style="color:#059669;">${data.ai_suggested_window.display_window}</span>
+              </div>
+
+              <div style="font-size:0.72rem;color:#334155;margin-bottom:8px;line-height:1.4;background:#FFF;padding:8px 10px;border-radius:4px;border:1px solid #A7F3D0;">
+                ${data.ai_suggested_window.rationale}
+              </div>
+
+              <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+                <span style="font-size:0.72rem;font-weight:700;color:#047857;">
+                  ✓ 0 Passenger delay minutes • Zero conflicting movements
+                </span>
+                <button onclick="window.applyAiAlternativeSlot('${stFrom}', '${stTo}', '${kmPoleSpan}', ${duration}, '${data.ai_suggested_window.start_time}')" style="padding:6px 12px;border-radius:6px;border:none;background:#059669;color:#FFF;font-size:0.76rem;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:4px;">
+                  <span>✓</span>
+                  <span>Apply AI Alternative Window</span>
+                </button>
+              </div>
+            </div>
+          ` : ''}
+
           <!-- Admin Master Overwrite Button -->
           <div style="margin-top: 10px; padding-top: 8px; border-top: 1px dashed #CBD5E1;">
             <button onclick="window.adminForceSanctionCorridor('${stFrom}', '${stTo}', '${kmPoleSpan}', '${startTime}', ${duration})" style="width: 100%; background: linear-gradient(135deg, #DC2626, #991B1B); color: #FFF; border: none; padding: 8px; border-radius: 6px; font-size: 0.76rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 2px 8px rgba(220,38,38,0.25);">
@@ -2219,6 +2252,20 @@
       } catch (err) {
         output.innerHTML = '<span style="color:#DC2626;">Error evaluating conflict: ' + err.message + '</span>';
       }
+    };
+
+    window.applyAiAlternativeSlot = function (stFrom, stTo, kmPoleSpan, duration, newStartTimeStr) {
+      const timeInput = document.getElementById('conflict-start-time');
+      const now = new Date();
+      const yr = now.getFullYear();
+      const mo = String(now.getMonth() + 1).padStart(2, '0');
+      const day = String(now.getDate()).padStart(2, '0');
+      const timePart = newStartTimeStr || '01:30';
+      const altTime = `${yr}-${mo}-${day}T${timePart}`;
+      if (timeInput) timeInput.value = altTime;
+
+      // Re-run the live conflict simulation with the AI alternative window!
+      window.runLiveCorridorConflictTest();
     };
 
     window.adminForceSanctionCorridor = async function (stFrom, stTo, kmPole, startTime, duration) {

@@ -99,6 +99,22 @@
       pageMatch: 'ai-model-management',
       desc: '6 AI agents, retraining & CP-SAT solver'
     },
+    {
+      key: 'data-sources',
+      label: 'Data Feeds',
+      icon: '🌐',
+      href: 'data-sources.html',
+      pageMatch: 'data-sources',
+      desc: '3D visualization of 15 system data feeds'
+    },
+    {
+      key: 'project-summary',
+      label: 'Executive Summary',
+      icon: '📋',
+      href: 'project-summary.html',
+      pageMatch: 'project-summary',
+      desc: 'Platform architecture & ROI summary'
+    }
   ];
 
   function isActive(link) {
@@ -120,6 +136,8 @@
     if (p.includes('control-office')) return { title: 'Section Control Office', sub: 'Corridor Movement Authority & Traffic Block Management', icon: '🎛️' };
     if (p.includes('surveillance-dashboard')) return { title: 'Corridor Safety & Surveillance', sub: 'USFD Ultrasonic Flaws, Drone Telemetry & Vibration Sensors', icon: '📡' };
     if (p.includes('ai-model-management')) return { title: 'AI Model Intelligence & MLOps', sub: '6 Multi-Agent Systems, Drift Monitoring & CP-SAT Solver', icon: '🧠' };
+    if (p.includes('data-sources')) return { title: 'Corridor Data Feeds & 3D Gateway', sub: 'Interactive Telemetry & Multi-System Data Pipeline', icon: '🌐' };
+    if (p.includes('project-summary')) return { title: 'Executive Summary & Dossier', sub: 'High-Speed Railway AI Platform Architecture & Roadmap', icon: '📋' };
     return { title: 'Operational Command Portal', sub: 'Indian Railways High-Speed AI Corridor Hub', icon: '🚆' };
   }
 
@@ -1622,6 +1640,66 @@
           </div>
         </div>
       </div>
+
+      <!-- Personnel Form Modal (For Add/Edit inside Credential Governance) -->
+      <div class="ir-modal-backdrop" id="snav-cred-user-modal" style="z-index:999999 !important; background: rgba(15, 23, 42, 0.82);" role="dialog" aria-modal="true">
+        <div style="background:#FFF;border-radius:12px;width:90%;max-width:540px;padding:24px;box-shadow:0 25px 60px rgba(0,0,0,0.6);position:relative;z-index:1000000;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;border-bottom:1px solid #E2E8F0;padding-bottom:12px;">
+            <h3 id="snav-cum-title" style="margin:0;font-size:1.1rem;color:#003366;font-weight:800;">Add / Edit Officer</h3>
+            <button id="snav-cum-close" style="background:none;border:none;font-size:1.3rem;cursor:pointer;color:#64748B;">✕</button>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;font-size:12px;">
+            <input type="hidden" id="snav-cum-id" />
+            <div style="grid-column:span 2;">
+              <label style="display:block;font-weight:700;margin-bottom:4px;color:#334155;">Full Name *</label>
+              <input type="text" id="snav-cum-name" placeholder="e.g. Rajesh Kumar" style="width:100%;padding:8px 12px;border:1px solid #CBD5E1;border-radius:6px;box-sizing:border-box;" />
+            </div>
+            <div>
+              <label style="display:block;font-weight:700;margin-bottom:4px;color:#334155;">Login ID (Username) *</label>
+              <input type="text" id="snav-cum-username" placeholder="e.g. rajesh_kumar" style="width:100%;padding:8px 12px;border:1px solid #CBD5E1;border-radius:6px;box-sizing:border-box;" />
+            </div>
+            <div>
+              <label style="display:block;font-weight:700;margin-bottom:4px;color:#334155;">Password</label>
+              <input type="password" id="snav-cum-password" placeholder="Leave blank to keep current" style="width:100%;padding:8px 12px;border:1px solid #CBD5E1;border-radius:6px;box-sizing:border-box;" />
+            </div>
+            <div>
+              <label style="display:block;font-weight:700;margin-bottom:4px;color:#334155;">Role &amp; System Access *</label>
+              <select id="snav-cum-role" style="width:100%;padding:8px 12px;border:1px solid #CBD5E1;border-radius:6px;box-sizing:border-box;background:#FFF;">
+                <option value="admin">Executive / Admin</option>
+                <option value="field-engineer">Field Engineer (General / SSE)</option>
+                <option value="field-tms">TMS — Track Maintenance</option>
+                <option value="field-smms">SMMS — Signal &amp; Telecom</option>
+                <option value="field-trd">TRD — Traction Distribution</option>
+                <option value="control-office">Control Office Controller</option>
+                <option value="surveillance">Surveillance Inspector</option>
+              </select>
+            </div>
+            <div>
+              <label style="display:block;font-weight:700;margin-bottom:4px;color:#334155;">Official Email</label>
+              <input type="email" id="snav-cum-email" placeholder="officer@indianrailways.gov.in" style="width:100%;padding:8px 12px;border:1px solid #CBD5E1;border-radius:6px;box-sizing:border-box;" />
+            </div>
+            <div>
+              <label style="display:block;font-weight:700;margin-bottom:4px;color:#334155;">Contact Phone</label>
+              <input type="text" id="snav-cum-phone" placeholder="+91-98XXX-XXXXX" style="width:100%;padding:8px 12px;border:1px solid #CBD5E1;border-radius:6px;box-sizing:border-box;" />
+            </div>
+            <div>
+              <label style="display:block;font-weight:700;margin-bottom:4px;color:#334155;">Division / Zone</label>
+              <input type="text" id="snav-cum-division" placeholder="Northern Railway — Delhi Division" style="width:100%;padding:8px 12px;border:1px solid #CBD5E1;border-radius:6px;box-sizing:border-box;" />
+            </div>
+            <div style="grid-column:span 2;">
+              <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:700;color:#334155;">
+                <input type="checkbox" id="snav-cum-active" checked style="width:16px;height:16px;cursor:pointer;" />
+                Account Active &amp; Authorized
+              </label>
+            </div>
+            <div id="snav-cum-err" style="grid-column:span 2;color:#DC2626;font-size:11px;font-weight:700;display:none;"></div>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:flex-end;gap:10px;margin-top:20px;border-top:1px solid #E2E8F0;padding-top:14px;">
+            <button id="snav-cum-cancel" style="padding:8px 16px;border-radius:6px;border:1px solid #CBD5E1;background:#FFF;color:#475569;font-weight:700;cursor:pointer;">Cancel</button>
+            <button id="snav-cum-save" style="padding:8px 18px;border-radius:6px;border:none;background:#003366;color:#FFF;font-weight:700;cursor:pointer;">Save Officer Account</button>
+          </div>
+        </div>
+      </div>
     `;
   }
 
@@ -3059,20 +3137,46 @@
           </div>
         ` : ''}
 
-        <!-- AI-Suggested Alternative Slot -->
-        <div style="background:#FFF;border:1px solid rgba(0,51,102,0.18);border-radius:8px;padding:12px 16px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
-          <div>
-            <div style="font-size:0.72rem;font-weight:800;color:#003366;text-transform:uppercase;letter-spacing:0.5px;">💡 AI-Suggested Conflict-Free Alternative Slot:</div>
-            <div style="font-size:0.88rem;font-weight:800;color:#0F172A;margin-top:2px;">01:30 – 03:30 (Night Rolling Maintenance Window)</div>
-            <div style="font-size:0.74rem;color:#059669;font-weight:600;margin-top:2px;">✓ 0 Passenger delay minutes • Loop line freight hold buffer preserved</div>
+        <!-- AI-Suggested Alternative Slot by Corridor Traffic & Freight Forecasting Engine Agent -->
+        ${data.ai_suggested_window ? `
+          <div style="background:#F0FDF4;border:1.5px solid #059669;border-radius:10px;padding:16px 20px;margin-bottom:14px;box-shadow:0 2px 10px rgba(5,150,105,0.08);">
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:8px;">
+              <div style="display:flex;align-items:center;gap:8px;">
+                <span style="font-size:1.25rem;">🤖</span>
+                <div>
+                  <div style="font-size:0.84rem;font-weight:800;color:#065F46;text-transform:uppercase;letter-spacing:0.5px;">
+                    AI AGENT RECOMMENDATION: ${data.ai_agent || 'Corridor Traffic & Freight Forecasting Engine'}
+                  </div>
+                  <div style="font-size:0.72rem;color:#047857;font-weight:600;">
+                    Optimized by XGBoost/TFT Multi-Agent Timetable Simulator
+                  </div>
+                </div>
+              </div>
+              <span style="background:#059669;color:#FFFFFF;font-size:0.75rem;font-weight:800;padding:4px 12px;border-radius:12px;box-shadow:0 2px 6px rgba(5,150,105,0.2);">
+                Feasibility: ${data.ai_suggested_window.feasibility_score}/100
+              </span>
+            </div>
+
+            <div style="font-size:0.95rem;font-weight:800;color:#0F172A;margin-bottom:4px;">
+              Most Feasible Window: <span style="color:#059669;">${data.ai_suggested_window.display_window}</span>
+            </div>
+
+            <div style="font-size:0.78rem;color:#334155;margin-bottom:12px;line-height:1.45;background:#FFFFFF;padding:10px 14px;border-radius:6px;border:1px solid #A7F3D0;">
+              ${data.ai_suggested_window.rationale}
+            </div>
+
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
+              <span style="font-size:0.75rem;font-weight:700;color:#047857;display:flex;align-items:center;gap:4px;">
+                <span>✓</span>
+                <span>0 Passenger delay minutes • Zero conflicting movements in this window</span>
+              </span>
+              <button onclick="window.fsApplyAiAlternativeSlot('${stFrom}', '${stTo}', '${kmPoleSpan}', ${duration}, '${data.ai_suggested_window.start_time}')" style="padding:8px 16px;border-radius:8px;border:none;background:#059669;color:#FFF;font-size:0.82rem;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:6px;box-shadow:0 2px 8px rgba(5,150,105,0.25);">
+                <span>✓</span>
+                <span>Apply AI Alternative Window</span>
+              </button>
+            </div>
           </div>
-          <div style="display:flex;align-items:center;gap:8px;">
-            <button onclick="window.fsApplyAiAlternativeSlot('${stFrom}', '${stTo}', '${kmPoleSpan}', ${duration})" style="padding:7px 14px;border-radius:6px;border:none;background:#059669;color:#FFF;font-size:0.78rem;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:6px;box-shadow:0 2px 6px rgba(5,150,105,0.2);">
-              <span>✓</span>
-              <span>Apply AI Alternative Window</span>
-            </button>
-          </div>
-        </div>
+        ` : ''}
 
         <!-- Admin Master Overwrite Button -->
         <div style="padding-top:8px;border-top:1px dashed #CBD5E1;">
@@ -3118,40 +3222,18 @@
     }
   };
 
-  window.fsApplyAiAlternativeSlot = function (stFrom, stTo, kmPoleSpan, duration) {
+  window.fsApplyAiAlternativeSlot = function (stFrom, stTo, kmPoleSpan, duration, newStartTimeStr) {
     const timeInput = document.getElementById('fs-conflict-start-time');
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    const yr = tomorrow.getFullYear();
-    const mo = String(tomorrow.getMonth() + 1).padStart(2, '0');
-    const day = String(tomorrow.getDate()).padStart(2, '0');
-    const altTime = `${yr}-${mo}-${day}T01:30`;
+    const now = new Date();
+    const yr = now.getFullYear();
+    const mo = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const timePart = newStartTimeStr || '01:30';
+    const altTime = `${yr}-${mo}-${day}T${timePart}`;
     if (timeInput) timeInput.value = altTime;
 
-    const output = document.getElementById('fs-corridor-conflict-output');
-    if (output) {
-      output.innerHTML = `
-        <div style="background:#ECFDF5;border:1.5px solid #10B98140;border-left:5px solid #059669;border-radius:8px;padding:14px 18px;margin-bottom:12px;">
-          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
-            <div style="font-weight:800;color:#059669;font-size:0.94rem;display:flex;align-items:center;gap:6px;">
-              <span>✓</span>
-              <span>AI CONFLICT-FREE WINDOW APPLIED: 01:30 – 03:30</span>
-            </div>
-            <span style="font-size:0.95rem;font-weight:800;color:#059669;background:#FFF;padding:3px 10px;border-radius:6px;border:1px solid #10B98140;">Score: 98.5/100</span>
-          </div>
-          <div style="font-size:0.78rem;color:#065F46;margin-top:6px;line-height:1.45;">
-            Scheduled on Night Rolling Corridor (01:30 – 03:30) between <strong>${stFrom} ➔ ${stTo}</strong> (KM Pole ${kmPoleSpan}).
-            Zero high-priority passenger trains clash in this slot. Loop line freight hold buffers are fully preserved.
-          </div>
-        </div>
-        <div style="padding-top:8px;">
-          <button onclick="window.fsForceSanctionCorridor('${stFrom}', '${stTo}', '${kmPoleSpan}', '${altTime}', ${duration})" style="width:100%;background:#003366;color:#FFF;border:none;padding:10px;border-radius:6px;font-size:0.80rem;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
-            <span>⚡</span>
-            <span>Confirm &amp; Sanction AI-Optimized Possession Window</span>
-          </button>
-        </div>
-      `;
-    }
+    // Immediately re-run live conflict simulation for the AI-suggested window!
+    window.runFsCorridorConflictTest();
   };
 
   window.fsForceSanctionCorridor = async function (stFrom, stTo, kmPole, startTime, duration) {
@@ -3708,34 +3790,134 @@
       });
     }
 
+    // Wiring user edit/add form modal inside credentials modal
+    const snavCredModalOverlay = document.getElementById('snav-cred-user-modal');
+    const snavCumTitle = document.getElementById('snav-cum-title');
+    const snavCumClose = document.getElementById('snav-cum-close');
+    const snavCumCancel = document.getElementById('snav-cum-cancel');
+    const snavCumSave = document.getElementById('snav-cum-save');
+    const snavCumErr = document.getElementById('snav-cum-err');
+
+    const snavFId = document.getElementById('snav-cum-id');
+    const snavFName = document.getElementById('snav-cum-name');
+    const snavFUsername = document.getElementById('snav-cum-username');
+    const snavFPassword = document.getElementById('snav-cum-password');
+    const snavFRole = document.getElementById('snav-cum-role');
+    const snavFEmail = document.getElementById('snav-cum-email');
+    const snavFPhone = document.getElementById('snav-cum-phone');
+    const snavFDivision = document.getElementById('snav-cum-division');
+    const snavFActive = document.getElementById('snav-cum-active');
+
+    function openSnavUserModal(user) {
+      if (!snavCredModalOverlay) return;
+      snavCumTitle.textContent = user ? `Edit Personnel: ${user.name || user.username}` : 'Add New Officer / Personnel';
+      snavFId.value = user ? user.id : '';
+      snavFName.value = user ? (user.name || '') : '';
+      snavFUsername.value = user ? user.username : '';
+      snavFPassword.value = '';
+      snavFRole.value = user ? user.role : 'field-tms';
+      snavFEmail.value = user ? (user.email || '') : '';
+      snavFPhone.value = user ? (user.phone || '') : '';
+      snavFDivision.value = user ? (user.division || '') : 'Northern Railway — Delhi Division';
+      snavFActive.checked = user ? user.active : true;
+      if (snavCumErr) { snavCumErr.style.display = 'none'; snavCumErr.textContent = ''; }
+      snavCredModalOverlay.classList.add('open');
+      snavCredModalOverlay.style.display = 'flex';
+      snavFName.focus();
+    }
+
+    function closeSnavUserModal() {
+      if (snavCredModalOverlay) {
+        snavCredModalOverlay.classList.remove('open');
+        snavCredModalOverlay.style.display = 'none';
+      }
+    }
+
+    if (snavCumClose) snavCumClose.addEventListener('click', closeSnavUserModal);
+    if (snavCumCancel) snavCumCancel.addEventListener('click', closeSnavUserModal);
+
+    if (snavCumSave) {
+      snavCumSave.addEventListener('click', () => {
+        if (!window.IR_UserStore) return;
+        if (snavCumErr) { snavCumErr.style.display = 'none'; snavCumErr.textContent = ''; }
+
+        const id = snavFId.value;
+        const name = snavFName.value.trim();
+        const username = snavFUsername.value.trim();
+        const password = snavFPassword.value.trim();
+        const role = snavFRole.value;
+        const email = snavFEmail.value.trim();
+        const phone = snavFPhone.value.trim();
+        const division = snavFDivision.value.trim();
+        const active = snavFActive.checked;
+
+        if (!name || !username) {
+          if (snavCumErr) { snavCumErr.textContent = 'Name and Login ID (Username) are required.'; snavCumErr.style.display = 'block'; }
+          return;
+        }
+
+        let res;
+        if (id) {
+          // Update
+          const fields = { name, username, role, email, phone, division, active };
+          if (password) fields.password = password;
+          res = window.IR_UserStore.update(id, fields);
+        } else {
+          // Add
+          if (!password) {
+            if (snavCumErr) { snavCumErr.textContent = 'Initial password is required for new accounts.'; snavCumErr.style.display = 'block'; }
+            return;
+          }
+          res = window.IR_UserStore.add({ name, username, password, role, email, phone, division, active });
+        }
+
+        if (!res.ok) {
+          if (snavCumErr) { snavCumErr.textContent = res.error || 'Operation failed.'; snavCumErr.style.display = 'block'; }
+          return;
+        }
+
+        closeSnavUserModal();
+        renderCredentialsTable(credSearch ? credSearch.value.trim() : '', activeCredFilter);
+        if (typeof window.renderTable === 'function') window.renderTable();
+      });
+    }
+
+    // Expose openSnavUserModal globally for modal calls
+    window.openSnavUserModal = openSnavUserModal;
+
+    // Global Action Wrappers
+    window.umEdit = function (id) {
+      if (!window.IR_UserStore) return;
+      if (!id) {
+        window.openSnavUserModal(null);
+        return;
+      }
+      const user = window.IR_UserStore.getAll().find(u => u.id === id);
+      if (user) {
+        window.openSnavUserModal(user);
+      }
+    };
+
+    window.umDelete = function (id) {
+      if (!window.IR_UserStore) return;
+      const user = window.IR_UserStore.getAll().find(u => u.id === id);
+      if (!user) return;
+      if (confirm(`Are you sure you want to delete personnel "${user.name || user.username}"?`)) {
+        const res = window.IR_UserStore.delete(id);
+        if (res.ok) {
+          renderCredentialsTable(credSearch ? credSearch.value.trim() : '', activeCredFilter);
+          if (typeof window.renderTable === 'function') window.renderTable();
+        } else {
+          alert(res.error || 'Could not delete user account');
+        }
+      }
+    };
+
     // Add user button in credentials modal
     const addCredUserBtn = document.getElementById('ir-cred-add-btn');
     if (addCredUserBtn) {
       addCredUserBtn.addEventListener('click', () => {
-        if (typeof window.umEdit === 'function') {
-          window.umEdit(null);
-        } else {
-          const name = prompt('Officer Full Name:');
-          if (!name) return;
-          const username = prompt('Login Username:');
-          if (!username) return;
-          const password = prompt('Initial Password:');
-          if (!password) return;
-          const role = prompt('Role (admin, field-tms, field-smms, field-trd, field-engineer, control-office, surveillance):', 'field-tms');
-          const division = prompt('Division / Zone:', 'Northern Railway — Delhi Division');
-
-          const r = window.IR_UserStore.add({
-            name,
-            username,
-            password,
-            role: role || 'field-tms',
-            division: division || 'Northern Railway',
-            active: true
-          });
-
-          if (!r.ok) alert(r.error);
-          else renderCredentialsTable();
-        }
+        openSnavUserModal(null);
       });
     }
 

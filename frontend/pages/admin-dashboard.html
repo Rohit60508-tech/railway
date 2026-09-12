@@ -1676,21 +1676,28 @@
 
       // Actions exposed globally
       window.umEdit = function (id) {
-        const u = store.getAll().find(x => x.id === id);
-        if (u) openModal(u);
+        if (overlay) {
+          const u = store.getAll().find(x => x.id === id);
+          openModal(u || null);
+        } else if (typeof window.openSnavUserModal === 'function') {
+          const u = id ? store.getAll().find(x => x.id === id) : null;
+          window.openSnavUserModal(u);
+        }
       };
       window.umToggle = function (id) {
         const r = store.toggleActive(id);
-        if (r.ok) renderTable();
-        else alert(r.error);
+        if (r.ok) {
+          if (typeof renderTable === 'function') renderTable();
+        } else alert(r.error);
       };
       window.umDelete = function (id) {
         const u = store.getAll().find(x => x.id === id);
         if (!u) return;
         if (!confirm(`Delete user "${u.name || u.username}"? This cannot be undone.`)) return;
         const r = store.delete(id);
-        if (r.ok) renderTable();
-        else alert(r.error);
+        if (r.ok) {
+          if (typeof renderTable === 'function') renderTable();
+        } else alert(r.error);
       };
 
       // Add user

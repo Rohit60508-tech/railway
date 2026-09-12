@@ -8,6 +8,11 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <!-- Auth guard -->
+  <script src="../components/auth-guard.js"></script>
+
+  <!-- Shared Navigation -->
+  <script src="../components/SharedNav.js"></script>
 
   <style>
     /* ── Reset & Base ──────────────────────────────────────────── */
@@ -30,6 +35,9 @@
     }
 
     body { font-family: var(--font); color: var(--white); }
+
+    /* Hide legacy header */
+    #hdr { display: none !important; }
 
     /* ── Canvas ────────────────────────────────────────────────── */
     #cv {
@@ -164,7 +172,7 @@
 
     /* ── Left controls ─────────────────────────────────────────── */
     #ctrl {
-      position: fixed; top: 70px; left: 20px; z-index: 20;
+      position: fixed; top: 80px; left: 88px; z-index: 20;
       display: flex; flex-direction: column; gap: 8px;
     }
     .ctrl-btn {
@@ -212,6 +220,9 @@
   </style>
 </head>
 <body>
+
+<!-- SharedNav mounts here -->
+<div id="shared-nav"></div>
 
 <canvas id="cv"></canvas>
 <div id="scanlines"></div>

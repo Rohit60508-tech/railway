@@ -354,37 +354,39 @@
     import { BundlingSuggestionCard } from '../components/BundlingSuggestionCard.js';
     import { ManualOverrideModal } from '../components/ManualOverrideModal.js';
 
-    // Bundling Suggestions Data
-    const bundlingData = [
-      {
-        bundleId: "BNDL-NDLS-CNB-001",
-        sectionId: "NDLS-CNB-UP (KM 410-416)",
-        timeWindow: "01:30 – 04:00 (2h 30m)",
-        synergyScore: 94,
-        savedHours: 2.5,
-        departments: ["CIVIL", "TRD_OHE", "SIGNALLING"],
-        tasks: [
-          { id: "WO-CIVIL-401", desc: "USFD rail fracture replacement & flash-butt welding", machine: "Flash Butt Welder", duration: "120m" },
-          { id: "WO-TRD-112", desc: "25kV OHE dropper adjustment under power shadow block", machine: "Tower Wagon 08", duration: "90m" },
-          { id: "WO-SIG-094", desc: "Track circuit bonding & insulation resistance test", machine: null, duration: "45m" }
-        ]
-      },
-      {
-        bundleId: "BNDL-GZB-ALJN-003",
-        sectionId: "GZB-ALJN-DN (KM 64-68)",
-        timeWindow: "12:45 – 15:15 (2h 30m)",
-        synergyScore: 88,
-        savedHours: 2.0,
-        departments: ["CIVIL", "TRD_OHE"],
-        tasks: [
-          { id: "WO-CIVIL-419", desc: "CSM Continuous Action Tamper track ballast packing", machine: "CSM-44", duration: "140m" },
-          { id: "WO-TRD-125", desc: "Catenary wire contact height verification", machine: "Tower Wagon 04", duration: "80m" }
-        ]
-      }
-    ];
+    // Role to Department Mapping
+    const ROLE_DEPT_MAP = {
+      'field-tms': { dept: 'CIVIL', label: 'Civil / P-Way (TMS)', lock: true },
+      'field-smms': { dept: 'SIG', label: 'Signalling & Telecom (SMMS)', lock: true },
+      'field-trd': { dept: 'TRD', label: 'Electrical / TRD (TRD)', lock: true }
+    };
 
-    // Prioritized Work Orders Data (Highest Priority First: P1 -> P2 -> P3 -> P4)
-    const workOrders = [
+    // Global state
+    let activeWorkOrders = [];
+    let currentDeptFilter = 'ALL';
+
+    function normalizeDeptCode(deptStr) {
+      if (!deptStr) return 'CIVIL';
+      const d = deptStr.toUpperCase();
+      if (d.includes('CIVIL') || d.includes('P-WAY') || d.includes('TMS')) return 'CIVIL';
+      if (d.includes('TRD') || d.includes('ELEC') || d.includes('ELECTRICAL') || d.includes('OHE')) return 'TRD';
+      if (d.includes('SIG') || d.includes('TELECOM') || d.includes('SMMS') || d.includes('SIGNAL')) return 'SIG';
+      if (d.includes('MECH') || d.includes('ROLLING')) return 'MECH';
+      return 'CIVIL';
+    }
+
+    function normalizeDeptLabel(deptCode) {
+      switch (deptCode) {
+        case 'CIVIL': return 'Civil / P-Way';
+        case 'TRD': return 'Electrical / TRD';
+        case 'SIG': return 'Signalling & Telecom';
+        case 'MECH': return 'Mechanical / Rolling Stock';
+        default: return 'Civil / P-Way';
+      }
+    }
+
+    // Static baseline fallback for initial render while API loads
+    const baselineApprovedWorkOrders = [
       {
         id: "WO-CIVIL-401",
         title: "Immediate Rail Fracture Cut & Replacement (KM 412/18)",
@@ -399,15 +401,16 @@
         slotRecommended: "01:30 – 03:30 (Tomorrow Night)",
         slotFeasibility: "HIGH_FEASIBILITY",
         slotConflicts: 0,
+        status: "SANCTIONED",
         tooltipExplanation: "Urgency Reason: Transverse rail fissure on 112 GMT high-speed corridor with 92% failure probability.",
         explanationSummary: "CRITICAL rail break risk under high freight axle loading; 24-hour mandatory safety SLA.",
-        detailedExplanation: "Transverse fissure observed during USFD testing with defect growth rate exceeding permissible limits. Failure to execute block repair will mandate a 20 km/h emergency speed restriction with heavy ripple delays.",
+        detailedExplanation: "Transverse fissure observed during USFD testing with defect growth rate exceeding permissible limits. Approved by Control Office for immediate night block.",
         factors: [
           { name: "Safety Severity", weight: 0.25, value: "CRITICAL (100)" },
           { name: "Axle Load Factor", weight: 0.20, value: "25-Tonne Axle" },
           { name: "Failure Probability", weight: 0.18, value: "92%" }
         ],
-        action: "Mobilize AEN P-Way gang; request 120-minute night corridor block."
+        action: "Mobilize AEN P-Way gang; execute sanctioned 120-minute night corridor block."
       },
       {
         id: "WO-TRD-112",
@@ -423,9 +426,10 @@
         slotRecommended: "01:30 – 04:00 (Bundled with BNDL-001)",
         slotFeasibility: "HIGH_FEASIBILITY",
         slotConflicts: 0,
-        tooltipExplanation: "Urgency Reason: Carbon erosion on 25kV catenary dropper exceeding 35% threshold. Risk of pantograph entanglement.",
+        status: "APPROVED",
+        tooltipExplanation: "Urgency Reason: Carbon erosion on 25kV catenary dropper exceeding 35% threshold.",
         explanationSummary: "Carbon erosion on main catenary dropper posing flashover & pantograph entanglement risk.",
-        detailedExplanation: "Current dropper wear is 38%. Can withstand current load for 48 hours but must be replaced within the 72h SLA window to prevent line shutdown during peak express operations.",
+        detailedExplanation: "Approved by Control Office for power shadow block alongside P-Way work.",
         factors: [
           { name: "Overdue Hours", weight: 0.22, value: "18h Remaining" },
           { name: "Department Weight", weight: 0.20, value: "TRD (90)" }
@@ -446,43 +450,147 @@
         slotRecommended: "02:00 – 03:00 (Bundled in Shadow Window)",
         slotFeasibility: "HIGH_FEASIBILITY",
         slotConflicts: 0,
-        tooltipExplanation: "Urgency Reason: Insulation resistance degraded to 850 ohms; preventive overhaul to avoid red lamp failure.",
-        explanationSummary: "Glued joint insulation resistance degraded to 850 ohms; within safe limit but declining.",
-        detailedExplanation: "Pre-monsoon track circuit bonding check to prevent red-lamp failure in automatic signaling territory.",
+        status: "SANCTIONED",
+        tooltipExplanation: "Urgency Reason: Insulation resistance degraded to 850 ohms; preventive overhaul sanctioned.",
+        explanationSummary: "Glued joint insulation resistance degraded to 850 ohms; sanctioned by Control Office.",
+        detailedExplanation: "Pre-monsoon track circuit bonding check approved by Control Office for execution.",
         factors: [
           { name: "Asset Criticality", weight: 0.16, value: "Glued Joint" },
           { name: "Weather Hazard", weight: 0.14, value: "Monsoon Ingress" }
         ],
         action: "Re-insulate fishplates and test audio frequency track circuit."
-      },
-      {
-        id: "WO-CIVIL-419",
-        title: "Machine Ballast Tamping & Track Lining (KM 64-68)",
-        dept: "CIVIL",
-        deptLabel: "Civil / P-Way",
-        section: "GZB-ALJN-DN",
-        score: 45.0,
-        category: "P4",
-        confidence: 0.95,
-        duration: "150 min",
-        machinery: "CSM Continuous Action Tamper (CSM-44)",
-        slotRecommended: "12:45 – 15:15 (Afternoon Lull)",
-        slotFeasibility: "MODERATE_FEASIBILITY",
-        slotConflicts: 1,
-        tooltipExplanation: "Urgency Reason: Routine maintenance surfacing; no structural derailment or speed restriction.",
-        explanationSummary: "Routine track geometry smoothing following monsoon settling; no safety restriction.",
-        detailedExplanation: "Track recording car (TRC) recorded standard track index of 82. Non-urgent surfacing upkeep scheduled during normal afternoon lull.",
-        factors: [
-          { name: "Track Index", weight: 0.12, value: "82 / 100" },
-          { name: "Speed Clearance", weight: 0.10, value: "130 km/h Unrestricted" }
-        ],
-        action: "Execute 1.5 km mechanized tamping and dynamic track stabilization."
       }
     ];
 
-    function renderBundles() {
+    // Bundling Data
+    const bundlingData = [
+      {
+        bundleId: "BNDL-NDLS-CNB-001",
+        sectionId: "NDLS-CNB-UP (KM 410-416)",
+        timeWindow: "01:30 – 04:00 (2h 30m)",
+        synergyScore: 94,
+        savedHours: 2.5,
+        departments: ["CIVIL", "TRD", "SIG"],
+        tasks: [
+          { id: "WO-CIVIL-401", desc: "USFD rail fracture replacement & flash-butt welding", machine: "Flash Butt Welder", duration: "120m" },
+          { id: "WO-TRD-112", desc: "25kV OHE dropper adjustment under power shadow block", machine: "Tower Wagon 08", duration: "90m" },
+          { id: "WO-SIG-094", desc: "Track circuit bonding & insulation resistance test", machine: null, duration: "45m" }
+        ]
+      },
+      {
+        bundleId: "BNDL-GZB-ALJN-003",
+        sectionId: "GZB-ALJN-DN (KM 64-68)",
+        timeWindow: "12:45 – 15:15 (2h 30m)",
+        synergyScore: 88,
+        savedHours: 2.0,
+        departments: ["CIVIL", "TRD"],
+        tasks: [
+          { id: "WO-CIVIL-419", desc: "CSM Continuous Action Tamper track ballast packing", machine: "CSM-44", duration: "140m" },
+          { id: "WO-TRD-125", desc: "Catenary wire contact height verification", machine: "Tower Wagon 04", duration: "80m" }
+        ]
+      }
+    ];
+
+    async function fetchApprovedWorkOrders() {
+      try {
+        const res = await fetch('/api/v1/requested-windows');
+        if (!res.ok) throw new Error('API fetch failed');
+        const data = await res.json();
+        
+        // Filter ONLY approved or sanctioned windows from Control Office
+        const approvedFromApi = (data || []).filter(item => {
+          const st = (item.status || '').toUpperCase();
+          return st === 'APPROVED' || st === 'SANCTIONED' || st.includes('SANCTION') || st.includes('APPROV');
+        }).map(item => {
+          const deptCode = normalizeDeptCode(item.department);
+          return {
+            id: item.request_id || `WO-${deptCode}-${item.id}`,
+            title: item.work_description || `Approved Block Requisition (${item.section_id})`,
+            dept: deptCode,
+            deptLabel: normalizeDeptLabel(deptCode),
+            section: item.section_id || `${item.station_from}-${item.station_to}`,
+            score: item.priority === 'P1' ? 94.0 : item.priority === 'P2' ? 82.0 : 65.0,
+            category: item.priority || 'P1',
+            confidence: 0.95,
+            duration: `${item.duration_minutes || 120} min`,
+            machinery: item.applied_alternative ? `Alternative: ${item.applied_alternative}` : 'Standard Gang Machinery',
+            slotRecommended: item.requested_window || `${item.window_start_time} - ${item.window_end_time}`,
+            slotFeasibility: 'HIGH_FEASIBILITY',
+            slotConflicts: 0,
+            status: item.status,
+            tooltipExplanation: `Approved by Control Office. Section: ${item.section_id}.`,
+            explanationSummary: `Sanctioned work order from Control Office for ${item.department}.`,
+            detailedExplanation: item.work_description || `Control Office approved maintenance window ${item.requested_window}.`,
+            factors: [
+              { name: "Control Office Status", weight: 0.30, value: item.status },
+              { name: "Priority", weight: 0.25, value: item.priority || "P1" }
+            ],
+            action: `Proceed with field execution during sanctioned window ${item.requested_window}.`
+          };
+        });
+
+        // Combine API approved items with baseline approved items (avoiding duplicates by ID)
+        const idSet = new Set(approvedFromApi.map(x => x.id));
+        const combined = [...approvedFromApi];
+        baselineApprovedWorkOrders.forEach(b => {
+          if (!idSet.has(b.id)) {
+            combined.push(b);
+          }
+        });
+
+        activeWorkOrders = combined;
+      } catch (err) {
+        console.warn('Could not fetch dynamic requested windows from backend, using baseline approved orders:', err);
+        activeWorkOrders = [...baselineApprovedWorkOrders];
+      }
+
+      updateDepartmentCounts();
+      renderWorkOrders(currentDeptFilter);
+      renderBundles(currentDeptFilter);
+    }
+
+    function updateDepartmentCounts() {
+      const counts = {
+        ALL: activeWorkOrders.length,
+        CIVIL: activeWorkOrders.filter(w => w.dept === 'CIVIL').length,
+        TRD: activeWorkOrders.filter(w => w.dept === 'TRD').length,
+        SIG: activeWorkOrders.filter(w => w.dept === 'SIG').length,
+        MECH: activeWorkOrders.filter(w => w.dept === 'MECH').length
+      };
+
+      const deptLabels = {
+        ALL: `All Departments (${counts.ALL})`,
+        CIVIL: `Civil / P-Way (TMS) (${counts.CIVIL})`,
+        TRD: `Electrical / TRD (${counts.TRD})`,
+        SIG: `Signalling & Telecom (SMMS) (${counts.SIG})`,
+        MECH: `Mechanical / Rolling Stock (${counts.MECH})`
+      };
+
+      document.querySelectorAll('.dept-tab').forEach(btn => {
+        const d = btn.getAttribute('data-dept');
+        if (deptLabels[d]) {
+          // preserve lock indicator if present
+          const isLocked = btn.disabled;
+          btn.textContent = deptLabels[d] + (isLocked ? ' 🔒' : '');
+        }
+      });
+    }
+
+    function renderBundles(filterDept = 'ALL') {
       const container = document.getElementById('bundling-cards-container');
-      container.innerHTML = bundlingData.map(b => BundlingSuggestionCard.render(b)).join('');
+      const filteredBundles = filterDept === 'ALL'
+        ? bundlingData
+        : bundlingData.filter(b => b.departments.includes(filterDept));
+
+      if (filteredBundles.length === 0) {
+        container.innerHTML = `
+          <div style="background: rgba(255,255,255,0.7); border: 1px dashed var(--border-cyan); border-radius: 8px; padding: 20px; text-align: center; color: #64748B; font-size: 0.88rem;">
+            No multi-department bundling suggestions active for department: <strong>${filterDept}</strong>.
+          </div>`;
+        return;
+      }
+
+      container.innerHTML = filteredBundles.map(b => BundlingSuggestionCard.render(b)).join('');
     }
 
     function renderWorkOrders(filterDept = 'ALL') {
@@ -490,8 +598,18 @@
       container.innerHTML = '';
 
       const filtered = filterDept === 'ALL'
-        ? workOrders
-        : workOrders.filter(w => w.dept === filterDept);
+        ? activeWorkOrders
+        : activeWorkOrders.filter(w => w.dept === filterDept);
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div style="background: rgba(255,255,255,0.8); border: 1px dashed var(--border-cyan); border-radius: 12px; padding: 36px; text-align: center; color: #64748B;">
+            <div style="font-size: 2rem; margin-bottom: 8px;">📋</div>
+            <div style="font-weight: 700; color: #003366; margin-bottom: 4px;">No Approved Control Office Work Orders Found</div>
+            <div style="font-size: 0.84rem;">There are currently no Control Office approved work orders for department <strong>${filterDept}</strong>.</div>
+          </div>`;
+        return;
+      }
 
       filtered.forEach(wo => {
         const card = document.createElement('div');
@@ -503,12 +621,15 @@
             <div>
               <div class="wo-title">
                 <span>${wo.title}</span>
+                <span style="background: #059669; color: white; font-size: 0.68rem; padding: 2px 8px; border-radius: 4px; font-weight: 700; text-transform: uppercase;">
+                  ✓ CONTROL OFFICE SANCTIONED
+                </span>
                 <div class="tooltip-wrap">
                   <span style="font-size: 0.85rem; color: #003366;">ℹ️</span>
                   <div class="tooltip-box">${wo.tooltipExplanation}</div>
                 </div>
               </div>
-              <div style="font-family: var(--font-mono); font-size: 0.78rem; color: #64748B; margin-top: 4px;">
+              <div style="font-family: var(--font-mono); font-size: 0.78rem; color: #64748B; margin-top: 6px;">
                 ID: <span style="color: #003366; font-weight: 700;">${wo.id}</span> | Section: <span style="color: #0F172A; font-weight: 600;">${wo.section}</span> | Dept: <span style="color: #059669; font-weight: 600;">${wo.deptLabel}</span>
               </div>
             </div>
@@ -542,7 +663,7 @@
             <div style="display: flex; align-items: center; gap: 10px;">
               <span style="font-size: 1.1rem;">🗓️</span>
               <div>
-                <div style="font-size: 0.72rem; text-transform: uppercase; color: #64748B; font-weight: 700;">AI Recommended Time Slot</div>
+                <div style="font-size: 0.72rem; text-transform: uppercase; color: #64748B; font-weight: 700;">Control Office Sanctioned Slot</div>
                 <div style="font-family: var(--font-mono); font-size: 0.88rem; font-weight: 700; color: #003366;">${wo.slotRecommended}</div>
               </div>
             </div>
@@ -559,7 +680,7 @@
                 font-weight: 700;
                 cursor: pointer;
                 box-shadow: 0 2px 8px rgba(0, 51, 102, 0.2);
-              " onclick="alert('Block slot for ${wo.id} confirmed for requisition submission!')">Confirm Slot</button>
+              " onclick="alert('Block slot for ${wo.id} confirmed for gang mobilization!')">Confirm Mobilization</button>
             </div>
           </div>
 
@@ -576,6 +697,45 @@
 
         container.appendChild(card);
       });
+    }
+
+    function applyRoleRestrictions() {
+      let role = null;
+      if (window.IR_AUTH && window.IR_AUTH.user) {
+        role = window.IR_AUTH.user.role;
+      } else {
+        try {
+          const sess = JSON.parse(sessionStorage.getItem('ir_auth_session') || '{}');
+          role = sess.role || null;
+        } catch (_) {}
+      }
+
+      if (role && ROLE_DEPT_MAP[role]) {
+        const mapping = ROLE_DEPT_MAP[role];
+        currentDeptFilter = mapping.dept;
+
+        // Hide unassigned department tabs completely for department-specific field engineers
+        document.querySelectorAll('.dept-tab').forEach(btn => {
+          const btnDept = btn.getAttribute('data-dept');
+          if (btnDept === mapping.dept) {
+            btn.classList.add('active');
+            btn.disabled = false;
+            btn.style.display = 'inline-block';
+          } else {
+            btn.classList.remove('active');
+            btn.style.display = 'none';
+          }
+        });
+      } else {
+        // Admin, Control Office Controller, and Senior Field SSE accounts can view and switch all department tabs
+        currentDeptFilter = 'ALL';
+        document.querySelectorAll('.dept-tab').forEach(btn => {
+          btn.style.display = 'inline-block';
+          btn.disabled = false;
+          btn.style.opacity = '1';
+          btn.style.cursor = 'pointer';
+        });
+      }
     }
 
     window.overrideWo = function (targetId, currentVal) {
@@ -612,15 +772,29 @@
     // Filter tab listeners
     document.querySelectorAll('.dept-tab').forEach(btn => {
       btn.addEventListener('click', () => {
+        if (btn.disabled) return;
         document.querySelectorAll('.dept-tab').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        renderWorkOrders(btn.getAttribute('data-dept'));
+        currentDeptFilter = btn.getAttribute('data-dept');
+        renderWorkOrders(currentDeptFilter);
+        renderBundles(currentDeptFilter);
       });
     });
 
-    renderBundles();
-    renderWorkOrders();
+    // Initialize Page
+    applyRoleRestrictions();
+    fetchApprovedWorkOrders().then(() => {
+      applyRoleRestrictions();
+      renderWorkOrders(currentDeptFilter);
+      renderBundles(currentDeptFilter);
+    });
     window.refreshMaintAudit();
+
+    document.addEventListener('DOMContentLoaded', () => {
+      applyRoleRestrictions();
+      renderWorkOrders(currentDeptFilter);
+      renderBundles(currentDeptFilter);
+    });
   </script>
 </body>
 
