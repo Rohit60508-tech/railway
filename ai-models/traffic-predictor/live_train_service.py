@@ -272,7 +272,7 @@ class LiveTrainService:
         # 1. Attempt RailRadar Live Station Query
         try:
             rr_url = f"https://api.railradar.in/v1/stations/{code}/live"
-            rr_resp = requests.get(rr_url, headers={"x-api-key": railradar_key, "Authorization": f"Bearer {railradar_key}"}, params={"hours": hours}, timeout=5)
+            rr_resp = requests.get(rr_url, headers={"x-api-key": railradar_key, "Authorization": f"Bearer {railradar_key}"}, params={"hours": hours}, timeout=1.0)
             if rr_resp.status_code == 200:
                 data = rr_resp.json()
                 train_list = data.get("data", {}).get("trains", []) or data.get("trains", [])
@@ -302,7 +302,7 @@ class LiveTrainService:
 
         # Attempt live network query
         try:
-            resp = requests.get(url, headers=headers, params=params, timeout=6)
+            resp = requests.get(url, headers=headers, params=params, timeout=1.0)
             if resp.status_code == 200:
                 data = resp.json()
                 trains = []

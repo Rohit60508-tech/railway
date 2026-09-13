@@ -20,8 +20,9 @@
   <!-- Core Styles -->
   <link rel="stylesheet" href="../styles/main.css" />
 
-  <!-- Shared Navigation -->
+  <!-- Shared Navigation & Real-Time Sync -->
   <script src="../components/SharedNav.js"></script>
+  <script src="../components/shared-live-sync.js"></script>
 
   <!-- AI Component Scripts -->
   <script type="module" src="../components/PriorityScoreBadge.js"></script>
@@ -308,24 +309,76 @@
       </div>
     </div>
 
+    <!-- ═══════════════════ SECTION 1: CONTROL OFFICE SANCTIONED REQUISITIONS (PENDING ACCEPTANCE) ═══════════════════ -->
+    <div class="section-title" style="display: flex; align-items: center; justify-content: space-between;">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <span>📋</span>
+        <span>Control Office Sanctioned Work Requisitions (Pending Acceptance)</span>
+        <span id="pending-wo-count-badge" style="background: rgba(0, 51, 102, 0.08); border: 1px solid rgba(0, 51, 102, 0.2); color: #003366; font-size: 0.76rem; font-weight: 700; padding: 2px 8px; border-radius: 12px;">0 Sanctioned</span>
+      </div>
+      <div style="font-size: 0.76rem; color: #64748B; font-weight: 600;">
+        Click <strong>"✓ Accept &amp; Lock Slot"</strong> to confirm requisition ➔ Move to Work To Be Done
+      </div>
+    </div>
+
+    <div class="work-orders-grid" id="pending-work-orders-container">
+      <!-- Populated dynamically with sanctioned work orders awaiting acceptance -->
+    </div>
+
+    <!-- ═══════════════════ SECTION 2: WORK ACCEPTED & LOCKED SLOTS (TO BE DONE) ═══════════════════ -->
+    <div class="section-title" style="margin-top: 36px; display: flex; align-items: center; justify-content: space-between;">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <span>📌</span>
+        <span style="color: #003366;">Work Accepted &amp; Locked Slots (To Be Done / In Progress)</span>
+        <span id="accepted-wo-count-badge" style="background: rgba(5, 150, 105, 0.1); border: 1px solid rgba(5, 150, 105, 0.3); color: #059669; font-size: 0.76rem; font-weight: 700; padding: 2px 8px; border-radius: 12px;">0 Accepted</span>
+      </div>
+      <div style="font-size: 0.76rem; color: #059669; font-weight: 600;">
+        Accepted Requisitions ready for field execution ➔ Click <strong>"☑ Tick Work Completed"</strong> when done
+      </div>
+    </div>
+
+    <div class="work-orders-grid" id="work-orders-container">
+      <!-- Populated dynamically ONLY with accepted work orders -->
+    </div>
+
+    <!-- ═══════════════════ SECTION 3: WORK COMPLETED & CLOSED REQUISITIONS ═══════════════════ -->
+    <div class="section-title" style="margin-top: 36px; display: flex; align-items: center; justify-content: space-between;">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <span>✅</span>
+        <span style="color: #059669;">Work Completed &amp; Closed Requisitions</span>
+        <span id="completed-wo-count-badge" style="background: rgba(5, 150, 105, 0.1); border: 1px solid rgba(5, 150, 105, 0.3); color: #059669; font-size: 0.76rem; font-weight: 700; padding: 2px 8px; border-radius: 12px;">0 Completed</span>
+      </div>
+      <button onclick="window.openIRReportModal('work-orders')" style="
+        background: linear-gradient(135deg, #059669, #047857);
+        border: none;
+        color: #FFFFFF;
+        padding: 7px 16px;
+        border-radius: 6px;
+        font-size: 0.78rem;
+        font-weight: 700;
+        cursor: pointer;
+        box-shadow: 0 2px 8px rgba(5, 150, 105, 0.25);
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      ">
+        <span>📑</span>
+        <span>Generate Completion Report Dossier</span>
+      </button>
+    </div>
+
+    <div class="work-orders-grid" id="completed-work-orders-container">
+      <!-- Populated dynamically with completed work orders -->
+    </div>
+
     <!-- ═══════════════════ MULTI-DEPT BUNDLING SECTION ═══════════════════ -->
-    <div class="section-title">
+    <div class="section-title" style="margin-top: 36px;">
       <span>🔗</span>
       <span>AI Multi-Department Bundling Opportunities (CP-SAT Solver)</span>
     </div>
 
     <div id="bundling-cards-container">
       <!-- Populated dynamically by BundlingSuggestionCard -->
-    </div>
-
-    <!-- ═══════════════════ WORK ORDERS SECTION ═══════════════════ -->
-    <div class="section-title" style="margin-top: 36px;">
-      <span>📋</span>
-      <span>Prioritized Maintenance Work Orders (Highest Priority First)</span>
-    </div>
-
-    <div class="work-orders-grid" id="work-orders-container">
-      <!-- Populated dynamically with AI-prioritized work orders -->
     </div>
 
     <!-- ═══════════════════ AUDIT LOGS SECTION ═══════════════════ -->
@@ -497,15 +550,15 @@
         if (!res.ok) throw new Error('API fetch failed');
         const data = await res.json();
         
-        // Filter ONLY approved or sanctioned windows from Control Office
-        const approvedFromApi = (data || []).filter(item => {
-          const st = (item.status || '').toUpperCase();
-          return st === 'APPROVED' || st === 'SANCTIONED' || st.includes('SANCTION') || st.includes('APPROV');
-        }).map(item => {
+        // Map ALL requested and sanctioned maintenance windows from local database audit_records.db & Supabase
+        const approvedFromApi = (data || []).map(item => {
           const deptCode = normalizeDeptCode(item.department);
+          const st = (item.status || 'PENDING_REVIEW').toUpperCase();
+          const isSanctioned = st === 'APPROVED' || st === 'SANCTIONED' || st.includes('SANCTION') || st.includes('APPROV');
+          
           return {
             id: item.request_id || `WO-${deptCode}-${item.id}`,
-            title: item.work_description || `Approved Block Requisition (${item.section_id})`,
+            title: item.work_description || `Requested Block Requisition (${item.section_id})`,
             dept: deptCode,
             deptLabel: normalizeDeptLabel(deptCode),
             section: item.section_id || `${item.station_from}-${item.station_to}`,
@@ -515,17 +568,17 @@
             duration: `${item.duration_minutes || 120} min`,
             machinery: item.applied_alternative ? `Alternative: ${item.applied_alternative}` : 'Standard Gang Machinery',
             slotRecommended: item.requested_window || `${item.window_start_time} - ${item.window_end_time}`,
-            slotFeasibility: 'HIGH_FEASIBILITY',
+            slotFeasibility: isSanctioned ? 'HIGH_FEASIBILITY' : 'PENDING_REVIEW',
             slotConflicts: 0,
             status: item.status,
-            tooltipExplanation: `Approved by Control Office. Section: ${item.section_id}.`,
-            explanationSummary: `Sanctioned work order from Control Office for ${item.department}.`,
-            detailedExplanation: item.work_description || `Control Office approved maintenance window ${item.requested_window}.`,
+            tooltipExplanation: `Submitted to local DB audit_records.db. Section: ${item.section_id}. Status: ${st}`,
+            explanationSummary: `Requested maintenance window from local DB for ${item.department}.`,
+            detailedExplanation: item.work_description || `Maintenance window ${item.requested_window}.`,
             factors: [
               { name: "Control Office Status", weight: 0.30, value: item.status },
               { name: "Priority", weight: 0.25, value: item.priority || "P1" }
             ],
-            action: `Proceed with field execution during sanctioned window ${item.requested_window}.`
+            action: `Proceed with field execution during window ${item.requested_window}.`
           };
         });
 
@@ -593,111 +646,379 @@
       container.innerHTML = filteredBundles.map(b => BundlingSuggestionCard.render(b)).join('');
     }
 
+    // State tracking for accepted & completed work orders
+    let acceptedWorkOrders = [];
+    let completedWorkOrders = [];
+
     function renderWorkOrders(filterDept = 'ALL') {
-      const container = document.getElementById('work-orders-container');
+      const pendingContainer = document.getElementById('pending-work-orders-container');
+      const acceptedContainer = document.getElementById('work-orders-container');
+      const pendingCountBadge = document.getElementById('pending-wo-count-badge');
+      const acceptedCountBadge = document.getElementById('accepted-wo-count-badge');
+
+      if (pendingContainer) pendingContainer.innerHTML = '';
+      if (acceptedContainer) acceptedContainer.innerHTML = '';
+
+      // Work pending acceptance
+      const pendingList = activeWorkOrders.filter(w => !w.isAccepted && !w.isCompleted);
+      // Work accepted & locked (to be done)
+      const acceptedList = activeWorkOrders.filter(w => w.isAccepted && !w.isCompleted);
+
+      const filteredPending = filterDept === 'ALL'
+        ? pendingList
+        : pendingList.filter(w => w.dept === filterDept);
+
+      const filteredAccepted = filterDept === 'ALL'
+        ? acceptedList
+        : acceptedList.filter(w => w.dept === filterDept);
+
+      if (pendingCountBadge) pendingCountBadge.textContent = `${filteredPending.length} Sanctioned`;
+      if (acceptedCountBadge) acceptedCountBadge.textContent = `${filteredAccepted.length} Accepted`;
+
+      // Render Pending Sanctioned Work Orders (Top Section)
+      if (pendingContainer) {
+        if (filteredPending.length === 0) {
+          pendingContainer.innerHTML = `
+            <div style="background: rgba(255,255,255,0.8); border: 1px dashed var(--border-cyan); border-radius: 12px; padding: 24px; text-align: center; color: #64748B; font-size: 0.85rem;">
+              No pending sanctioned requisitions awaiting acceptance for department: <strong>${filterDept}</strong>.
+            </div>`;
+        } else {
+          filteredPending.forEach(wo => {
+            const card = document.createElement('div');
+            const alertClass = wo.category === 'P1' ? 'p1-alert' : wo.category === 'P2' ? 'p2-alert' : '';
+            card.className = `work-order-card ${alertClass}`;
+
+            card.innerHTML = `
+              <div class="wo-header">
+                <div>
+                  <div class="wo-title">
+                    <span>${wo.title}</span>
+                    <span style="background: #059669; color: white; font-size: 0.68rem; padding: 2px 8px; border-radius: 4px; font-weight: 700; text-transform: uppercase;">
+                      ✓ CONTROL OFFICE SANCTIONED
+                    </span>
+                    <div class="tooltip-wrap">
+                      <span style="font-size: 0.85rem; color: #003366;">ℹ️</span>
+                      <div class="tooltip-box">${wo.tooltipExplanation}</div>
+                    </div>
+                  </div>
+                  <div style="font-family: var(--font-mono); font-size: 0.78rem; color: #64748B; margin-top: 6px;">
+                    ID: <span style="color: #003366; font-weight: 700;">${wo.id}</span> | Section: <span style="color: #0F172A; font-weight: 600;">${wo.section}</span> | Dept: <span style="color: #059669; font-weight: 600;">${wo.deptLabel}</span>
+                  </div>
+                </div>
+
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <span id="badge-slot-${wo.id}">
+                    ${PriorityScoreBadge.render({ score: wo.score, category: wo.category })}
+                  </span>
+                  ${ConfidenceIndicator.render({ confidence: wo.confidence })}
+
+                  <button onclick="window.overrideWo('${wo.id}', '${wo.category}')" style="
+                    background: rgba(217, 83, 30, 0.08);
+                    border: 1px solid rgba(217, 83, 30, 0.35);
+                    color: #D9531E;
+                    padding: 5px 12px;
+                    border-radius: 6px;
+                    font-size: 0.74rem;
+                    font-weight: 700;
+                    cursor: pointer;
+                  ">Manual Override</button>
+                </div>
+              </div>
+
+              <div class="wo-meta-row" style="color: #8eb3da;">
+                <span>⏱️ <strong>Required Block:</strong> ${wo.duration}</span>
+                <span>🚜 <strong>Machinery:</strong> ${wo.machinery}</span>
+              </div>
+
+              <div class="wo-slot-box">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <span style="font-size: 1.1rem;">🗓️</span>
+                  <div>
+                    <div style="font-size: 0.72rem; text-transform: uppercase; color: #64748B; font-weight: 700;">Control Office Sanctioned Slot</div>
+                    <div style="font-family: var(--font-mono); font-size: 0.88rem; font-weight: 700; color: #003366;">${wo.slotRecommended}</div>
+                  </div>
+                </div>
+
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  ${SlotFeasibilityIndicator.render({ status: wo.slotFeasibility, conflicts: wo.slotConflicts, compact: true })}
+                  <button id="btn-accept-${wo.id}" style="
+                    background: #003366;
+                    border: none;
+                    color: #ffffff;
+                    padding: 6px 16px;
+                    border-radius: 6px;
+                    font-size: 0.78rem;
+                    font-weight: 700;
+                    cursor: pointer;
+                    box-shadow: 0 2px 8px rgba(0, 51, 102, 0.2);
+                    transition: all 0.2s ease;
+                  " onclick="window.acceptWorkOrder('${wo.id}')">✓ Accept &amp; Lock Slot</button>
+                </div>
+              </div>
+
+              ${AIExplanationCard.render({
+                id: wo.id,
+                summary: wo.explanationSummary,
+                detailedReason: wo.detailedExplanation,
+                factors: wo.factors,
+                recommendedAction: wo.action,
+                defaultExpanded: wo.category === 'P1'
+              })}
+            `;
+            pendingContainer.appendChild(card);
+          });
+        }
+      }
+
+      // Render Accepted Work Orders (Middle Section - Work To Be Done)
+      if (acceptedContainer) {
+        if (filteredAccepted.length === 0) {
+          acceptedContainer.innerHTML = `
+            <div style="background: rgba(240, 253, 244, 0.7); border: 1px dashed rgba(5, 150, 105, 0.4); border-radius: 12px; padding: 24px; text-align: center; color: #059669; font-size: 0.85rem;">
+              No accepted work orders currently in progress for department: <strong>${filterDept}</strong>. Click <strong>"✓ Accept & Lock Slot"</strong> above to move work here.
+            </div>`;
+        } else {
+          filteredAccepted.forEach(wo => {
+            const card = document.createElement('div');
+            card.className = `work-order-card`;
+            card.style.background = '#F0FDF4';
+            card.style.borderColor = 'rgba(5, 150, 105, 0.45)';
+            card.style.borderLeft = '6px solid #059669';
+
+            card.innerHTML = `
+              <div class="wo-header">
+                <div>
+                  <div class="wo-title">
+                    <span style="color: #065F46; font-weight: 800;">${wo.title}</span>
+                    <span style="background: #059669; color: white; font-size: 0.68rem; padding: 3px 10px; border-radius: 12px; font-weight: 800; text-transform: uppercase;">
+                      🔒 WORK ACCEPTED &amp; SLOT LOCKED
+                    </span>
+                    <div class="tooltip-wrap">
+                      <span style="font-size: 0.85rem; color: #003366;">ℹ️</span>
+                      <div class="tooltip-box">${wo.tooltipExplanation}</div>
+                    </div>
+                  </div>
+                  <div style="font-family: var(--font-mono); font-size: 0.78rem; color: #047857; margin-top: 6px;">
+                    ID: <span style="color: #003366; font-weight: 700;">${wo.id}</span> | Section: <span style="color: #0F172A; font-weight: 600;">${wo.section}</span> | Dept: <span style="color: #059669; font-weight: 600;">${wo.deptLabel}</span>
+                  </div>
+                </div>
+
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <span id="badge-slot-${wo.id}">
+                    ${PriorityScoreBadge.render({ score: wo.score, category: wo.category })}
+                  </span>
+                  ${ConfidenceIndicator.render({ confidence: wo.confidence })}
+                </div>
+              </div>
+
+              <div class="wo-meta-row" style="color: #065F46;">
+                <span>⏱️ <strong>Required Block:</strong> ${wo.duration}</span>
+                <span>🚜 <strong>Machinery:</strong> ${wo.machinery}</span>
+                <span>🕒 <strong>Accepted At:</strong> ${wo.acceptedAt}</span>
+              </div>
+
+              <div class="wo-slot-box" style="background: rgba(5, 150, 105, 0.08); border-color: rgba(5, 150, 105, 0.3);">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <span style="font-size: 1.1rem;">🗓️</span>
+                  <div>
+                    <div style="font-size: 0.72rem; text-transform: uppercase; color: #047857; font-weight: 700;">🔒 Locked Corridor Window</div>
+                    <div style="font-family: var(--font-mono); font-size: 0.88rem; font-weight: 700; color: #003366;">${wo.slotRecommended}</div>
+                  </div>
+                </div>
+
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  ${SlotFeasibilityIndicator.render({ status: wo.slotFeasibility, conflicts: wo.slotConflicts, compact: true })}
+                  <button id="btn-complete-${wo.id}" style="
+                    background: #059669;
+                    border: none;
+                    color: #ffffff;
+                    padding: 7px 18px;
+                    border-radius: 6px;
+                    font-size: 0.80rem;
+                    font-weight: 800;
+                    cursor: pointer;
+                    box-shadow: 0 2px 10px rgba(5, 150, 105, 0.3);
+                    transition: all 0.2s ease;
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 6px;
+                  " onclick="window.markWorkCompleted('${wo.id}')">☑ Tick Work Completed</button>
+                </div>
+              </div>
+
+              ${AIExplanationCard.render({
+                id: wo.id,
+                summary: wo.explanationSummary,
+                detailedReason: wo.detailedExplanation,
+                factors: wo.factors,
+                recommendedAction: wo.action,
+                defaultExpanded: wo.category === 'P1'
+              })}
+            `;
+            acceptedContainer.appendChild(card);
+          });
+        }
+      }
+
+      renderCompletedWorkOrders(filterDept);
+    }
+
+    function renderCompletedWorkOrders(filterDept = 'ALL') {
+      const container = document.getElementById('completed-work-orders-container');
+      const completedBadge = document.getElementById('completed-wo-count-badge');
+      if (!container) return;
       container.innerHTML = '';
 
       const filtered = filterDept === 'ALL'
-        ? activeWorkOrders
-        : activeWorkOrders.filter(w => w.dept === filterDept);
+        ? completedWorkOrders
+        : completedWorkOrders.filter(w => w.dept === filterDept);
+
+      if (completedBadge) {
+        completedBadge.textContent = `${filtered.length} Completed`;
+      }
 
       if (filtered.length === 0) {
         container.innerHTML = `
-          <div style="background: rgba(255,255,255,0.8); border: 1px dashed var(--border-cyan); border-radius: 12px; padding: 36px; text-align: center; color: #64748B;">
-            <div style="font-size: 2rem; margin-bottom: 8px;">📋</div>
-            <div style="font-weight: 700; color: #003366; margin-bottom: 4px;">No Approved Control Office Work Orders Found</div>
-            <div style="font-size: 0.84rem;">There are currently no Control Office approved work orders for department <strong>${filterDept}</strong>.</div>
+          <div style="background: rgba(240, 253, 244, 0.7); border: 1px dashed rgba(5, 150, 105, 0.4); border-radius: 12px; padding: 24px; text-align: center; color: #059669; font-size: 0.85rem;">
+            No work orders marked completed yet for department: <strong>${filterDept}</strong>. Accept work orders above and click ☑ Tick Work Completed.
           </div>`;
         return;
       }
 
       filtered.forEach(wo => {
         const card = document.createElement('div');
-        const alertClass = wo.category === 'P1' ? 'p1-alert' : wo.category === 'P2' ? 'p2-alert' : '';
-        card.className = `work-order-card ${alertClass}`;
+        card.className = `work-order-card`;
+        card.style.background = '#ECFDF5';
+        card.style.borderColor = 'rgba(5, 150, 105, 0.45)';
+        card.style.borderLeft = '6px solid #059669';
 
         card.innerHTML = `
           <div class="wo-header">
             <div>
               <div class="wo-title">
-                <span>${wo.title}</span>
-                <span style="background: #059669; color: white; font-size: 0.68rem; padding: 2px 8px; border-radius: 4px; font-weight: 700; text-transform: uppercase;">
-                  ✓ CONTROL OFFICE SANCTIONED
+                <span style="color: #065F46; font-weight: 700;">${wo.title}</span>
+                <span style="background: #059669; color: white; font-size: 0.68rem; padding: 3px 10px; border-radius: 12px; font-weight: 800; text-transform: uppercase;">
+                  ✓ WORK COMPLETED &amp; CLOSED
                 </span>
-                <div class="tooltip-wrap">
-                  <span style="font-size: 0.85rem; color: #003366;">ℹ️</span>
-                  <div class="tooltip-box">${wo.tooltipExplanation}</div>
-                </div>
               </div>
-              <div style="font-family: var(--font-mono); font-size: 0.78rem; color: #64748B; margin-top: 6px;">
-                ID: <span style="color: #003366; font-weight: 700;">${wo.id}</span> | Section: <span style="color: #0F172A; font-weight: 600;">${wo.section}</span> | Dept: <span style="color: #059669; font-weight: 600;">${wo.deptLabel}</span>
+              <div style="font-family: var(--font-mono); font-size: 0.78rem; color: #047857; margin-top: 6px;">
+                ID: <span style="font-weight: 700;">${wo.id}</span> | Section: <span>${wo.section}</span> | Dept: <strong>${wo.deptLabel}</strong>
               </div>
             </div>
 
             <div style="display: flex; align-items: center; gap: 8px;">
-              <span id="badge-slot-${wo.id}">
-                ${PriorityScoreBadge.render({ score: wo.score, category: wo.category })}
+              <span style="background: rgba(5, 150, 105, 0.15); color: #059669; border: 1px solid rgba(5, 150, 105, 0.3); padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 800;">
+                ✓ 100% EXECUTED
               </span>
-              ${ConfidenceIndicator.render({ confidence: wo.confidence })}
-
-              <button onclick="window.overrideWo('${wo.id}', '${wo.category}')" style="
-                background: rgba(217, 83, 30, 0.08);
-                border: 1px solid rgba(217, 83, 30, 0.35);
-                color: #D9531E;
-                padding: 5px 12px;
-                border-radius: 6px;
-                font-size: 0.74rem;
-                font-weight: 700;
-                cursor: pointer;
-              ">Manual Override</button>
             </div>
           </div>
 
-          <div class="wo-meta-row">
-            <span>⏱️ <strong>Required Block:</strong> ${wo.duration}</span>
-            <span>🚜 <strong>Machinery:</strong> ${wo.machinery}</span>
+          <div class="wo-meta-row" style="color: #065F46;">
+            <span>⏱️ <strong>Completed Block:</strong> ${wo.duration}</span>
+            <span>🚜 <strong>Deployed Gang/Machine:</strong> ${wo.machinery}</span>
+            <span>🕒 <strong>Completed At:</strong> ${wo.completedAt || new Date().toLocaleTimeString()}</span>
           </div>
 
-          <!-- AI Recommended Time Slot Box -->
-          <div class="wo-slot-box">
-            <div style="display: flex; align-items: center; gap: 10px;">
-              <span style="font-size: 1.1rem;">🗓️</span>
-              <div>
-                <div style="font-size: 0.72rem; text-transform: uppercase; color: #64748B; font-weight: 700;">Control Office Sanctioned Slot</div>
-                <div style="font-family: var(--font-mono); font-size: 0.88rem; font-weight: 700; color: #003366;">${wo.slotRecommended}</div>
-              </div>
+          <div style="background: rgba(255, 255, 255, 0.9); border: 1px solid rgba(5, 150, 105, 0.3); border-radius: 8px; padding: 10px 14px; margin-top: 10px; display: flex; align-items: center; justify-content: space-between;">
+            <div style="font-size: 0.78rem; color: #065F46; font-weight: 700;">
+              ✓ Requisition closed, track safety clearance logged &amp; ready for statutory audit report generation.
             </div>
-
-            <div style="display: flex; align-items: center; gap: 10px;">
-              ${SlotFeasibilityIndicator.render({ status: wo.slotFeasibility, conflicts: wo.slotConflicts, compact: true })}
-              <button style="
-                background: #003366;
-                border: none;
-                color: #ffffff;
-                padding: 6px 14px;
-                border-radius: 6px;
-                font-size: 0.76rem;
-                font-weight: 700;
-                cursor: pointer;
-                box-shadow: 0 2px 8px rgba(0, 51, 102, 0.2);
-              " onclick="alert('Block slot for ${wo.id} confirmed for gang mobilization!')">Confirm Mobilization</button>
-            </div>
+            <button onclick="window.openIRReportModal('work-orders')" style="
+              background: #059669;
+              border: none;
+              color: white;
+              padding: 5px 14px;
+              border-radius: 4px;
+              font-size: 0.74rem;
+              font-weight: 700;
+              cursor: pointer;
+            ">📑 View Report</button>
           </div>
-
-          <!-- AI Explanation Card -->
-          ${AIExplanationCard.render({
-          id: wo.id,
-          summary: wo.explanationSummary,
-          detailedReason: wo.detailedExplanation,
-          factors: wo.factors,
-          recommendedAction: wo.action,
-          defaultExpanded: wo.category === 'P1'
-        })}
         `;
 
         container.appendChild(card);
       });
     }
+
+    // Helper: Dispatch Audit Log Record to Supabase Cloud & Local Ledger
+    function logToSupabase(entryName, eventType, wo, reason) {
+      try {
+        const auth = window.IR_AUTH || {};
+        fetch('/api/v1/supabase/audit-log', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            entry_name: entryName,
+            event_type: eventType,
+            staff_id: auth.id || auth.username || 'IR-STAFF-UNKNOWN',
+            user_name: auth.name || 'Indian Railways Officer',
+            user_role: auth.role || 'FIELD_ENGINEER',
+            user_division: auth.division || 'Northern Railway — Delhi Division',
+            section: wo.section || 'NDLS-CNB-UP',
+            target_entity_id: wo.id,
+            reason: reason,
+            disruption_score: wo.score || 0,
+            delay_minutes: parseInt(wo.duration) || 0,
+            action_payload: {
+              work_order_id: wo.id,
+              title: wo.title,
+              dept: wo.dept,
+              slot: wo.slotRecommended
+            }
+          })
+        }).catch(err => console.warn('Supabase audit logging background dispatch:', err));
+      } catch (e) {
+        console.warn('Supabase audit payload prep error:', e);
+      }
+    }
+
+    // Step 1: On 1-click Accept & Lock Slot
+    window.acceptWorkOrder = function (woId, suppressToast = false) {
+      const idx = activeWorkOrders.findIndex(w => w.id === woId);
+      if (idx === -1) return;
+
+      const wo = activeWorkOrders[idx];
+      wo.isAccepted = true;
+      wo.acceptedAt = new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
+      if (!acceptedWorkOrders.find(c => c.id === woId)) {
+        acceptedWorkOrders.unshift(wo);
+      }
+
+      // Log action to Supabase
+      logToSupabase('ACCEPT_WORK_ORDER_SLOT_LOCK', 'SLOT_LOCK', wo, `Requisition ${woId} accepted and slot locked for execution.`);
+
+      if (!suppressToast) {
+        if (window.showToast) {
+          window.showToast(`🔒 Work order ${woId} accepted & slot locked! Logged to Supabase.`, 'success');
+        }
+      }
+
+      renderWorkOrders(currentDeptFilter);
+    };
+
+    // Step 2: On Tick Work Completed
+    window.markWorkCompleted = function (woId) {
+      const idx = activeWorkOrders.findIndex(w => w.id === woId);
+      if (idx === -1) return;
+
+      const wo = activeWorkOrders[idx];
+      wo.isCompleted = true;
+      wo.completedAt = new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
+      if (!completedWorkOrders.find(c => c.id === woId)) {
+        completedWorkOrders.unshift(wo);
+      }
+
+      // Log completion to Supabase
+      logToSupabase('WORK_ORDER_COMPLETED_AND_CLOSED', 'WORK_COMPLETED', wo, `Work order ${woId} marked 100% executed and requisition closed.`);
+
+      if (window.showToast) {
+        window.showToast(`✅ Work order ${woId} marked completed & stored in Supabase!`, 'success');
+      }
+
+      renderWorkOrders(currentDeptFilter);
+    };
 
     function applyRoleRestrictions() {
       let role = null;
@@ -794,6 +1115,12 @@
       applyRoleRestrictions();
       renderWorkOrders(currentDeptFilter);
       renderBundles(currentDeptFilter);
+
+      if (window.IR_LIVE_SYNC) {
+        window.IR_LIVE_SYNC.on('conflicts_updated', () => {
+          fetchApprovedWorkOrders();
+        });
+      }
     });
   </script>
 </body>

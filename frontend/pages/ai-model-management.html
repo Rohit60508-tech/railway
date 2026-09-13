@@ -23,8 +23,9 @@
   <!-- Core Styles -->
   <link rel="stylesheet" href="../styles/main.css" />
 
-  <!-- Shared Navigation -->
+  <!-- Shared Navigation & Real-Time Sync -->
   <script src="../components/SharedNav.js"></script>
+  <script src="../components/shared-live-sync.js"></script>
 
   <!-- AI Component Scripts -->
   <script type="module" src="../components/PriorityScoreBadge.js"></script>
@@ -1319,16 +1320,19 @@
             <div class="agent-metrics-row">
               <div class="agent-metric-chip">
                 <div class="lbl">Inference</div>
-                <div class="val">14.7 ms</div>
+                <div class="val" id="tfa-card-inference">14.7 ms</div>
               </div>
               <div class="agent-metric-chip">
                 <div class="lbl">Delay MAE</div>
-                <div class="val" style="color: #003366;">3.8m</div>
+                <div class="val" style="color: #003366;" id="tfa-card-mae">3.8m</div>
               </div>
               <div class="agent-metric-chip">
                 <div class="lbl">Buffer R²</div>
-                <div class="val" style="color: #059669;">0.912</div>
+                <div class="val" style="color: #059669;" id="tfa-card-r2">0.912</div>
               </div>
+            </div>
+            <div id="tfa-card-live-slots" style="background:#ECFDF5;border:1px solid #A7F3D0;border-radius:6px;padding:6px 10px;font-size:0.72rem;color:#065F46;margin-top:8px;margin-bottom:8px;font-weight:700;">
+              🟢 <strong>OPEN WINDOWS NOW:</strong> 12:45 – 15:00 (NDLS-GZB-DN) &bull; 14:00 – 16:30 (BCT-NDLS-UP)
             </div>
             <div class="agent-rationale-snippet">
               "Balances timetable simplicity with seasonal freight peaks and Rajdhani/Shatabdi headway preservation."
@@ -2429,17 +2433,21 @@
       document.getElementById('modal-agent-need').innerText = meta.need;
       document.getElementById('modal-agent-rationale').innerText = meta.rationale;
       document.getElementById('modal-payload-input').value = JSON.stringify(meta.samplePayload, null, 2);
-      document.getElementById('modal-test-output').innerText = '// Click "Run Test Inference" to execute agent...';
+      document.getElementById('modal-test-output').innerHTML = '// Click "Run Test Inference" to execute live agent...';
       document.getElementById('modal-latency-badge').innerText = 'Ready';
 
       document.getElementById('agent-test-modal').classList.add('open');
+
+      if (agentId === 'traffic_forecast_agent') {
+        window.executeSingleAgentTest();
+      }
     };
 
     window.closeAgentTestModal = function () {
       document.getElementById('agent-test-modal').classList.remove('open');
     };
 
-    window.executeSingleAgentTest = function () {
+    window.executeSingleAgentTest = async function () {
       const btn = document.getElementById('btn-exec-agent-test');
       btn.disabled = true;
       btn.innerHTML = '<span>⏳ Ingesting &amp; Running...</span>';
@@ -2457,7 +2465,50 @@
       const t0 = performance.now();
       const meta = AGENTS_METADATA[currentActiveAgentId] || {};
 
-      // Simulated microsecond dispatch to FastAPI agent runner
+      if (currentActiveAgentId === 'traffic_forecast_agent') {
+        try {
+          const res = await fetch('/api/v1/agents/traffic-forecast/live?section_id=' + encodeURIComponent(parsedPayload.section_id || 'NDLS-CNB-01'));
+          const data = await res.json();
+          const elapsed = (performance.now() - t0).toFixed(2);
+
+          btn.disabled = false;
+          btn.innerHTML = '<span>⚡ Run Test Inference</span>';
+          document.getElementById('modal-latency-badge').innerText = `${elapsed} ms (Live API)`;
+
+          const openWinHtml = (data.corridors_traffic_status || []).map(c => `
+            <div style="background:${c.is_window_open_now ? '#ECFDF5' : '#FFFDF5'}; border:1px solid ${c.is_window_open_now ? '#A7F3D0' : '#FDE68A'}; border-radius:6px; padding:8px 12px; margin-bottom:6px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
+              <div>
+                <strong style="font-size:0.8rem; color:#003366;">${c.corridor_id}</strong> &bull; <span style="font-size:0.75rem; color:#475569;">${c.section_name}</span>
+                <div style="font-size:0.74rem; font-weight:700; color:${c.is_window_open_now ? '#059669' : '#B45309'}; margin-top:2px;">
+                  ${c.is_window_open_now ? '🟢 MAINTENANCE WINDOW OPEN NOW:' : '🌙 UPCOMING SHADOW WINDOW:'} <strong>${c.open_window}</strong>
+                </div>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-size:0.78rem; font-weight:800; color:${c.occupancy_rate_pct > 70 ? '#DC2626' : c.occupancy_rate_pct > 50 ? '#D9531E' : '#059669'};">
+                  ${c.traffic_level}
+                </div>
+                <div style="font-size:0.70rem; color:#64748B;">Live Movements: ${c.active_trains_count} Trains</div>
+              </div>
+            </div>
+          `).join('');
+
+          document.getElementById('modal-test-output').innerHTML = `
+            <div style="margin-bottom:12px; padding:10px; background:#F8FAFC; border:1px solid #CBD5E1; border-radius:8px;">
+              <div style="font-size:0.74rem; font-weight:800; color:#003366; text-transform:uppercase; margin-bottom:8px;">
+                🛰️ REAL-TIME CORRIDOR TRAFFIC DENSITY &amp; MAINTENANCE WINDOW INSPECTION:
+              </div>
+              ${openWinHtml}
+            </div>
+            <div style="font-size:0.72rem; color:#64748B; margin-bottom:4px; font-weight:700;">RAW AGENT INFERENCE EXECUTION PAYLOAD:</div>
+            <pre style="margin:0; font-size:0.74rem; line-height:1.35;">${JSON.stringify(data, null, 2)}</pre>
+          `;
+          return;
+        } catch (err) {
+          console.warn("Live traffic forecast API fallback:", err);
+        }
+      }
+
+      // Default fallback for other agents
       setTimeout(() => {
         const elapsed = (performance.now() - t0).toFixed(2);
         btn.disabled = false;

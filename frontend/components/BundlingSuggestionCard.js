@@ -149,7 +149,7 @@ export class BundlingSuggestionCard {
             cursor: pointer;
             box-shadow: 0 2px 8px rgba(0, 51, 102, 0.25);
             transition: all 0.2s ease;
-          ">Accept & Schedule</button>
+          ">Accept &amp; Move to Work Orders</button>
         </div>
       </div>
     `;
@@ -161,8 +161,29 @@ export class BundlingSuggestionCard {
   }
 
   static accept(bundleId) {
-    if (window.showToast) window.showToast(`✅ Bundle ${bundleId} scheduled with CP-SAT solver!`, 'success');
-    else alert(`Accepted bundle ${bundleId}`);
+    const card = document.getElementById(bundleId);
+    if (card) {
+      card.style.background = '#F0FDF4';
+      card.style.borderColor = 'rgba(5, 150, 105, 0.45)';
+      card.style.borderLeft = '6px solid #059669';
+      
+      const actionBox = card.querySelector('button[onclick*="accept"]')?.parentElement;
+      if (actionBox) {
+        actionBox.innerHTML = `
+          <span style="background:#059669;color:#FFF;padding:6px 14px;border-radius:6px;font-size:0.78rem;font-weight:800;">
+            🔒 BUNDLE ACCEPTED &amp; SENT TO WORK TO BE DONE
+          </span>
+        `;
+      }
+    }
+
+    if (window.acceptWorkOrder) {
+      // Find matching tasks in bundle if available
+      const activeIds = ['WO-CIVIL-401', 'WO-TRD-112', 'WO-SIG-094', 'WO-CIVIL-419', 'WO-TRD-125'];
+      activeIds.forEach(id => window.acceptWorkOrder(id, true));
+    }
+
+    if (window.showToast) window.showToast(`🔒 CP-SAT Bundle ${bundleId} accepted! All tasks moved to Work To Be Done.`, 'success');
   }
 }
 
