@@ -271,46 +271,81 @@ def get_requested_windows() -> List[Dict[str, Any]]:
     except Exception as e:
         logger.warning(f"Ledger fetch error: {e}")
 
-    # 2. Read from Supabase corridor_windows table
+    # 2. Read from Supabase requested_windows & corridor_windows table
     try:
-        sup_url = os.environ.get("SUPABASE_URL", "")
-        sup_key = os.environ.get("SUPABASE_SERVICE_ROLE_KEY", "") or os.environ.get("SUPABASE_KEY", "")
-        if sup_url and sup_key:
-            import urllib.request, json
-            req_obj = urllib.request.Request(
-                f"http://127.0.0.1:5000/api/v1/supabase/data/corridor_windows",
+        import urllib.request, json
+        # 2a. Fetch requested_windows table
+        try:
+            rw_obj = urllib.request.Request(
+                "http://127.0.0.1:5000/api/v1/supabase/data/requested_windows",
                 headers={"Content-Type": "application/json"}
             )
-            with urllib.request.urlopen(req_obj, timeout=3) as resp:
-                if resp.status == 200:
-                    resp_data = json.loads(resp.read().decode('utf-8'))
-                    items = resp_data.get("data", []) if isinstance(resp_data, dict) else (resp_data if isinstance(resp_data, list) else [])
-                    for cw in items:
-                        req_id = cw.get("window_id") or cw.get("id") or "SUP-CW-01"
+            with urllib.request.urlopen(rw_obj, timeout=3) as rw_resp:
+                if rw_resp.status == 200:
+                    rw_data = json.loads(rw_resp.read().decode('utf-8'))
+                    rw_items = rw_data.get("data", []) if isinstance(rw_data, dict) else (rw_data if isinstance(rw_data, list) else [])
+                    for rw in rw_items:
+                        req_id = rw.get("request_id") or rw.get("id") or "REQ-SUP-01"
                         if req_id not in local_req_ids:
                             local_req_ids.add(req_id)
                             db_requests.append({
                                 "id": len(db_requests) + 1,
-                                "request_id": f"CW-{req_id[:8]}",
-                                "section_id": cw.get("section_id") or "NDLS-CNB-DN",
-                                "station_from": (cw.get("section_id") or "NDLS-CNB").split("-")[0],
-                                "station_to": (cw.get("section_id") or "NDLS-CNB").split("-")[1] if "-" in (cw.get("section_id") or "") else "CNB",
-                                "start_km": 10.0,
-                                "end_km": 20.0,
-                                "km_pole": "KM 10-20",
-                                "requested_window": f"{cw.get('window_start', '09:00')[11:16]} - {cw.get('window_end', '11:00')[11:16]}",
-                                "window_start_time": cw.get("window_start", "09:00"),
-                                "window_end_time": cw.get("window_end", "11:00"),
-                                "duration_minutes": cw.get("duration_minutes", 120),
-                                "department": cw.get("department") or "Civil (P-Way)",
-                                "work_description": f"Supabase Cloud Window Record ({cw.get('status', 'AVAILABLE')})",
-                                "priority": "P1",
-                                "status": cw.get("status") or "PENDING_REVIEW",
-                                "applied_alternative": None,
-                                "created_at": cw.get("created_at")
+                                "request_id": req_id,
+                                "section_id": rw.get("section_id") or "NDLS-GZB-DN",
+                                "station_from": rw.get("station_from") or "NDLS",
+                                "station_to": rw.get("station_to") or "GZB",
+                                "start_km": float(rw.get("start_km", 12.0)),
+                                "end_km": float(rw.get("end_km", 16.0)),
+                                "km_pole": rw.get("km_pole") or f"KM {rw.get('start_km', 12)}-{rw.get('end_km', 16)}",
+                                "requested_window": rw.get("requested_window") or f"{rw.get('window_start_time', '09:00')} – {rw.get('window_end_time', '11:00')}",
+                                "window_start_time": rw.get("window_start_time", "09:00"),
+                                "window_end_time": rw.get("window_end_time", "11:00"),
+                                "duration_minutes": int(rw.get("duration_minutes", 120)),
+                                "department": rw.get("department") or "Civil (P-Way)",
+                                "work_description": rw.get("work_description") or "Supabase requested_windows Requisition",
+                                "priority": rw.get("priority") or "P1",
+                                "status": rw.get("status") or "PENDING_REVIEW",
+                                "applied_alternative": rw.get("applied_alternative"),
+                                "created_at": rw.get("created_at")
                             })
+        except Exception as rw_e:
+            logger.warning(f"Supabase requested_windows fetch notice: {rw_e}")
+
+        # 2b. Also read local dedicated tables store file data/supabase_tables.json
+        try:
+            sup_tables_file = WORKSPACE_DIR / "data" / "supabase_tables.json"
+            if sup_tables_file.exists():
+                with open(sup_tables_file, "r", encoding="utf-8") as stf:
+                    sup_data = json.load(stf)
+                    for rw in sup_data.get("requested_windows", []):
+                        req_id = rw.get("request_id") or rw.get("id")
+                        if req_id and req_id not in local_req_ids:
+                            local_req_ids.add(req_id)
+                            db_requests.append({
+                                "id": len(db_requests) + 1,
+                                "request_id": req_id,
+                                "section_id": rw.get("section_id") or "NDLS-GZB-DN",
+                                "station_from": rw.get("station_from") or "NDLS",
+                                "station_to": rw.get("station_to") or "GZB",
+                                "start_km": float(rw.get("start_km", 12.0)),
+                                "end_km": float(rw.get("end_km", 16.0)),
+                                "km_pole": rw.get("km_pole") or f"KM {rw.get('start_km', 12)}-{rw.get('end_km', 16)}",
+                                "requested_window": rw.get("requested_window") or f"{rw.get('window_start_time', '09:00')} – {rw.get('window_end_time', '11:00')}",
+                                "window_start_time": rw.get("window_start_time", "09:00"),
+                                "window_end_time": rw.get("window_end_time", "11:00"),
+                                "duration_minutes": int(rw.get("duration_minutes", 120)),
+                                "department": rw.get("department") or "Civil (P-Way)",
+                                "work_description": rw.get("work_description") or "Supabase Store Requisition",
+                                "priority": rw.get("priority") or "P1",
+                                "status": rw.get("status") or "PENDING_REVIEW",
+                                "applied_alternative": rw.get("applied_alternative"),
+                                "created_at": rw.get("created_at")
+                            })
+        except Exception:
+            pass
+
     except Exception as sup_e:
-        logger.warning(f"Supabase corridor_windows fetch error: {sup_e}")
+        logger.warning(f"Supabase windows sync notice: {sup_e}")
 
     return db_requests
 
@@ -584,14 +619,79 @@ def get_live_conflicts() -> List[Dict[str, Any]]:
     except Exception as e:
         logger.warning(f"Supabase ledger fetch notice: {e}")
 
-    # 2b. Fetch directly from Supabase Cloud corridor_windows table
+    # 2b. Fetch directly from Supabase Data API requested_windows and corridor_windows
     try:
+        import urllib.request, json
+        # Fetch requested_windows table
+        try:
+            rw_obj = urllib.request.Request("http://127.0.0.1:5000/api/v1/supabase/data/requested_windows")
+            with urllib.request.urlopen(rw_obj, timeout=3) as resp:
+                if resp.status == 200:
+                    resp_data = json.loads(resp.read().decode("utf-8"))
+                    rw_items = resp_data.get("data", []) if isinstance(resp_data, dict) else (resp_data if isinstance(resp_data, list) else [])
+                    for rw in rw_items:
+                        req_id = rw.get("request_id") or rw.get("id") or "REQ-SUP-01"
+                        if req_id not in local_req_ids:
+                            local_req_ids.add(req_id)
+                            db_requests.append({
+                                "id": len(db_requests) + 1,
+                                "request_id": req_id,
+                                "section_id": rw.get("section_id") or "NDLS-GZB-DN",
+                                "station_from": rw.get("station_from") or "NDLS",
+                                "station_to": rw.get("station_to") or "GZB",
+                                "start_km": float(rw.get("start_km", 12.0)),
+                                "end_km": float(rw.get("end_km", 16.0)),
+                                "km_pole": rw.get("km_pole") or f"KM {rw.get('start_km', 12)}-{rw.get('end_km', 16)}",
+                                "requested_window": rw.get("requested_window") or f"{rw.get('window_start_time', '09:00')} – {rw.get('window_end_time', '11:00')}",
+                                "window_start_time": rw.get("window_start_time", "09:00"),
+                                "window_end_time": rw.get("window_end_time", "11:00"),
+                                "duration_minutes": int(rw.get("duration_minutes", 120)),
+                                "department": rw.get("department") or "Civil (P-Way)",
+                                "work_description": rw.get("work_description") or "Supabase requested_windows Requisition",
+                                "priority": rw.get("priority") or "P1",
+                                "status": rw.get("status") or "PENDING_REVIEW",
+                                "applied_alternative": rw.get("applied_alternative")
+                            })
+        except Exception as rw_err:
+            logger.warning(f"Error reading requested_windows in live_conflicts: {rw_err}")
+
+        # Local dedicated store fallback
+        try:
+            sup_tables_file = WORKSPACE_DIR / "data" / "supabase_tables.json"
+            if sup_tables_file.exists():
+                with open(sup_tables_file, "r", encoding="utf-8") as stf:
+                    sup_data = json.load(stf)
+                    for rw in sup_data.get("requested_windows", []):
+                        req_id = rw.get("request_id") or rw.get("id")
+                        if req_id and req_id not in local_req_ids:
+                            local_req_ids.add(req_id)
+                            db_requests.append({
+                                "id": len(db_requests) + 1,
+                                "request_id": req_id,
+                                "section_id": rw.get("section_id") or "NDLS-GZB-DN",
+                                "station_from": rw.get("station_from") or "NDLS",
+                                "station_to": rw.get("station_to") or "GZB",
+                                "start_km": float(rw.get("start_km", 12.0)),
+                                "end_km": float(rw.get("end_km", 16.0)),
+                                "km_pole": rw.get("km_pole") or f"KM {rw.get('start_km', 12)}-{rw.get('end_km', 16)}",
+                                "requested_window": rw.get("requested_window") or f"{rw.get('window_start_time', '09:00')} – {rw.get('window_end_time', '11:00')}",
+                                "window_start_time": rw.get("window_start_time", "09:00"),
+                                "window_end_time": rw.get("window_end_time", "11:00"),
+                                "duration_minutes": int(rw.get("duration_minutes", 120)),
+                                "department": rw.get("department") or "Civil (P-Way)",
+                                "work_description": rw.get("work_description") or "Supabase Store Requisition",
+                                "priority": rw.get("priority") or "P1",
+                                "status": rw.get("status") or "PENDING_REVIEW",
+                                "applied_alternative": rw.get("applied_alternative")
+                            })
+        except Exception:
+            pass
+
         sup_url = os.environ.get("SUPABASE_URL", "https://surzryivaqezaoebvqsa.supabase.co").rstrip("/")
         sup_key = os.environ.get("SUPABASE_SERVICE_ROLE_KEY", "") or os.environ.get("SUPABASE_KEY", "") or os.environ.get("SUPABASE_ANON_KEY", "")
         cw_items = []
 
         if sup_url and sup_key:
-            import urllib.request, json
             try:
                 headers = {"apikey": sup_key, "Authorization": f"Bearer {sup_key}", "Content-Type": "application/json"}
                 req_obj = urllib.request.Request(f"{sup_url}/rest/v1/corridor_windows?select=*", headers=headers)
@@ -604,7 +704,6 @@ def get_live_conflicts() -> List[Dict[str, Any]]:
         # Fallback to local Node server proxy if direct fetch returned empty
         if not cw_items:
             try:
-                import urllib.request, json
                 req_obj = urllib.request.Request("http://127.0.0.1:5000/api/v1/supabase/data/corridor_windows")
                 with urllib.request.urlopen(req_obj, timeout=3) as resp:
                     if resp.status == 200:

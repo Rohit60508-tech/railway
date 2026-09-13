@@ -43,14 +43,12 @@ export default function RoleLoginView() {
     }
 
     setLoading(true);
-    setTimeout(() => {
-      try {
-        login(username.trim(), password, selectedRole.key);
-      } catch (err) {
-        setError(err.message || 'Authentication failed.');
-        setLoading(false);
-      }
-    }, 350);
+    try {
+      login(username.trim(), password, selectedRole.key);
+    } catch (err) {
+      setError(err.message || 'Authentication failed.');
+      setLoading(false);
+    }
   };
 
   return (

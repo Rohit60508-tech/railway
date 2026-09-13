@@ -4,12 +4,12 @@ import { Database, Server, Radio, Shield, Cpu, Network, RefreshCw, CheckCircle2 
 export default function DataSourcesView() {
   const [sources, setSources] = useState([
     { id: 'DS-01', name: 'TMS (Track Management System)', dept: 'Civil Track', type: 'PostgreSQL Geo', rate: 'Live Stream', status: 'ONLINE', latency: '12 ms', recordsProcessed: '1.4M' },
-    { id: 'DS-02', name: 'USFD Ultrasonic Flaw Rig', type: 'Binary Oscillography', dept: 'P-Way Maintenance', rate: '100 Hz', status: 'ONLINE', latency: '4 ms', recordsProcessed: '840K' },
+    { id: 'DS-02', name: 'USFD Ultrasonic Flaw Rig', type: 'Binary Oscillography', dept: 'P-Way Maintenance', rate: '144 Hz', status: 'ONLINE', latency: '4 ms', recordsProcessed: '840K' },
     { id: 'DS-03', name: 'TDMS OHE 25kV Telemetry', type: 'SCADA Protocol', dept: 'Electrical TRD', rate: '500 ms', status: 'ONLINE', latency: '8 ms', recordsProcessed: '2.1M' },
     { id: 'DS-04', name: 'SMMS Signal & Interlocking', type: 'Form T/351 Disconnection', dept: 'Signalling', rate: 'Event-driven', status: 'ONLINE', latency: '15 ms', recordsProcessed: '320K' },
     { id: 'DS-05', name: 'COA Timetable & Live Movement', type: 'REST API Gateway', dept: 'Traffic & Control', rate: '1 sec', status: 'ONLINE', latency: '18 ms', recordsProcessed: '4.8M' },
     { id: 'DS-06', name: 'FOIS Freight Operations', type: 'REST API / IRCTC', dept: 'Traffic & Freight', rate: '1 min', status: 'ONLINE', latency: '24 ms', recordsProcessed: '910K' },
-    { id: 'DS-07', name: 'Drone RGB Vision Scanner', type: 'EfficientNet-B4 Frames', dept: 'Surveillance Inspection', rate: '30 FPS', status: 'ONLINE', latency: '35 ms', recordsProcessed: '180K' }
+    { id: 'DS-07', name: 'Drone RGB Vision Scanner', type: 'EfficientNet-B4 Frames', dept: 'Surveillance Inspection', rate: '144 Hz', status: 'ONLINE', latency: '15 ms', recordsProcessed: '180K' }
   ]);
 
   const [refreshing, setRefreshing] = useState(false);
