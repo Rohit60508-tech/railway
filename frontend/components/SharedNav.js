@@ -1835,16 +1835,16 @@
     const rowsHTML = data.rows.map(r => `
       <tr>
         ${r.map((cell, idx) => {
-          if (idx === 0) {
-            const rawId = cell.replace(/<[^>]*>/g, '').trim();
-            return `<td>
+      if (idx === 0) {
+        const rawId = cell.replace(/<[^>]*>/g, '').trim();
+        return `<td>
               <a href="javascript:void(0)" onclick="window.openIRBriefReport('${rawId}', '${type}')" style="font-weight:800;font-family:monospace;color:#003366;text-decoration:underline;cursor:pointer;" title="Click to view detailed brief report for ${rawId}">
                 ${cell} 🔍
               </a>
             </td>`;
-          }
-          return `<td>${cell}</td>`;
-        }).join('')}
+      }
+      return `<td>${cell}</td>`;
+    }).join('')}
       </tr>
     `).join('');
 
@@ -2435,7 +2435,7 @@
       if (!mapContainer) return;
 
       if (fsMapInstance) {
-        try { fsMapInstance.remove(); } catch (e) {}
+        try { fsMapInstance.remove(); } catch (e) { }
         fsMapInstance = null;
       }
 
@@ -2443,7 +2443,7 @@
         if (!document.getElementById('fs-leaflet-map')) return;
         try {
           if (fsMapInstance) {
-            try { fsMapInstance.remove(); } catch (e) {}
+            try { fsMapInstance.remove(); } catch (e) { }
             fsMapInstance = null;
           }
           mapContainer.innerHTML = '';
@@ -2721,10 +2721,10 @@
             </thead>
             <tbody id="fs-weather-table-rows">
               ${cur.stations.map(s => {
-                const amb = (26.5 + ((s.km % 30) * 0.12)).toFixed(1);
-                const rail = (parseFloat(amb) + 14.2).toFixed(1);
-                const isSafe = parseFloat(rail) < 55.0;
-                return `
+      const amb = (26.5 + ((s.km % 30) * 0.12)).toFixed(1);
+      const rail = (parseFloat(amb) + 14.2).toFixed(1);
+      const isSafe = parseFloat(rail) < 55.0;
+      return `
                   <tr style="border-bottom:1px solid #E2E8F0;">
                     <td style="padding:10px 14px;font-weight:700;">${s.name} (${s.code})</td>
                     <td style="padding:10px 14px;color:#64748B;">KM ${s.km.toFixed(1)}</td>
@@ -2734,7 +2734,7 @@
                     <td style="padding:10px 14px;"><span style="color:${isSafe ? '#059669' : '#DC2626'};font-weight:700;">${isSafe ? '✓ Permitted' : '⚠️ Critical Buckling Alert'}</span></td>
                   </tr>
                 `;
-              }).join('')}
+    }).join('')}
             </tbody>
           </table>
         </div>
@@ -3491,7 +3491,7 @@
           disruption_score: Math.max(0, 100 - (data.feasibility_score || 0)),
           delay_minutes: duration
         })
-      }).catch(_ => {});
+      }).catch(_ => { });
 
     } catch (err) {
       output.innerHTML = `
@@ -3566,7 +3566,7 @@
           <div id="conf-card-db-${idx}" style="background:#FFF;border:1.5px solid #FCA5A5;border-radius:10px;padding:14px;box-shadow:0 2px 8px rgba(220,38,38,0.04);">
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
               <div style="font-size:0.86rem;font-weight:800;color:#DC2626;display:flex;align-items:center;gap:6px;">
-                <span>⚠️ ${r.target_entity_id || ('CONF-DB-0' + (idx+1))}</span>
+                <span>⚠️ ${r.target_entity_id || ('CONF-DB-0' + (idx + 1))}</span>
                 <span style="color:#0F172A;font-weight:700;">${r.section || 'NDLS-CNB-UP'}</span>
               </div>
               <div style="display:flex;align-items:center;gap:6px;">
@@ -3644,7 +3644,7 @@
         disruption_score: 0.0,
         delay_minutes: 0
       })
-    }).catch(_ => {});
+    }).catch(_ => { });
 
     alert(`✓ AI Alternative Window Applied!\n\nSelected Window: ${altSlot}\nDisruption score reduced to 0.0. Audit record generated and stored to Supabase.`);
   };
@@ -3679,7 +3679,7 @@
         disruption_score: 25.0,
         delay_minutes: 120
       })
-    }).catch(_ => {});
+    }).catch(_ => { });
 
     alert(`🔒 Block Window ${confCode} Sanctioned & Locked!\n\nCryptographic audit proof stored to Supabase PostgreSQL.`);
   };
@@ -3717,7 +3717,7 @@
       });
       const data = await res.json();
       alert(`✓ Block Possession Sanctioned Successfully!\n\nSection: ${stFrom} ➔ ${stTo} (KM ${kmPole})\nRecord Hash: ${data.record_hash ? data.record_hash.slice(0, 16) + '...' : 'SEALED-OK'}\n\nTamper-proof record appended to Supabase & SQLite Audit Ledger.`);
-      
+
       if (typeof window.fsRefreshAudit === 'function') {
         window.fsRefreshAudit();
       }
@@ -4043,7 +4043,7 @@
     if (fsMapInstance) {
       try {
         fsMapInstance.remove();
-      } catch (e) {}
+      } catch (e) { }
       fsMapInstance = null;
     }
   };
@@ -4127,6 +4127,30 @@
     const logoutBtn = document.getElementById('snav-logout-btn');
     if (logoutBtn && window.IR_AUTH) {
       logoutBtn.addEventListener('click', () => window.IR_AUTH.logout());
+    }
+
+    // Check for security redirect notice
+    if (window.location.search.includes('security_notice=unauthorized_page_access')) {
+      setTimeout(() => {
+        const alertBox = document.createElement('div');
+        alertBox.style.cssText = `
+          position: fixed; top: 70px; right: 24px; z-index: 9999;
+          background: #FEF2F2; border: 1px solid #FCA5A5; border-left: 5px solid #DC2626;
+          color: #991B1B; padding: 12px 18px; border-radius: 10px;
+          box-shadow: 0 10px 25px rgba(220, 38, 38, 0.2); font-size: 13px; font-weight: 600;
+          display: flex; align-items: center; gap: 10px;
+        `;
+        alertBox.innerHTML = `
+          <span style="font-size: 18px;">🛑</span>
+          <div>
+            <strong>SECURITY NOTICE — ACCESS RESTRICTED</strong><br/>
+            Your account role is not authorized to access the requested admin console. You have been safely redirected to your assigned workspace.
+          </div>
+          <button onclick="this.parentElement.remove()" style="background:none; border:none; color:#991B1B; font-size:16px; cursor:pointer; font-weight:700; margin-left:10px;">✕</button>
+        `;
+        document.body.appendChild(alertBox);
+        setTimeout(() => { if (alertBox.parentElement) alertBox.remove(); }, 7000);
+      }, 400);
     }
 
     // Reports open buttons

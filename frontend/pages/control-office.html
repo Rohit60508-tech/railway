@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -443,7 +443,8 @@
                 title="Import maintenance window requests from CSV file or Supabase table"
                 style="background: #ECFDF5; color: #059669; border: 1px solid #A7F3D0; padding: 4px 10px; border-radius: 5px; font-size: 0.72rem; font-weight: 700; cursor: pointer;">📥
                 Import CSV / Supabase</button>
-              <input type="file" id="csv-file-input" accept=".csv" style="display:none;" onchange="window.handleCsvFileSelected(event)" />
+              <input type="file" id="csv-file-input" accept=".csv" style="display:none;"
+                onchange="window.handleCsvFileSelected(event)" />
               <button onclick="window.fetchLiveConflicts(); window.fetchLiveRecommendedSlots();"
                 title="Re-evaluate with Live Train API"
                 style="background: #FAF6EE; color: #003366; border: 1px solid #C3B296; padding: 3px 8px; border-radius: 5px; font-size: 0.72rem; font-weight: 700; cursor: pointer;">↻
@@ -1580,7 +1581,7 @@
         }).catch(() => null);
 
         alert(`✓ [${entryName}] Block ${slotId} (${windowTime}) SANCTIONED!\n\nOperator: ${data.user_name || activeUser.name} [${data.staff_id || 'STAFF-01'}]\nDatabase: ${data.storage_destination || 'audit_records.db'}\nSHA-256 Hash: ${data.record_hash ? data.record_hash.slice(0, 16) + '...' : 'SECURED'}\nImmutability: 🔒 CRYPTOGRAPHICALLY SEALED`);
-        
+
         await window.fetchLiveConflicts();
         await window.fetchLiveRecommendedSlots();
         if (typeof window.refreshCtrlAudit === 'function') window.refreshCtrlAudit();
@@ -2657,6 +2658,10 @@
     };
 
     document.addEventListener('DOMContentLoaded', () => {
+      // Auto-load conflicts & recommended slots on page load directly from Supabase & local DB
+      if (typeof window.fetchLiveConflicts === 'function') window.fetchLiveConflicts();
+      if (typeof window.fetchLiveRecommendedSlots === 'function') window.fetchLiveRecommendedSlots();
+
       if (window.IR_LIVE_SYNC) {
         window.IR_LIVE_SYNC.on('conflicts_updated', () => {
           if (typeof window.fetchLiveConflicts === 'function') window.fetchLiveConflicts();

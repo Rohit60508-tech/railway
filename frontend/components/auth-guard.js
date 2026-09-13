@@ -154,6 +154,7 @@
       return isAdmin || meta.permissions.includes('OVERWRITE_ANY') || meta.permissions.includes(feature);
     },
     hasPermission(key) {
+      if (!key) return true;
       if (isAdmin) return true;
       return meta.permissions.includes(key) || meta.permissions.includes('ALL') || meta.permissions.includes('*');
     },
@@ -168,4 +169,14 @@
       window.location.replace(LOGIN_URL);
     },
   };
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // STRICT ROLE-BASED ACCESS CONTROL (RBAC) PAGE AUTHORIZATION GUARD
+  // ═══════════════════════════════════════════════════════════════════════════
+  if (pageKey && !window.IR_AUTH.hasPermission(pageKey)) {
+    console.warn(`[Security AuthGuard] ACCESS DENIED: Role '${session.role}' (${meta.label}) is not authorized to access page '${pageKey}' (${window.location.pathname}). Redirecting to authorized route: ${meta.route}`);
+    const redirectTarget = meta.route || 'maintenance-dashboard.html';
+    window.location.replace(redirectTarget + '?security_notice=unauthorized_page_access');
+    return;
+  }
 })();
