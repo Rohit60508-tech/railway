@@ -2657,6 +2657,10 @@
     };
 
     document.addEventListener('DOMContentLoaded', () => {
+      // Auto-load conflicts & recommended slots on page load directly from Supabase & local DB
+      if (typeof window.fetchLiveConflicts === 'function') window.fetchLiveConflicts();
+      if (typeof window.fetchLiveRecommendedSlots === 'function') window.fetchLiveRecommendedSlots();
+
       if (window.IR_LIVE_SYNC) {
         window.IR_LIVE_SYNC.on('conflicts_updated', () => {
           if (typeof window.fetchLiveConflicts === 'function') window.fetchLiveConflicts();
