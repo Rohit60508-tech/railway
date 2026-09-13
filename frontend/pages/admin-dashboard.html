@@ -1442,23 +1442,28 @@
     window.refreshAdminAudit();
   </script>
 
-    <!-- ═══════════════════ SECTION 5: PERSONNEL ACCESS & CREDENTIAL GOVERNANCE ═══════════════════ -->
-    <div class="card-panel" style="margin-top: 20px; display: flex; align-items: center; justify-content: space-between; padding: 20px 24px; background: #FFFFFF; border-left: 4px solid #003366; border-radius: 12px; box-shadow: 0 4px 20px rgba(70, 50, 30, 0.05);">
-      <div>
-        <div style="display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 1rem; color: #003366;">
-          <span>🔐</span>
-          <span>Personnel Credentials &amp; Access Governance</span>
-          <span style="font-size: 0.68rem; padding: 2px 8px; border-radius: 12px; background: rgba(0, 51, 102, 0.08); color: #003366; font-weight: 700;">RBAC Protected</span>
-        </div>
-        <p style="font-size: 0.80rem; color: #64748B; margin-top: 4px;">
-          Credentials and role authorizations for Track (TMS), Signal (SMMS), Traction (TRD), Control, and Surveillance personnel are securely protected and managed on-demand.
-        </p>
-      </div>
-      <button onclick="window.openUserCredentialsModal()" style="display: inline-flex; align-items: center; gap: 8px; padding: 10px 22px; border-radius: 8px; border: none; background: #003366; color: #FFFFFF; font-weight: 700; font-size: 0.82rem; cursor: pointer; box-shadow: 0 3px 10px rgba(0, 51, 102, 0.25); transition: all 0.15s; white-space: nowrap;">
+  <!-- ═══════════════════ SECTION 5: PERSONNEL ACCESS & CREDENTIAL GOVERNANCE ═══════════════════ -->
+  <div class="card-panel"
+    style="margin-top: 20px; display: flex; align-items: center; justify-content: space-between; padding: 20px 24px; background: #FFFFFF; border-left: 4px solid #003366; border-radius: 12px; box-shadow: 0 4px 20px rgba(70, 50, 30, 0.05);">
+    <div>
+      <div style="display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 1rem; color: #003366;">
         <span>🔐</span>
-        <span>Manage Personnel Credentials</span>
-      </button>
+        <span>Personnel Credentials &amp; Access Governance</span>
+        <span
+          style="font-size: 0.68rem; padding: 2px 8px; border-radius: 12px; background: rgba(0, 51, 102, 0.08); color: #003366; font-weight: 700;">RBAC
+          Protected</span>
+      </div>
+      <p style="font-size: 0.80rem; color: #64748B; margin-top: 4px;">
+        Credentials and role authorizations for Track (TMS), Signal (SMMS), Traction (TRD), Control, and Surveillance
+        personnel are securely protected and managed on-demand.
+      </p>
     </div>
+    <button onclick="window.openUserCredentialsModal()"
+      style="display: inline-flex; align-items: center; gap: 8px; padding: 10px 22px; border-radius: 8px; border: none; background: #003366; color: #FFFFFF; font-weight: 700; font-size: 0.82rem; cursor: pointer; box-shadow: 0 3px 10px rgba(0, 51, 102, 0.25); transition: all 0.15s; white-space: nowrap;">
+      <span>🔐</span>
+      <span>Manage Personnel Credentials</span>
+    </button>
+  </div>
 
   </main><!-- /admin-container -->
 
@@ -1601,7 +1606,7 @@
         }
 
         if (currentSearchQuery) {
-          users = users.filter(u => 
+          users = users.filter(u =>
             (u.name || '').toLowerCase().includes(currentSearchQuery) ||
             (u.username || '').toLowerCase().includes(currentSearchQuery) ||
             (u.division || '').toLowerCase().includes(currentSearchQuery) ||

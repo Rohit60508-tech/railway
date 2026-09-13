@@ -65,8 +65,15 @@
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(6px); }
-      to { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .animate-fade-in {
@@ -84,9 +91,11 @@
       width: 6px;
       height: 6px;
     }
+
     ::-webkit-scrollbar-track {
       background: rgba(15, 23, 42, 0.5);
     }
+
     ::-webkit-scrollbar-thumb {
       background: rgba(255, 255, 255, 0.2);
       border-radius: 4px;
@@ -110,12 +119,12 @@
       try {
         const navEntries = performance.getEntriesByType ? performance.getEntriesByType('navigation') : [];
         const isReload = (navEntries.length > 0 && navEntries[0].type === 'reload') ||
-                         (window.performance && window.performance.navigation && window.performance.navigation.type === 1);
+          (window.performance && window.performance.navigation && window.performance.navigation.type === 1);
         if (isReload) {
           sessionStorage.removeItem(SESSION_KEY);
           sessionStorage.removeItem(TOKEN_KEY);
         }
-      } catch (_) {}
+      } catch (_) { }
 
       const urlParams = new URLSearchParams(window.location.search);
       const isReloadSecurity = urlParams.get('reason') === 'reload_security';

@@ -314,7 +314,9 @@
       <div style="display: flex; align-items: center; gap: 10px;">
         <span>📋</span>
         <span>Control Office Sanctioned Work Requisitions (Pending Acceptance)</span>
-        <span id="pending-wo-count-badge" style="background: rgba(0, 51, 102, 0.08); border: 1px solid rgba(0, 51, 102, 0.2); color: #003366; font-size: 0.76rem; font-weight: 700; padding: 2px 8px; border-radius: 12px;">0 Sanctioned</span>
+        <span id="pending-wo-count-badge"
+          style="background: rgba(0, 51, 102, 0.08); border: 1px solid rgba(0, 51, 102, 0.2); color: #003366; font-size: 0.76rem; font-weight: 700; padding: 2px 8px; border-radius: 12px;">0
+          Sanctioned</span>
       </div>
       <div style="font-size: 0.76rem; color: #64748B; font-weight: 600;">
         Click <strong>"✓ Accept &amp; Lock Slot"</strong> to confirm requisition ➔ Move to Work To Be Done
@@ -326,11 +328,14 @@
     </div>
 
     <!-- ═══════════════════ SECTION 2: WORK ACCEPTED & LOCKED SLOTS (TO BE DONE) ═══════════════════ -->
-    <div class="section-title" style="margin-top: 36px; display: flex; align-items: center; justify-content: space-between;">
+    <div class="section-title"
+      style="margin-top: 36px; display: flex; align-items: center; justify-content: space-between;">
       <div style="display: flex; align-items: center; gap: 10px;">
         <span>📌</span>
         <span style="color: #003366;">Work Accepted &amp; Locked Slots (To Be Done / In Progress)</span>
-        <span id="accepted-wo-count-badge" style="background: rgba(5, 150, 105, 0.1); border: 1px solid rgba(5, 150, 105, 0.3); color: #059669; font-size: 0.76rem; font-weight: 700; padding: 2px 8px; border-radius: 12px;">0 Accepted</span>
+        <span id="accepted-wo-count-badge"
+          style="background: rgba(5, 150, 105, 0.1); border: 1px solid rgba(5, 150, 105, 0.3); color: #059669; font-size: 0.76rem; font-weight: 700; padding: 2px 8px; border-radius: 12px;">0
+          Accepted</span>
       </div>
       <div style="font-size: 0.76rem; color: #059669; font-weight: 600;">
         Accepted Requisitions ready for field execution ➔ Click <strong>"☑ Tick Work Completed"</strong> when done
@@ -342,11 +347,14 @@
     </div>
 
     <!-- ═══════════════════ SECTION 3: WORK COMPLETED & CLOSED REQUISITIONS ═══════════════════ -->
-    <div class="section-title" style="margin-top: 36px; display: flex; align-items: center; justify-content: space-between;">
+    <div class="section-title"
+      style="margin-top: 36px; display: flex; align-items: center; justify-content: space-between;">
       <div style="display: flex; align-items: center; gap: 10px;">
         <span>✅</span>
         <span style="color: #059669;">Work Completed &amp; Closed Requisitions</span>
-        <span id="completed-wo-count-badge" style="background: rgba(5, 150, 105, 0.1); border: 1px solid rgba(5, 150, 105, 0.3); color: #059669; font-size: 0.76rem; font-weight: 700; padding: 2px 8px; border-radius: 12px;">0 Completed</span>
+        <span id="completed-wo-count-badge"
+          style="background: rgba(5, 150, 105, 0.1); border: 1px solid rgba(5, 150, 105, 0.3); color: #059669; font-size: 0.76rem; font-weight: 700; padding: 2px 8px; border-radius: 12px;">0
+          Completed</span>
       </div>
       <button onclick="window.openIRReportModal('work-orders')" style="
         background: linear-gradient(135deg, #059669, #047857);
@@ -549,13 +557,13 @@
         const res = await fetch('/api/v1/requested-windows');
         if (!res.ok) throw new Error('API fetch failed');
         const data = await res.json();
-        
+
         // Map ALL requested and sanctioned maintenance windows from local database audit_records.db & Supabase
         const approvedFromApi = (data || []).map(item => {
           const deptCode = normalizeDeptCode(item.department);
           const st = (item.status || 'PENDING_REVIEW').toUpperCase();
           const isSanctioned = st === 'APPROVED' || st === 'SANCTIONED' || st.includes('SANCTION') || st.includes('APPROV');
-          
+
           return {
             id: item.request_id || `WO-${deptCode}-${item.id}`,
             title: item.work_description || `Requested Block Requisition (${item.section_id})`,
@@ -757,13 +765,13 @@
               </div>
 
               ${AIExplanationCard.render({
-                id: wo.id,
-                summary: wo.explanationSummary,
-                detailedReason: wo.detailedExplanation,
-                factors: wo.factors,
-                recommendedAction: wo.action,
-                defaultExpanded: wo.category === 'P1'
-              })}
+              id: wo.id,
+              summary: wo.explanationSummary,
+              detailedReason: wo.detailedExplanation,
+              factors: wo.factors,
+              recommendedAction: wo.action,
+              defaultExpanded: wo.category === 'P1'
+            })}
             `;
             pendingContainer.appendChild(card);
           });
@@ -847,13 +855,13 @@
               </div>
 
               ${AIExplanationCard.render({
-                id: wo.id,
-                summary: wo.explanationSummary,
-                detailedReason: wo.detailedExplanation,
-                factors: wo.factors,
-                recommendedAction: wo.action,
-                defaultExpanded: wo.category === 'P1'
-              })}
+              id: wo.id,
+              summary: wo.explanationSummary,
+              detailedReason: wo.detailedExplanation,
+              factors: wo.factors,
+              recommendedAction: wo.action,
+              defaultExpanded: wo.category === 'P1'
+            })}
             `;
             acceptedContainer.appendChild(card);
           });
@@ -1028,7 +1036,7 @@
         try {
           const sess = JSON.parse(sessionStorage.getItem('ir_auth_session') || '{}');
           role = sess.role || null;
-        } catch (_) {}
+        } catch (_) { }
       }
 
       if (role && ROLE_DEPT_MAP[role]) {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { 
-  Shield, Wrench, Sliders, Radio, Database, FileText, LogOut, Cpu, Activity, 
+import {
+  Shield, Wrench, Sliders, Radio, Database, FileText, LogOut, Cpu, Activity,
   ChevronLeft, ChevronRight, Sun, Moon, Bell, RefreshCw, UserCheck, Layers, Terminal, AlertTriangle
 } from 'lucide-react';
 
@@ -20,7 +20,7 @@ export default function MasterCommandLayout({ children, currentTab, setCurrentTa
       document.body.classList.toggle('dark-mode', nextTheme === 'dark');
       document.body.classList.toggle('light-mode', nextTheme === 'light');
     }
-    try { localStorage.setItem('ir_theme_mode', nextTheme); } catch (_) {}
+    try { localStorage.setItem('ir_theme_mode', nextTheme); } catch (_) { }
   };
 
   useEffect(() => {
@@ -103,7 +103,7 @@ export default function MasterCommandLayout({ children, currentTab, setCurrentTa
 
   return (
     <div style={{ minHeight: '100vh', background: bgGradient, color: textColor, fontFamily: "'Plus Jakarta Sans', 'Calibri', sans-serif" }}>
-      
+
       {/* ── Top Live Telemetry Ticker Header ── */}
       <div style={{
         height: '38px',
@@ -141,7 +141,7 @@ export default function MasterCommandLayout({ children, currentTab, setCurrentTa
             <span>LIVE TELEMETRY STREAM</span>
           </div>
 
-          <button 
+          <button
             onClick={toggleThemeMode}
             style={{ background: 'rgba(255, 255, 255, 0.1)', border: '1px solid rgba(255, 255, 255, 0.2)', borderRadius: '6px', padding: '4px 8px', color: '#E2E8F0', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.72rem', fontWeight: '700' }}
             title="Toggle Light / Dark Command Theme"
@@ -154,7 +154,7 @@ export default function MasterCommandLayout({ children, currentTab, setCurrentTa
 
       {/* ── Main Layout Body ── */}
       <div style={{ display: 'flex', minHeight: 'calc(100vh - 38px)' }}>
-        
+
         {/* ── Master Command Sidebar ── */}
         <aside style={{
           width: collapsed ? '72px' : '265px',
@@ -232,7 +232,7 @@ export default function MasterCommandLayout({ children, currentTab, setCurrentTa
             {/* Nav Categories */}
             <div style={{ padding: '14px 12px', overflowY: 'auto', maxHeight: 'calc(100vh - 180px)' }}>
               {CATEGORIZED_NAV.map((cat, idx) => {
-                const allowedItems = cat.items.filter(item => 
+                const allowedItems = cat.items.filter(item =>
                   !session || session.role === 'admin' || item.roleAllowed.includes(session.role)
                 );
                 if (allowedItems.length === 0) return null;
@@ -355,7 +355,7 @@ export default function MasterCommandLayout({ children, currentTab, setCurrentTa
 
         {/* ── Main View Content Area ── */}
         <main style={{ flex: 1, padding: '28px 36px', overflowY: 'auto' }}>
-          
+
           {/* Quick Role Switcher Drawer Modal */}
           {showRoleDrawer && (
             <div style={{

@@ -714,10 +714,21 @@
       border-color: rgba(0, 51, 102, 0.4);
     }
 
-    .agent-card.cat-safety { border-left-color: #DC2626; }
-    .agent-card.cat-predictive { border-left-color: #0056B3; }
-    .agent-card.cat-vision { border-left-color: #059669; }
-    .agent-card.cat-llm { border-left-color: #7C3AED; }
+    .agent-card.cat-safety {
+      border-left-color: #DC2626;
+    }
+
+    .agent-card.cat-predictive {
+      border-left-color: #0056B3;
+    }
+
+    .agent-card.cat-vision {
+      border-left-color: #059669;
+    }
+
+    .agent-card.cat-llm {
+      border-left-color: #7C3AED;
+    }
 
     .agent-top-row {
       display: flex;
@@ -911,8 +922,15 @@
     }
 
     @keyframes modalPop {
-      from { transform: scale(0.96); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
+      from {
+        transform: scale(0.96);
+        opacity: 0;
+      }
+
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
     }
 
     .swarm-modal-header {
@@ -1154,7 +1172,8 @@
           <div>
             <div class="swarm-title">Autonomous Multi-Agent AI Swarm Registry (10 Active Agents)</div>
             <div class="swarm-sub">
-              Sovereign agentic system located in <code>ai-models/agents</code> &bull; Coordinated by Central Swarm Orchestrator with Zero-Hallucination Safe AI Architecture
+              Sovereign agentic system located in <code>ai-models/agents</code> &bull; Coordinated by Central Swarm
+              Orchestrator with Zero-Hallucination Safe AI Architecture
             </div>
           </div>
         </div>
@@ -1195,16 +1214,22 @@
       <!-- Filter Tabs & Real-Time Search Bar -->
       <div class="swarm-filter-bar">
         <div class="swarm-tabs" id="swarm-category-tabs">
-          <button class="swarm-tab-btn active" data-category="all" onclick="window.filterSwarmCategory('all', this)">All Agents (10)</button>
-          <button class="swarm-tab-btn" data-category="safety" onclick="window.filterSwarmCategory('safety', this)">Safety &amp; Triage (2)</button>
-          <button class="swarm-tab-btn" data-category="predictive" onclick="window.filterSwarmCategory('predictive', this)">Predictive &amp; Scheduling (3)</button>
-          <button class="swarm-tab-btn" data-category="vision" onclick="window.filterSwarmCategory('vision', this)">Vision &amp; Ingestion (2)</button>
-          <button class="swarm-tab-btn" data-category="llm" onclick="window.filterSwarmCategory('llm', this)">LLM &amp; Governance (3)</button>
+          <button class="swarm-tab-btn active" data-category="all" onclick="window.filterSwarmCategory('all', this)">All
+            Agents (10)</button>
+          <button class="swarm-tab-btn" data-category="safety"
+            onclick="window.filterSwarmCategory('safety', this)">Safety &amp; Triage (2)</button>
+          <button class="swarm-tab-btn" data-category="predictive"
+            onclick="window.filterSwarmCategory('predictive', this)">Predictive &amp; Scheduling (3)</button>
+          <button class="swarm-tab-btn" data-category="vision"
+            onclick="window.filterSwarmCategory('vision', this)">Vision &amp; Ingestion (2)</button>
+          <button class="swarm-tab-btn" data-category="llm" onclick="window.filterSwarmCategory('llm', this)">LLM &amp;
+            Governance (3)</button>
         </div>
 
         <div class="swarm-search-box">
           <span class="swarm-search-icon">🔍</span>
-          <input type="text" class="swarm-search-input" id="swarm-search-input" placeholder="Search agents by name, ID, or method..." oninput="window.searchSwarmAgents(this.value)" />
+          <input type="text" class="swarm-search-input" id="swarm-search-input"
+            placeholder="Search agents by name, ID, or method..." oninput="window.searchSwarmAgents(this.value)" />
         </div>
       </div>
 
@@ -1244,7 +1269,8 @@
               </div>
             </div>
             <div class="agent-rationale-snippet">
-              "Fast tabular self-learning fitted to Indian Railways safety rules (IRPWM 2020) without LLM hallucination."
+              "Fast tabular self-learning fitted to Indian Railways safety rules (IRPWM 2020) without LLM
+              hallucination."
             </div>
           </div>
           <div class="agent-card-footer">
@@ -1288,7 +1314,8 @@
               </div>
             </div>
             <div class="agent-rationale-snippet">
-              "Handles right-censored maintenance records and asset wear degradation curves to prevent sudden rail fractures."
+              "Handles right-censored maintenance records and asset wear degradation curves to prevent sudden rail
+              fractures."
             </div>
           </div>
           <div class="agent-card-footer">
@@ -1331,7 +1358,8 @@
                 <div class="val" style="color: #059669;" id="tfa-card-r2">0.912</div>
               </div>
             </div>
-            <div id="tfa-card-live-slots" style="background:#ECFDF5;border:1px solid #A7F3D0;border-radius:6px;padding:6px 10px;font-size:0.72rem;color:#065F46;margin-top:8px;margin-bottom:8px;font-weight:700;">
+            <div id="tfa-card-live-slots"
+              style="background:#ECFDF5;border:1px solid #A7F3D0;border-radius:6px;padding:6px 10px;font-size:0.72rem;color:#065F46;margin-top:8px;margin-bottom:8px;font-weight:700;">
               🟢 <strong>OPEN WINDOWS NOW:</strong> 12:45 – 15:00 (NDLS-GZB-DN) &bull; 14:00 – 16:30 (BCT-NDLS-UP)
             </div>
             <div class="agent-rationale-snippet">
@@ -1379,7 +1407,8 @@
               </div>
             </div>
             <div class="agent-rationale-snippet">
-              "Millimeter-precision detection of internal transverse cracks, missing ERC clips, ballast voids, and OHE droppers."
+              "Millimeter-precision detection of internal transverse cracks, missing ERC clips, ballast voids, and OHE
+              droppers."
             </div>
           </div>
           <div class="agent-card-footer">
@@ -1467,7 +1496,8 @@
               </div>
             </div>
             <div class="agent-rationale-snippet">
-              "Natural-language access to standard operating procedures without letting the LLM directly query live databases."
+              "Natural-language access to standard operating procedures without letting the LLM directly query live
+              databases."
             </div>
           </div>
           <div class="agent-card-footer">
@@ -1511,7 +1541,8 @@
               </div>
             </div>
             <div class="agent-rationale-snippet">
-              "Explainable AI with verifiable ground truth for DRM, Chief Controllers, and Railway Safety Commissioners."
+              "Explainable AI with verifiable ground truth for DRM, Chief Controllers, and Railway Safety
+              Commissioners."
             </div>
           </div>
           <div class="agent-card-footer">
@@ -1599,7 +1630,8 @@
               </div>
             </div>
             <div class="agent-rationale-snippet">
-              "Solves multi-department track possessions (Civil, TRD OHE, S&T) into shadow blocks with zero train delay."
+              "Solves multi-department track possessions (Civil, TRD OHE, S&T) into shadow blocks with zero train
+              delay."
             </div>
           </div>
           <div class="agent-card-footer">
@@ -2553,13 +2585,16 @@
       </div>
 
       <div class="swarm-modal-body">
-        <div style="background: #FCFBF7; border: 1px solid rgba(195,178,150,0.45); border-radius: 8px; padding: 14px; margin-bottom: 20px;">
+        <div
+          style="background: #FCFBF7; border: 1px solid rgba(195,178,150,0.45); border-radius: 8px; padding: 14px; margin-bottom: 20px;">
           <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
             <div>
               <div style="font-size: 0.8rem; font-weight: 700; color: #003366;">Select Test Incident Scenario:</div>
-              <div style="font-size: 0.72rem; color: #64748B;">Simulates real-time IoT feeds, inspection images, and dispatcher registers</div>
+              <div style="font-size: 0.72rem; color: #64748B;">Simulates real-time IoT feeds, inspection images, and
+                dispatcher registers</div>
             </div>
-            <select id="pipe-scenario-select" style="padding: 6px 12px; border-radius: 6px; border: 1px solid rgba(0,51,102,0.3); background: #FFF; font-size: 0.78rem; font-weight: 600; color: #003366; outline: none;">
+            <select id="pipe-scenario-select"
+              style="padding: 6px 12px; border-radius: 6px; border: 1px solid rgba(0,51,102,0.3); background: #FFF; font-size: 0.78rem; font-weight: 600; color: #003366; outline: none;">
               <option value="imr_fracture">Scenario 1: IMR Rail Fracture at KM 124/6 (NDLS-CNB UP Main)</option>
               <option value="oms_spike">Scenario 2: OMS High Accel Spike (0.42g, Ghaziabad Outer)</option>
               <option value="ohe_wear">Scenario 3: OHE Catenary Dropper Wear on High-Speed Corridor</option>
@@ -2568,7 +2603,8 @@
         </div>
 
         <!-- 7-Step Cooperative Pipeline Stepper -->
-        <div style="font-size: 0.75rem; font-weight: 800; color: #475569; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px;">
+        <div
+          style="font-size: 0.75rem; font-weight: 800; color: #475569; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px;">
           7-Step Swarm Execution Architecture:
         </div>
 
@@ -2578,9 +2614,11 @@
             <div class="pipeline-step-content">
               <div class="pipeline-step-title">
                 <span>Text / Vision Ingestion &amp; Extraction</span>
-                <span style="font-size: 0.7rem; color: #0056B3; font-family: var(--font-mono);">text_extraction_agent / vision_defect_alert_agent</span>
+                <span style="font-size: 0.7rem; color: #0056B3; font-family: var(--font-mono);">text_extraction_agent /
+                  vision_defect_alert_agent</span>
               </div>
-              <div class="pipeline-step-desc">Extracts unstructured field registers or 4K drone imagery into structured defect schema.</div>
+              <div class="pipeline-step-desc">Extracts unstructured field registers or 4K drone imagery into structured
+                defect schema.</div>
             </div>
           </div>
 
@@ -2589,9 +2627,11 @@
             <div class="pipeline-step-content">
               <div class="pipeline-step-title">
                 <span>Sensor &amp; Telemetry Anomaly Sentinel</span>
-                <span style="font-size: 0.7rem; color: #0056B3; font-family: var(--font-mono);">anomaly_detection_agent</span>
+                <span
+                  style="font-size: 0.7rem; color: #0056B3; font-family: var(--font-mono);">anomaly_detection_agent</span>
               </div>
-              <div class="pipeline-step-desc">Validates OMS vertical accel (0.42g), rail temp (46°C), and rejects corrupted/spoofed telemetry.</div>
+              <div class="pipeline-step-desc">Validates OMS vertical accel (0.42g), rail temp (46°C), and rejects
+                corrupted/spoofed telemetry.</div>
             </div>
           </div>
 
@@ -2600,9 +2640,11 @@
             <div class="pipeline-step-content">
               <div class="pipeline-step-title">
                 <span>Track Defect Priority Classification</span>
-                <span style="font-size: 0.7rem; color: #0056B3; font-family: var(--font-mono);">defect_priority_agent</span>
+                <span
+                  style="font-size: 0.7rem; color: #0056B3; font-family: var(--font-mono);">defect_priority_agent</span>
               </div>
-              <div class="pipeline-step-desc">XGBoost 3.4.1 computes safety score &amp; matches statutory IRPWM Para 268/522/523 urgency rules.</div>
+              <div class="pipeline-step-desc">XGBoost 3.4.1 computes safety score &amp; matches statutory IRPWM Para
+                268/522/523 urgency rules.</div>
             </div>
           </div>
 
@@ -2611,9 +2653,11 @@
             <div class="pipeline-step-content">
               <div class="pipeline-step-title">
                 <span>Survival &amp; Time-to-Failure Degradation (RUL)</span>
-                <span style="font-size: 0.7rem; color: #0056B3; font-family: var(--font-mono);">time_to_event_risk_agent</span>
+                <span
+                  style="font-size: 0.7rem; color: #0056B3; font-family: var(--font-mono);">time_to_event_risk_agent</span>
               </div>
-              <div class="pipeline-step-desc">Calculates Remaining Useful Life (RUL in days) before structural failure under cumulative GMT.</div>
+              <div class="pipeline-step-desc">Calculates Remaining Useful Life (RUL in days) before structural failure
+                under cumulative GMT.</div>
             </div>
           </div>
 
@@ -2622,9 +2666,11 @@
             <div class="pipeline-step-content">
               <div class="pipeline-step-title">
                 <span>Corridor Traffic &amp; Headway Simulation</span>
-                <span style="font-size: 0.7rem; color: #0056B3; font-family: var(--font-mono);">traffic_forecast_agent</span>
+                <span
+                  style="font-size: 0.7rem; color: #0056B3; font-family: var(--font-mono);">traffic_forecast_agent</span>
               </div>
-              <div class="pipeline-step-desc">Simulates passenger headways (Rajdhani, Shatabdi, Vande Bharat) to find zero-conflict slots.</div>
+              <div class="pipeline-step-desc">Simulates passenger headways (Rajdhani, Shatabdi, Vande Bharat) to find
+                zero-conflict slots.</div>
             </div>
           </div>
 
@@ -2633,9 +2679,11 @@
             <div class="pipeline-step-content">
               <div class="pipeline-step-title">
                 <span>Combinatorial Shadow Block Scheduling</span>
-                <span style="font-size: 0.7rem; color: #0056B3; font-family: var(--font-mono);">scheduling_agent (Google OR-Tools CP-SAT)</span>
+                <span style="font-size: 0.7rem; color: #0056B3; font-family: var(--font-mono);">scheduling_agent (Google
+                  OR-Tools CP-SAT)</span>
               </div>
-              <div class="pipeline-step-desc">Bundles Civil track renewal with TRD OHE power block into unified shadow window.</div>
+              <div class="pipeline-step-desc">Bundles Civil track renewal with TRD OHE power block into unified shadow
+                window.</div>
             </div>
           </div>
 
@@ -2644,47 +2692,61 @@
             <div class="pipeline-step-content">
               <div class="pipeline-step-title">
                 <span>Explainable AI &amp; Regulatory Audit Justification</span>
-                <span style="font-size: 0.7rem; color: #0056B3; font-family: var(--font-mono);">explanation_agent (Local Ollama llama3.2:1b)</span>
+                <span style="font-size: 0.7rem; color: #0056B3; font-family: var(--font-mono);">explanation_agent (Local
+                  Ollama llama3.2:1b)</span>
               </div>
-              <div class="pipeline-step-desc">Synthesizes natural-language audit memo citing safety codes for DRM and Safety Commissioner.</div>
+              <div class="pipeline-step-desc">Synthesizes natural-language audit memo citing safety codes for DRM and
+                Safety Commissioner.</div>
             </div>
           </div>
         </div>
 
         <!-- Live Results Summary Display -->
-        <div id="pipe-summary-box" style="display: none; background: #F0FDF4; border: 1px solid rgba(5,150,105,0.4); border-radius: 10px; padding: 18px; margin-top: 20px;">
-          <div style="font-size: 0.92rem; font-weight: 800; color: #065F46; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+        <div id="pipe-summary-box"
+          style="display: none; background: #F0FDF4; border: 1px solid rgba(5,150,105,0.4); border-radius: 10px; padding: 18px; margin-top: 20px;">
+          <div
+            style="font-size: 0.92rem; font-weight: 800; color: #065F46; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
             <span>🛡️ Swarm Autonomous Triage Recommendation (Sanction-Ready)</span>
           </div>
 
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 14px;">
-            <div style="background: #FFF; padding: 8px 12px; border-radius: 6px; border: 1px solid rgba(5,150,105,0.2);">
+          <div
+            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 14px;">
+            <div
+              style="background: #FFF; padding: 8px 12px; border-radius: 6px; border: 1px solid rgba(5,150,105,0.2);">
               <div style="font-size: 0.68rem; color: #64748B; text-transform: uppercase;">Assigned Priority:</div>
-              <div id="pipe-priority-badge" style="font-weight: 800; color: #DC2626; font-size: 0.85rem;">P1 - CRITICAL</div>
+              <div id="pipe-priority-badge" style="font-weight: 800; color: #DC2626; font-size: 0.85rem;">P1 - CRITICAL
+              </div>
             </div>
-            <div style="background: #FFF; padding: 8px 12px; border-radius: 6px; border: 1px solid rgba(5,150,105,0.2);">
+            <div
+              style="background: #FFF; padding: 8px 12px; border-radius: 6px; border: 1px solid rgba(5,150,105,0.2);">
               <div style="font-size: 0.68rem; color: #64748B; text-transform: uppercase;">Estimated RUL:</div>
               <div id="pipe-rul-val" style="font-weight: 800; color: #003366; font-size: 0.85rem;">3.4 Days</div>
             </div>
-            <div style="background: #FFF; padding: 8px 12px; border-radius: 6px; border: 1px solid rgba(5,150,105,0.2);">
+            <div
+              style="background: #FFF; padding: 8px 12px; border-radius: 6px; border: 1px solid rgba(5,150,105,0.2);">
               <div style="font-size: 0.68rem; color: #64748B; text-transform: uppercase;">Speed Restriction:</div>
               <div id="pipe-tsr-val" style="font-weight: 800; color: #D9531E; font-size: 0.85rem;">30 km/h TSR</div>
             </div>
-            <div style="background: #FFF; padding: 8px 12px; border-radius: 6px; border: 1px solid rgba(5,150,105,0.2);">
+            <div
+              style="background: #FFF; padding: 8px 12px; border-radius: 6px; border: 1px solid rgba(5,150,105,0.2);">
               <div style="font-size: 0.68rem; color: #64748B; text-transform: uppercase;">Block Allocation:</div>
-              <div id="pipe-window-val" style="font-weight: 800; color: #059669; font-size: 0.85rem;">02:15 - 04:45 IST</div>
+              <div id="pipe-window-val" style="font-weight: 800; color: #059669; font-size: 0.85rem;">02:15 - 04:45 IST
+              </div>
             </div>
           </div>
 
-          <div style="background: #FFF; padding: 10px 14px; border-radius: 6px; border: 1px solid rgba(5,150,105,0.2); font-size: 0.78rem; color: #1E293B; line-height: 1.45;">
+          <div
+            style="background: #FFF; padding: 10px 14px; border-radius: 6px; border: 1px solid rgba(5,150,105,0.2); font-size: 0.78rem; color: #1E293B; line-height: 1.45;">
             <strong>Statutory Safety Justification:</strong>
             <p id="pipe-justification-text" style="margin-top: 4px;"></p>
           </div>
         </div>
 
         <div style="margin-top: 20px;">
-          <div style="font-size: 0.75rem; font-weight: 700; color: #475569; margin-bottom: 6px;">Pipeline JSON Telemetry Output:</div>
-          <pre class="json-output-box" id="pipe-json-output">// Pipeline output will appear here after execution...</pre>
+          <div style="font-size: 0.75rem; font-weight: 700; color: #475569; margin-bottom: 6px;">Pipeline JSON Telemetry
+            Output:</div>
+          <pre class="json-output-box"
+            id="pipe-json-output">// Pipeline output will appear here after execution...</pre>
         </div>
       </div>
 
@@ -2710,19 +2772,24 @@
 
       <div class="swarm-modal-body">
         <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-bottom: 18px;">
-          <div style="background: #FCFBF7; padding: 10px 14px; border-radius: 8px; border: 1px solid rgba(195,178,150,0.45);">
-            <div style="font-size: 0.68rem; color: #64748B; text-transform: uppercase;">Agent ID &amp; Source File:</div>
-            <div id="modal-agent-id" style="font-family: var(--font-mono); font-weight: 700; color: #003366; font-size: 0.82rem;"></div>
+          <div
+            style="background: #FCFBF7; padding: 10px 14px; border-radius: 8px; border: 1px solid rgba(195,178,150,0.45);">
+            <div style="font-size: 0.68rem; color: #64748B; text-transform: uppercase;">Agent ID &amp; Source File:
+            </div>
+            <div id="modal-agent-id"
+              style="font-family: var(--font-mono); font-weight: 700; color: #003366; font-size: 0.82rem;"></div>
             <div id="modal-agent-file" style="font-family: var(--font-mono); font-size: 0.72rem; color: #64748B;"></div>
           </div>
-          <div style="background: #FCFBF7; padding: 10px 14px; border-radius: 8px; border: 1px solid rgba(195,178,150,0.45);">
+          <div
+            style="background: #FCFBF7; padding: 10px 14px; border-radius: 8px; border: 1px solid rgba(195,178,150,0.45);">
             <div style="font-size: 0.68rem; color: #64748B; text-transform: uppercase;">Operational Role (Need):</div>
             <div id="modal-agent-need" style="font-weight: 700; color: #0F172A; font-size: 0.82rem;"></div>
             <div id="modal-agent-method" style="font-size: 0.72rem; color: #0056B3; font-weight: 600;"></div>
           </div>
         </div>
 
-        <div style="background: #FAF6EE; border-left: 3px solid #003366; padding: 8px 12px; border-radius: 4px; font-size: 0.76rem; color: #334155; margin-bottom: 18px; line-height: 1.4;">
+        <div
+          style="background: #FAF6EE; border-left: 3px solid #003366; padding: 8px 12px; border-radius: 4px; font-size: 0.76rem; color: #334155; margin-bottom: 18px; line-height: 1.4;">
           <strong>Practical Rationale &amp; Zero-Hallucination Guarantee:</strong>
           <span id="modal-agent-rationale"></span>
         </div>
@@ -2732,13 +2799,15 @@
             <label style="font-size: 0.76rem; font-weight: 700; color: #003366;">Input Payload (JSON):</label>
             <span style="font-size: 0.7rem; color: #64748B;">Editable sample parameters</span>
           </div>
-          <textarea id="modal-payload-input" rows="7" style="width: 100%; font-family: var(--font-mono); font-size: 0.75rem; background: #FAF6EE; border: 1px solid rgba(0,51,102,0.25); border-radius: 8px; padding: 10px; color: #0F172A; outline: none; line-height: 1.4;"></textarea>
+          <textarea id="modal-payload-input" rows="7"
+            style="width: 100%; font-family: var(--font-mono); font-size: 0.75rem; background: #FAF6EE; border: 1px solid rgba(0,51,102,0.25); border-radius: 8px; padding: 10px; color: #0F172A; outline: none; line-height: 1.4;"></textarea>
         </div>
 
         <div>
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
             <div style="font-size: 0.76rem; font-weight: 700; color: #003366;">Agent Response Output:</div>
-            <span id="modal-latency-badge" style="font-family: var(--font-mono); font-size: 0.7rem; background: #E0F2FE; color: #0369A1; padding: 2px 8px; border-radius: 4px; font-weight: 700;">Ready</span>
+            <span id="modal-latency-badge"
+              style="font-family: var(--font-mono); font-size: 0.7rem; background: #E0F2FE; color: #0369A1; padding: 2px 8px; border-radius: 4px; font-weight: 700;">Ready</span>
           </div>
           <pre class="json-output-box" id="modal-test-output">// Click "Run Test Inference" to execute agent...</pre>
         </div>
