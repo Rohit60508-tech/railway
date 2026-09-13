@@ -12,6 +12,10 @@ export function AuthProvider({ children }) {
                        (window.performance && window.performance.navigation && window.performance.navigation.type === 1);
       if (isReload) {
         sessionStorage.removeItem(SESSION_KEY);
+        sessionStorage.removeItem('ir_auth_token');
+        localStorage.removeItem(SESSION_KEY);
+        localStorage.removeItem('token');
+        localStorage.removeItem('ir_auth_token');
         return null;
       }
       const raw = sessionStorage.getItem(SESSION_KEY);
@@ -47,13 +51,22 @@ export function AuthProvider({ children }) {
       loginTime: Date.now()
     };
 
-    sessionStorage.setItem(SESSION_KEY, JSON.stringify(newSession));
+    try {
+      sessionStorage.setItem(SESSION_KEY, JSON.stringify(newSession));
+      localStorage.setItem(SESSION_KEY, JSON.stringify(newSession));
+    } catch (_) {}
     setSession(newSession);
     return newSession;
   };
 
   const logout = () => {
-    sessionStorage.removeItem(SESSION_KEY);
+    try {
+      sessionStorage.removeItem(SESSION_KEY);
+      sessionStorage.removeItem('ir_auth_token');
+      localStorage.removeItem(SESSION_KEY);
+      localStorage.removeItem('token');
+      localStorage.removeItem('ir_auth_token');
+    } catch (_) {}
     setSession(null);
   };
 

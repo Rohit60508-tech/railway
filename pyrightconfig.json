@@ -1,0 +1,17 @@
+{
+  "include": [
+    "ai-models"
+  ],
+  "extraPaths": [
+    "ai-models",
+    "ai-models/shared",
+    "ai-models/block-optimizer",
+    "ai-models/priority-engine",
+    "ai-models/traffic-predictor",
+    "ai-models/agents",
+    "ai-models/training",
+    "ai-models/inference"
+  ],
+  "reportMissingImports": "none",
+  "reportMissingModuleSource": "none"
+}

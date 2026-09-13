@@ -18,16 +18,6 @@
   <!-- User Store -->
   <script src="../components/user-store.js"></script>
 
-  <!-- React 18 & ReactDOM 18 (Local bundle with CDN fallback) -->
-  <script src="/node_modules/react/umd/react.production.min.js"></script>
-  <script src="/node_modules/react-dom/umd/react-dom.production.min.js"></script>
-  <script>
-    if (!window.React || !window.ReactDOM) {
-      document.write('<script src="https://unpkg.com/react@18/umd/react.production.min.js"><\/script>');
-      document.write('<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"><\/script>');
-    }
-  </script>
-
   <style>
     *,
     *::before,
@@ -57,11 +47,19 @@
       background-color: #030712;
     }
 
-    #root {
+    #app-container {
       min-height: 100vh;
+      width: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
+      padding: 16px;
+      background-image: linear-gradient(135deg, rgba(3, 7, 18, 0.70) 0%, rgba(15, 23, 42, 0.50) 50%, rgba(3, 7, 18, 0.80) 100%), url('../vande_bharat_bg.jpg'), url('/frontend/vande_bharat_bg.jpg'), url('/vande_bharat_bg.jpg');
+      background-position: center;
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      position: relative;
     }
 
     @keyframes fadeIn {
@@ -81,10 +79,104 @@
     }
 
     /* Custom input focus styles */
+    .gov-input {
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      background: rgba(15, 23, 42, 0.65);
+      font-size: 0.88rem;
+      color: #FFFFFF;
+      outline: none;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+      font-family: inherit;
+      transition: all 0.18s ease;
+    }
+
     .gov-input:focus {
       border-color: #F97316 !important;
       background: rgba(15, 23, 42, 0.85) !important;
       box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.22), inset 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+    }
+
+    .role-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 14px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.13);
+      cursor: pointer;
+      transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      overflow: hidden;
+      text-decoration: none;
+      user-select: none;
+    }
+
+    .role-card:hover {
+      background: rgba(255, 255, 255, 0.15);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+    }
+
+    .role-icon-box {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.20);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .btn-back {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      padding: 5px 10px;
+      color: #E2E8F0;
+      font-weight: 700;
+      font-size: 0.74rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .btn-back:hover {
+      background: rgba(255, 255, 255, 0.18);
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 11px;
+      border-radius: 10px;
+      border: none;
+      background: linear-gradient(135deg, #F97316 0%, #EA580C 100%);
+      color: #FFFFFF;
+      font-size: 0.90rem;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(249, 115, 22, 0.35);
+      letter-spacing: 0.3px;
+      transition: all 0.18s ease;
+    }
+
+    .submit-btn:hover {
+      box-shadow: 0 8px 24px rgba(249, 115, 22, 0.55);
+      transform: translateY(-1px);
+    }
+
+    .submit-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
     }
 
     ::-webkit-scrollbar {
@@ -104,31 +196,60 @@
 </head>
 
 <body>
-  <div id="root"></div>
+  <div id="app-container">
+    <div id="login-card" style="
+      width: 100%;
+      max-width: 510px;
+      background: rgba(15, 23, 42, 0.72);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.20);
+      padding: 26px 28px;
+      color: #F8FAFC;
+      position: relative;
+    ">
+      <!-- Dynamic Views injected here -->
+      <div id="view-root" class="animate-fade-in"></div>
+
+      <!-- Card Footer -->
+      <div style="
+        margin-top: 18px;
+        padding-top: 14px;
+        border-top: 1px solid rgba(255, 255, 255, 0.09);
+        text-align: center;
+        font-size: 0.68rem;
+        color: #94A3B8;
+        line-height: 1.5;
+      ">
+        <div>Access restricted to authorized Indian Railways personnel.</div>
+        <div style="color: #64748B; margin-top: 2px;">RAKSHA PATH v2.4.1 · High-Speed Corridor Command</div>
+      </div>
+    </div>
+  </div>
 
   <script>
     (function () {
       'use strict';
 
-      // ═══════════════════════════════════════════════════════════════════════
-      // HIGH-SECURITY PROTOCOL: PURGE SESSION ON PAGE RELOAD / REFRESH
-      // ═══════════════════════════════════════════════════════════════════════
       const SESSION_KEY = 'ir_auth_session';
       const TOKEN_KEY = 'ir_auth_token';
 
-      try {
-        const navEntries = performance.getEntriesByType ? performance.getEntriesByType('navigation') : [];
-        const isReload = (navEntries.length > 0 && navEntries[0].type === 'reload') ||
-          (window.performance && window.performance.navigation && window.performance.navigation.type === 1);
-        if (isReload) {
-          sessionStorage.removeItem(SESSION_KEY);
-          sessionStorage.removeItem(TOKEN_KEY);
-        }
-      } catch (_) { }
-
       const urlParams = new URLSearchParams(window.location.search);
+      const isLogout = urlParams.get('logout') === 'true';
       const isReloadSecurity = urlParams.get('reason') === 'reload_security';
       const redirectUrl = urlParams.get('redirect') || null;
+
+      if (isLogout || isReloadSecurity) {
+        try {
+          sessionStorage.removeItem(SESSION_KEY);
+          sessionStorage.removeItem(TOKEN_KEY);
+          localStorage.removeItem(SESSION_KEY);
+          localStorage.removeItem('token');
+          localStorage.removeItem(TOKEN_KEY);
+        } catch (_) {}
+      }
 
       // 1. Primary Command Authorities Catalog
       const MAIN_ROLES = [
@@ -214,733 +335,522 @@
         }
       ];
 
-      const { useState, useEffect, createElement: e } = window.React;
+      // Application State
+      let viewMode = 'main'; // 'main' | 'maintenance' | 'form'
+      let selectedRole = null;
+      let username = '';
+      let password = '';
+      let showPassword = false;
+      let error = '';
+      let success = '';
+      let loading = false;
 
-      function RoleLoginApp() {
-        // View modes: 'main' | 'maintenance' | 'form'
-        const [viewMode, setViewMode] = useState('main');
-        const [selectedRole, setSelectedRole] = useState(null);
-        const [username, setUsername] = useState('');
-        const [password, setPassword] = useState('');
-        const [showPassword, setShowPassword] = useState(false);
-        const [error, setError] = useState('');
-        const [success, setSuccess] = useState('');
-        const [loading, setLoading] = useState(false);
+      const viewRoot = document.getElementById('view-root');
 
-        const handleSelectMainRole = (role) => {
-          if (role.isMaintenanceGroup) {
-            setViewMode('maintenance');
-            setError('');
-            return;
-          }
-          setSelectedRole(role);
-          setViewMode('form');
-          setUsername('');
-          setPassword('');
-          setError('');
-          setSuccess('');
-        };
+      function escapeHtml(str) {
+        if (!str) return '';
+        return String(str)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#039;');
+      }
 
-        const handleSelectMaintenanceDept = (dept) => {
-          setSelectedRole(dept);
-          setViewMode('form');
-          setUsername('');
-          setPassword('');
-          setError('');
-          setSuccess('');
-        };
+      function render() {
+        if (!viewRoot) return;
+        viewRoot.className = 'animate-fade-in';
 
-        const handleBack = () => {
-          if (viewMode === 'form') {
-            if (selectedRole && selectedRole.key.startsWith('field-')) {
-              setViewMode('maintenance');
+        if (viewMode === 'main') {
+          renderMain();
+        } else if (viewMode === 'maintenance') {
+          renderMaintenance();
+        } else if (viewMode === 'form' && selectedRole) {
+          renderForm();
+        }
+      }
+
+      function renderMain() {
+        let html = '';
+
+        if (isReloadSecurity) {
+          html += `
+            <div style="
+              margin-bottom: 14px;
+              padding: 10px 12px;
+              border-radius: 10px;
+              background: rgba(249, 115, 22, 0.16);
+              border: 1px solid rgba(249, 115, 22, 0.45);
+              color: #FDBA74;
+              font-size: 0.75rem;
+              line-height: 1.4;
+              display: flex;
+              align-items: center;
+              gap: 8px;
+            ">
+              <span style="font-size: 1.1rem; flex-shrink: 0;">🔒</span>
+              <div>
+                <strong style="color: #FED7AA; display: block;">High-Security Protocol Active</strong>
+                Active session terminated upon page reload as per Railway Security Protocol. Please select your role to sign in.
+              </div>
+            </div>
+          `;
+        }
+
+        html += `
+          <div style="text-align: center; margin-bottom: 18px;">
+            <div style="
+              display: inline-flex;
+              align-items: center;
+              gap: 6px;
+              font-size: 0.68rem;
+              font-weight: 800;
+              color: #F97316;
+              letter-spacing: 1px;
+              text-transform: uppercase;
+              background: rgba(249, 115, 22, 0.15);
+              border: 1px solid rgba(249, 115, 22, 0.35);
+              padding: 4px 12px;
+              border-radius: 16px;
+              box-shadow: 0 2px 6px rgba(249, 115, 22, 0.12);
+            ">
+              <span>🛡️</span>
+              <span>Indian Railways Access Gateway</span>
+            </div>
+            <h1 style="font-size: 1.45rem; font-weight: 800; color: #FFFFFF; margin-top: 10px; letter-spacing: 0.2px;">
+              Select Access Role
+            </h1>
+            <p style="font-size: 0.80rem; color: #CBD5E1; margin-top: 4px; line-height: 1.4;">
+              Choose your operational command authority to enter the platform.
+            </p>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 9px;">
+        `;
+
+        MAIN_ROLES.forEach(r => {
+          html += `
+            <div class="role-card" data-key="${r.key}" style="border-left: 3px solid ${r.color};">
+              <div style="display: flex; align-items: center; gap: 12px; min-width: 0; flex: 1;">
+                <div class="role-icon-box">${r.icon}</div>
+                <div style="min-width: 0; flex: 1; overflow: hidden;">
+                  <div style="font-size: 0.90rem; font-weight: 700; color: #FFFFFF; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                    ${escapeHtml(r.label)}
+                  </div>
+                  <div style="font-size: 0.71rem; color: #94A3B8; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                    ${escapeHtml(r.dept)}
+                  </div>
+                </div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 4px; font-size: 0.76rem; font-weight: 700; color: #60A5FA; flex-shrink: 0; white-space: nowrap; margin-left: 12px;">
+                <span>Sign In</span>
+                <span style="font-size: 0.88rem; line-height: 1;">→</span>
+              </div>
+            </div>
+          `;
+        });
+
+        html += `</div>`;
+        viewRoot.innerHTML = html;
+
+        // Bind clicks
+        viewRoot.querySelectorAll('.role-card').forEach(card => {
+          card.addEventListener('click', () => {
+            const key = card.getAttribute('data-key');
+            const role = MAIN_ROLES.find(r => r.key === key);
+            if (!role) return;
+
+            if (role.isMaintenanceGroup) {
+              viewMode = 'maintenance';
+              error = '';
+              render();
             } else {
-              setViewMode('main');
+              selectedRole = role;
+              viewMode = 'form';
+              username = '';
+              password = '';
+              error = '';
+              success = '';
+              render();
             }
-            setSelectedRole(null);
-          } else if (viewMode === 'maintenance') {
-            setViewMode('main');
-          }
-          setUsername('');
-          setPassword('');
-          setError('');
-          setSuccess('');
-        };
+          });
+        });
+      }
 
-        const handleSubmit = (ev) => {
-          if (ev) ev.preventDefault();
-          setError('');
-          setSuccess('');
+      function renderMaintenance() {
+        let html = `
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+            <button type="button" id="btn-back-to-main" class="btn-back">
+              <span>←</span>
+              <span>Back to Access Roles</span>
+            </button>
+            <div style="
+              padding: 4px 11px;
+              border-radius: 16px;
+              background: rgba(245, 158, 11, 0.15);
+              border: 1px solid rgba(245, 158, 11, 0.4);
+              color: #FBBF24;
+              font-weight: 700;
+              font-size: 0.74rem;
+            ">
+              🔧 Maintenance Wing
+            </div>
+          </div>
 
-          if (!selectedRole) {
-            setError('Please select an operational access role first.');
-            return;
-          }
-          if (!username.trim()) {
-            setError('Please enter your official username or Employee ID.');
-            return;
-          }
-          if (!password) {
-            setError('Please enter your password.');
-            return;
-          }
+          <div style="margin-bottom: 16px; text-align: center;">
+            <h2 style="font-size: 1.30rem; font-weight: 800; color: #FFFFFF; letter-spacing: 0.2px;">
+              Select Maintenance Department
+            </h2>
+            <p style="font-size: 0.78rem; color: #CBD5E1; margin-top: 3px; line-height: 1.4;">
+              Choose your specialized field engineering authority:
+            </p>
+          </div>
 
-          setLoading(true);
+          <div style="display: flex; flex-direction: column; gap: 9px;">
+        `;
 
-          setTimeout(() => {
+        MAINTENANCE_DEPARTMENTS.forEach(d => {
+          html += `
+            <div class="role-card" data-key="${d.key}" style="border-left: 3px solid ${d.color};">
+              <div style="display: flex; align-items: center; gap: 12px; min-width: 0; flex: 1;">
+                <div class="role-icon-box">${d.icon}</div>
+                <div style="min-width: 0; flex: 1; overflow: hidden;">
+                  <div style="font-size: 0.90rem; font-weight: 700; color: #FFFFFF; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                    ${escapeHtml(d.label)}
+                  </div>
+                  <div style="font-size: 0.70rem; color: #94A3B8; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                    ${escapeHtml(d.dept)}
+                  </div>
+                </div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 4px; font-size: 0.76rem; font-weight: 700; color: #60A5FA; flex-shrink: 0; white-space: nowrap; margin-left: 12px;">
+                <span>Sign In</span>
+                <span style="font-size: 0.88rem; line-height: 1;">→</span>
+              </div>
+            </div>
+          `;
+        });
+
+        html += `</div>`;
+        viewRoot.innerHTML = html;
+
+        document.getElementById('btn-back-to-main')?.addEventListener('click', () => {
+          viewMode = 'main';
+          render();
+        });
+
+        viewRoot.querySelectorAll('.role-card').forEach(card => {
+          card.addEventListener('click', () => {
+            const key = card.getAttribute('data-key');
+            const dept = MAINTENANCE_DEPARTMENTS.find(d => d.key === key);
+            if (!dept) return;
+
+            selectedRole = dept;
+            viewMode = 'form';
+            username = '';
+            password = '';
+            error = '';
+            success = '';
+            render();
+          });
+        });
+      }
+
+      function renderForm() {
+        const titleLabel = selectedRole.shortLabel || selectedRole.label;
+        let html = `
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+            <button type="button" id="btn-back-form" class="btn-back">
+              <span>←</span>
+              <span>Change Authority</span>
+            </button>
+            <div style="
+              display: flex;
+              align-items: center;
+              gap: 6px;
+              padding: 4px 11px;
+              border-radius: 16px;
+              background: rgba(255, 255, 255, 0.12);
+              border: 1px solid ${selectedRole.color};
+              color: #FFFFFF;
+              font-weight: 700;
+              font-size: 0.74rem;
+            ">
+              <span>${selectedRole.icon}</span>
+              <span>${escapeHtml(titleLabel)}</span>
+            </div>
+          </div>
+
+          <div style="margin-bottom: 16px;">
+            <h2 style="font-size: 1.30rem; font-weight: 800; color: #FFFFFF; letter-spacing: 0.2px;">
+              Sign In as ${escapeHtml(titleLabel)}
+            </h2>
+            <p style="font-size: 0.78rem; color: #94A3B8; margin-top: 3px; line-height: 1.4;">
+              Enter your authorized credentials for ${escapeHtml(selectedRole.dept)}.
+            </p>
+          </div>
+
+          <form id="login-form">
+            <div style="margin-bottom: 12px;">
+              <label style="
+                display: block;
+                font-size: 0.70rem;
+                font-weight: 700;
+                color: #CBD5E1;
+                text-transform: uppercase;
+                letter-spacing: 0.7px;
+                margin-bottom: 6px;
+              ">Username / Employee ID</label>
+              <input
+                type="text"
+                id="input-username"
+                class="gov-input"
+                placeholder="Enter official username / employee ID"
+                value="${escapeHtml(username)}"
+                autocomplete="username"
+                required
+              />
+            </div>
+
+            <div style="margin-bottom: 16px;">
+              <div style="
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                font-size: 0.70rem;
+                font-weight: 700;
+                color: #CBD5E1;
+                text-transform: uppercase;
+                letter-spacing: 0.7px;
+                margin-bottom: 6px;
+              ">
+                <span>Password</span>
+                <button type="button" id="btn-toggle-pwd" style="
+                  background: transparent;
+                  border: none;
+                  color: #94A3B8;
+                  cursor: pointer;
+                  font-size: 0.70rem;
+                  font-weight: 600;
+                ">${showPassword ? 'Hide' : 'Show'}</button>
+              </div>
+              <input
+                type="${showPassword ? 'text' : 'password'}"
+                id="input-password"
+                class="gov-input"
+                placeholder="Enter official password"
+                value="${escapeHtml(password)}"
+                autocomplete="current-password"
+                required
+              />
+            </div>
+
+            <div id="error-container"></div>
+            <div id="success-container"></div>
+
+            <button type="submit" id="btn-submit" class="submit-btn" ${loading ? 'disabled' : ''}>
+              ${loading ? 'Authenticating Officer Credentials...' : 'Sign In to Corridor Command →'}
+            </button>
+          </form>
+        `;
+
+        viewRoot.innerHTML = html;
+
+        // Auto-focus username
+        const userInput = document.getElementById('input-username');
+        if (userInput && !username) userInput.focus();
+
+        // Update error/success UI
+        updateNoticeContainers();
+
+        // Bind events
+        document.getElementById('btn-back-form')?.addEventListener('click', () => {
+          if (selectedRole && selectedRole.key.startsWith('field-')) {
+            viewMode = 'maintenance';
+          } else {
+            viewMode = 'main';
+          }
+          selectedRole = null;
+          username = '';
+          password = '';
+          error = '';
+          success = '';
+          render();
+        });
+
+        document.getElementById('btn-toggle-pwd')?.addEventListener('click', () => {
+          showPassword = !showPassword;
+          const pwdInput = document.getElementById('input-password');
+          if (pwdInput) {
+            pwdInput.type = showPassword ? 'text' : 'password';
+          }
+          const btn = document.getElementById('btn-toggle-pwd');
+          if (btn) btn.textContent = showPassword ? 'Hide' : 'Show';
+        });
+
+        const form = document.getElementById('login-form');
+        if (form) {
+          form.addEventListener('submit', (ev) => {
+            ev.preventDefault();
+            const u = document.getElementById('input-username')?.value || '';
+            const p = document.getElementById('input-password')?.value || '';
+            handleFormSubmit(u, p);
+          });
+        }
+      }
+
+      function updateNoticeContainers() {
+        const errorContainer = document.getElementById('error-container');
+        if (errorContainer) {
+          if (error) {
+            errorContainer.innerHTML = `
+              <div style="
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                padding: 10px 12px;
+                border-radius: 9px;
+                background: rgba(220, 38, 38, 0.22);
+                border: 1px solid rgba(220, 38, 38, 0.45);
+                color: #FCA5A5;
+                font-size: 0.78rem;
+                font-weight: 600;
+                margin-bottom: 14px;
+              ">
+                <span>⚠️</span>
+                <span>${escapeHtml(error)}</span>
+              </div>
+            `;
+          } else {
+            errorContainer.innerHTML = '';
+          }
+        }
+
+        const successContainer = document.getElementById('success-container');
+        if (successContainer) {
+          if (success) {
+            successContainer.innerHTML = `
+              <div style="
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                padding: 10px 12px;
+                border-radius: 9px;
+                background: rgba(16, 185, 129, 0.22);
+                border: 1px solid rgba(16, 185, 129, 0.45);
+                color: #6EE7B7;
+                font-size: 0.78rem;
+                font-weight: 600;
+                margin-bottom: 14px;
+              ">
+                <span>✓</span>
+                <span>${escapeHtml(success)}</span>
+              </div>
+            `;
+          } else {
+            successContainer.innerHTML = '';
+          }
+        }
+      }
+
+      function handleFormSubmit(u, p) {
+        username = u.trim();
+        password = p;
+        error = '';
+        success = '';
+
+        if (!selectedRole) {
+          error = 'Please select an operational access role first.';
+          updateNoticeContainers();
+          return;
+        }
+        if (!username) {
+          error = 'Please enter your official username or Employee ID.';
+          updateNoticeContainers();
+          return;
+        }
+        if (!password) {
+          error = 'Please enter your password.';
+          updateNoticeContainers();
+          return;
+        }
+
+        loading = true;
+        const submitBtn = document.getElementById('btn-submit');
+        if (submitBtn) {
+          submitBtn.disabled = true;
+          submitBtn.textContent = 'Authenticating Officer Credentials...';
+        }
+
+        setTimeout(() => {
+          try {
+            let user = null;
+            if (window.IR_UserStore && typeof window.IR_UserStore.authenticate === 'function') {
+              user = window.IR_UserStore.authenticate(username, password);
+            }
+
+            if (!user) {
+              error = 'Invalid credentials. Please verify your username and password.';
+              loading = false;
+              if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Sign In to Corridor Command →';
+              }
+              updateNoticeContainers();
+              return;
+            }
+
+            // Verify role permission
+            const allowedRoles = selectedRole.roleFilter || [selectedRole.key, 'admin'];
+            if (!allowedRoles.includes(user.role) && user.role !== 'admin') {
+              error = `Officer account '${user.username}' is assigned to role '${user.role}', which does not match '${selectedRole.label}'.`;
+              loading = false;
+              if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Sign In to Corridor Command →';
+              }
+              updateNoticeContainers();
+              return;
+            }
+
+            // Create session payload
+            const sessionData = {
+              username: user.username,
+              role: user.role,
+              name: user.name || selectedRole.label,
+              division: user.division || 'Northern Zone',
+              loginTime: Date.now()
+            };
+
             try {
-              let user = null;
-              if (window.IR_UserStore && typeof window.IR_UserStore.authenticate === 'function') {
-                user = window.IR_UserStore.authenticate(username.trim(), password);
-              }
-
-              if (!user) {
-                setError('Invalid credentials. Please verify your username and password.');
-                setLoading(false);
-                return;
-              }
-
-              // Verify role permission
-              const allowedRoles = selectedRole.roleFilter || [selectedRole.key, 'admin'];
-              if (!allowedRoles.includes(user.role) && user.role !== 'admin') {
-                setError(`Officer account '${user.username}' is assigned to role '${user.role}', which does not match '${selectedRole.label}'.`);
-                setLoading(false);
-                return;
-              }
-
-              // Create session payload
-              const sessionData = {
-                username: user.username,
-                role: user.role,
-                name: user.name || selectedRole.label,
-                division: user.division || 'Northern Zone',
-                loginTime: Date.now()
-              };
-
               sessionStorage.setItem(SESSION_KEY, JSON.stringify(sessionData));
               sessionStorage.setItem(TOKEN_KEY, 'ir_tok_' + Math.random().toString(36).substring(2));
+              localStorage.setItem(SESSION_KEY, JSON.stringify(sessionData));
+              localStorage.setItem(TOKEN_KEY, 'ir_tok_' + Math.random().toString(36).substring(2));
+            } catch (_) {}
 
-              setSuccess(`Access Authorized: Welcome, ${sessionData.name}. Launching Command Console...`);
+            success = `Access Authorized: Welcome, ${sessionData.name}. Launching Command Console...`;
+            updateNoticeContainers();
 
-              // Redirect
-              const targetRoute = redirectUrl || selectedRole.route;
-              setTimeout(() => {
-                window.location.replace(targetRoute);
-              }, 450);
+            const targetRoute = redirectUrl || selectedRole.route;
+            setTimeout(() => {
+              window.location.replace(targetRoute);
+            }, 50);
 
-            } catch (err) {
-              setError(err.message || 'Authentication error encountered.');
-              setLoading(false);
+          } catch (err) {
+            error = err.message || 'Authentication error encountered.';
+            loading = false;
+            if (submitBtn) {
+              submitBtn.disabled = false;
+              submitBtn.textContent = 'Sign In to Corridor Command →';
             }
-          }, 320);
-        };
-
-        // Outer background container
-        return e('div', {
-          style: {
-            minHeight: '100vh',
-            width: '100%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '16px',
-            backgroundImage: "linear-gradient(135deg, rgba(3, 7, 18, 0.70) 0%, rgba(15, 23, 42, 0.50) 50%, rgba(3, 7, 18, 0.80) 100%), url('../vande_bharat_bg.jpg'), url('/frontend/vande_bharat_bg.jpg'), url('/vande_bharat_bg.jpg')",
-            backgroundPosition: 'center',
-            backgroundSize: 'cover',
-            backgroundRepeat: 'no-repeat',
-            backgroundAttachment: 'fixed',
-            position: 'relative'
+            updateNoticeContainers();
           }
-        },
-          // Center Frosted Glass Card
-          e('div', {
-            className: 'animate-fade-in',
-            style: {
-              width: '100%',
-              maxWidth: '510px',
-              background: 'rgba(15, 23, 42, 0.72)',
-              backdropFilter: 'blur(28px)',
-              WebkitBackdropFilter: 'blur(28px)',
-              borderRadius: '20px',
-              border: '1px solid rgba(255, 255, 255, 0.16)',
-              boxShadow: '0 25px 50px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.20)',
-              padding: '26px 28px',
-              color: '#F8FAFC',
-              position: 'relative'
-            }
-          },
-
-            // High-Security Reload Logout Notification
-            isReloadSecurity && e('div', {
-              style: {
-                marginBottom: '14px',
-                padding: '9px 12px',
-                borderRadius: '10px',
-                background: 'rgba(249, 115, 22, 0.16)',
-                border: '1px solid rgba(249, 115, 22, 0.45)',
-                color: '#FDBA74',
-                fontSize: '0.74rem',
-                lineHeight: '1.35',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px'
-              }
-            },
-              e('span', { style: { fontSize: '1.05rem', flexShrink: 0 } }, '🔒'),
-              e('div', null,
-                e('strong', { style: { color: '#FED7AA', display: 'block' } }, 'High-Security Automatic Logout'),
-                'Session terminated upon page refresh as per Railway Security Protocol. Please select your role to sign in.'
-              )
-            ),
-
-            // ═════════════════════════════════════════════════════════════════
-            // SCREEN 1: PRIMARY ROLE SELECTION
-            // ═════════════════════════════════════════════════════════════════
-            viewMode === 'main' && e('div', null,
-              // Top Badge
-              e('div', { style: { textAlign: 'center', marginBottom: '18px' } },
-                e('div', {
-                  style: {
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '6px',
-                    fontSize: '0.68rem',
-                    fontWeight: '800',
-                    color: '#F97316',
-                    letterSpacing: '1px',
-                    textTransform: 'uppercase',
-                    background: 'rgba(249, 115, 22, 0.15)',
-                    border: '1px solid rgba(249, 115, 22, 0.35)',
-                    padding: '4px 12px',
-                    borderRadius: '16px',
-                    boxShadow: '0 2px 6px rgba(249, 115, 22, 0.12)'
-                  }
-                },
-                  e('span', null, '🛡️'),
-                  e('span', null, 'Indian Railways Access Gateway')
-                ),
-                e('h1', {
-                  style: {
-                    fontSize: '1.45rem',
-                    fontWeight: '800',
-                    color: '#FFFFFF',
-                    marginTop: '10px',
-                    letterSpacing: '0.2px'
-                  }
-                }, 'Select Access Role'),
-                e('p', {
-                  style: {
-                    fontSize: '0.80rem',
-                    color: '#CBD5E1',
-                    marginTop: '4px',
-                    lineHeight: '1.4'
-                  }
-                }, 'Choose your operational command authority to enter the platform.')
-              ),
-
-              // Role Cards List
-              e('div', { style: { display: 'flex', flexDirection: 'column', gap: '9px' } },
-                MAIN_ROLES.map(r => e('div', {
-                  key: r.key,
-                  onClick: () => handleSelectMainRole(r),
-                  style: {
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    padding: '12px 14px',
-                    borderRadius: '12px',
-                    background: 'rgba(255, 255, 255, 0.08)',
-                    border: '1px solid rgba(255, 255, 255, 0.13)',
-                    cursor: 'pointer',
-                    transition: 'all 0.18s cubic-bezier(0.16, 1, 0.3, 1)',
-                    position: 'relative',
-                    overflow: 'hidden'
-                  },
-                  onMouseEnter: (ev) => {
-                    ev.currentTarget.style.background = 'rgba(255, 255, 255, 0.15)';
-                    ev.currentTarget.style.borderColor = r.color;
-                    ev.currentTarget.style.transform = 'translateY(-2px)';
-                    ev.currentTarget.style.boxShadow = '0 8px 20px rgba(0, 0, 0, 0.35)';
-                  },
-                  onMouseLeave: (ev) => {
-                    ev.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)';
-                    ev.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.13)';
-                    ev.currentTarget.style.transform = 'none';
-                    ev.currentTarget.style.boxShadow = 'none';
-                  }
-                },
-                  e('div', { style: { display: 'flex', alignItems: 'center', gap: '12px', minWidth: 0, flex: 1 } },
-                    e('div', {
-                      style: {
-                        width: '38px',
-                        height: '38px',
-                        borderRadius: '10px',
-                        background: 'rgba(255, 255, 255, 0.12)',
-                        border: '1px solid rgba(255, 255, 255, 0.20)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        fontSize: '1.2rem',
-                        flexShrink: 0
-                      }
-                    }, r.icon),
-                    e('div', { style: { minWidth: 0, flex: 1, overflow: 'hidden' } },
-                      e('div', {
-                        style: {
-                          fontSize: '0.90rem',
-                          fontWeight: '700',
-                          color: '#FFFFFF',
-                          whiteSpace: 'nowrap',
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis'
-                        }
-                      }, r.label),
-                      e('div', {
-                        style: {
-                          fontSize: '0.71rem',
-                          color: '#94A3B8',
-                          marginTop: '2px',
-                          whiteSpace: 'nowrap',
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis'
-                        }
-                      }, r.dept)
-                    )
-                  ),
-                  e('div', {
-                    style: {
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '4px',
-                      fontSize: '0.76rem',
-                      fontWeight: '700',
-                      color: '#60A5FA',
-                      flexShrink: 0,
-                      whiteSpace: 'nowrap',
-                      marginLeft: '12px'
-                    }
-                  },
-                    e('span', null, 'Sign In'),
-                    e('span', { style: { fontSize: '0.88rem', lineHeight: '1' } }, '→')
-                  )
-                ))
-              )
-            ),
-
-            // ═════════════════════════════════════════════════════════════════
-            // SCREEN 1B: MAINTENANCE TEAMS (TMS, SMMS, TRD, GENERAL SSE)
-            // ═════════════════════════════════════════════════════════════════
-            viewMode === 'maintenance' && e('div', { className: 'animate-fade-in' },
-              // Header with Back Button
-              e('div', {
-                style: {
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  marginBottom: '16px'
-                }
-              },
-                e('button', {
-                  type: 'button',
-                  onClick: handleBack,
-                  style: {
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '5px',
-                    background: 'rgba(255, 255, 255, 0.1)',
-                    border: '1px solid rgba(255, 255, 255, 0.2)',
-                    borderRadius: '8px',
-                    padding: '5px 10px',
-                    color: '#E2E8F0',
-                    fontWeight: '700',
-                    fontSize: '0.74rem',
-                    cursor: 'pointer',
-                    transition: 'all 0.15s ease'
-                  },
-                  onMouseEnter: (ev) => ev.currentTarget.style.background = 'rgba(255, 255, 255, 0.18)',
-                  onMouseLeave: (ev) => ev.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)'
-                },
-                  e('span', null, '←'),
-                  e('span', null, 'Back to Access Roles')
-                ),
-                e('div', {
-                  style: {
-                    padding: '4px 11px',
-                    borderRadius: '16px',
-                    background: 'rgba(245, 158, 11, 0.15)',
-                    border: '1px solid rgba(245, 158, 11, 0.4)',
-                    color: '#FBBF24',
-                    fontWeight: '700',
-                    fontSize: '0.74rem'
-                  }
-                }, '🔧 Maintenance Wing')
-              ),
-
-              e('div', { style: { marginBottom: '16px', textAlign: 'center' } },
-                e('h2', {
-                  style: {
-                    fontSize: '1.30rem',
-                    fontWeight: '800',
-                    color: '#FFFFFF',
-                    letterSpacing: '0.2px'
-                  }
-                }, 'Select Maintenance Department'),
-                e('p', {
-                  style: {
-                    fontSize: '0.78rem',
-                    color: '#CBD5E1',
-                    marginTop: '3px',
-                    lineHeight: '1.4'
-                  }
-                }, 'Choose your specialized field engineering authority:')
-              ),
-
-              // Department Cards
-              e('div', { style: { display: 'flex', flexDirection: 'column', gap: '9px' } },
-                MAINTENANCE_DEPARTMENTS.map(d => e('div', {
-                  key: d.key,
-                  onClick: () => handleSelectMaintenanceDept(d),
-                  style: {
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    padding: '12px 14px',
-                    borderRadius: '12px',
-                    background: 'rgba(255, 255, 255, 0.08)',
-                    border: '1px solid rgba(255, 255, 255, 0.13)',
-                    cursor: 'pointer',
-                    transition: 'all 0.18s cubic-bezier(0.16, 1, 0.3, 1)',
-                    position: 'relative'
-                  },
-                  onMouseEnter: (ev) => {
-                    ev.currentTarget.style.background = 'rgba(255, 255, 255, 0.15)';
-                    ev.currentTarget.style.borderColor = d.color;
-                    ev.currentTarget.style.transform = 'translateY(-2px)';
-                    ev.currentTarget.style.boxShadow = '0 8px 20px rgba(0, 0, 0, 0.35)';
-                  },
-                  onMouseLeave: (ev) => {
-                    ev.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)';
-                    ev.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.13)';
-                    ev.currentTarget.style.transform = 'none';
-                    ev.currentTarget.style.boxShadow = 'none';
-                  }
-                },
-                  e('div', { style: { display: 'flex', alignItems: 'center', gap: '12px', minWidth: 0, flex: 1 } },
-                    e('div', {
-                      style: {
-                        width: '38px',
-                        height: '38px',
-                        borderRadius: '10px',
-                        background: 'rgba(255, 255, 255, 0.12)',
-                        border: '1px solid rgba(255, 255, 255, 0.20)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        fontSize: '1.2rem',
-                        flexShrink: 0
-                      }
-                    }, d.icon),
-                    e('div', { style: { minWidth: 0, flex: 1, overflow: 'hidden' } },
-                      e('div', {
-                        style: {
-                          fontSize: '0.90rem',
-                          fontWeight: '700',
-                          color: '#FFFFFF',
-                          whiteSpace: 'nowrap',
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis'
-                        }
-                      }, d.label),
-                      e('div', {
-                        style: {
-                          fontSize: '0.70rem',
-                          color: '#94A3B8',
-                          marginTop: '2px',
-                          whiteSpace: 'nowrap',
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis'
-                        }
-                      }, d.dept)
-                    )
-                  ),
-                  e('div', {
-                    style: {
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '4px',
-                      fontSize: '0.76rem',
-                      fontWeight: '700',
-                      color: '#60A5FA',
-                      flexShrink: 0,
-                      whiteSpace: 'nowrap',
-                      marginLeft: '12px'
-                    }
-                  },
-                    e('span', null, 'Sign In'),
-                    e('span', { style: { fontSize: '0.88rem', lineHeight: '1' } }, '→')
-                  )
-                ))
-              )
-            ),
-
-            // ═════════════════════════════════════════════════════════════════
-            // SCREEN 2: SIGN IN FORM (CLEAN, NO DEMO INFORMATION)
-            // ═════════════════════════════════════════════════════════════════
-            viewMode === 'form' && selectedRole && e('div', { className: 'animate-fade-in' },
-              // Header with Back Button and Selected Role Badge
-              e('div', {
-                style: {
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  marginBottom: '16px'
-                }
-              },
-                e('button', {
-                  type: 'button',
-                  onClick: handleBack,
-                  style: {
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '5px',
-                    background: 'rgba(255, 255, 255, 0.1)',
-                    border: '1px solid rgba(255, 255, 255, 0.2)',
-                    borderRadius: '8px',
-                    padding: '5px 10px',
-                    color: '#E2E8F0',
-                    fontWeight: '700',
-                    fontSize: '0.74rem',
-                    cursor: 'pointer',
-                    transition: 'all 0.15s ease'
-                  },
-                  onMouseEnter: (ev) => ev.currentTarget.style.background = 'rgba(255, 255, 255, 0.18)',
-                  onMouseLeave: (ev) => ev.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)'
-                },
-                  e('span', null, '←'),
-                  e('span', null, 'Change Authority')
-                ),
-                e('div', {
-                  style: {
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '6px',
-                    padding: '4px 11px',
-                    borderRadius: '16px',
-                    background: 'rgba(255, 255, 255, 0.12)',
-                    border: '1px solid ' + selectedRole.color,
-                    color: '#FFFFFF',
-                    fontWeight: '700',
-                    fontSize: '0.74rem'
-                  }
-                },
-                  e('span', null, selectedRole.icon),
-                  e('span', null, selectedRole.shortLabel || selectedRole.label)
-                )
-              ),
-
-              // Title and Department text
-              e('div', { style: { marginBottom: '16px' } },
-                e('h2', {
-                  style: {
-                    fontSize: '1.30rem',
-                    fontWeight: '800',
-                    color: '#FFFFFF',
-                    letterSpacing: '0.2px'
-                  }
-                }, `Sign In as ${selectedRole.shortLabel || selectedRole.label}`),
-                e('p', {
-                  style: {
-                    fontSize: '0.78rem',
-                    color: '#94A3B8',
-                    marginTop: '3px',
-                    lineHeight: '1.4'
-                  }
-                }, `Enter your authorized credentials for ${selectedRole.dept}.`)
-              ),
-
-              // Official Form (Clean, without demo credentials)
-              e('form', { onSubmit: handleSubmit },
-                // Username Input
-                e('div', { style: { marginBottom: '12px' } },
-                  e('label', {
-                    style: {
-                      display: 'block',
-                      fontSize: '0.70rem',
-                      fontWeight: '700',
-                      color: '#CBD5E1',
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.7px',
-                      marginBottom: '6px'
-                    }
-                  }, 'Username / Employee ID'),
-                  e('input', {
-                    type: 'text',
-                    className: 'gov-input',
-                    value: username,
-                    onChange: (ev) => setUsername(ev.target.value),
-                    placeholder: 'Enter official username / employee ID',
-                    autoFocus: true,
-                    style: {
-                      width: '100%',
-                      padding: '10px 14px',
-                      borderRadius: '10px',
-                      border: '1px solid rgba(255, 255, 255, 0.22)',
-                      background: 'rgba(15, 23, 42, 0.65)',
-                      fontSize: '0.88rem',
-                      color: '#FFFFFF',
-                      outline: 'none',
-                      boxShadow: 'inset 0 2px 4px rgba(0, 0, 0, 0.3)',
-                      fontFamily: 'inherit'
-                    }
-                  })
-                ),
-
-                // Password Input
-                e('div', { style: { marginBottom: '16px' } },
-                  e('label', {
-                    style: {
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      fontSize: '0.70rem',
-                      fontWeight: '700',
-                      color: '#CBD5E1',
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.7px',
-                      marginBottom: '6px'
-                    }
-                  },
-                    e('span', null, 'Password'),
-                    e('button', {
-                      type: 'button',
-                      onClick: () => setShowPassword(!showPassword),
-                      style: {
-                        background: 'transparent',
-                        border: 'none',
-                        color: '#94A3B8',
-                        cursor: 'pointer',
-                        fontSize: '0.70rem',
-                        fontWeight: '600'
-                      }
-                    }, showPassword ? 'Hide' : 'Show')
-                  ),
-                  e('input', {
-                    type: showPassword ? 'text' : 'password',
-                    className: 'gov-input',
-                    value: password,
-                    onChange: (ev) => setPassword(ev.target.value),
-                    placeholder: 'Enter official password',
-                    style: {
-                      width: '100%',
-                      padding: '10px 14px',
-                      borderRadius: '10px',
-                      border: '1px solid rgba(255, 255, 255, 0.22)',
-                      background: 'rgba(15, 23, 42, 0.65)',
-                      fontSize: '0.88rem',
-                      color: '#FFFFFF',
-                      outline: 'none',
-                      boxShadow: 'inset 0 2px 4px rgba(0, 0, 0, 0.3)',
-                      fontFamily: 'inherit'
-                    }
-                  })
-                ),
-
-                // Error message
-                error && e('div', {
-                  style: {
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '8px',
-                    padding: '10px 12px',
-                    borderRadius: '9px',
-                    background: 'rgba(220, 38, 38, 0.22)',
-                    border: '1px solid rgba(220, 38, 38, 0.45)',
-                    color: '#FCA5A5',
-                    fontSize: '0.78rem',
-                    fontWeight: '600',
-                    marginBottom: '14px'
-                  }
-                },
-                  e('span', null, '⚠️'),
-                  e('span', null, error)
-                ),
-
-                // Success message
-                success && e('div', {
-                  style: {
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '8px',
-                    padding: '10px 12px',
-                    borderRadius: '9px',
-                    background: 'rgba(16, 185, 129, 0.22)',
-                    border: '1px solid rgba(16, 185, 129, 0.45)',
-                    color: '#6EE7B7',
-                    fontSize: '0.78rem',
-                    fontWeight: '600',
-                    marginBottom: '14px'
-                  }
-                },
-                  e('span', null, '✓'),
-                  e('span', null, success)
-                ),
-
-                // Submit Button
-                e('button', {
-                  type: 'submit',
-                  disabled: loading,
-                  style: {
-                    width: '100%',
-                    padding: '11px',
-                    borderRadius: '10px',
-                    border: 'none',
-                    background: 'linear-gradient(135deg, #F97316 0%, #EA580C 100%)',
-                    color: '#FFFFFF',
-                    fontSize: '0.90rem',
-                    fontWeight: '800',
-                    cursor: loading ? 'not-allowed' : 'pointer',
-                    boxShadow: '0 6px 20px rgba(249, 115, 22, 0.35)',
-                    letterSpacing: '0.3px',
-                    transition: 'all 0.18s ease'
-                  },
-                  onMouseEnter: (ev) => {
-                    if (!loading) ev.currentTarget.style.boxShadow = '0 8px 24px rgba(249, 115, 22, 0.55)';
-                  },
-                  onMouseLeave: (ev) => {
-                    ev.currentTarget.style.boxShadow = '0 6px 20px rgba(249, 115, 22, 0.35)';
-                  }
-                },
-                  loading ? 'Authenticating Officer Credentials...' : `Sign In to Corridor Command →`
-                )
-              )
-            ),
-
-            // Card Footer
-            e('div', {
-              style: {
-                marginTop: '18px',
-                paddingTop: '14px',
-                borderTop: '1px solid rgba(255, 255, 255, 0.09)',
-                textAlign: 'center',
-                fontSize: '0.68rem',
-                color: '#94A3B8',
-                lineHeight: '1.5'
-              }
-            },
-              e('div', null, 'Access restricted to authorized Indian Railways personnel.'),
-              e('div', { style: { color: '#64748B', marginTop: '2px' } }, 'RAKSHA PATH v2.4.1 · High-Speed Corridor Command')
-            )
-          )
-        );
+        }, 30);
       }
 
-      // Mount React Application into #root
-      const rootElement = document.getElementById('root');
-      if (window.ReactDOM.createRoot) {
-        window.ReactDOM.createRoot(rootElement).render(e(RoleLoginApp));
-      } else if (window.ReactDOM.render) {
-        window.ReactDOM.render(e(RoleLoginApp), rootElement);
-      }
+      // Initial Mount
+      render();
     })();
   </script>
 </body>

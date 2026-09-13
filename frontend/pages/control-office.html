@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -430,8 +430,8 @@
             <div style="display: flex; align-items: center; gap: 8px;">
               <span>Active Conflict Analysis &amp; AI Alternatives</span>
               <span
-                style="font-size: 0.68rem; background: #FAF6EE; border: 1px solid #C3B296; color: #003366; padding: 2px 6px; border-radius: 4px; font-weight: 700;">🗄️
-                Local DB: audit_records.db</span>
+                style="font-size: 0.68rem; background: #FAF6EE; border: 1px solid #C3B296; color: #003366; padding: 2px 6px; border-radius: 4px; font-weight: 700;">☁️
+                Supabase: requested_windows</span>
             </div>
             <div style="display: flex; align-items: center; gap: 6px;">
               <span style="font-size: 0.72rem; color: #D9531E; font-family: var(--font-mono); font-weight: 700;">Live
@@ -1595,7 +1595,19 @@
       const entryName = 'APPLY_ALTERNATIVE_SLOT';
 
       try {
-        // 1. Update local SQLite database
+        // 1. Update Supabase requested_windows table via Data API
+        await fetch(`/api/v1/supabase/data/requested_windows?key=request_id&val=${encodeURIComponent(conflictId)}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            status: 'ALTERNATIVE_APPLIED',
+            applied_alternative: altWindow,
+            sanctioned_by: activeUser.name || 'Indian Railways Operator',
+            sanctioned_at: new Date().toISOString()
+          })
+        }).catch(() => null);
+
+        // 2. Update local server
         const localDbRes = await fetch('/api/v1/apply-alternative-window', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -1610,35 +1622,12 @@
         });
         const localDbData = await localDbRes.json();
 
-        // 2. Log to immutable Supabase audit trail
-        const supabaseRes = await fetch('/api/v1/supabase/audit-log', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            entry_name: entryName,
-            event_type: 'ALTERNATIVE_APPLIED',
-            block_id: conflictId,
-            target_entity_id: conflictId,
-            section: 'LOCAL-DB-SECTION',
-            window: altWindow,
-            staff_id: activeUser.staffId || activeUser.id || 'IR-STAFF-UNKNOWN',
-            user_name: activeUser.name || activeUser.username || 'Indian Railways Operator',
-            user_role: activeUser.role || activeUser.designation || 'Senior Section Controller',
-            user_division: activeUser.division || 'Northern Railway — Delhi Division',
-            reason: `Avoided collision with passenger path. Shifted to ${altWindow}`,
-            disruption_score: 12.5,
-            delay_minutes: 0,
-            details: { conflict_id: conflictId, alt_window: altWindow, local_db_status: localDbData.status }
-          })
-        }).catch(() => null);
-        const supabaseData = supabaseRes ? await supabaseRes.json().catch(() => ({})) : {};
-
-        alert(`✓ [${entryName}] Alternative accepted for ${conflictId}!\nShifted to: ${altWindow}\n\n🗄️ Local DB (audit_records.db): ${localDbData.status || 'ALTERNATIVE_APPLIED'}\n🔒 Supabase Audit: ${supabaseData.record_hash ? supabaseData.record_hash.slice(0, 16) + '...' : 'Logged'}\n\nOperator: ${activeUser.name || 'Indian Railways Operator'}`);
+        alert(`✓ [${entryName}] Alternative accepted for ${conflictId}!\nShifted to: ${altWindow}\n\n☁️ Supabase Data API (requested_windows): ALTERNATIVE_APPLIED\n\nOperator: ${activeUser.name || 'Indian Railways Operator'}`);
 
         // 3. Refresh both panels from live train API
         await window.fetchLiveConflicts();
         await window.fetchLiveRecommendedSlots();
-        window.refreshCtrlAudit();
+        if (typeof window.refreshCtrlAudit === 'function') window.refreshCtrlAudit();
       } catch (e) {
         alert('Alternative error: ' + e.message);
       }
@@ -1649,7 +1638,18 @@
       if (!confirm(`Force Sanction maintenance window ${conflictId}?\n\nThis will override all AI conflict warnings and sanction the originally requested window.\n\nOperator: ${activeUser.name || 'Indian Railways Operator'}\n\nProceed?`)) return;
 
       try {
-        // 1. Update local SQLite database
+        // 1. Update Supabase requested_windows table via Data API
+        await fetch(`/api/v1/supabase/data/requested_windows?key=request_id&val=${encodeURIComponent(conflictId)}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            status: 'FORCE_SANCTIONED',
+            sanctioned_by: activeUser.name || 'Indian Railways Operator',
+            sanctioned_at: new Date().toISOString()
+          })
+        }).catch(() => null);
+
+        // 2. Update local server
         const localDbRes = await fetch('/api/v1/force-sanction-window', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -1665,33 +1665,11 @@
         });
         const localDbData = await localDbRes.json();
 
-        // 2. Log to immutable Supabase audit trail
-        await fetch('/api/v1/supabase/audit-log', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            entry_name: 'CONTROLLER_FORCE_SANCTION',
-            event_type: 'FORCE_SANCTION',
-            block_id: conflictId,
-            target_entity_id: conflictId,
-            section: 'LOCAL-DB-SECTION',
-            window: 'FORCED',
-            staff_id: activeUser.staffId || activeUser.id || 'IR-STAFF-UNKNOWN',
-            user_name: activeUser.name || activeUser.username || 'Indian Railways Operator',
-            user_role: activeUser.role || activeUser.designation || 'Senior Section Controller',
-            user_division: activeUser.division || 'Northern Railway — Delhi Division',
-            reason: 'Force sanction executed by Section Controller override — operational exigency.',
-            disruption_score: 68.0,
-            delay_minutes: 45,
-            details: { conflict_id: conflictId, local_db_status: localDbData.status }
-          })
-        }).catch(() => null);
-
-        alert(`⚡ FORCE SANCTION executed for ${conflictId}!\n\n🗄️ Local DB (audit_records.db): FORCE_SANCTIONED\n🔒 Supabase Audit: Logged (Immutable)\n\nOperator: ${activeUser.name || 'Indian Railways Operator'}`);
+        alert(`⚡ FORCE SANCTION executed for ${conflictId}!\n\n☁️ Supabase Data API (requested_windows): FORCE_SANCTIONED\n\nOperator: ${activeUser.name || 'Indian Railways Operator'}`);
 
         // 3. Refresh panels
         await window.fetchLiveConflicts();
-        window.refreshCtrlAudit();
+        if (typeof window.refreshCtrlAudit === 'function') window.refreshCtrlAudit();
       } catch (e) {
         alert('Force sanction error: ' + e.message);
       }
@@ -2464,15 +2442,26 @@
       border-top: 4px solid #003366;
       font-family: 'Inter', sans-serif;
     ">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
         <div>
           <div
             style="font-size:0.68rem;color:#003366;font-weight:800;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:2px;">
-            🗄️ Local Database — audit_records.db</div>
+            ☁️ SUPABASE DATA API — requested_windows</div>
           <div style="font-size:1.05rem;font-weight:800;color:#0F172A;">➕ Submit Maintenance Window Request</div>
         </div>
         <button onclick="document.getElementById('submit-window-modal').style.display='none'"
           style="background:none;border:none;font-size:1.2rem;cursor:pointer;color:#64748B;padding:4px;">✕</button>
+      </div>
+
+      <!-- INGEST FROM MAINTENANCE DEFECTS PICKER -->
+      <div style="margin-bottom: 14px; background: #F8FAFC; border: 1px solid #CBD5E1; border-radius: 8px; padding: 10px 12px;">
+        <label style="font-size:0.74rem;font-weight:800;color:#003366;display:flex;align-items:center;gap:5px;margin-bottom:5px;">
+          <span>📥</span> Ingest from Maintenance Defect (TMS / SMMS / TDMS / USFD / Supabase)
+        </label>
+        <select id="swm-defect-picker" onchange="window.handleDefectSelected(this.value)"
+          style="width:100%;padding:7px 10px;border:1px solid #003366;border-radius:6px;font-size:0.80rem;background:#FFFFFF;font-weight:600;color:#0F172A;box-sizing:border-box;">
+          <option value="">-- Manual Requisition or Select Active Defect --</option>
+        </select>
       </div>
 
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
@@ -2510,13 +2499,13 @@
         <div>
           <label style="font-size:0.74rem;font-weight:700;color:#003366;display:block;margin-bottom:4px;">Start KM
             Pole</label>
-          <input id="swm-km-start" type="number" placeholder="e.g. 12.0" value="12.0"
+          <input id="swm-km-start" type="number" step="0.1" placeholder="e.g. 12.0" value="12.0"
             style="width:100%;padding:7px 10px;border:1px solid #C3B296;border-radius:6px;font-size:0.82rem;box-sizing:border-box;" />
         </div>
         <div>
           <label style="font-size:0.74rem;font-weight:700;color:#003366;display:block;margin-bottom:4px;">End KM
             Pole</label>
-          <input id="swm-km-end" type="number" placeholder="e.g. 16.0" value="16.0"
+          <input id="swm-km-end" type="number" step="0.1" placeholder="e.g. 16.0" value="16.0"
             style="width:100%;padding:7px 10px;border:1px solid #C3B296;border-radius:6px;font-size:0.82rem;box-sizing:border-box;" />
         </div>
         <div>
@@ -2542,9 +2531,8 @@
 
       <div
         style="background:#FAF6EE;border:1px solid rgba(195,178,150,0.5);border-radius:6px;padding:8px 12px;font-size:0.72rem;color:#64748B;margin-bottom:16px;">
-        ℹ️ Request will be saved to <strong>local SQLite database</strong> (audit_records.db) and <strong>immediately
-          evaluated</strong> for train conflicts using the <strong>Live Train API</strong>. The cards will refresh
-        automatically.
+        ☁️ Request will be saved to Supabase <strong>requested_windows</strong> table via Data API and <strong>immediately
+          analyzed</strong> under <strong>Active Conflict Analysis &amp; AI Alternatives</strong> for this specific window.
       </div>
 
       <div style="display:flex;align-items:center;gap:8px;">
@@ -2552,7 +2540,7 @@
           background:#003366; color:#FFF; border:none; padding:9px 22px;
           border-radius:7px; font-weight:700; font-size:0.84rem; cursor:pointer;
           box-shadow:0 2px 8px rgba(0,51,102,0.25); flex:1;
-        ">🗄️ Save to Local DB & Evaluate Conflicts</button>
+        ">☁️ Save to Supabase (requested_windows) &amp; Analyze Conflicts</button>
         <button onclick="document.getElementById('submit-window-modal').style.display='none'" style="
           background:#F1F5F9; color:#475569; border:1px solid #C3B296;
           padding:9px 16px; border-radius:7px; font-weight:600; font-size:0.82rem; cursor:pointer;
@@ -2563,15 +2551,67 @@
 
 
   <script>
+    let cachedDefects = [];
+
+    window.loadActiveDefects = async function () {
+      try {
+        const picker = document.getElementById('swm-defect-picker');
+        if (!picker) return;
+        const res = await fetch('/api/v1/supabase/data/maintenance_defects');
+        if (res.ok) {
+          const data = await res.json();
+          const items = data.data || [];
+          cachedDefects = items;
+          picker.innerHTML = `<option value="">-- Manual Requisition or Select Active Defect (${items.length} Available) --</option>` +
+            items.map(d => {
+              const defId = d.defect_id || d.external_ref_id || d.id;
+              const title = d.defect_type || d.work_type || 'Track Flaw';
+              const kmSpan = (d.start_km !== undefined) ? `KM ${d.start_km}-${d.end_km}` : (d.section_id || '');
+              return `<option value="${defId}">[${d.source_system || 'TMS'}] ${defId}: ${title} (${kmSpan}, ${d.department || 'Civil'}, ${d.priority_category || 'P1'})</option>`;
+            }).join('');
+        }
+      } catch (e) {
+        console.warn('Defects load notice:', e);
+      }
+    };
+
+    window.handleDefectSelected = function (defId) {
+      if (!defId) return;
+      const defect = cachedDefects.find(d => (d.defect_id === defId || d.external_ref_id === defId || String(d.id) === String(defId)));
+      if (!defect) return;
+
+      if (defect.section_id) document.getElementById('swm-section').value = defect.section_id;
+      if (defect.department) {
+        const deptSelect = document.getElementById('swm-dept');
+        for (let i = 0; i < deptSelect.options.length; i++) {
+          if (deptSelect.options[i].value.toLowerCase().includes(defect.department.toLowerCase().slice(0, 4))) {
+            deptSelect.selectedIndex = i;
+            break;
+          }
+        }
+      }
+      if (defect.station_from) document.getElementById('swm-stn-from').value = defect.station_from;
+      if (defect.station_to) document.getElementById('swm-stn-to').value = defect.station_to;
+      if (defect.start_km !== undefined) document.getElementById('swm-km-start').value = defect.start_km;
+      if (defect.end_km !== undefined) document.getElementById('swm-km-end').value = defect.end_km;
+      if (defect.suggested_window_start) document.getElementById('swm-start-time').value = defect.suggested_window_start;
+      if (defect.suggested_window_end) document.getElementById('swm-end-time').value = defect.suggested_window_end;
+      
+      const desc = `[${defId}] ${defect.defect_type || 'Defect Rectification'} (${defect.severity || 'CRITICAL'} - ${defect.priority_category || 'P1'})`;
+      document.getElementById('swm-work-desc').value = desc;
+    };
+
     window.openSubmitWindowModal = function () {
       document.getElementById('submit-window-modal').style.display = 'flex';
+      window.loadActiveDefects();
     };
 
     window.submitWindowRequest = async function () {
       const btn = document.getElementById('swm-submit-btn');
-      btn.textContent = '⏳ Saving...';
+      btn.textContent = '⏳ Saving to Supabase (requested_windows)...';
       btn.disabled = true;
 
+      const selectedDefectId = document.getElementById('swm-defect-picker')?.value || '';
       const section = document.getElementById('swm-section').value.trim();
       const dept = document.getElementById('swm-dept').value;
       const stnFrom = document.getElementById('swm-stn-from').value.trim().toUpperCase();
@@ -2593,7 +2633,11 @@
             : startTime <= '16:00' ? 'Afternoon Lull'
               : 'Evening Peak';
 
+      const deptCode = dept.slice(0, 3).toUpperCase();
+      const reqId = `REQ-${deptCode}-${Math.floor(1000 + Math.random() * 9000)}`;
+
       const payload = {
+        request_id: reqId,
         section_id: section || `${stnFrom}-${stnTo}-DN`,
         station_from: stnFrom,
         station_to: stnTo,
@@ -2606,53 +2650,60 @@
         duration_minutes: duration,
         department: dept,
         work_description: workDesc || 'Routine maintenance as per schedule',
-        priority: 'P1'
+        defect_ref_id: selectedDefectId || null,
+        priority: 'P1',
+        status: 'PENDING_REVIEW'
       };
 
       try {
-        const res = await fetch('/api/v1/requested-windows', {
+        // 1. POST directly to Supabase requested_windows table via Data API
+        const supRes = await fetch('/api/v1/supabase/data/requested_windows', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         });
-        const data = await res.json();
-        if (data.success) {
-          document.getElementById('submit-window-modal').style.display = 'none';
+        const supData = await supRes.json();
 
-          // Sync submitted values to Active Conflict Evaluation Controls
-          const stFromEl = document.getElementById('fs-conflict-station-from') || document.getElementById('conflict-station-from');
-          const stToEl = document.getElementById('fs-conflict-station-to') || document.getElementById('conflict-station-to');
-          const kmStartEl = document.getElementById('fs-conflict-start-km') || document.getElementById('conflict-start-km');
-          const kmEndEl = document.getElementById('fs-conflict-end-km') || document.getElementById('conflict-end-km');
-          const startTimeEl = document.getElementById('fs-conflict-start-time') || document.getElementById('conflict-start-time');
-          const durationEl = document.getElementById('fs-conflict-duration') || document.getElementById('conflict-duration');
+        // 2. Also register in local endpoint
+        await fetch('/api/v1/requested-windows', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        }).catch(() => null);
 
-          if (stFromEl) stFromEl.value = stnFrom;
-          if (stToEl) stToEl.value = stnTo;
-          if (kmStartEl) kmStartEl.value = `${kmStart}/00`;
-          if (kmEndEl) kmEndEl.value = `${kmEnd}/00`;
-          if (startTimeEl) startTimeEl.value = startTime.includes('T') ? startTime : new Date().toISOString().slice(0, 10) + 'T' + startTime;
-          if (durationEl) durationEl.value = duration;
+        document.getElementById('submit-window-modal').style.display = 'none';
 
-          // Trigger Live AI Evaluation & Dual-Panel Recommendations
-          if (typeof window.runFsCorridorConflictTest === 'function') {
-            await window.runFsCorridorConflictTest();
-          } else if (typeof window.runLiveCorridorConflictTest === 'function') {
-            await window.runLiveCorridorConflictTest();
-          }
+        // 3. Sync submitted values to Active Conflict Evaluation Controls for that window
+        const stFromEl = document.getElementById('fs-conflict-station-from') || document.getElementById('conflict-station-from');
+        const stToEl = document.getElementById('fs-conflict-station-to') || document.getElementById('conflict-station-to');
+        const kmStartEl = document.getElementById('fs-conflict-start-km') || document.getElementById('conflict-start-km');
+        const kmEndEl = document.getElementById('fs-conflict-end-km') || document.getElementById('conflict-end-km');
+        const startTimeEl = document.getElementById('fs-conflict-start-time') || document.getElementById('conflict-start-time');
+        const durationEl = document.getElementById('fs-conflict-duration') || document.getElementById('conflict-duration');
 
-          // Refresh live conflict items & recommended slots list
-          await window.fetchLiveConflicts();
-          await window.fetchLiveRecommendedSlots();
+        if (stFromEl) stFromEl.value = stnFrom;
+        if (stToEl) stToEl.value = stnTo;
+        if (kmStartEl) kmStartEl.value = `${kmStart}/00`;
+        if (kmEndEl) kmEndEl.value = `${kmEnd}/00`;
+        if (startTimeEl) startTimeEl.value = startTime.includes('T') ? startTime : new Date().toISOString().slice(0, 10) + 'T' + startTime;
+        if (durationEl) durationEl.value = duration;
 
-          alert(`✅ Maintenance Window Request Submitted & Live AI Evaluated!\n\nRequest ID: ${data.request_id}\nSection: ${section} (${stnFrom} ➔ ${stnTo})\nSpan: KM ${kmStart} - ${kmEnd}\nRequested Window: ${startTime} – ${endTime} (${duration} mins)\n\n🤖 Live AI Recommendation & Active Conflict analysis updated below.`);
-        } else {
-          alert('Error saving to local DB: ' + (data.detail || JSON.stringify(data)));
+        // 4. Trigger Live AI Evaluation for THAT window specifically
+        if (typeof window.runFsCorridorConflictTest === 'function') {
+          await window.runFsCorridorConflictTest();
+        } else if (typeof window.runLiveCorridorConflictTest === 'function') {
+          await window.runLiveCorridorConflictTest();
         }
+
+        // 5. Refresh live conflict items & recommended slots list
+        await window.fetchLiveConflicts();
+        await window.fetchLiveRecommendedSlots();
+
+        alert(`✅ Maintenance Window Request Saved to Supabase requested_windows via Data API!\n\nRequisition ID: ${reqId}\nDestination: ☁️ Supabase PostgreSQL (requested_windows)\n${selectedDefectId ? 'Linked Defect: ' + selectedDefectId + '\n' : ''}Section: ${section} (${stnFrom} ➔ ${stnTo})\nSpan: KM ${kmStart} - ${kmEnd}\nRequested Window: ${startTime} – ${endTime} (${duration} mins)\n\n🤖 Live Conflict Analysis & AI Alternatives for this window updated below.`);
       } catch (e) {
-        alert('Network error: ' + e.message);
+        alert('Supabase Data API error: ' + e.message);
       } finally {
-        btn.textContent = '🗄️ Save to Local DB & Evaluate Conflicts';
+        btn.textContent = '☁️ Save to Supabase (requested_windows) & Analyze Conflicts';
         btn.disabled = false;
       }
     };

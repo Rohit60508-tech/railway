@@ -84,7 +84,7 @@
   /** Read & validate session */
   function getSession() {
     try {
-      const raw = sessionStorage.getItem(SESSION_KEY);
+      const raw = sessionStorage.getItem(SESSION_KEY) || localStorage.getItem(SESSION_KEY);
       if (!raw) return null;
       const session = JSON.parse(raw);
       if (!session || !session.role || !ROLE_META[session.role]) return null;
@@ -122,6 +122,9 @@
     try {
       sessionStorage.removeItem(SESSION_KEY);
       sessionStorage.removeItem('ir_auth_token');
+      localStorage.removeItem(SESSION_KEY);
+      localStorage.removeItem('token');
+      localStorage.removeItem('ir_auth_token');
     } catch (_) {}
     window.location.replace(LOGIN_URL + '?reason=reload_security');
     return;
@@ -161,11 +164,20 @@
     setAdminRole() {
       session.role = 'admin';
       session.name = 'Chief Controller & Executive Admin';
-      sessionStorage.setItem(SESSION_KEY, JSON.stringify(session));
+      try {
+        sessionStorage.setItem(SESSION_KEY, JSON.stringify(session));
+        localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+      } catch (_) {}
       window.location.reload();
     },
     logout() {
-      sessionStorage.removeItem(SESSION_KEY);
+      try {
+        sessionStorage.removeItem(SESSION_KEY);
+        sessionStorage.removeItem('ir_auth_token');
+        localStorage.removeItem(SESSION_KEY);
+        localStorage.removeItem('token');
+        localStorage.removeItem('ir_auth_token');
+      } catch (_) {}
       window.location.replace(LOGIN_URL);
     },
   };
