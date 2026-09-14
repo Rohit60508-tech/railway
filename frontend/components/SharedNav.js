@@ -3214,254 +3214,107 @@
           </div>
         </div>
 
-        <!-- DUAL PANEL CONTAINER MATCHING EXACT USER DESIGN -->
-        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(360px, 1fr));gap:20px;align-items:start;">
-
-          <!-- LEFT PANEL: AI-RECOMMENDED BLOCK WINDOWS (FEASIBILITY RANKED) -->
-          <div style="background:#FFFFFF;border:1px solid #E2E8F0;border-radius:12px;padding:18px;box-shadow:0 4px 16px rgba(15,23,42,0.05);">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid #F1F5F9;">
-              <div>
-                <div style="font-size:0.92rem;font-weight:800;color:#0F172A;letter-spacing:0.5px;">
-                  AI-RECOMMENDED BLOCK WINDOWS
-                </div>
-                <div style="font-size:0.70rem;color:#64748B;font-weight:700;text-transform:uppercase;">(FEASIBILITY RANKED)</div>
-              </div>
-              <div style="display:flex;align-items:center;gap:6px;">
-                <span style="font-size:0.72rem;font-weight:800;color:#003366;">${stFrom}-${stTo}-UP</span>
-                <span style="font-size:0.68rem;font-weight:800;color:#059669;background:#ECFDF5;border:1px solid #A7F3D0;padding:2px 8px;border-radius:10px;">LIVE HEADWAYS</span>
-              </div>
+        <!-- ACTIVE CONFLICT ANALYSIS & AI DIRECTIVES (FULL WIDTH) -->
+        <div style="background:#FFFFFF;border:1px solid #E2E8F0;border-radius:12px;padding:20px;box-shadow:0 4px 16px rgba(15,23,42,0.05);">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid #F1F5F9;">
+            <div style="font-size:0.95rem;font-weight:800;color:#0F172A;letter-spacing:0.5px;">
+              ACTIVE CONFLICT ANALYSIS &amp; AI DIRECTIVES
             </div>
-
-            <!-- #1 RECOMMENDED OPTIMAL WINDOW -->
-            <div style="background:#F0FDF4;border:1.5px solid #059669;border-radius:10px;padding:14px;margin-bottom:14px;box-shadow:0 2px 8px rgba(5,150,105,0.06);">
-              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
-                <div style="font-size:0.86rem;font-weight:800;color:#065F46;">
-                  #1 RECOMMENDED <span style="font-size:0.92rem;color:#059669;margin-left:4px;">01:30 – 04:30 (Night Shadow)</span> ℹ️
-                </div>
-                <div style="display:flex;align-items:center;gap:6px;">
-                  <span style="font-size:0.68rem;font-weight:800;color:#059669;background:#DCFCE7;border:1px solid #86EFAC;padding:2px 8px;border-radius:8px;">OPTIMAL (Clear)</span>
-                  <span style="font-size:0.76rem;font-weight:800;color:#059669;background:#FFF;padding:2px 6px;border-radius:6px;border:1px solid #A7F3D0;">98%</span>
-                </div>
-              </div>
-
-              <!-- Disruption Progress Bar -->
-              <div style="margin-bottom:8px;">
-                <div style="display:flex;align-items:center;justify-content:space-between;font-size:0.72rem;font-weight:800;color:#059669;margin-bottom:4px;">
-                  <span>LOW DISRUPTION</span>
-                  <span>12.5/100</span>
-                </div>
-                <div style="width:100%;height:6px;background:#DCFCE7;border-radius:4px;overflow:hidden;">
-                  <div style="width:12.5%;height:100%;background:#059669;border-radius:4px;"></div>
-                </div>
-              </div>
-
-              <div style="display:flex;align-items:center;justify-content:space-between;font-size:0.72rem;color:#475569;font-weight:600;margin-bottom:8px;">
-                <span>⏱️ 0m Exp. Delay &bull; 🚆 0 Trains Regulated</span>
-                <span style="color:#059669;font-weight:700;">Permissible with nominal impact</span>
-              </div>
-
-              <div style="font-size:0.73rem;color:#334155;background:#FFF;padding:8px 10px;border-radius:6px;border:1px solid #A7F3D0;margin-bottom:10px;">
-                ℹ️ Clear headway gap across all UP/DN tracks. Minimum line occupancy.
-              </div>
-
-              <div style="display:flex;align-items:center;justify-content:flex-end;gap:8px;">
-                <button onclick="window.fsSanctionRecommendedBlock('#1 RECOMMENDED 01:30 - 04:30', '${stFrom}', '${stTo}')" style="background:#1E3A8A;color:#FFF;border:none;padding:6px 14px;border-radius:6px;font-size:0.76rem;font-weight:800;cursor:pointer;box-shadow:0 2px 6px rgba(30,58,138,0.2);">
-                  Sanction Block
-                </button>
-                <button onclick="window.fsOverrideBlock('#1 RECOMMENDED 01:30 - 04:30')" style="background:#FFF;color:#D97706;border:1px solid #FCD34D;padding:6px 12px;border-radius:6px;font-size:0.76rem;font-weight:700;cursor:pointer;">
-                  Override
-                </button>
-              </div>
-            </div>
-
-            <!-- #2 VIABLE AFTERNOON LULL WINDOW -->
-            <div style="background:#FFFBEB;border:1.5px solid #F59E0B;border-radius:10px;padding:14px;margin-bottom:14px;">
-              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
-                <div style="font-size:0.86rem;font-weight:800;color:#92400E;">
-                  #2 VIABLE <span style="font-size:0.92rem;color:#D97706;margin-left:4px;">12:45 – 15:00 (Afternoon Lull)</span> ℹ️
-                </div>
-                <div style="display:flex;align-items:center;gap:6px;">
-                  <span style="font-size:0.68rem;font-weight:800;color:#D97706;background:#FEF3C7;border:1px solid #FDE68A;padding:2px 8px;border-radius:8px;">VIABLE (1 conflict)</span>
-                  <span style="font-size:0.76rem;font-weight:800;color:#D97706;background:#FFF;padding:2px 6px;border-radius:6px;border:1px solid #FDE68A;">92%</span>
-                </div>
-              </div>
-
-              <!-- Disruption Progress Bar -->
-              <div style="margin-bottom:8px;">
-                <div style="display:flex;align-items:center;justify-content:space-between;font-size:0.72rem;font-weight:800;color:#D97706;margin-bottom:4px;">
-                  <span>MODERATE IMPACT</span>
-                  <span>38.0/100</span>
-                </div>
-                <div style="width:100%;height:6px;background:#FEF3C7;border-radius:4px;overflow-overflow:hidden;">
-                  <div style="width:38%;height:100%;background:#D97706;border-radius:4px;"></div>
-                </div>
-              </div>
-
-              <div style="display:flex;align-items:center;justify-content:space-between;font-size:0.72rem;color:#475569;font-weight:600;margin-bottom:8px;">
-                <span>⏱️ 25m Exp. Delay &bull; 🚆 1 Trains Regulated</span>
-                <span style="color:#D97706;font-weight:700;">Freight regulation required</span>
-              </div>
-
-              <div style="font-size:0.73rem;color:#334155;background:#FFF;padding:8px 10px;border-radius:6px;border:1px solid #FDE68A;margin-bottom:10px;">
-                ℹ️ Freight regulated at Khurja loop line. 12004 Shatabdi cleared on main line.
-              </div>
-
-              <div style="display:flex;align-items:center;justify-content:flex-end;gap:8px;">
-                <button onclick="window.fsSanctionRecommendedBlock('#2 VIABLE 12:45 - 15:00', '${stFrom}', '${stTo}')" style="background:#1E3A8A;color:#FFF;border:none;padding:6px 14px;border-radius:6px;font-size:0.76rem;font-weight:800;cursor:pointer;box-shadow:0 2px 6px rgba(30,58,138,0.2);">
-                  Sanction Block
-                </button>
-                <button onclick="window.fsOverrideBlock('#2 VIABLE 12:45 - 15:00')" style="background:#FFF;color:#D97706;border:1px solid #FCD34D;padding:6px 12px;border-radius:6px;font-size:0.76rem;font-weight:700;cursor:pointer;">
-                  Override
-                </button>
-              </div>
-            </div>
-
-            <!-- #3 CONTINGENT PRE-PEAK WINDOW -->
-            <div style="background:#FEF2F2;border:1.5px solid #EF4444;border-radius:10px;padding:14px;">
-              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
-                <div style="font-size:0.86rem;font-weight:800;color:#991B1B;">
-                  #3 CONTINGENT <span style="font-size:0.92rem;color:#DC2626;margin-left:4px;">15:30 – 17:30 (Pre-Peak)</span> ℹ️
-                </div>
-                <div style="display:flex;align-items:center;gap:6px;">
-                  <span style="font-size:0.68rem;font-weight:800;color:#DC2626;background:#FEE2E2;border:1px solid #FCA5A5;padding:2px 8px;border-radius:8px;">RESTRICTED (3 conflicts)</span>
-                  <span style="font-size:0.76rem;font-weight:800;color:#DC2626;background:#FFF;padding:2px 6px;border-radius:6px;border:1px solid #FCA5A5;">86%</span>
-                </div>
-              </div>
-
-              <!-- Disruption Progress Bar -->
-              <div style="margin-bottom:8px;">
-                <div style="display:flex;align-items:center;justify-content:space-between;font-size:0.72rem;font-weight:800;color:#DC2626;margin-bottom:4px;">
-                  <span>HEAVY DISRUPTION</span>
-                  <span>68.5/100</span>
-                </div>
-                <div style="width:100%;height:6px;background:#FEE2E2;border-radius:4px;overflow:hidden;">
-                  <div style="width:68.5%;height:100%;background:#DC2626;border-radius:4px;"></div>
-                </div>
-              </div>
-
-              <div style="display:flex;align-items:center;justify-content:space-between;font-size:0.72rem;color:#475569;font-weight:600;margin-bottom:8px;">
-                <span>⏱️ 95m Exp. Delay &bull; 🚆 3 Trains Regulated</span>
-                <span style="color:#DC2626;font-weight:700;">Requires Sr. DOM sanction</span>
-              </div>
-
-              <div style="font-size:0.73rem;color:#334155;background:#FFF;padding:8px 10px;border-radius:6px;border:1px solid #FCA5A5;margin-bottom:10px;">
-                ℹ️ Heavy commuter load encroaches on section. Discretionary sanction required.
-              </div>
-
-              <div style="display:flex;align-items:center;justify-content:flex-end;gap:8px;">
-                <button onclick="window.fsSanctionRecommendedBlock('#3 CONTINGENT 15:30 - 17:30', '${stFrom}', '${stTo}')" style="background:#1E3A8A;color:#FFF;border:none;padding:6px 14px;border-radius:6px;font-size:0.76rem;font-weight:800;cursor:pointer;box-shadow:0 2px 6px rgba(30,58,138,0.2);">
-                  Sanction Block
-                </button>
-                <button onclick="window.fsOverrideBlock('#3 CONTINGENT 15:30 - 17:30')" style="background:#FFF;color:#D97706;border:1px solid #FCD34D;padding:6px 12px;border-radius:6px;font-size:0.76rem;font-weight:700;cursor:pointer;">
-                  Override
-                </button>
-              </div>
-            </div>
+            <span style="font-size:0.70rem;font-weight:800;color:#1E3A8A;background:#EFF6FF;border:1px solid #BFDBFE;padding:3px 8px;border-radius:6px;">
+              🔴 LIVE TIMETABLE MATCHER
+            </span>
           </div>
 
-          <!-- RIGHT PANEL: ACTIVE CONFLICT ANALYSIS & AI ALTERNATIVES -->
-          <div style="background:#FFFFFF;border:1px solid #E2E8F0;border-radius:12px;padding:18px;box-shadow:0 4px 16px rgba(15,23,42,0.05);">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid #F1F5F9;">
-              <div style="font-size:0.92rem;font-weight:800;color:#0F172A;letter-spacing:0.5px;">
-                ACTIVE CONFLICT ANALYSIS &amp; AI DIRECTIVES
-              </div>
-              <span style="font-size:0.70rem;font-weight:800;color:#1E3A8A;background:#EFF6FF;border:1px solid #BFDBFE;padding:3px 8px;border-radius:6px;">
-                🔴 LIVE TIMETABLE MATCHER
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
+            <div style="font-size:0.75rem;font-weight:800;color:#DC2626;letter-spacing:0.5px;display:flex;align-items:center;gap:6px;">
+              <span>⚡</span>
+              <span>WINDOW: ${data.evaluated_time_window || 'Selected Window'} (${duration}m)</span>
+            </div>
+            <div style="display:flex;gap:6px;">
+              <span style="font-size:0.72rem;font-weight:800;color:${data.conflicts && data.conflicts.length > 0 ? '#DC2626' : '#059669'};background:${data.conflicts && data.conflicts.length > 0 ? '#FEF2F2' : '#ECFDF5'};border:1px solid ${data.conflicts && data.conflicts.length > 0 ? '#FCA5A5' : '#A7F3D0'};padding:4px 10px;border-radius:6px;">
+                ${data.conflicts && data.conflicts.length > 0 ? ('⚠️ ' + data.conflicts.length + ' Active Clash(es)') : '✅ 0 Clashes (Clear)'}
               </span>
             </div>
-
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
-              <div style="font-size:0.75rem;font-weight:800;color:#DC2626;letter-spacing:0.5px;display:flex;align-items:center;gap:6px;">
-                <span>⚡</span>
-                <span>WINDOW: ${data.evaluated_time_window || 'Selected Window'} (${duration}m)</span>
-              </div>
-              <div style="display:flex;gap:6px;">
-                <span style="font-size:0.72rem;font-weight:800;color:${data.conflicts && data.conflicts.length > 0 ? '#DC2626' : '#059669'};background:${data.conflicts && data.conflicts.length > 0 ? '#FEF2F2' : '#ECFDF5'};border:1px solid ${data.conflicts && data.conflicts.length > 0 ? '#FCA5A5' : '#A7F3D0'};padding:4px 10px;border-radius:6px;">
-                  ${data.conflicts && data.conflicts.length > 0 ? ('⚠️ ' + data.conflicts.length + ' Active Clash(es)') : '✅ 0 Clashes (Clear)'}
-                </span>
-              </div>
-            </div>
-
-            <div id="fs-active-conflicts-container" style="display:flex;flex-direction:column;gap:14px;">
-              ${(data.conflicts && data.conflicts.length > 0) ? data.conflicts.map((c, idx) => `
-                <div id="conf-card-${idx}" style="background:#FFF;border:1.5px solid ${c.severity === 'CRITICAL_PASSENGER_CONFLICT' ? '#DC2626' : '#F59E0B'};border-radius:10px;padding:14px;box-shadow:0 2px 8px rgba(0,0,0,0.04);">
-                  <!-- Header Row -->
-                  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
-                    <div style="font-size:0.88rem;font-weight:800;color:#DC2626;display:flex;align-items:center;gap:6px;">
-                      <span>⚠️ #${c.train_number}</span>
-                      <span style="color:#0F172A;font-weight:800;">${c.train_name}</span>
-                    </div>
-                    <div style="display:flex;align-items:center;gap:6px;">
-                      <span id="conf-card-${idx}-status" style="font-size:0.68rem;font-weight:800;color:#DC2626;background:#FEF2F2;border:1px solid #FCA5A5;padding:2px 8px;border-radius:8px;">&bull; CONFLICT</span>
-                      <span style="font-size:0.72rem;font-weight:800;color:#475569;background:#F1F5F9;padding:2px 6px;border-radius:6px;border:1px solid #CBD5E1;">${c.type}</span>
-                    </div>
-                  </div>
-
-                  <!-- Scheduled Time & Location -->
-                  <div style="font-size:0.76rem;color:#475569;font-weight:600;margin-bottom:8px;background:#F8FAFC;padding:6px 10px;border-radius:6px;border:1px solid #E2E8F0;">
-                    <div>🕒 <strong>Scheduled Time in Section:</strong> <span style="color:#0F172A;font-weight:800;">${c.scheduled_time}</span></div>
-                    <div style="margin-top:2px;font-size:0.72rem;color:#64748B;">📍 <strong>Impact Zone:</strong> ${c.location_span || (stFrom + ' ➔ ' + stTo)}</div>
-                  </div>
-
-                  <!-- DIRECTIVE 1: WHERE TO STOP -->
-                  <div style="background:#FEF2F2;border:1px solid #FCA5A5;border-radius:8px;padding:10px 12px;margin-bottom:8px;">
-                    <div style="font-size:0.74rem;font-weight:800;color:#991B1B;display:flex;align-items:center;gap:6px;margin-bottom:3px;">
-                      <span>🛑</span> WHERE THE TRAIN SHOULD BE STOPPED / REGULATED:
-                    </div>
-                    <div style="font-size:0.82rem;font-weight:800;color:#7F1D1D;line-height:1.3;">
-                      ${c.stop_station || 'Designated Section Yard Loop Line'}
-                    </div>
-                    <div style="font-size:0.70rem;color:#B91C1C;font-weight:600;margin-top:4px;">
-                      ⏱️ Hold Duration: <strong>${c.stop_duration_mins || 15} Minutes</strong> &bull; Priority Class: ${c.priority_level || 'Passenger'}
-                    </div>
-                  </div>
-
-                  <!-- DIRECTIVE 2: WHERE TO REROUTE -->
-                  <div style="background:#EFF6FF;border:1px solid #93C5FD;border-radius:8px;padding:10px 12px;margin-bottom:10px;">
-                    <div style="font-size:0.74rem;font-weight:800;color:#1E40AF;display:flex;align-items:center;gap:6px;margin-bottom:3px;">
-                      <span>🔀</span> WHERE THE TRAIN SHOULD BE REROUTED / DIVERTED:
-                    </div>
-                    <div style="font-size:0.82rem;font-weight:800;color:#1E3A8A;line-height:1.3;">
-                      ${c.reroute_route || 'Divert via Local Loop or Parallel Bypass Chord Line'}
-                    </div>
-                    <div style="font-size:0.70rem;color:#2563EB;font-weight:600;margin-top:4px;">
-                      ⚡ Clearance: Bypasses KM ${parsedStartKm}–${parsedEndKm} maintenance possession section
-                    </div>
-                  </div>
-
-                  <!-- Action Buttons -->
-                  <div style="display:flex;align-items:center;justify-content:flex-end;gap:8px;">
-                    <button onclick="window.fsExecuteRerouteOrder('${c.train_number}', '${(c.reroute_route || '').replace(/'/g, "\\'")}')" style="background:#1E3A8A;color:#FFF;border:none;padding:6px 12px;border-radius:6px;font-size:0.74rem;font-weight:800;cursor:pointer;box-shadow:0 2px 6px rgba(30,58,138,0.2);">
-                      Issue Reroute Order
-                    </button>
-                    <button onclick="window.fsExecuteHoldOrder('${c.train_number}', '${(c.stop_station || '').replace(/'/g, "\\'")}', ${c.stop_duration_mins || 15})" style="background:#FFF;color:#DC2626;border:1px solid #FCA5A5;padding:6px 12px;border-radius:6px;font-size:0.74rem;font-weight:700;cursor:pointer;">
-                      Issue Hold Order (${c.stop_duration_mins || 15}m)
-                    </button>
-                  </div>
-                </div>
-              `).join('') : `
-                <!-- ZERO CONFLICTS CARD -->
-                <div style="background:#F0FDF4;border:1.5px solid #059669;border-radius:10px;padding:24px 18px;text-align:center;box-shadow:0 2px 8px rgba(5,150,105,0.06);">
-                  <div style="font-size:2rem;margin-bottom:8px;">✅</div>
-                  <div style="font-size:1.02rem;font-weight:800;color:#065F46;margin-bottom:6px;">
-                    100% CLEAR WINDOW — ZERO TRAIN CONFLICTS
-                  </div>
-                  <div style="font-size:0.78rem;color:#047857;font-weight:600;margin-bottom:12px;line-height:1.4;">
-                    No scheduled passenger or freight train paths intersect section <strong>${stFrom} ➔ ${stTo}</strong> (KM ${kmPoleSpan}) during <strong>${data.evaluated_time_window}</strong>.
-                  </div>
-                  <div style="display:inline-flex;align-items:center;gap:6px;background:#DCFCE7;border:1px solid #86EFAC;padding:4px 12px;border-radius:20px;font-size:0.74rem;color:#065F46;font-weight:800;margin-bottom:16px;">
-                    <span>🛡️ 0 Trains Regulated</span> &bull; <span>⏱️ 0m Delay</span> &bull; <span>Feasibility: 99.5%</span>
-                  </div>
-                  <div>
-                    <button onclick="window.fsSanctionRecommendedBlock('${data.evaluated_time_window} (Clear Window)', '${stFrom}', '${stTo}')" style="background:#059669;color:#FFF;border:none;padding:10px 22px;border-radius:8px;font-size:0.82rem;font-weight:800;cursor:pointer;box-shadow:0 2px 8px rgba(5,150,105,0.25);">
-                      ✓ Sanction Clear Possession Block Now
-                    </button>
-                  </div>
-                </div>
-              `}
-            </div>
           </div>
 
+          <div id="fs-active-conflicts-container" style="display:flex;flex-direction:column;gap:14px;">
+            ${(data.conflicts && data.conflicts.length > 0) ? data.conflicts.map((c, idx) => `
+              <div id="conf-card-${idx}" style="background:#FFF;border:1.5px solid ${c.severity === 'CRITICAL_PASSENGER_CONFLICT' ? '#DC2626' : '#F59E0B'};border-radius:10px;padding:14px;box-shadow:0 2px 8px rgba(0,0,0,0.04);">
+                <!-- Header Row -->
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+                  <div style="font-size:0.88rem;font-weight:800;color:#DC2626;display:flex;align-items:center;gap:6px;">
+                    <span>⚠️ #${c.train_number}</span>
+                    <span style="color:#0F172A;font-weight:800;">${c.train_name}</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:6px;">
+                    <span id="conf-card-${idx}-status" style="font-size:0.68rem;font-weight:800;color:#DC2626;background:#FEF2F2;border:1px solid #FCA5A5;padding:2px 8px;border-radius:8px;">&bull; CONFLICT</span>
+                    <span style="font-size:0.72rem;font-weight:800;color:#475569;background:#F1F5F9;padding:2px 6px;border-radius:6px;border:1px solid #CBD5E1;">${c.type}</span>
+                  </div>
+                </div>
+
+                <!-- Scheduled Time & Location -->
+                <div style="font-size:0.76rem;color:#475569;font-weight:600;margin-bottom:8px;background:#F8FAFC;padding:6px 10px;border-radius:6px;border:1px solid #E2E8F0;">
+                  <div>🕒 <strong>Scheduled Time in Section:</strong> <span style="color:#0F172A;font-weight:800;">${c.scheduled_time}</span></div>
+                  <div style="margin-top:2px;font-size:0.72rem;color:#64748B;">📍 <strong>Impact Zone:</strong> ${c.location_span || (stFrom + ' ➔ ' + stTo)}</div>
+                </div>
+
+                <!-- DIRECTIVE 1: WHERE TO STOP -->
+                <div style="background:#FEF2F2;border:1px solid #FCA5A5;border-radius:8px;padding:10px 12px;margin-bottom:8px;">
+                  <div style="font-size:0.74rem;font-weight:800;color:#991B1B;display:flex;align-items:center;gap:6px;margin-bottom:3px;">
+                    <span>🛑</span> WHERE THE TRAIN SHOULD BE STOPPED / REGULATED:
+                  </div>
+                  <div style="font-size:0.82rem;font-weight:800;color:#7F1D1D;line-height:1.3;">
+                    ${c.stop_station || 'Designated Section Yard Loop Line'}
+                  </div>
+                  <div style="font-size:0.70rem;color:#B91C1C;font-weight:600;margin-top:4px;">
+                    ⏱️ Hold Duration: <strong>${c.stop_duration_mins || 15} Minutes</strong> &bull; Priority Class: ${c.priority_level || 'Passenger'}
+                  </div>
+                </div>
+
+                <!-- DIRECTIVE 2: WHERE TO REROUTE -->
+                <div style="background:#EFF6FF;border:1px solid #93C5FD;border-radius:8px;padding:10px 12px;margin-bottom:10px;">
+                  <div style="font-size:0.74rem;font-weight:800;color:#1E40AF;display:flex;align-items:center;gap:6px;margin-bottom:3px;">
+                    <span>🔀</span> WHERE THE TRAIN SHOULD BE REROUTED / DIVERTED:
+                  </div>
+                  <div style="font-size:0.82rem;font-weight:800;color:#1E3A8A;line-height:1.3;">
+                    ${c.reroute_route || 'Divert via Local Loop or Parallel Bypass Chord Line'}
+                  </div>
+                  <div style="font-size:0.70rem;color:#2563EB;font-weight:600;margin-top:4px;">
+                    ⚡ Clearance: Bypasses KM ${parsedStartKm}–${parsedEndKm} maintenance possession section
+                  </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div style="display:flex;align-items:center;justify-content:flex-end;gap:8px;">
+                  <button onclick="window.fsExecuteRerouteOrder('${c.train_number}', '${(c.reroute_route || '').replace(/'/g, "\\'")}')" style="background:#1E3A8A;color:#FFF;border:none;padding:6px 12px;border-radius:6px;font-size:0.74rem;font-weight:800;cursor:pointer;box-shadow:0 2px 6px rgba(30,58,138,0.2);">
+                    Issue Reroute Order
+                  </button>
+                  <button onclick="window.fsExecuteHoldOrder('${c.train_number}', '${(c.stop_station || '').replace(/'/g, "\\'")}', ${c.stop_duration_mins || 15})" style="background:#FFF;color:#DC2626;border:1px solid #FCA5A5;padding:6px 12px;border-radius:6px;font-size:0.74rem;font-weight:700;cursor:pointer;">
+                    Issue Hold Order (${c.stop_duration_mins || 15}m)
+                  </button>
+                </div>
+              </div>
+            `).join('') : `
+              <!-- ZERO CONFLICTS CARD -->
+              <div style="background:#F0FDF4;border:1.5px solid #059669;border-radius:10px;padding:24px 18px;text-align:center;box-shadow:0 2px 8px rgba(5,150,105,0.06);">
+                <div style="font-size:2rem;margin-bottom:8px;">✅</div>
+                <div style="font-size:1.02rem;font-weight:800;color:#065F46;margin-bottom:6px;">
+                  100% CLEAR WINDOW — ZERO TRAIN CONFLICTS
+                </div>
+                <div style="font-size:0.78rem;color:#047857;font-weight:600;margin-bottom:12px;line-height:1.4;">
+                  No scheduled passenger or freight train paths intersect section <strong>${stFrom} ➔ ${stTo}</strong> (KM ${kmPoleSpan}) during <strong>${data.evaluated_time_window}</strong>.
+                </div>
+                <div style="display:inline-flex;align-items:center;gap:6px;background:#DCFCE7;border:1px solid #86EFAC;padding:4px 12px;border-radius:20px;font-size:0.74rem;color:#065F46;font-weight:800;margin-bottom:16px;">
+                  <span>🛡️ 0 Trains Regulated</span> &bull; <span>⏱️ 0m Delay</span> &bull; <span>Feasibility: 99.5%</span>
+                </div>
+                <div>
+                  <button onclick="window.fsSanctionRecommendedBlock('${data.evaluated_time_window} (Clear Window)', '${stFrom}', '${stTo}')" style="background:#059669;color:#FFF;border:none;padding:10px 22px;border-radius:8px;font-size:0.82rem;font-weight:800;cursor:pointer;box-shadow:0 2px 8px rgba(5,150,105,0.25);">
+                    ✓ Sanction Clear Possession Block Now
+                  </button>
+                </div>
+              </div>
+            `}
+          </div>
         </div>
       `;
 

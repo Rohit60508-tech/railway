@@ -506,8 +506,8 @@ export default function FieldEngineerView() {
               </tbody>
             </table>
           </div>
-        </div>
-      )}
+        )}
+      </div>
 
       {/* STATUTORY WORK COMPLETION REPORT MODAL */}
       {completionModalOpen && activeCompletingWo && (
