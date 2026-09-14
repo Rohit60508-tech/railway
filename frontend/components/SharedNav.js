@@ -3029,34 +3029,35 @@
     const defaultStartTime = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
 
     body.innerHTML = `
-      <div style="max-width:840px;margin:0 auto;display:flex;flex-direction:column;gap:16px;">
-        <!-- Card Container matching the reference image styling -->
-        <div style="background:#FFFFFF;border-radius:10px;box-shadow:0 4px 18px rgba(0,0,0,0.06);border:1px solid #E2E8F0;border-top:4.5px solid #C5221F;padding:26px 28px;box-sizing:border-box;">
+      <div style="max-width:1400px;margin:0 auto;display:grid;grid-template-columns:minmax(360px, 450px) 1fr;gap:20px;align-items:start;padding:0 4px;box-sizing:border-box;">
+        
+        <!-- LEFT COLUMN: Parameter Configuration Card -->
+        <div style="background:#FFFFFF;border-radius:10px;box-shadow:0 4px 18px rgba(0,0,0,0.06);border:1px solid #E2E8F0;border-top:4.5px solid #C5221F;padding:22px 24px;box-sizing:border-box;">
           
           <!-- Header with Shield & Pill Badge -->
-          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:10px;">
-            <div style="display:flex;align-items:center;gap:10px;">
-              <span style="font-size:1.35rem;line-height:1;">🛡️</span>
-              <h2 style="font-size:1.12rem;font-weight:800;color:#0F2B48;letter-spacing:0.04em;margin:0;text-transform:uppercase;font-family:'Inter',sans-serif;">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:8px;">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span style="font-size:1.30rem;line-height:1;">🛡️</span>
+              <h2 style="font-size:1.05rem;font-weight:800;color:#0F2B48;letter-spacing:0.03em;margin:0;text-transform:uppercase;font-family:'Inter',sans-serif;">
                 CORRIDOR CONFLICT &amp; DELAY SIMULATION
               </h2>
             </div>
-            <span style="font-size:0.70rem;background:#FFFFFF;color:#DC2626;border:1.2px solid rgba(220,38,38,0.4);padding:4px 12px;border-radius:4px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;font-family:monospace;">
+            <span style="font-size:0.68rem;background:#FFFFFF;color:#DC2626;border:1.2px solid rgba(220,38,38,0.4);padding:3px 10px;border-radius:4px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;font-family:monospace;">
               LIVE TIMETABLE MATCHER
             </span>
           </div>
 
           <!-- Subtitle -->
-          <p style="font-size:0.80rem;color:#475569;margin:0 0 16px 0;line-height:1.45;">
+          <p style="font-size:0.78rem;color:#475569;margin:0 0 14px 0;line-height:1.4;">
             Test any planned maintenance possession window against real-time passenger train paths to predict choke delays before granting possession across all Indian Railway corridors.
           </p>
 
           <!-- Corridor Route Selector -->
-          <div style="margin-bottom:14px;">
-            <label style="font-size:0.78rem;font-weight:800;color:#003366;display:flex;align-items:center;gap:6px;margin-bottom:6px;">
+          <div style="margin-bottom:12px;">
+            <label style="font-size:0.76rem;font-weight:800;color:#003366;display:flex;align-items:center;gap:5px;margin-bottom:5px;">
               <span>🛤️ Corridor Route:</span>
             </label>
-            <select id="fs-conflict-corridor-select" onchange="window.switchConflictCorridor(this.value)" style="width:100%;padding:9px 12px;border:1.5px solid #003366;border-radius:8px;font-size:0.82rem;font-weight:700;background:#FAF6EE;color:#003366;box-sizing:border-box;outline:none;cursor:pointer;">
+            <select id="fs-conflict-corridor-select" onchange="window.switchConflictCorridor(this.value)" style="width:100%;padding:8px 11px;border:1.5px solid #003366;border-radius:8px;font-size:0.80rem;font-weight:700;background:#FAF6EE;color:#003366;box-sizing:border-box;outline:none;cursor:pointer;">
               ${Object.values(PAN_INDIA_CORRIDORS).map(c => `
                 <option value="${c.id}" ${c.id === activeConflictCorridor ? 'selected' : ''}>
                   📍 ${c.name}
@@ -3066,22 +3067,22 @@
           </div>
 
           <!-- Row 1: Nearest Station A (From) & Station B (To) -->
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:14px;">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
             <div>
-              <label style="font-size:0.78rem;font-weight:700;color:#003366;display:flex;align-items:center;gap:6px;margin-bottom:6px;">
+              <label style="font-size:0.76rem;font-weight:700;color:#003366;display:flex;align-items:center;gap:5px;margin-bottom:5px;">
                 <span>🚉 Nearest Station A (From):</span>
               </label>
-              <select id="fs-conflict-station-from" onchange="window.onFsConflictStationChange()" style="width:100%;padding:9px 12px;border:1px solid #CBD5E1;border-radius:8px;font-size:0.82rem;background:#FFF;font-weight:600;color:#0F172A;box-sizing:border-box;outline:none;">
+              <select id="fs-conflict-station-from" onchange="window.onFsConflictStationChange()" style="width:100%;padding:8px 10px;border:1px solid #CBD5E1;border-radius:8px;font-size:0.80rem;background:#FFF;font-weight:600;color:#0F172A;box-sizing:border-box;outline:none;">
                 ${cur.stations.map((s, idx) => `
                   <option value="${s.code}" ${idx === 0 ? 'selected' : ''}>${s.code} - ${s.name} (KM ${s.km.toFixed(1)})</option>
                 `).join('')}
               </select>
             </div>
             <div>
-              <label style="font-size:0.78rem;font-weight:700;color:#003366;display:flex;align-items:center;gap:6px;margin-bottom:6px;">
+              <label style="font-size:0.76rem;font-weight:700;color:#003366;display:flex;align-items:center;gap:5px;margin-bottom:5px;">
                 <span>🚉 Nearest Station B (To):</span>
               </label>
-              <select id="fs-conflict-station-to" onchange="window.onFsConflictStationChange()" style="width:100%;padding:9px 12px;border:1px solid #CBD5E1;border-radius:8px;font-size:0.82rem;background:#FFF;font-weight:600;color:#0F172A;box-sizing:border-box;outline:none;">
+              <select id="fs-conflict-station-to" onchange="window.onFsConflictStationChange()" style="width:100%;padding:8px 10px;border:1px solid #CBD5E1;border-radius:8px;font-size:0.80rem;background:#FFF;font-weight:600;color:#0F172A;box-sizing:border-box;outline:none;">
                 ${cur.stations.map((s, idx) => `
                   <option value="${s.code}" ${idx === Math.min(1, cur.stations.length - 1) ? 'selected' : ''}>${s.code} - ${s.name} (KM ${s.km.toFixed(1)})</option>
                 `).join('')}
@@ -3090,41 +3091,41 @@
           </div>
 
           <!-- Row 2: Start KM / Pole No. & End KM / Pole No. -->
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:14px;">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
             <div>
-              <label style="font-size:0.78rem;font-weight:700;color:#003366;display:flex;align-items:center;gap:6px;margin-bottom:6px;">
+              <label style="font-size:0.76rem;font-weight:700;color:#003366;display:flex;align-items:center;gap:5px;margin-bottom:5px;">
                 <span>📍 Start KM / Pole No.:</span>
               </label>
-              <input id="fs-conflict-start-km" type="text" value="142/10" oninput="window.updateFsConflictBadge()" placeholder="e.g. 142/10" style="width:100%;padding:9px 12px;border:1px solid #CBD5E1;border-radius:8px;font-size:0.82rem;font-weight:600;color:#0F172A;font-family:monospace;box-sizing:border-box;outline:none;">
+              <input id="fs-conflict-start-km" type="text" value="6/40" oninput="window.updateFsConflictBadge()" placeholder="e.g. 6/40" style="width:100%;padding:8px 10px;border:1px solid #CBD5E1;border-radius:8px;font-size:0.80rem;font-weight:600;color:#0F172A;font-family:monospace;box-sizing:border-box;outline:none;">
             </div>
             <div>
-              <label style="font-size:0.78rem;font-weight:700;color:#003366;display:flex;align-items:center;gap:6px;margin-bottom:6px;">
+              <label style="font-size:0.76rem;font-weight:700;color:#003366;display:flex;align-items:center;gap:5px;margin-bottom:5px;">
                 <span>📍 End KM / Pole No.:</span>
               </label>
-              <input id="fs-conflict-end-km" type="text" value="145/20" oninput="window.updateFsConflictBadge()" placeholder="e.g. 145/20" style="width:100%;padding:9px 12px;border:1px solid #CBD5E1;border-radius:8px;font-size:0.82rem;font-weight:600;color:#0F172A;font-family:monospace;box-sizing:border-box;outline:none;">
+              <input id="fs-conflict-end-km" type="text" value="9/70" oninput="window.updateFsConflictBadge()" placeholder="e.g. 9/70" style="width:100%;padding:8px 10px;border:1px solid #CBD5E1;border-radius:8px;font-size:0.80rem;font-weight:600;color:#0F172A;font-family:monospace;box-sizing:border-box;outline:none;">
             </div>
           </div>
 
           <!-- Row 3: Proposed Start & Duration (Minutes) -->
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:14px;">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;">
             <div>
-              <label style="font-size:0.78rem;font-weight:700;color:#003366;display:block;margin-bottom:6px;">
+              <label style="font-size:0.76rem;font-weight:700;color:#003366;display:block;margin-bottom:5px;">
                 Proposed Start:
               </label>
-              <input id="fs-conflict-start-time" type="datetime-local" value="${defaultStartTime}" style="width:100%;padding:9px 12px;border:1px solid #CBD5E1;border-radius:8px;font-size:0.82rem;font-weight:600;color:#0F172A;box-sizing:border-box;outline:none;">
+              <input id="fs-conflict-start-time" type="datetime-local" value="${defaultStartTime}" style="width:100%;padding:8px 10px;border:1px solid #CBD5E1;border-radius:8px;font-size:0.80rem;font-weight:600;color:#0F172A;box-sizing:border-box;outline:none;">
             </div>
             <div>
-              <label style="font-size:0.78rem;font-weight:700;color:#003366;display:block;margin-bottom:6px;">
+              <label style="font-size:0.76rem;font-weight:700;color:#003366;display:block;margin-bottom:5px;">
                 Duration (Minutes):
               </label>
-              <input id="fs-conflict-duration" type="number" value="120" step="15" min="15" max="480" style="width:100%;padding:9px 12px;border:1px solid #CBD5E1;border-radius:8px;font-size:0.82rem;font-weight:600;color:#0F172A;box-sizing:border-box;outline:none;">
+              <input id="fs-conflict-duration" type="number" value="120" step="15" min="15" max="480" style="width:100%;padding:8px 10px;border:1px solid #CBD5E1;border-radius:8px;font-size:0.80rem;font-weight:600;color:#0F172A;box-sizing:border-box;outline:none;">
             </div>
           </div>
 
           <!-- Dashed Location Badge Preview -->
-          <div id="fs-conflict-location-badge" style="margin-bottom:16px;padding:12px 16px;background:#EFF6FF;border-radius:8px;border:1.5px dashed #1E40AF;font-size:0.80rem;color:#1E40AF;font-weight:700;display:flex;align-items:center;justify-content:space-between;">
+          <div id="fs-conflict-location-badge" style="margin-bottom:16px;padding:10px 14px;background:#EFF6FF;border-radius:8px;border:1.5px dashed #1E40AF;font-size:0.78rem;color:#1E40AF;font-weight:700;display:flex;align-items:center;justify-content:space-between;">
             <span>📍 Block: <strong id="fs-lbl-block" style="color:#1E3A8A;">${cur.stations[0]?.code || 'NDLS'} ➔ ${cur.stations[1]?.code || 'GZB'}</strong></span>
-            <span>Pole: <strong id="fs-lbl-pole" style="color:#1E3A8A;">142/10 – 145/20</strong> (~3.3 KM)</span>
+            <span>Pole: <strong id="fs-lbl-pole" style="color:#1E3A8A;">6/40 – 9/70</strong> (~3.3 KM)</span>
           </div>
 
           <!-- Prominent Red Action Button -->
@@ -3132,13 +3133,26 @@
             <span>🔍</span>
             <span>Evaluate Live Conflict Impact</span>
           </button>
-
-          <!-- Output Container -->
-          <div id="fs-corridor-conflict-output" style="margin-top:16px;font-size:0.80rem;background:#FAF6EE;padding:14px 18px;border-radius:8px;border:1px solid rgba(195,178,150,0.45);color:#0F172A;line-height:1.5;">
-            Select corridor route, block section stations, KM pole span, and click evaluate to simulate collision impact against live trains.
-          </div>
-
         </div>
+
+        <!-- RIGHT COLUMN: Output & Directives Container -->
+        <div id="fs-corridor-conflict-output" style="display:flex;flex-direction:column;gap:14px;">
+          <div style="background:#FFFFFF;border-radius:10px;box-shadow:0 4px 18px rgba(0,0,0,0.06);border:1px solid #E2E8F0;padding:28px 24px;text-align:center;color:#475569;">
+            <div style="font-size:2.2rem;margin-bottom:10px;">🛡️</div>
+            <h3 style="font-size:1.02rem;font-weight:800;color:#0F2B48;margin:0 0 6px 0;">
+              Live Timetable &amp; Conflict Directives Ready
+            </h3>
+            <p style="font-size:0.80rem;color:#64748B;max-width:460px;margin:0 auto 16px auto;line-height:1.45;">
+              Configure your corridor block section, KM pole span, and proposed maintenance window on the left, then click <strong>Evaluate Live Conflict Impact</strong> to run the timetable matcher.
+            </p>
+            <div style="display:inline-flex;flex-direction:column;gap:8px;text-align:left;background:#F8FAFC;border:1px solid #E2E8F0;border-radius:8px;padding:14px 18px;font-size:0.78rem;color:#334155;max-width:460px;margin:0 auto;">
+              <div style="display:flex;align-items:center;gap:6px;"><span>⚡</span> <span><strong>Live Timetable Matching:</strong> Cross-checks IRCTC/FOIS schedule paths.</span></div>
+              <div style="display:flex;align-items:center;gap:6px;"><span>📍</span> <span><strong>Exact KM Collision Detection:</strong> Computes train intercept points down to pole level.</span></div>
+              <div style="display:flex;align-items:center;gap:6px;"><span>🔀</span> <span><strong>Mitigation Directives:</strong> Loop regulation stations and chord bypass routing.</span></div>
+            </div>
+          </div>
+        </div>
+
       </div>
     `;
 
