@@ -632,254 +632,208 @@ export default function ControlOfficeView() {
         </div>
       </div>
 
-      {/* SECOND ROW: AI RECOMMENDED BLOCKS & ACTIVE CONFLICT ANALYSIS */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', marginBottom: '28px' }}>
+      {/* SECOND ROW: SPOT SECTION & KM CONFLICT RESOLVER & DIVERSION DISPATCHER */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1.1fr 1fr', gap: '24px', marginBottom: '28px' }}>
         
-        {/* PANEL 3: AI-RECOMMENDED BLOCK WINDOWS (FEASIBILITY RANKED) */}
-        <div style={{ background: '#FFFFFF', border: '1px solid rgba(195,178,150,0.38)', borderRadius: '12px', padding: '20px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
-            <h2 style={{ fontSize: '1.05rem', fontWeight: '800', color: '#003366', margin: 0 }}>
-              AI-RECOMMENDED BLOCK WINDOWS (FEASIBILITY RANKED)
-            </h2>
-            <span style={{ fontSize: '0.72rem', color: '#0056B3', fontWeight: '800', letterSpacing: '0.5px' }}>NDLS-CNB-UP CORRIDOR</span>
+        {/* PANEL 3: TARGETED SPOT SECTION & KM CONFLICT QUERY CONSOLE */}
+        <div style={{ background: '#FFFFFF', border: '1.5px solid rgba(0,51,102,0.3)', borderRadius: '12px', padding: '22px', boxShadow: '0 4px 14px rgba(0,0,0,0.04)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px', borderBottom: '2px solid #E2E8F0', paddingBottom: '12px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span style={{ fontSize: '1.3rem' }}>🎯</span>
+              <h2 style={{ fontSize: '1.05rem', fontWeight: '800', color: '#003366', margin: 0 }}>
+                SPOT SECTION &amp; KM CONFLICT SOLVER
+              </h2>
+            </div>
+            <span style={{ fontSize: '0.72rem', background: '#EFF6FF', color: '#1E40AF', padding: '3px 10px', borderRadius: '12px', fontWeight: '800', border: '1px solid #BFDBFE' }}>
+              EXACT TIME &amp; KM MATCHING
+            </span>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            {/* Card 1: #1 RECOMMENDED OPTIMAL */}
-            <div style={{ background: '#FAF6EE', border: '1px solid #A7F3D0', borderRadius: '10px', padding: '14px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-                <div style={{ fontSize: '0.85rem', fontWeight: '800', color: '#003366' }}>
-                  <span style={{ color: '#059669', marginRight: '6px' }}>#1 RECOMMENDED</span> 01:30 – 04:30 (Night Shadow) ℹ
-                </div>
-                <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
-                  <span style={{ background: '#D1FAE5', color: '#065F46', padding: '3px 8px', borderRadius: '12px', fontSize: '0.68rem', fontWeight: '800' }}>● OPTIMAL (Clear)</span>
-                  <span style={{ background: '#ECFDF5', color: '#047857', padding: '3px 6px', borderRadius: '4px', fontSize: '0.68rem', fontWeight: '800' }}>🎯 98%</span>
-                </div>
-              </div>
+          <p style={{ fontSize: '0.78rem', color: '#64748B', marginBottom: '14px' }}>
+            Evaluate train conflicts for an exact time slot and exact KM span between two stations. No generic window clutter—only actionable diversion &amp; regulation decisions.
+          </p>
 
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-                <span style={{ fontSize: '0.72rem', fontWeight: '800', color: '#059669', textTransform: 'uppercase' }}>● LOW DISRUPTION</span>
-                <span style={{ fontSize: '0.82rem', fontWeight: '800', color: '#0F172A' }}>12.5<span style={{ fontSize: '0.7rem', color: '#64748B' }}>/100</span></span>
-              </div>
-              <div style={{ width: '100%', height: '6px', background: '#E2E8F0', borderRadius: '3px', marginBottom: '10px', overflow: 'hidden' }}>
-                <div style={{ width: '12.5%', height: '100%', background: '#059669', borderRadius: '3px' }} />
-              </div>
-
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem', color: '#475569', marginBottom: '12px' }}>
-                <span>⏱ 0m Exp. Delay</span>
-                <span>🚆 0 Trains Regulated</span>
-                <span style={{ color: '#059669', fontWeight: '700' }}>Permissible with nominal impact</span>
-              </div>
-
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '10px', borderTop: '1px dashed #CBD5E1' }}>
-                <span style={{ fontSize: '0.72rem', color: '#64748B' }}>ℹ Clear headway gap across all UP/DN tracks. Minimum line occupancy.</span>
-                <div style={{ display: 'flex', gap: '6px' }}>
-                  <button
-                    onClick={async () => {
-                      try {
-                        const response = await fetch('/api/v1/ai/optimize/save-block', {
-                          method: 'POST',
-                          headers: {
-                            'Content-Type': 'application/json',
-                            'x-api-key': 'ir-ai-key-2026',
-                          },
-                          body: JSON.stringify({
-                            section: 'NDLS-CNB-UP',
-                            start_time: '2026-09-12T01:30:00Z',
-                            end_time: '2026-09-12T04:30:00Z',
-                            duration_minutes: 180,
-                            departments: ['Civil', 'TRD', 'SIG'],
-                            status: 'SANCTIONED',
-                            disruption_score: 12.5,
-                            created_by: 'Control Office Controller'
-                          }),
-                        });
-                        const res = await response.json();
-                        alert(`✓ BLOCK SANCTIONED & SEALED!\n\nBlock ID: ${res.block_id || 'BLK-' + Math.floor(1000 + Math.random() * 9000)}\nWindow: 01:30 - 04:30 (Night Shadow)\nStatus: SANCTIONED`);
-                      } catch (err) {
-                        alert('Sanction Error: ' + err.message);
-                      }
-                    }}
-                    style={{ padding: '6px 12px', background: '#003366', color: '#FFF', border: 'none', borderRadius: '6px', fontWeight: '800', fontSize: '0.75rem', cursor: 'pointer' }}
-                  >
-                    Sanction Block
-                  </button>
-                  <button onClick={() => alert('Override Modal Opened')} style={{ padding: '6px 10px', background: '#FFFBEB', color: '#B45309', border: '1px solid #FCD34D', borderRadius: '6px', fontWeight: '700', fontSize: '0.75rem', cursor: 'pointer' }}>
-                    Override
-                  </button>
-                </div>
-              </div>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '12px' }}>
+            <div>
+              <label style={{ display: 'block', fontSize: '0.74rem', fontWeight: '800', color: '#003366', marginBottom: '4px' }}>
+                🚉 Station A (From):
+              </label>
+              <select
+                value={simForm.stationA}
+                onChange={e => setSimForm({ ...simForm, stationA: e.target.value })}
+                style={{ width: '100%', padding: '9px', borderRadius: '6px', border: '1.5px solid #CBD5E1', fontSize: '0.82rem', background: '#F8FAFC', color: '#0F172A', fontWeight: '700' }}
+              >
+                <option value="NDLS">NDLS - New Delhi (KM 0.0)</option>
+                <option value="GZB">GZB - Ghaziabad (KM 24.5)</option>
+                <option value="ALJN">ALJN - Aligarh Jn (KM 126.1)</option>
+                <option value="TDL">TDL - Tundla Jn (KM 204.3)</option>
+                <option value="CNB">CNB - Kanpur Central (KM 435.0)</option>
+                <option value="PRYJ">PRYJ - Prayagraj Jn (KM 630.0)</option>
+              </select>
             </div>
-
-            {/* Card 2: #2 VIABLE */}
-            <div style={{ background: '#FAF6EE', border: '1px solid #FDE68A', borderRadius: '10px', padding: '14px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-                <div style={{ fontSize: '0.85rem', fontWeight: '800', color: '#003366' }}>
-                  <span style={{ color: '#D97706', marginRight: '6px' }}>#2 VIABLE</span> 12:45 – 15:00 (Afternoon Lull) ℹ
-                </div>
-                <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
-                  <span style={{ background: '#FEF3C7', color: '#92400E', padding: '3px 8px', borderRadius: '12px', fontSize: '0.68rem', fontWeight: '800' }}>● VIABLE (1 conflict)</span>
-                  <span style={{ background: '#FFFBEB', color: '#B45309', padding: '3px 6px', borderRadius: '4px', fontSize: '0.68rem', fontWeight: '800' }}>🎯 92%</span>
-                </div>
-              </div>
-
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-                <span style={{ fontSize: '0.72rem', fontWeight: '800', color: '#D97706', textTransform: 'uppercase' }}>● MODERATE IMPACT</span>
-                <span style={{ fontSize: '0.82rem', fontWeight: '800', color: '#0F172A' }}>38.0<span style={{ fontSize: '0.7rem', color: '#64748B' }}>/100</span></span>
-              </div>
-              <div style={{ width: '100%', height: '6px', background: '#E2E8F0', borderRadius: '3px', marginBottom: '10px', overflow: 'hidden' }}>
-                <div style={{ width: '38%', height: '100%', background: '#D97706', borderRadius: '3px' }} />
-              </div>
-
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem', color: '#475569', marginBottom: '12px' }}>
-                <span>⏱ 25m Exp. Delay</span>
-                <span>🚆 1 Trains Regulated</span>
-                <span style={{ color: '#D97706', fontWeight: '700' }}>Freight regulation required</span>
-              </div>
-
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '10px', borderTop: '1px dashed #CBD5E1' }}>
-                <span style={{ fontSize: '0.72rem', color: '#64748B' }}>ℹ Freight regulated at Khurja loop line. 12004 Shatabdi cleared on main line.</span>
-                <div style={{ display: 'flex', gap: '6px' }}>
-                  <button
-                    onClick={() => {
-                      API.post('/api/v1/ai/optimize/save-block', {
-                        section: 'NDLS-CNB-UP',
-                        start_time: '2026-09-12T12:45:00Z',
-                        end_time: '2026-09-12T15:00:00Z',
-                        duration_minutes: 135,
-                        departments: ['Civil', 'SIG'],
-                        status: 'SANCTIONED',
-                        disruption_score: 38.0,
-                        created_by: 'Control Office Controller'
-                      }).then(res => alert(`✓ BLOCK SANCTIONED!\n\nBlock ID: ${res.block_id}\nWindow: 12:45 - 15:00 (Afternoon Lull)`))
-                        .catch(err => alert('Sanction Error: ' + err.message));
-                    }}
-                    style={{ padding: '6px 12px', background: '#003366', color: '#FFF', border: 'none', borderRadius: '6px', fontWeight: '800', fontSize: '0.75rem', cursor: 'pointer' }}
-                  >
-                    Sanction Block
-                  </button>
-                  <button onClick={() => alert('Override Modal Opened')} style={{ padding: '6px 10px', background: '#FFFBEB', color: '#B45309', border: '1px solid #FCD34D', borderRadius: '6px', fontWeight: '700', fontSize: '0.75rem', cursor: 'pointer' }}>
-                    Override
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* Card 3: #3 CONTINGENT */}
-            <div style={{ background: '#FAF6EE', border: '1px solid #FCA5A5', borderRadius: '10px', padding: '14px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-                <div style={{ fontSize: '0.85rem', fontWeight: '800', color: '#003366' }}>
-                  <span style={{ color: '#DC2626', marginRight: '6px' }}>#3 CONTINGENT</span> 15:30 – 17:30 (Pre-Peak) ℹ
-                </div>
-                <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
-                  <span style={{ background: '#FEE2E2', color: '#991B1B', padding: '3px 8px', borderRadius: '12px', fontSize: '0.68rem', fontWeight: '800' }}>● RESTRICTED (3 conflicts)</span>
-                  <span style={{ background: '#FEF2F2', color: '#DC2626', padding: '3px 6px', borderRadius: '4px', fontSize: '0.68rem', fontWeight: '800' }}>✓ 86%</span>
-                </div>
-              </div>
-
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-                <span style={{ fontSize: '0.72rem', fontWeight: '800', color: '#DC2626', textTransform: 'uppercase' }}>● HEAVY DISRUPTION</span>
-                <span style={{ fontSize: '0.82rem', fontWeight: '800', color: '#0F172A' }}>68.5<span style={{ fontSize: '0.7rem', color: '#64748B' }}>/100</span></span>
-              </div>
-              <div style={{ width: '100%', height: '6px', background: '#E2E8F0', borderRadius: '3px', marginBottom: '10px', overflow: 'hidden' }}>
-                <div style={{ width: '68.5%', height: '100%', background: '#DC2626', borderRadius: '3px' }} />
-              </div>
-
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem', color: '#475569', marginBottom: '12px' }}>
-                <span>⏱ 95m Exp. Delay</span>
-                <span>🚆 3 Trains Regulated</span>
-                <span style={{ color: '#DC2626', fontWeight: '700' }}>Requires Sr. DOM sanction</span>
-              </div>
-
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '10px', borderTop: '1px dashed #CBD5E1' }}>
-                <span style={{ fontSize: '0.72rem', color: '#64748B' }}>ℹ Heavy commuter load encroaches on section. Discretionary sanction.</span>
-                <div style={{ display: 'flex', gap: '6px' }}>
-                  <button
-                    onClick={() => alert('Requires Sr. DOM Step-Up Clearance!')}
-                    style={{ padding: '6px 12px', background: '#003366', color: '#FFF', border: 'none', borderRadius: '6px', fontWeight: '800', fontSize: '0.75rem', cursor: 'pointer' }}
-                  >
-                    Sanction
-                  </button>
-                  <button onClick={() => alert('Override Modal Opened')} style={{ padding: '6px 10px', background: '#FFFBEB', color: '#B45309', border: '1px solid #FCD34D', borderRadius: '6px', fontWeight: '700', fontSize: '0.75rem', cursor: 'pointer' }}>
-                    Override
-                  </button>
-                </div>
-              </div>
+            <div>
+              <label style={{ display: 'block', fontSize: '0.74rem', fontWeight: '800', color: '#003366', marginBottom: '4px' }}>
+                🛤 Station B (To):
+              </label>
+              <select
+                value={simForm.stationB}
+                onChange={e => setSimForm({ ...simForm, stationB: e.target.value })}
+                style={{ width: '100%', padding: '9px', borderRadius: '6px', border: '1.5px solid #CBD5E1', fontSize: '0.82rem', background: '#F8FAFC', color: '#0F172A', fontWeight: '700' }}
+              >
+                <option value="GZB">GZB - Ghaziabad (KM 24.5)</option>
+                <option value="ALJN">ALJN - Aligarh Jn (KM 126.1)</option>
+                <option value="TDL">TDL - Tundla Jn (KM 204.3)</option>
+                <option value="CNB">CNB - Kanpur Central (KM 435.0)</option>
+                <option value="PRYJ">PRYJ - Prayagraj Jn (KM 630.0)</option>
+                <option value="NDLS">NDLS - New Delhi (KM 0.0)</option>
+              </select>
             </div>
           </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '12px' }}>
+            <div>
+              <label style={{ display: 'block', fontSize: '0.74rem', fontWeight: '800', color: '#003366', marginBottom: '4px' }}>
+                📍 Work Zone Start KM / Pole:
+              </label>
+              <input
+                type="text"
+                value={simForm.startPole}
+                onChange={e => setSimForm({ ...simForm, startPole: e.target.value })}
+                placeholder="e.g. 14.2 or 142/10"
+                style={{ width: '100%', padding: '8px 10px', borderRadius: '6px', border: '1.5px solid #CBD5E1', fontSize: '0.82rem', color: '#0F172A', fontWeight: '700' }}
+              />
+            </div>
+            <div>
+              <label style={{ display: 'block', fontSize: '0.74rem', fontWeight: '800', color: '#003366', marginBottom: '4px' }}>
+                📍 Work Zone End KM / Pole:
+              </label>
+              <input
+                type="text"
+                value={simForm.endPole}
+                onChange={e => setSimForm({ ...simForm, endPole: e.target.value })}
+                placeholder="e.g. 16.5 or 145/20"
+                style={{ width: '100%', padding: '8px 10px', borderRadius: '6px', border: '1.5px solid #CBD5E1', fontSize: '0.82rem', color: '#0F172A', fontWeight: '700' }}
+              />
+            </div>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '14px' }}>
+            <div>
+              <label style={{ display: 'block', fontSize: '0.74rem', fontWeight: '800', color: '#003366', marginBottom: '4px' }}>
+                🕒 Proposed Maintenance Time:
+              </label>
+              <input
+                type="datetime-local"
+                value={simForm.proposedStart}
+                onChange={e => setSimForm({ ...simForm, proposedStart: e.target.value })}
+                style={{ width: '100%', padding: '8px 10px', borderRadius: '6px', border: '1.5px solid #CBD5E1', fontSize: '0.82rem', background: '#FFFFFF', color: '#0F172A', fontWeight: '700' }}
+              />
+            </div>
+            <div>
+              <label style={{ display: 'block', fontSize: '0.74rem', fontWeight: '800', color: '#003366', marginBottom: '4px' }}>
+                ⏱ Block Duration (Minutes):
+              </label>
+              <input
+                type="number"
+                value={simForm.duration}
+                onChange={e => setSimForm({ ...simForm, duration: e.target.value })}
+                style={{ width: '100%', padding: '8px 10px', borderRadius: '6px', border: '1.5px solid #CBD5E1', fontSize: '0.82rem', color: '#0F172A', fontWeight: '700' }}
+              />
+            </div>
+          </div>
+
+          <div style={{ padding: '8px 12px', background: '#F8FAFC', border: '1px dashed #64748B', borderRadius: '6px', marginBottom: '14px', display: 'flex', justifyContent: 'space-between', fontSize: '0.74rem', color: '#334155', fontWeight: '700' }}>
+            <span>📍 Section: {simForm.stationA} ➔ {simForm.stationB}</span>
+            <span>Work Span: KM {simForm.startPole} – {simForm.endPole}</span>
+            <span>Duration: {simForm.duration} mins</span>
+          </div>
+
+          <button
+            onClick={() => {
+              handleSimulateTsr();
+              setAuditLogStatus(`Calculated spot conflicts between ${simForm.stationA} & ${simForm.stationB} KM ${simForm.startPole}–${simForm.endPole}`);
+            }}
+            disabled={tsrSimulating}
+            style={{
+              width: '100%', padding: '12px', borderRadius: '8px', border: 'none',
+              background: tsrSimulating ? '#94A3B8' : '#003366', color: '#FFF', fontWeight: '800', fontSize: '0.88rem',
+              cursor: tsrSimulating ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
+              boxShadow: '0 3px 8px rgba(0,51,102,0.25)'
+            }}
+          >
+            <Activity size={16} />
+            <span>{tsrSimulating ? 'Analyzing Spot Trajectories...' : '🔍 Check Train Conflicts & Generate Diversion Plan'}</span>
+          </button>
         </div>
 
-        {/* PANEL 4: ACTIVE CONFLICT ANALYSIS & AI ALTERNATIVES */}
-        <div style={{ background: '#FFFFFF', border: '1px solid rgba(195,178,150,0.38)', borderRadius: '12px', padding: '20px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
-            <h2 style={{ fontSize: '1.05rem', fontWeight: '800', color: '#003366', margin: 0 }}>
-              ACTIVE CONFLICT ANALYSIS &amp; AI ALTERNATIVES
-            </h2>
-            <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
-              <span style={{ background: '#FAF6EE', border: '1px solid #C3B296', color: '#003366', padding: '2px 6px', borderRadius: '4px', fontSize: '0.68rem', fontWeight: '700' }}>
-                ☁️ Supabase: requested_windows
-              </span>
-              <span style={{ background: '#FEF3C7', color: '#B45309', padding: '2px 8px', borderRadius: '4px', fontSize: '0.68rem', fontWeight: '800' }}>
-                LIVE DISRUPTION ENGINE
-              </span>
+        {/* PANEL 4: REAL-TIME TRAIN MITIGATION & REROUTE DISPATCHER */}
+        <div style={{ background: '#FFFFFF', border: '1.5px solid rgba(0,51,102,0.3)', borderRadius: '12px', padding: '22px', boxShadow: '0 4px 14px rgba(0,0,0,0.04)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px', borderBottom: '2px solid #E2E8F0', paddingBottom: '12px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span style={{ fontSize: '1.3rem' }}>🔀</span>
+              <h2 style={{ fontSize: '1.05rem', fontWeight: '800', color: '#003366', margin: 0 }}>
+                TRAIN MITIGATION &amp; REROUTE DIRECTIVES
+              </h2>
             </div>
+            <span style={{ background: conflicts && conflicts.length > 0 ? '#FEF2F2' : '#ECFDF5', color: conflicts && conflicts.length > 0 ? '#DC2626' : '#059669', border: `1px solid ${conflicts && conflicts.length > 0 ? '#FCA5A5' : '#A7F3D0'}`, padding: '3px 10px', borderRadius: '12px', fontSize: '0.72rem', fontWeight: '800' }}>
+              {conflicts && conflicts.length > 0 ? `⚠️ ${conflicts.length} CONFLICTING TRAIN(S)` : '✓ ZERO CONFLICTS'}
+            </span>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', maxHeight: '480px', overflowY: 'auto', paddingRight: '4px' }}>
             {conflicts && conflicts.length > 0 ? (
               conflicts.map((c, idx) => (
-                <div key={idx} style={{ background: '#FAF6EE', border: `1.5px solid ${c.severity === 'CRITICAL_PASSENGER_CONFLICT' ? '#DC2626' : '#F59E0B'}`, borderRadius: '10px', padding: '14px' }}>
+                <div key={idx} style={{ background: '#FAF6EE', border: `1.5px solid ${c.severity === 'CRITICAL_PASSENGER_CONFLICT' ? '#DC2626' : '#F59E0B'}`, borderRadius: '10px', padding: '14px', boxShadow: '0 2px 6px rgba(0,0,0,0.04)' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                    <div style={{ fontSize: '0.88rem', fontWeight: '800', color: '#DC2626', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      <span>⚠️ #{c.train_number || 'TR-LIVE'}</span>
-                      <span style={{ color: '#0F172A', fontWeight: '800' }}>{c.train_name || 'Passenger Express'}</span>
+                    <div style={{ fontSize: '0.90rem', fontWeight: '800', color: '#DC2626', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <span>🚆 #{c.train_number}</span>
+                      <span style={{ color: '#0F172A', fontWeight: '800' }}>{c.train_name}</span>
                     </div>
-                    <span style={{ background: '#FEF2F2', color: '#DC2626', border: '1px solid #FCA5A5', padding: '2px 8px', borderRadius: '8px', fontSize: '0.68rem', fontWeight: '800' }}>
-                      {c.type || 'Superfast'}
+                    <span style={{ background: '#FEF2F2', color: '#DC2626', border: '1px solid #FCA5A5', padding: '2px 8px', borderRadius: '6px', fontSize: '0.68rem', fontWeight: '800' }}>
+                      {c.type}
                     </span>
                   </div>
 
-                  <div style={{ fontSize: '0.78rem', color: '#0F172A', marginBottom: '6px', background: '#FFFFFF', padding: '6px 10px', borderRadius: '6px', border: '1px solid #E2E8F0' }}>
-                    <div>🕒 <strong>Scheduled Crossing:</strong> <span style={{ fontWeight: '800', color: '#003366' }}>{c.scheduled_time || 'In Requested Window'}</span></div>
-                    <div style={{ fontSize: '0.72rem', color: '#64748B', marginTop: '2px' }}>📍 <strong>Section Span:</strong> {c.location_span || `${simForm.stationA} → ${simForm.stationB}`}</div>
+                  <div style={{ fontSize: '0.77rem', color: '#0F172A', marginBottom: '8px', background: '#FFFFFF', padding: '8px 10px', borderRadius: '6px', border: '1px solid #E2E8F0' }}>
+                    <div>🕒 <strong>Scheduled Section Time:</strong> <span style={{ fontWeight: '800', color: '#003366' }}>{c.scheduled_time}</span> (Arriving KM work zone at ~<strong>{c.exact_km_arrival || c.scheduled_time}</strong>)</div>
+                    <div style={{ fontSize: '0.72rem', color: '#64748B', marginTop: '2px' }}>📍 <strong>Location:</strong> {c.location_span}</div>
                   </div>
 
-                  {/* DIRECTIVE 1: WHERE TO STOP */}
+                  {/* ACTION 1: EXACT REROUTE / DIVERSION */}
+                  <div style={{ background: '#EFF6FF', border: '1px solid #93C5FD', borderRadius: '8px', padding: '10px 12px', marginBottom: '8px' }}>
+                    <div style={{ fontSize: '0.74rem', fontWeight: '800', color: '#1E40AF', display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '3px' }}>
+                      <span>🔀</span> ACTION 1: TRACK REROUTE / DIVERSION PATHWAY
+                    </div>
+                    <div style={{ fontSize: '0.80rem', fontWeight: '700', color: '#1E3A8A', lineHeight: '1.3' }}>
+                      {c.reroute_route || c.where_to_reroute}
+                    </div>
+                  </div>
+
+                  {/* ACTION 2: EXACT LOOP REGULATION */}
                   <div style={{ background: '#FEF2F2', border: '1px solid #FCA5A5', borderRadius: '8px', padding: '10px 12px', marginBottom: '8px' }}>
                     <div style={{ fontSize: '0.74rem', fontWeight: '800', color: '#991B1B', display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '3px' }}>
-                      <span>🛑</span> WHERE THE TRAIN SHOULD BE STOPPED / REGULATED:
+                      <span>🛑</span> ACTION 2: STATION REGULATION &amp; LOOP HOLD
                     </div>
-                    <div style={{ fontSize: '0.82rem', fontWeight: '800', color: '#7F1D1D' }}>
-                      {c.stop_station || 'Designated Station Yard Loop Line'}
-                    </div>
-                    <div style={{ fontSize: '0.70rem', color: '#B91C1C', fontWeight: '600', marginTop: '3px' }}>
-                      ⏱️ Hold Duration: <strong>{c.stop_duration_mins || 15} Minutes</strong> · Priority: {c.priority_level || 'Passenger Superfast'}
+                    <div style={{ fontSize: '0.80rem', fontWeight: '700', color: '#7F1D1D' }}>
+                      {c.stop_station} (Hold: <strong>{c.stop_duration_mins || 15} mins</strong>)
                     </div>
                   </div>
 
-                  {/* DIRECTIVE 2: WHERE TO REROUTE */}
-                  <div style={{ background: '#EFF6FF', border: '1px solid #93C5FD', borderRadius: '8px', padding: '10px 12px', marginBottom: '10px' }}>
-                    <div style={{ fontSize: '0.74rem', fontWeight: '800', color: '#1E40AF', display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '3px' }}>
-                      <span>🔀</span> WHERE THE TRAIN SHOULD BE REROUTED / DIVERTED:
-                    </div>
-                    <div style={{ fontSize: '0.82rem', fontWeight: '800', color: '#1E3A8A' }}>
-                      {c.reroute_route || 'Divert via Parallel Dedicated Freight Corridor or Alternative Chord Line'}
-                    </div>
-                    <div style={{ fontSize: '0.70rem', color: '#2563EB', fontWeight: '600', marginTop: '3px' }}>
-                      ⚡ Clearance: Bypasses KM Pole {simForm.startPole} – {simForm.endPole} maintenance zone
-                    </div>
+                  {/* ACTION 3: TSR SPEED ADVISORY */}
+                  <div style={{ background: '#FFFBEB', border: '1px solid #FDE68A', borderRadius: '8px', padding: '8px 12px', marginBottom: '10px', fontSize: '0.72rem', color: '#92400E', fontWeight: '700' }}>
+                    ⚡ <strong>Speed Caution:</strong> {c.tsr_speed_advisory || '30 km/h Caution Order on adjacent lines'}
                   </div>
 
                   <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
                     <button
-                      onClick={() => alert(`🔀 TRAIN REROUTE ORDER TRANSMITTED!\n\nTrain: #${c.train_number}\nDiversion Route: ${c.reroute_route}\n\nTransmitted to FOIS/COA Signal Cabin.`)}
-                      style={{ padding: '6px 14px', background: '#003366', color: '#FFF', border: 'none', borderRadius: '6px', fontWeight: '800', fontSize: '0.75rem', cursor: 'pointer' }}
+                      onClick={() => alert(`🔀 DIVERSION ORDER DISPATCHED!\n\nTrain: #${c.train_number} (${c.train_name})\nDirective: ${c.reroute_route}\n\nTransmitted to Chief Controller & COA Section Desk.`)}
+                      style={{ padding: '7px 14px', background: '#003366', color: '#FFF', border: 'none', borderRadius: '6px', fontWeight: '800', fontSize: '0.75rem', cursor: 'pointer' }}
                     >
-                      Issue Reroute Order
+                      Issue Reroute Directive
                     </button>
                     <button
-                      onClick={() => alert(`🛑 TRAIN REGULATION / STOP ORDER TRANSMITTED!\n\nTrain: #${c.train_number}\nRegulation Loop: ${c.stop_station}\nHold Time: ${c.stop_duration_mins}m\n\nDirectives dispatched to Station Master.`)}
-                      style={{ padding: '6px 12px', background: '#FFF', color: '#DC2626', border: '1px solid #FCA5A5', borderRadius: '6px', fontWeight: '700', fontSize: '0.75rem', cursor: 'pointer' }}
+                      onClick={() => alert(`🛑 HOLD / REGULATION ORDER DISPATCHED!\n\nTrain: #${c.train_number}\nLoop Siding: ${c.stop_station}\nHold Time: ${c.stop_duration_mins} mins\n\nDispatched to Station Master.`)}
+                      style={{ padding: '7px 12px', background: '#FFF', color: '#DC2626', border: '1px solid #FCA5A5', borderRadius: '6px', fontWeight: '700', fontSize: '0.75rem', cursor: 'pointer' }}
                     >
                       Issue Hold Order ({c.stop_duration_mins || 15}m)
                     </button>
@@ -887,19 +841,19 @@ export default function ControlOfficeView() {
                 </div>
               ))
             ) : (
-              <div style={{ background: '#F0FDF4', border: '1.5px solid #059669', borderRadius: '10px', padding: '24px 18px', textAlign: 'center' }}>
-                <div style={{ fontSize: '1.8rem', marginBottom: '6px' }}>✅</div>
-                <div style={{ fontSize: '1.02rem', fontWeight: '800', color: '#065F46', marginBottom: '4px' }}>
-                  100% CLEAR WINDOW — ZERO TRAIN CONFLICTS
+              <div style={{ background: '#F0FDF4', border: '1.5px solid #059669', borderRadius: '10px', padding: '36px 20px', textAlign: 'center' }}>
+                <div style={{ fontSize: '2.4rem', marginBottom: '8px' }}>✅</div>
+                <div style={{ fontSize: '1.10rem', fontWeight: '900', color: '#065F46', marginBottom: '6px' }}>
+                  100% CLEAR TRACK — ZERO CONFLICTS DETECTED
                 </div>
-                <div style={{ fontSize: '0.78rem', color: '#047857', marginBottom: '12px' }}>
-                  No active passenger or freight trains scheduled on <strong>{simForm.stationA} → {simForm.stationB}</strong> during this evaluated time window.
+                <div style={{ fontSize: '0.80rem', color: '#047857', marginBottom: '16px', maxWidth: '420px', margin: '0 auto 16px auto', lineHeight: '1.4' }}>
+                  No scheduled passenger or freight trains will traverse <strong>{simForm.stationA} ➔ {simForm.stationB}</strong> (KM {simForm.startPole}–{simForm.endPole}) during the evaluated {simForm.duration}-minute window.
                 </div>
                 <button
-                  onClick={() => alert(`✓ Block Possession Sanctioned for ${simForm.stationA} → ${simForm.stationB}!`)}
-                  style={{ background: '#059669', color: '#FFF', border: 'none', padding: '8px 18px', borderRadius: '6px', fontSize: '0.8rem', fontWeight: '800', cursor: 'pointer' }}
+                  onClick={() => alert(`✓ TRACK POSSESSION SANCTIONED!\n\nSection: ${simForm.stationA} ➔ ${simForm.stationB}\nKM Span: ${simForm.startPole} – ${simForm.endPole}\nDuration: ${simForm.duration} mins\nStatus: 100% SAFE`)}
+                  style={{ background: '#059669', color: '#FFF', border: 'none', padding: '10px 22px', borderRadius: '8px', fontSize: '0.84rem', fontWeight: '800', cursor: 'pointer', boxShadow: '0 3px 8px rgba(5,150,105,0.3)' }}
                 >
-                  ✓ Sanction Clear Possession Window
+                  ✓ Sanction Direct Track Possession
                 </button>
               </div>
             )}

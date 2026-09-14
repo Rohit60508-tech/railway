@@ -2454,8 +2454,10 @@
       </div>
 
       <!-- INGEST FROM MAINTENANCE DEFECTS PICKER -->
-      <div style="margin-bottom: 14px; background: #F8FAFC; border: 1px solid #CBD5E1; border-radius: 8px; padding: 10px 12px;">
-        <label style="font-size:0.74rem;font-weight:800;color:#003366;display:flex;align-items:center;gap:5px;margin-bottom:5px;">
+      <div
+        style="margin-bottom: 14px; background: #F8FAFC; border: 1px solid #CBD5E1; border-radius: 8px; padding: 10px 12px;">
+        <label
+          style="font-size:0.74rem;font-weight:800;color:#003366;display:flex;align-items:center;gap:5px;margin-bottom:5px;">
           <span>📥</span> Ingest from Maintenance Defect (TMS / SMMS / TDMS / USFD / Supabase)
         </label>
         <select id="swm-defect-picker" onchange="window.handleDefectSelected(this.value)"
@@ -2531,8 +2533,10 @@
 
       <div
         style="background:#FAF6EE;border:1px solid rgba(195,178,150,0.5);border-radius:6px;padding:8px 12px;font-size:0.72rem;color:#64748B;margin-bottom:16px;">
-        ☁️ Request will be saved to Supabase <strong>requested_windows</strong> table via Data API and <strong>immediately
-          analyzed</strong> under <strong>Active Conflict Analysis &amp; AI Alternatives</strong> for this specific window.
+        ☁️ Request will be saved to Supabase <strong>requested_windows</strong> table via Data API and
+        <strong>immediately
+          analyzed</strong> under <strong>Active Conflict Analysis &amp; AI Alternatives</strong> for this specific
+        window.
       </div>
 
       <div style="display:flex;align-items:center;gap:8px;">
@@ -2596,7 +2600,7 @@
       if (defect.end_km !== undefined) document.getElementById('swm-km-end').value = defect.end_km;
       if (defect.suggested_window_start) document.getElementById('swm-start-time').value = defect.suggested_window_start;
       if (defect.suggested_window_end) document.getElementById('swm-end-time').value = defect.suggested_window_end;
-      
+
       const desc = `[${defId}] ${defect.defect_type || 'Defect Rectification'} (${defect.severity || 'CRITICAL'} - ${defect.priority_category || 'P1'})`;
       document.getElementById('swm-work-desc').value = desc;
     };
