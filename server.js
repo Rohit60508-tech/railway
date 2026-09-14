@@ -13,6 +13,7 @@
 'use strict';
 
 const http = require('http');
+const https = require('https');
 const fs = require('fs');
 const path = require('path');
 const url = require('url');
@@ -505,12 +506,15 @@ const server = http.createServer(async (req, res) => {
       ];
 
       let finalClashes = [];
-      if (liveClashes.length > 0) {
+      const isLiveApiSuccess = liveDataFrom.success || liveDataTo.success;
+
+      if (isLiveApiSuccess) {
+        // Use genuine live train clashes directly from RailRadar API
         finalClashes = liveClashes;
       } else {
-        // Fallback to corridor master timetable
+        // Fallback to corridor master timetable only if live API is offline/unavailable
         const matchedTrains = masterTimetable.filter(t => {
-          const matchesSection = t.section_patterns.includes(stFrom) || t.section_patterns.includes(stTo) || t.section_patterns.includes("NDLS");
+          const matchesSection = t.section_patterns.includes(stFrom) || t.section_patterns.includes(stTo);
           if (!matchesSection) return false;
           const tStart = t.crossing_start_min;
           const tEnd = t.crossing_end_min;

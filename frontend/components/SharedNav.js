@@ -3029,9 +3029,9 @@
     const defaultStartTime = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
 
     body.innerHTML = `
-      <div style="max-width:1400px;margin:0 auto;display:grid;grid-template-columns:minmax(360px, 450px) 1fr;gap:20px;align-items:start;padding:0 4px;box-sizing:border-box;">
+      <div style="width:100%;max-width:100%;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start;box-sizing:border-box;">
         
-        <!-- LEFT COLUMN: Parameter Configuration Card -->
+        <!-- LEFT COLUMN (50%): Parameter Configuration Card -->
         <div style="background:#FFFFFF;border-radius:10px;box-shadow:0 4px 18px rgba(0,0,0,0.06);border:1px solid #E2E8F0;border-top:4.5px solid #C5221F;padding:22px 24px;box-sizing:border-box;">
           
           <!-- Header with Shield & Pill Badge -->
@@ -3135,8 +3135,8 @@
           </button>
         </div>
 
-        <!-- RIGHT COLUMN: Output & Directives Container -->
-        <div id="fs-corridor-conflict-output" style="display:flex;flex-direction:column;gap:14px;">
+        <!-- RIGHT COLUMN (50%): Output & Directives Container -->
+        <div id="fs-corridor-conflict-output" style="width:100%;display:flex;flex-direction:column;gap:14px;box-sizing:border-box;">
           <div style="background:#FFFFFF;border-radius:10px;box-shadow:0 4px 18px rgba(0,0,0,0.06);border:1px solid #E2E8F0;padding:28px 24px;text-align:center;color:#475569;">
             <div style="font-size:2.2rem;margin-bottom:10px;">🛡️</div>
             <h3 style="font-size:1.02rem;font-weight:800;color:#0F2B48;margin:0 0 6px 0;">

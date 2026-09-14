@@ -355,7 +355,7 @@ class LiveTrainService:
         """
         Queries live GPS running status, current station, and delay minutes for a train.
         """
-        train_no = str(train_number).strip()
+        train_no = train_number.strip()
         date_str = date or datetime.now().strftime("%Y-%m-%d")
         url = f"https://{self.host}/getLiveTrainStatus"
         headers = {
@@ -414,18 +414,19 @@ class LiveTrainService:
         Uses Corridor Traffic & Freight Forecasting Engine agent to determine the most feasible window.
         """
         # 1. Resolve 2 nearest bounding stations
-        stn1 = (station_from or "").upper().strip()
-        stn2 = (station_to or "").upper().strip()
+        stn1: str = (station_from or "").upper().strip()
+        stn2: str = (station_to or "").upper().strip()
 
         # If KM is provided without stations, auto-detect nearest bounding stations
         if (not stn1 or not stn2) and start_km is not None:
-            prev_s = CORRIDOR_STATIONS_MASTER[0]["code"]
+            prev_s: str = str(CORRIDOR_STATIONS_MASTER[0]["code"])
             for s in CORRIDOR_STATIONS_MASTER:
-                if s["km"] >= start_km:
+                km_val = float(s["km"])
+                if km_val >= float(start_km):
                     stn1 = stn1 or prev_s
-                    stn2 = stn2 or s["code"]
+                    stn2 = stn2 or str(s["code"])
                     break
-                prev_s = s["code"]
+                prev_s = str(s["code"])
 
         # Default fallback to Aligarh - Tundla block section
         if not stn1 or not stn2 or stn1 == stn2:
@@ -433,10 +434,10 @@ class LiveTrainService:
             stn2 = "TDL"
 
         # 2. Resolve KM poles and span
-        stn1_info = STATION_COORDINATES.get(stn1, {"km": 126.1, "name": stn1})
-        stn2_info = STATION_COORDINATES.get(stn2, {"km": 204.3, "name": stn2})
-        stn1_km = stn1_info.get("km", 126.1)
-        stn2_km = stn2_info.get("km", 204.3)
+        stn1_info: Dict[str, Any] = STATION_COORDINATES.get(stn1, {"km": 126.1, "name": stn1})
+        stn2_info: Dict[str, Any] = STATION_COORDINATES.get(stn2, {"km": 204.3, "name": stn2})
+        stn1_km = float(stn1_info.get("km", 126.1))
+        stn2_km = float(stn2_info.get("km", 204.3))
 
         actual_start_km = float(start_km) if start_km is not None else min(stn1_km, stn2_km) + 16.4
         actual_end_km = float(end_km) if end_km is not None else actual_start_km + 3.3
@@ -495,38 +496,64 @@ class LiveTrainService:
         ]
 
         def get_overlapping_trains(s_from: str, s_to: str, start_m: int, end_m: int) -> List[Dict[str, Any]]:
-            sec_key = f"{s_from}-{s_to}"
-            rev_key = f"{s_to}-{s_from}"
             matches = []
-            
-            for t in CORRIDOR_MASTER_TIMETABLES:
-                t_sec = t["section"]
-                if t_sec in (sec_key, rev_key) or s_from in t_sec or s_to in t_sec or section_id.startswith(t_sec[:4]):
-                    t_start = t["start_min"]
-                    t_end = t["end_min"]
-                    if max(start_m, t_start) < min(end_m, t_end):
-                        matches.append(t)
+            seen_train_nums = set()
 
-            if not matches:
-                stn_trains = self.get_live_trains_at_station(s_from, hours=4).get("trains", [])
-                for t in stn_trains:
-                    arr_str = t.get("actual_arrival") or t.get("scheduled_arrival") or "08:00"
-                    try:
-                        p = arr_str.split(":")
-                        t_m = int(p[0]) * 60 + int(p[1])
-                    except Exception:
-                        t_m = 480
-                    t_start = t_m - 15
-                    t_end = t_m + 30
-                    if max(start_m, t_start) < min(end_m, t_end):
-                        matches.append({
-                            "train_number": t.get("train_number", "12004"),
-                            "train_name": t.get("train_name", "Express Service"),
-                            "type": t.get("type", "Superfast"),
-                            "start_min": t_start,
-                            "end_min": t_end,
-                            "section": sec_key
-                        })
+            # 1. Primary: Fetch live IRCTC / RailRadar departures & arrivals for both bounding stations
+            for stn_code in [s_from, s_to]:
+                try:
+                    stn_res = self.get_live_trains_at_station(stn_code, hours=8)
+                    stn_trains = stn_res.get("trains", []) if isinstance(stn_res, dict) else []
+                    for t in stn_trains:
+                        t_no = str(t.get("train_number") or t.get("train", {}).get("number") or "").strip()
+                        if not t_no or t_no in seen_train_nums:
+                            continue
+
+                        # Extract scheduled and expected live arrival/departure times
+                        arr_str = t.get("actual_arrival") or t.get("scheduled_arrival") or t.get("stop", {}).get("arrival") or t.get("stop", {}).get("departure") or ""
+                        exp_str = t.get("live", {}).get("expectedArrivalTime") or ""
+                        if exp_str and "T" in exp_str:
+                            arr_str = exp_str.split("T")[1][:5]
+
+                        if not arr_str or ":" not in arr_str:
+                            continue
+
+                        try:
+                            p = arr_str.split(":")
+                            t_m = (int(p[0]) * 60 + int(p[1])) % 1440
+                        except Exception:
+                            continue
+
+                        t_start = (t_m - 20 + 1440) % 1440
+                        t_end = (t_m + 25 + 1440) % 1440
+
+                        # Check time-window overlap: [start_m, end_m] with [t_start, t_end]
+                        if max(start_m, t_start) < min(end_m, t_end):
+                            seen_train_nums.add(t_no)
+                            t_name = t.get("train_name") or t.get("train", {}).get("name") or f"Service #{t_no}"
+                            t_type = t.get("type") or t.get("train", {}).get("type") or "Superfast"
+                            platform = t.get("platform") or t.get("stop", {}).get("platform") or "1"
+                            delay = t.get("delay_minutes") or t.get("live", {}).get("delayMinutes") or 0
+                            source_stn = t.get("source") or t.get("train", {}).get("source") or s_from
+                            dest_stn = t.get("destination") or t.get("train", {}).get("destination") or s_to
+
+                            matches.append({
+                                "train_number": t_no,
+                                "train_name": t_name,
+                                "type": t_type,
+                                "start_min": t_start,
+                                "end_min": t_end,
+                                "scheduled_time_str": arr_str,
+                                "platform": platform,
+                                "delay_minutes": delay,
+                                "source": source_stn,
+                                "destination": dest_stn,
+                                "section": f"{s_from}-{s_to}",
+                                "is_live": True
+                            })
+                except Exception as e:
+                    pass
+
             return matches
 
         # 4. Compute conflicts for user-selected window
@@ -536,45 +563,92 @@ class LiveTrainService:
         freight_held = 0
 
         for t in window_trains:
-            t_type = t.get("type", "Mail/Express")
-            t_name = t.get("train_name", "Express Service")
-            t_no = t.get("train_number", "")
+            t_type = str(t.get("type", "Mail/Express"))
+            t_name = str(t.get("train_name", "Express Service"))
+            t_no = str(t.get("train_number", ""))
+            platform = str(t.get("platform", "1"))
+            delay = int(t.get("delay_minutes", 0))
+            delay_status = f"+{delay}m Delay" if delay > 0 else "On Time"
+            source_dest = f"{t.get('source', stn1)} ➔ {t.get('destination', stn2)}"
 
-            if t_type in ("Vande Bharat", "Rajdhani", "Shatabdi"):
+            t_type_lower = t_type.lower()
+            is_vip = "vande" in t_type_lower or "rajdhani" in t_type_lower or "shatabdi" in t_type_lower or "tejas" in t_type_lower
+            is_freight = "freight" in t_type_lower or "boxn" in t_type_lower or "bcn" in t_type_lower or "rake" in t_type_lower
+
+            loop_station = f"{stn2} Platform {platform} / Outer Loop"
+            diversion_path = f"Divert via designated bypass chord line bypassing KM {actual_start_km:.1f}–{actual_end_km:.1f}"
+
+            if is_vip:
                 passenger_weight += 12
                 conflicts.append({
                     "train_number": t_no,
                     "train_name": t_name,
                     "type": t_type,
-                    "location_span": f"Between {stn1} and {stn2} (KM {actual_start_km:.1f} - {actual_end_km:.1f})",
+                    "is_live": True,
+                    "live_platform": platform,
+                    "live_delay_mins": delay,
+                    "live_status_str": delay_status,
+                    "source_dest": source_dest,
+                    "scheduled_time": f"{t.get('scheduled_time_str', '08:00')} ({delay_status})",
+                    "location_span": f"Between {stn1} and {stn2} (KM {actual_start_km:.1f} - {actual_end_km:.1f} Pole {pole_display})",
                     "severity": "CRITICAL_PASSENGER_CONFLICT",
-                    "action_required": f"Regulate at {stn1} Platform Loop or Divert via Down Line past Pole {pole_display}",
+                    "action_required": f"Divert train via {diversion_path} to protect block without delaying VIP service.",
+                    "where_to_stop": f"🛑 Stop & Regulate at: {loop_station} (Hold for 15 mins)",
+                    "where_to_reroute": f"🔀 Reroute / Divert via: {diversion_path}",
+                    "stop_station": loop_station,
+                    "stop_duration_mins": 15,
+                    "reroute_route": diversion_path,
                     "delay_minutes": 15,
+                    "priority_level": "VVIP / Priority 1 High-Speed"
                 })
-            elif t_type in ("Superfast", "Express", "Suburban"):
-                passenger_weight += 6
-                conflicts.append({
-                    "train_number": t_no,
-                    "train_name": t_name,
-                    "type": t_type,
-                    "location_span": f"Approaching {stn1} Outer (KM {actual_start_km:.1f})",
-                    "severity": "MODERATE_PASSENGER_REGULATION",
-                    "action_required": f"Hold at {stn1} Outer Loop for {min(duration_minutes, 45)} mins",
-                    "delay_minutes": 10,
-                })
-            elif t_type == "Freight":
+            elif is_freight:
                 freight_held += 1
                 conflicts.append({
                     "train_number": t_no,
                     "train_name": t_name,
                     "type": "Freight Rake",
+                    "is_live": True,
+                    "live_platform": "Goods Line",
+                    "live_delay_mins": delay,
+                    "live_status_str": delay_status,
+                    "source_dest": source_dest,
+                    "scheduled_time": f"{t.get('scheduled_time_str', '10:00')}",
                     "location_span": f"Block Section {stn1} – {stn2}",
                     "severity": "REGULATION_PERMISSIBLE",
                     "action_required": f"Detain in {stn1} Goods Siding until block cleared (Zero Revenue Penalty)",
+                    "where_to_stop": f"🛑 Stop & Regulate at: {stn1} Goods Reception Siding (Hold for {duration_minutes} mins)",
+                    "where_to_reroute": f"🔀 Divert via Dedicated Freight Corridor / Goods Loop",
+                    "stop_station": f"{stn1} Goods Reception Siding",
+                    "stop_duration_mins": duration_minutes,
+                    "reroute_route": f"Divert via Parallel Goods Loop bypassing KM {actual_start_km:.1f}–{actual_end_km:.1f}",
                     "delay_minutes": duration_minutes,
+                    "priority_level": "P4 Bulk Freight"
+                })
+            else:
+                passenger_weight += 6
+                conflicts.append({
+                    "train_number": t_no,
+                    "train_name": t_name,
+                    "type": t_type,
+                    "is_live": True,
+                    "live_platform": platform,
+                    "live_delay_mins": delay,
+                    "live_status_str": delay_status,
+                    "source_dest": source_dest,
+                    "scheduled_time": f"{t.get('scheduled_time_str', '08:00')} ({delay_status})",
+                    "location_span": f"Approaching {stn1} Outer (KM {actual_start_km:.1f})",
+                    "severity": "MODERATE_PASSENGER_REGULATION",
+                    "action_required": f"Hold at {loop_station} for {min(duration_minutes, 30)} mins OR Divert via {diversion_path}",
+                    "where_to_stop": f"🛑 Stop & Regulate at: {loop_station} (Hold for 15 mins)",
+                    "where_to_reroute": f"🔀 Reroute / Divert via: {diversion_path}",
+                    "stop_station": loop_station,
+                    "stop_duration_mins": 15,
+                    "reroute_route": diversion_path,
+                    "delay_minutes": 10,
+                    "priority_level": "Priority 1 Passenger Superfast"
                 })
 
-        feasibility_score = max(0.0, 100.0 - (len(conflicts) * 12.0) - (passenger_weight * 3.0))
+        feasibility_score = max(0.0, 100.0 - (len(conflicts) * 12.0) - (passenger_weight * 3.0)) if conflicts else 100.0
 
         # 5. Use Corridor Traffic & Freight Forecasting Engine Agent to find the Most Feasible Window across 24h
         best_candidate_start_min = 90  # 01:30 AM
