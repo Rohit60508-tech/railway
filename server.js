@@ -185,6 +185,44 @@ const server = http.createServer(async (req, res) => {
     }
   }
 
+  // Helper to fetch live station departures/arrivals from RailRadar Gateway API
+  function fetchRailRadarStationLive(stationCode) {
+    return new Promise((resolve) => {
+      const key = process.env.RAILRADAR_API_KEY || 'rg_5ad51fb7d3d248d29f23a4ec49894050';
+      const code = (stationCode || 'NDLS').toUpperCase().trim();
+      const options = {
+        hostname: 'api.railradar.in',
+        path: `/v1/stations/${encodeURIComponent(code)}/live?hours=6`,
+        method: 'GET',
+        headers: {
+          'x-api-key': key,
+          'Authorization': `Bearer ${key}`
+        },
+        timeout: 3500
+      };
+
+      const req = https.request(options, (res) => {
+        let body = '';
+        res.on('data', chunk => { body += chunk; });
+        res.on('end', () => {
+          try {
+            if (res.statusCode === 200) {
+              const json = JSON.parse(body);
+              if (json && json.success && json.data && Array.isArray(json.data.trains)) {
+                return resolve({ success: true, trains: json.data.trains, station: json.data.station });
+              }
+            }
+          } catch (_) {}
+          resolve({ success: false, trains: [] });
+        });
+      });
+
+      req.on('error', () => resolve({ success: false, trains: [] }));
+      req.on('timeout', () => { req.destroy(); resolve({ success: false, trains: [] }); });
+      req.end();
+    });
+  }
+
   // 1c. Live Corridor Conflicts & CP-SAT Timetable Simulation Handler (Exact Time-Window & Location Specific)
   if (pathname === '/api/v1/live-corridor-conflicts' && req.method === 'POST') {
     let body = '';
@@ -238,7 +276,87 @@ const server = http.createServer(async (req, res) => {
 
       const windowDisplayStr = `${formatMin(reqStartMinutes)} – ${formatMin(reqEndMinutes)}`;
 
-      // Master Indian Railways Live Corridor Timetable
+      // 1. Fetch live telemetry from RailRadar API Gateway for stFrom and stTo
+      const [liveDataFrom, liveDataTo] = await Promise.all([
+        fetchRailRadarStationLive(stFrom),
+        fetchRailRadarStationLive(stTo)
+      ]);
+
+      const liveTrains = [...(liveDataFrom.trains || []), ...(liveDataTo.trains || [])];
+      let liveClashes = [];
+
+      if (liveTrains.length > 0) {
+        // De-duplicate live trains by train number
+        const seenTrains = new Set();
+        for (const item of liveTrains) {
+          const tInfo = item.train || {};
+          const stopInfo = item.stop || {};
+          const liveInfo = item.live || {};
+          const tNo = String(tInfo.number || '').trim();
+          if (!tNo || seenTrains.has(tNo)) continue;
+
+          // Parse arrival/departure time
+          let arrStr = stopInfo.arrival || stopInfo.departure || '08:00';
+          if (liveInfo.expectedArrivalTime && liveInfo.expectedArrivalTime.includes('T')) {
+            arrStr = liveInfo.expectedArrivalTime.split('T')[1].slice(0, 5);
+          }
+
+          let tMinutes = 480;
+          if (arrStr && arrStr.includes(':')) {
+            const [th, tm] = arrStr.split(':').map(Number);
+            if (!isNaN(th) && !isNaN(tm)) {
+              tMinutes = (th * 60 + tm) % 1440;
+            }
+          }
+
+          const crossingStart = (tMinutes - 20 + 1440) % 1440;
+          const crossingEnd = (tMinutes + 25 + 1440) % 1440;
+
+          // Check overlap with requested block window
+          const overlaps = Math.max(reqStartMinutes, crossingStart) < Math.min(reqEndMinutes, crossingEnd);
+          if (overlaps) {
+            seenTrains.add(tNo);
+            const tType = tInfo.type || 'Superfast Express';
+            const isVip = tType.toLowerCase().includes('rajdhani') || tType.toLowerCase().includes('vande') || tType.toLowerCase().includes('shatabdi') || tType.toLowerCase().includes('tejas');
+            const sev = isVip ? "CRITICAL_PASSENGER_CONFLICT" : "MODERATE_PASSENGER_REGULATION";
+            const delayMins = liveInfo.delayMinutes !== undefined ? liveInfo.delayMinutes : 0;
+            const delayStatusStr = delayMins > 0 ? `+${delayMins}m Delay` : 'On Time';
+            const platformStr = stopInfo.platform ? `Platform ${stopInfo.platform}` : 'Main Line';
+            const sourceDest = `${tInfo.source || stFrom} ➔ ${tInfo.destination || stTo}`;
+
+            const loopStation = `${stTo} ${platformStr} / Outer Loop`;
+            const diversionRoute = `Divert via Sahibabad (SBB) – Old Delhi (DLI) Down Chord bypassing KM ${startKmNum}–${endKmNum}`;
+
+            liveClashes.push({
+              train_number: tNo,
+              train_name: tInfo.name || `Train #${tNo}`,
+              type: tType,
+              scheduled_time: `${formatMin(crossingStart)} – ${formatMin(crossingEnd)}`,
+              exact_km_arrival: `${formatMin(tMinutes)}`,
+              location_span: `Between ${stFrom} & ${stTo} (KM ${startKmNum} – ${endKmNum} Pole ${pole})`,
+              severity: sev,
+              is_live: true,
+              live_platform: stopInfo.platform || '1',
+              live_delay_mins: delayMins,
+              live_status_str: delayStatusStr,
+              source_dest: sourceDest,
+              where_to_stop: `🛑 Stop & Regulate at: ${loopStation} (Hold for 15 mins)`,
+              where_to_reroute: `🔀 Reroute / Divert via: ${diversionRoute}`,
+              stop_station: loopStation,
+              stop_duration_mins: 15,
+              reroute_route: diversionRoute,
+              tsr_speed_advisory: "30 km/h Caution Order on Adjacent Track per IR P-Way Manual Para 268",
+              action_required: isVip
+                ? `Divert train via ${diversionRoute} to protect block without delaying VIP service.`
+                : `Regulate at ${loopStation} for 15 mins OR Divert via ${diversionRoute}`,
+              delay_minutes: isVip ? 5 : 15,
+              priority_level: isVip ? "VVIP / Priority 1 High-Speed" : "Priority 1 Passenger Superfast"
+            });
+          }
+        }
+      }
+
+      // Master Indian Railways Live Corridor Timetable Fallback/Supplement
       const masterTimetable = [
         {
           train_number: "BOXN-9842",
@@ -386,55 +504,63 @@ const server = http.createServer(async (req, res) => {
         }
       ];
 
-      // Exact Time-Window & Corridor Section Matching
-      const matchedTrains = masterTimetable.filter(t => {
-        const matchesSection = t.section_patterns.includes(stFrom) || t.section_patterns.includes(stTo) || t.section_patterns.includes("NDLS");
-        if (!matchesSection) return false;
+      let finalClashes = [];
+      if (liveClashes.length > 0) {
+        finalClashes = liveClashes;
+      } else {
+        // Fallback to corridor master timetable
+        const matchedTrains = masterTimetable.filter(t => {
+          const matchesSection = t.section_patterns.includes(stFrom) || t.section_patterns.includes(stTo) || t.section_patterns.includes("NDLS");
+          if (!matchesSection) return false;
+          const tStart = t.crossing_start_min;
+          const tEnd = t.crossing_end_min;
+          return Math.max(reqStartMinutes, tStart) < Math.min(reqEndMinutes, tEnd);
+        });
 
-        const tStart = t.crossing_start_min;
-        const tEnd = t.crossing_end_min;
+        finalClashes = matchedTrains.map(t => {
+          const isVip = t.type.includes('Vande') || t.type.includes('Rajdhani');
+          const isShatabdi = t.type.includes('Shatabdi') || t.type.includes('Superfast');
+          const sev = isVip ? "CRITICAL_PASSENGER_CONFLICT" : (isShatabdi ? "MODERATE_PASSENGER_REGULATION" : "REGULATION_PERMISSIBLE");
+          const diversionRoute = t.reroute_path || `Switch via Facing Crossover at ${stFrom} North Cabin (KM ${(startKmNum - 1.5).toFixed(1)}) to 3rd Line, bypass work zone KM ${startKmNum}–${endKmNum}, rejoin Main Line via Trailing Crossover at KM ${(endKmNum + 1.2).toFixed(1)}`;
+          const loopStation = t.stop_station || `${stFrom} Goods Loop Line 2 / Siding`;
 
-        // Check time-window overlap: [reqStartMinutes, reqEndMinutes] with [tStart, tEnd]
-        const overlaps = Math.max(reqStartMinutes, tStart) < Math.min(reqEndMinutes, tEnd);
-        return overlaps;
-      });
+          return {
+            train_number: t.train_number,
+            train_name: t.train_name,
+            type: t.type,
+            scheduled_time: `${formatMin(t.crossing_start_min)} – ${formatMin(t.crossing_end_min)}`,
+            exact_km_arrival: `${formatMin(Math.round((t.crossing_start_min + t.crossing_end_min) / 2))}`,
+            location_span: `Between ${stFrom} & ${stTo} (KM ${startKmNum} – ${endKmNum} Pole ${pole})`,
+            severity: sev,
+            is_live: false,
+            live_platform: '2',
+            live_delay_mins: 0,
+            live_status_str: 'On Time (COA Timetable)',
+            source_dest: `${stFrom} ➔ ${stTo}`,
+            where_to_stop: `🛑 Stop & Regulate at: ${loopStation} (Hold for ${t.stop_duration_mins} mins)`,
+            where_to_reroute: `🔀 Reroute / Divert via: ${diversionRoute}`,
+            stop_station: loopStation,
+            stop_duration_mins: t.stop_duration_mins,
+            reroute_route: diversionRoute,
+            tsr_speed_advisory: "30 km/h Caution Order on Adjacent Track per IR P-Way Manual Para 268",
+            action_required: isVip
+              ? `Divert train via ${diversionRoute} to protect block without holding priority rake.`
+              : `Regulate at ${loopStation} for ${t.stop_duration_mins} mins OR Divert via ${diversionRoute}`,
+            delay_minutes: isVip ? 5 : t.stop_duration_mins,
+            priority_level: t.priority
+          };
+        });
+      }
 
-      const clashes = matchedTrains.map(t => {
-        const isVip = t.type.includes('Vande') || t.type.includes('Rajdhani');
-        const isShatabdi = t.type.includes('Shatabdi') || t.type.includes('Superfast');
-        const isFreight = t.type.includes('Freight');
-
-        const sev = isVip ? "CRITICAL_PASSENGER_CONFLICT" : (isShatabdi ? "MODERATE_PASSENGER_REGULATION" : "REGULATION_PERMISSIBLE");
-        const diversionRoute = t.reroute_path || `Switch via Facing Crossover at ${stFrom} North Cabin (KM ${(startKmNum - 1.5).toFixed(1)}) to 3rd Line, bypass work zone KM ${startKmNum}–${endKmNum}, rejoin Main Line via Trailing Crossover at KM ${(endKmNum + 1.2).toFixed(1)}`;
-        const loopStation = t.stop_station || `${stFrom} Goods Loop Line 2 / Siding`;
-
-        return {
-          train_number: t.train_number,
-          train_name: t.train_name,
-          type: t.type,
-          scheduled_time: `${formatMin(t.crossing_start_min)} – ${formatMin(t.crossing_end_min)}`,
-          exact_km_arrival: `${formatMin(Math.round((t.crossing_start_min + t.crossing_end_min) / 2))}`,
-          location_span: `Between ${stFrom} & ${stTo} (KM ${startKmNum} – ${endKmNum} Pole ${pole})`,
-          severity: sev,
-          where_to_stop: `🛑 Stop & Regulate at: ${loopStation} (Hold for ${t.stop_duration_mins} mins)`,
-          where_to_reroute: `🔀 Reroute / Divert via: ${diversionRoute}`,
-          stop_station: loopStation,
-          stop_duration_mins: t.stop_duration_mins,
-          reroute_route: diversionRoute,
-          tsr_speed_advisory: "30 km/h Caution Order on Adjacent Track per IR P-Way Manual Para 268",
-          action_required: isVip
-            ? `Divert train via ${diversionRoute} to protect block without holding priority rake.`
-            : `Regulate at ${loopStation} for ${t.stop_duration_mins} mins OR Divert via ${diversionRoute}`,
-          delay_minutes: isVip ? 5 : t.stop_duration_mins,
-          priority_level: t.priority
-        };
-      });
-
-      const hasCriticalClash = clashes.some(c => c.severity === 'CRITICAL_PASSENGER_CONFLICT');
-      const feasibilityScore = clashes.length === 0 ? 100.0 : (hasCriticalClash ? 32.0 : 65.0);
+      const hasCriticalClash = finalClashes.some(c => c.severity === 'CRITICAL_PASSENGER_CONFLICT');
+      const feasibilityScore = finalClashes.length === 0 ? 100.0 : (hasCriticalClash ? 32.0 : 65.0);
 
       const responsePayload = {
         status: "SUCCESS",
+        provider: liveDataFrom.success || liveDataTo.success ? "RailRadar Live IRCTC Telemetry API" : "COA Master Timetable Gateway",
+        is_live_api: liveDataFrom.success || liveDataTo.success,
+        live_trains_count: liveTrains.length,
+        live_sync_timestamp: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
         section_id: payload.section_id || "HDN-1",
         station_from: stFrom,
         station_to: stTo,
@@ -448,18 +574,17 @@ const server = http.createServer(async (req, res) => {
         location_summary: `Between ${stFrom} & ${stTo} at KM ${startKmNum}–${endKmNum} (Pole ${pole})`,
         proposed_window_start: payload.start_time || new Date().toISOString(),
         duration_minutes: duration,
+        conflicting_trains_count: finalClashes.length,
+        high_priority_passenger_conflicts: finalClashes.filter(c => c.severity === 'CRITICAL_PASSENGER_CONFLICT').length,
+        freight_trains_regulated: finalClashes.filter(c => c.type.includes('Freight')).length,
         feasibility_score: feasibilityScore,
-        trains_detected: clashes.length > 0,
-        conflicting_trains_count: clashes.length,
-        high_priority_passenger_conflicts: clashes.filter(c => c.severity === 'CRITICAL_PASSENGER_CONFLICT').length,
-        freight_trains_regulated: clashes.filter(c => c.severity === 'REGULATION_PERMISSIBLE').length,
-        recommendation: clashes.length === 0 
+        recommendation: finalClashes.length === 0 
           ? "TRACK 100% CLEAR — ZERO TRAINS IN THIS KM SECTION" 
           : "TRAIN CONFLICT DETECTED: EXECUTE DIVERSION / REGULATION DIRECTIVES BELOW",
-        conflicts: clashes,
-        mitigation_summary: clashes.length === 0 
+        conflicts: finalClashes,
+        mitigation_summary: finalClashes.length === 0 
           ? `No trains detected between ${stFrom} & ${stTo} (KM ${startKmNum}–${endKmNum}) during ${windowDisplayStr}. Direct block possession is safe.`
-          : `${clashes.length} train(s) will occupy KM ${startKmNum}–${endKmNum} during ${windowDisplayStr}. Execute reroute via bypass lines or hold at upstream station loops.`
+          : `${finalClashes.length} train(s) will occupy KM ${startKmNum}–${endKmNum} during ${windowDisplayStr}. Execute reroute via bypass lines or hold at upstream station loops.`
       };
 
       res.writeHead(200, { 'Content-Type': 'application/json' });

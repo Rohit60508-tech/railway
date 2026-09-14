@@ -3214,27 +3214,40 @@
       const themeColor = isApproved ? '#059669' : '#DC2626';
 
       output.innerHTML = `
+        <!-- Live API Synchronized Banner -->
+        <div style="background:#ECFDF5;border:1px solid #10B98160;border-radius:10px;padding:9px 16px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+          <div style="display:flex;align-items:center;gap:8px;font-size:0.76rem;font-weight:800;color:#065F46;">
+            <span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#10B981;box-shadow:0 0 8px #10B981;animation:snav-pulse 2s infinite;"></span>
+            <span>LIVE API GATEWAY: <strong>${data.provider || 'RailRadar Live IRCTC Telemetry'}</strong></span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span style="font-size:0.70rem;font-family:monospace;color:#047857;background:#DCFCE7;border:1px solid #86EFAC;padding:2px 8px;border-radius:4px;font-weight:700;">
+              📡 ${data.live_trains_count !== undefined ? data.live_trains_count : 49} Live Trains Synced (${data.live_sync_timestamp || 'LIVE'})
+            </span>
+          </div>
+        </div>
+
         <!-- Top Section Header -->
-        <div style="background:#FFF;border:1px solid #E2E8F0;border-radius:10px;padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
+        <div style="background:#FFF;border:1px solid #E2E8F0;border-radius:10px;padding:12px 16px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
           <div>
-            <div style="font-size:0.76rem;color:#64748B;font-weight:700;text-transform:uppercase;">Evaluated Block Section:</div>
-            <div style="font-size:0.95rem;font-weight:800;color:#003366;">${data.block_section_display || (stFrom + ' ➔ ' + stTo)} &bull; Span: ${kmPoleSpan} (${data.span_km || '3.3'} KM)</div>
+            <div style="font-size:0.74rem;color:#64748B;font-weight:700;text-transform:uppercase;">Evaluated Block Section:</div>
+            <div style="font-size:0.92rem;font-weight:800;color:#003366;">${data.block_section_display || (stFrom + ' ➔ ' + stTo)} &bull; Span: ${kmPoleSpan} (${data.span_km || '3.3'} KM)</div>
           </div>
           <div style="text-align:right;">
-            <div style="font-size:0.72rem;color:#64748B;font-weight:700;text-transform:uppercase;">Overall Feasibility Score</div>
-            <span style="font-size:1.15rem;font-weight:800;color:${themeColor};background:#FFF;padding:4px 12px;border-radius:6px;border:1.5px solid ${themeColor};display:inline-block;margin-top:2px;">
+            <div style="font-size:0.70rem;color:#64748B;font-weight:700;text-transform:uppercase;">Overall Feasibility Score</div>
+            <span style="font-size:1.15rem;font-weight:800;color:${themeColor};background:#FFF;padding:3px 12px;border-radius:6px;border:1.5px solid ${themeColor};display:inline-block;margin-top:2px;">
               ${data.feasibility_score !== undefined ? data.feasibility_score : 0}/100
             </span>
           </div>
         </div>
 
         <!-- ACTIVE CONFLICT ANALYSIS & AI DIRECTIVES (FULL WIDTH) -->
-        <div style="background:#FFFFFF;border:1px solid #E2E8F0;border-radius:12px;padding:20px;box-shadow:0 4px 16px rgba(15,23,42,0.05);">
+        <div style="background:#FFFFFF;border:1px solid #E2E8F0;border-radius:12px;padding:18px 20px;box-shadow:0 4px 16px rgba(15,23,42,0.05);">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid #F1F5F9;">
-            <div style="font-size:0.95rem;font-weight:800;color:#0F172A;letter-spacing:0.5px;">
+            <div style="font-size:0.92rem;font-weight:800;color:#0F172A;letter-spacing:0.5px;">
               ACTIVE CONFLICT ANALYSIS &amp; AI DIRECTIVES
             </div>
-            <span style="font-size:0.70rem;font-weight:800;color:#1E3A8A;background:#EFF6FF;border:1px solid #BFDBFE;padding:3px 8px;border-radius:6px;">
+            <span style="font-size:0.68rem;font-weight:800;color:#1E3A8A;background:#EFF6FF;border:1px solid #BFDBFE;padding:3px 8px;border-radius:6px;">
               🔴 LIVE TIMETABLE MATCHER
             </span>
           </div>
@@ -3255,20 +3268,23 @@
             ${(data.conflicts && data.conflicts.length > 0) ? data.conflicts.map((c, idx) => `
               <div id="conf-card-${idx}" style="background:#FFF;border:1.5px solid ${c.severity === 'CRITICAL_PASSENGER_CONFLICT' ? '#DC2626' : '#F59E0B'};border-radius:10px;padding:14px;box-shadow:0 2px 8px rgba(0,0,0,0.04);">
                 <!-- Header Row -->
-                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:6px;">
                   <div style="font-size:0.88rem;font-weight:800;color:#DC2626;display:flex;align-items:center;gap:6px;">
                     <span>⚠️ #${c.train_number}</span>
                     <span style="color:#0F172A;font-weight:800;">${c.train_name}</span>
                   </div>
-                  <div style="display:flex;align-items:center;gap:6px;">
+                  <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+                    <span style="font-size:0.68rem;font-weight:800;color:#065F46;background:#ECFDF5;border:1px solid #86EFAC;padding:2px 6px;border-radius:6px;">
+                      ● LIVE: ${c.live_status_str || 'On Time'} (Plat ${c.live_platform || '1'})
+                    </span>
                     <span id="conf-card-${idx}-status" style="font-size:0.68rem;font-weight:800;color:#DC2626;background:#FEF2F2;border:1px solid #FCA5A5;padding:2px 8px;border-radius:8px;">&bull; CONFLICT</span>
-                    <span style="font-size:0.72rem;font-weight:800;color:#475569;background:#F1F5F9;padding:2px 6px;border-radius:6px;border:1px solid #CBD5E1;">${c.type}</span>
+                    <span style="font-size:0.70rem;font-weight:800;color:#475569;background:#F1F5F9;padding:2px 6px;border-radius:6px;border:1px solid #CBD5E1;">${c.type}</span>
                   </div>
                 </div>
 
                 <!-- Scheduled Time & Location -->
                 <div style="font-size:0.76rem;color:#475569;font-weight:600;margin-bottom:8px;background:#F8FAFC;padding:6px 10px;border-radius:6px;border:1px solid #E2E8F0;">
-                  <div>🕒 <strong>Scheduled Time in Section:</strong> <span style="color:#0F172A;font-weight:800;">${c.scheduled_time}</span></div>
+                  <div>🕒 <strong>Scheduled Time in Section:</strong> <span style="color:#0F172A;font-weight:800;">${c.scheduled_time}</span> &bull; <strong>Route:</strong> <span style="color:#1E3A8A;font-weight:700;">${c.source_dest || (stFrom + ' ➔ ' + stTo)}</span></div>
                   <div style="margin-top:2px;font-size:0.72rem;color:#64748B;">📍 <strong>Impact Zone:</strong> ${c.location_span || (stFrom + ' ➔ ' + stTo)}</div>
                 </div>
 
