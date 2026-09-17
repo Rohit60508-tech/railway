@@ -180,13 +180,13 @@
       "applied_alternative": "01:30 – 04:30 (Night Shadow)",
       "created_at": "2026-09-13T19:50:33.514Z",
       "sanctioned_by": "Control Office Controller",
-      "sanctioned_at": "2026-09-15T20:05:52.991Z",
-      "updated_at": "2026-09-15T20:05:53.055Z"
+      "sanctioned_at": "2026-09-16T16:38:29.252Z",
+      "updated_at": "2026-09-16T16:38:29.362Z"
     },
     {
       "id": "REQ-CIV-7428",
       "created_at": "2026-09-13T20:05:57.068Z",
-      "status": "PENDING_REVIEW",
+      "status": "ALTERNATIVE_APPLIED",
       "request_id": "REQ-CIV-7428",
       "section_id": "NDLS-GZB-DN",
       "station_from": "NDLS",
@@ -201,7 +201,11 @@
       "department": "Civil (P-Way)",
       "work_description": "USFD",
       "defect_ref_id": null,
-      "priority": "P1"
+      "priority": "P1",
+      "applied_alternative": "01:30 – 04:30 (Night Shadow)",
+      "sanctioned_by": "Control Office Controller",
+      "sanctioned_at": "2026-09-16T16:15:01.419Z",
+      "updated_at": "2026-09-16T16:15:01.498Z"
     },
     {
       "id": "REQ-9997",
