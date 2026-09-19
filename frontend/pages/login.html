@@ -248,7 +248,7 @@
           localStorage.removeItem(SESSION_KEY);
           localStorage.removeItem('token');
           localStorage.removeItem(TOKEN_KEY);
-        } catch (_) {}
+        } catch (_) { }
       }
 
       // 1. Primary Command Authorities Catalog
@@ -827,12 +827,12 @@
               sessionStorage.setItem(TOKEN_KEY, 'ir_tok_' + Math.random().toString(36).substring(2));
               localStorage.setItem(SESSION_KEY, JSON.stringify(sessionData));
               localStorage.setItem(TOKEN_KEY, 'ir_tok_' + Math.random().toString(36).substring(2));
-            } catch (_) {}
+            } catch (_) { }
 
             success = `Access Authorized: Welcome, ${sessionData.name}. Launching Command Console...`;
             updateNoticeContainers();
 
-            const targetRoute = redirectUrl || selectedRole.route;
+            const targetRoute = redirectUrl || 'getting-started.html';
             setTimeout(() => {
               window.location.replace(targetRoute);
             }, 50);

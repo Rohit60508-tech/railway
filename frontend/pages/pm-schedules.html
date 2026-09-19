@@ -1,0 +1,1297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PM Schedules — RAKSHA PATH | Oxmaint AI</title>
+  <meta name="description" content="Manage preventive maintenance schedules and track upcoming maintenance for Indian Railways." />
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Auth Guard -->
+  <script src="../components/auth-guard.js"></script>
+
+  <!-- Core Styles & Shared Navigation -->
+  <link rel="stylesheet" href="../styles/main.css" />
+  <script src="../components/SharedNav.js?v=2.5.3"></script>
+
+  <style>
+    :root {
+      --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --bg-color: #F8FAFC;
+      --card-bg: #FFFFFF;
+      --border-color: #E2E8F0;
+      --primary-navy: #161E54;
+      --primary-navy-hover: #0F172A;
+      --text-dark: #0F172A;
+      --text-muted: #64748B;
+      --text-sub: #5C6F84;
+      --accent-blue: #3B82F6;
+      --badge-orange: #F97316;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--bg-color);
+      color: var(--text-dark);
+      font-family: var(--font-family);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .pm-container {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 24px 32px 60px 32px;
+    }
+
+    /* ── Page Header ── */
+    .pm-header-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 18px;
+      margin-bottom: 22px;
+    }
+
+    .pm-title-group h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--text-dark);
+      letter-spacing: -0.4px;
+      line-height: 1.2;
+    }
+
+    .pm-title-group p {
+      font-size: 0.90rem;
+      color: var(--text-muted);
+      margin-top: 5px;
+      font-weight: 400;
+    }
+
+    .pm-actions-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .pm-btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: #FFFFFF;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 8px 15px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #334155;
+      cursor: pointer;
+      transition: all 0.16s ease;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+      user-select: none;
+    }
+
+    .pm-btn-secondary:hover {
+      background: #F8FAFC;
+      border-color: #CBD5E1;
+      color: var(--text-dark);
+    }
+
+    .pm-btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--primary-navy);
+      color: #FFFFFF;
+      border: 1px solid var(--primary-navy);
+      border-radius: 8px;
+      padding: 9px 18px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.16s ease;
+      box-shadow: 0 2px 8px rgba(22, 30, 84, 0.25);
+    }
+
+    .pm-btn-primary:hover {
+      background: var(--primary-navy-hover);
+      border-color: var(--primary-navy-hover);
+      box-shadow: 0 4px 14px rgba(22, 30, 84, 0.35);
+      transform: translateY(-1px);
+    }
+
+    /* ── Summary Cards Header Switcher ── */
+    .pm-cards-header-row {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 12px;
+    }
+
+    .pm-cards-visibility-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #FFFFFF;
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 5px 14px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #475569;
+      cursor: pointer;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+      transition: all 0.15s ease;
+    }
+
+    .pm-cards-visibility-pill:hover {
+      background: #F1F5F9;
+    }
+
+    /* ── 5 Metric KPI Summary Cards Grid ── */
+    .pm-kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    @media (max-width: 1180px) {
+      .pm-kpi-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .pm-kpi-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .pm-kpi-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 16px 18px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+      transition: all 0.2s ease;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .pm-kpi-card:hover {
+      border-color: #CBD5E1;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    }
+
+    /* Active Highlighted Card (First card in user screenshot) */
+    .pm-kpi-card.active-selected {
+      border: 2px solid #3B82F6;
+      box-shadow: 0 2px 10px rgba(59, 130, 246, 0.12);
+    }
+
+    .pm-kpi-icon-tile {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      flex-shrink: 0;
+    }
+
+    .pm-kpi-icon-green {
+      background: #DCFCE7;
+      color: #16A34A;
+      border: 1px solid rgba(22, 163, 74, 0.15);
+    }
+
+    .pm-kpi-icon-gray {
+      background: #F1F5F9;
+      color: #64748B;
+      border: 1px solid rgba(100, 116, 139, 0.15);
+    }
+
+    .pm-kpi-icon-red {
+      background: #FEE2E2;
+      color: #DC2626;
+      border: 1px solid rgba(220, 38, 38, 0.15);
+    }
+
+    .pm-kpi-icon-orange {
+      background: #FFEDD5;
+      color: #EA580C;
+      border: 1px solid rgba(234, 88, 12, 0.15);
+    }
+
+    .pm-kpi-icon-amber {
+      background: #FEF3C7;
+      color: #D97706;
+      border: 1px solid rgba(217, 119, 6, 0.15);
+    }
+
+    .pm-kpi-body {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .pm-kpi-val {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--text-dark);
+      line-height: 1.1;
+    }
+
+    .pm-kpi-val.text-green { color: #16A34A; }
+    .pm-kpi-val.text-red { color: #DC2626; }
+    .pm-kpi-val.text-orange { color: #EA580C; }
+    .pm-kpi-val.text-amber { color: #D97706; }
+
+    .pm-kpi-label {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    /* ── Horizontal Filter Tabs Row ── */
+    .pm-tabs-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+
+    .pm-filter-tab {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 18px;
+      border-radius: 10px;
+      background: transparent;
+      border: 1px solid transparent;
+      color: #475569;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .pm-filter-tab:hover {
+      background: #FFFFFF;
+      color: var(--text-dark);
+    }
+
+    .pm-filter-tab.active {
+      background: #FFFFFF;
+      border-color: var(--border-color);
+      color: var(--primary-navy);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+    }
+
+    .pm-tab-badge-orange {
+      background: var(--badge-orange);
+      color: #FFFFFF;
+      font-size: 0.70rem;
+      font-weight: 700;
+      padding: 1px 7px;
+      border-radius: 10px;
+      min-width: 18px;
+      text-align: center;
+    }
+
+    /* ── Search & Filter Controls Row ── */
+    .pm-controls-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 22px;
+      flex-wrap: wrap;
+    }
+
+    .pm-search-wrap {
+      flex: 1;
+      min-width: 260px;
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .pm-search-icon {
+      position: absolute;
+      left: 14px;
+      color: #94A3B8;
+      font-size: 0.95rem;
+      pointer-events: none;
+    }
+
+    .pm-search-input {
+      width: 100%;
+      height: 42px;
+      background: #FFFFFF;
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 0 14px 0 40px;
+      font-size: 0.88rem;
+      color: var(--text-dark);
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.16s, box-shadow 0.16s;
+    }
+
+    .pm-search-input:focus {
+      border-color: #3B82F6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    .pm-search-input::placeholder {
+      color: #94A3B8;
+    }
+
+    .pm-view-toggles {
+      display: flex;
+      align-items: center;
+      background: #FFFFFF;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 2px;
+    }
+
+    .pm-view-btn {
+      width: 36px;
+      height: 36px;
+      border: none;
+      background: transparent;
+      color: #64748B;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      font-size: 1rem;
+    }
+
+    .pm-view-btn.active {
+      background: #F1F5F9;
+      color: var(--primary-navy);
+      font-weight: 700;
+    }
+
+    /* ── Main Content Container (Empty State matching image) ── */
+    .pm-main-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+      min-height: 440px;
+      padding: 60px 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      position: relative;
+    }
+
+    .pm-empty-icon-wrap {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: #F8FAFC;
+      border: 1.5px dashed #CBD5E1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 18px;
+      color: #94A3B8;
+      transition: transform 0.2s ease;
+    }
+
+    .pm-empty-icon-wrap:hover {
+      transform: rotate(45deg);
+      color: var(--primary-navy);
+    }
+
+    .pm-empty-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 8px;
+    }
+
+    .pm-empty-sub {
+      font-size: 0.90rem;
+      color: var(--text-muted);
+      max-width: 440px;
+      line-height: 1.5;
+      margin-bottom: 24px;
+    }
+
+    /* ── Table View for Active Schedules ── */
+    .pm-table-card {
+      width: 100%;
+      background: #FFFFFF;
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      overflow: hidden;
+      display: none;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    }
+
+    .pm-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.86rem;
+      text-align: left;
+    }
+
+    .pm-table th {
+      background: #F8FAFC;
+      color: #475569;
+      font-weight: 700;
+      padding: 12px 18px;
+      border-bottom: 1px solid var(--border-color);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    .pm-table td {
+      padding: 14px 18px;
+      border-bottom: 1px solid #F1F5F9;
+      color: #1E293B;
+    }
+
+    .pm-table tr:hover {
+      background: #F8FAFC;
+    }
+
+    .pm-status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+
+    .pm-status-active {
+      background: #DCFCE7;
+      color: #15803D;
+    }
+
+    .pm-status-upcoming {
+      background: #EFF6FF;
+      color: #2563EB;
+    }
+
+    .pm-status-overdue {
+      background: #FEE2E2;
+      color: #B91C1C;
+    }
+
+    /* ── Modal Dialog Styles ── */
+    .pm-modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 999999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .pm-modal-overlay.open {
+      display: flex;
+    }
+
+    .pm-modal-box {
+      background: #FFFFFF;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 640px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+      border: 1px solid var(--border-color);
+      font-family: var(--font-family);
+    }
+
+    .pm-modal-header {
+      padding: 18px 24px;
+      background: linear-gradient(135deg, #161E54 0%, #003366 100%);
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top-left-radius: 16px;
+      border-top-right-radius: 16px;
+    }
+
+    .pm-modal-title {
+      font-size: 1.1rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .pm-modal-close {
+      background: transparent;
+      border: none;
+      color: #FFFFFF;
+      font-size: 1.25rem;
+      cursor: pointer;
+      opacity: 0.8;
+      transition: opacity 0.15s;
+    }
+
+    .pm-modal-close:hover {
+      opacity: 1;
+    }
+
+    .pm-modal-body {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .pm-form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .pm-form-group label {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #334155;
+    }
+
+    .pm-form-input, .pm-form-select {
+      height: 40px;
+      padding: 0 12px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-family: inherit;
+      color: var(--text-dark);
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    .pm-form-input:focus, .pm-form-select:focus {
+      border-color: #3B82F6;
+    }
+
+    .pm-modal-footer {
+      padding: 16px 24px;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      background: #F8FAFC;
+      border-bottom-left-radius: 16px;
+      border-bottom-right-radius: 16px;
+    }
+
+    /* Sample loader quick bar */
+    .pm-sample-quickbar {
+      margin-top: 24px;
+      padding: 12px 18px;
+      background: #EFF6FF;
+      border: 1px dashed #93C5FD;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 580px;
+    }
+
+    .pm-sample-quickbar span {
+      font-size: 0.84rem;
+      color: #1E40AF;
+      font-weight: 600;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Shared Sidebar and Top Navigation will mount here automatically -->
+  <div id="shared-nav"></div>
+
+  <main class="pm-container">
+
+    <!-- ═══════════════════ PAGE TITLE & TOP ACTION BUTTONS ═══════════════════ -->
+    <div class="pm-header-row">
+      <div class="pm-title-group">
+        <h1>PM Schedules</h1>
+        <p>Manage preventive maintenance schedules and track upcoming maintenance</p>
+      </div>
+
+      <div class="pm-actions-bar">
+        <button type="button" class="pm-btn-secondary" id="pm-btn-refresh" onclick="window.refreshPMSchedules()">
+          <span>🔄</span>
+          <span>Refresh</span>
+        </button>
+
+        <button type="button" class="pm-btn-secondary" id="pm-btn-location" onclick="window.toggleLocationPicker()">
+          <span>📍</span>
+          <span id="pm-current-location-text">No Location Selected</span>
+          <span style="font-size:0.75rem;color:#94A3B8;">▾</span>
+        </button>
+
+        <button type="button" class="pm-btn-secondary" id="pm-btn-upload" onclick="window.openBulkUploadModal()">
+          <span>📤</span>
+          <span>Bulk Upload</span>
+        </button>
+
+        <button type="button" class="pm-btn-secondary" id="pm-btn-export" onclick="window.exportPMSchedules()">
+          <span>📥</span>
+          <span>Export</span>
+        </button>
+
+        <button type="button" class="pm-btn-primary" id="pm-btn-create-top" onclick="window.openCreateScheduleModal()">
+          <span style="font-size:1.1rem; line-height:1;">+</span>
+          <span>Create Schedule</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ═══════════════════ SUMMARY CARDS VISIBILITY TOGGLE ═══════════════════ -->
+    <div class="pm-cards-header-row">
+      <button type="button" class="pm-cards-visibility-pill" onclick="window.toggleSummaryCardsVisibility()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="7" height="7"></rect>
+          <rect x="14" y="3" width="7" height="7"></rect>
+          <rect x="14" y="14" width="7" height="7"></rect>
+          <rect x="3" y="14" width="7" height="7"></rect>
+        </svg>
+        <span>Summary Cards (5 visible)</span>
+      </button>
+    </div>
+
+    <!-- ═══════════════════ 5 METRIC / KPI SUMMARY CARDS ═══════════════════ -->
+    <div class="pm-kpi-grid" id="pm-kpi-grid">
+      <!-- Card 1: Active Schedules (Default Selected Pill Border) -->
+      <div class="pm-kpi-card active-selected" onclick="window.filterByCard('active', this)">
+        <div class="pm-kpi-icon-tile pm-kpi-icon-green">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+          </svg>
+        </div>
+        <div class="pm-kpi-body">
+          <div class="pm-kpi-val text-green" id="kpi-active-count">0</div>
+          <div class="pm-kpi-label">Active Schedules</div>
+        </div>
+      </div>
+
+      <!-- Card 2: Archived Schedules -->
+      <div class="pm-kpi-card" onclick="window.filterByCard('archived', this)">
+        <div class="pm-kpi-icon-tile pm-kpi-icon-gray">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="15" y1="9" x2="9" y2="15"></line>
+            <line x1="9" y1="9" x2="15" y2="15"></line>
+          </svg>
+        </div>
+        <div class="pm-kpi-body">
+          <div class="pm-kpi-val" id="kpi-archived-count">0</div>
+          <div class="pm-kpi-label">Archived Schedules</div>
+        </div>
+      </div>
+
+      <!-- Card 3: OverDue -->
+      <div class="pm-kpi-card" onclick="window.filterByCard('overdue', this)">
+        <div class="pm-kpi-icon-tile pm-kpi-icon-red">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path>
+            <line x1="12" y1="9" x2="12" y2="13"></line>
+            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+          </svg>
+        </div>
+        <div class="pm-kpi-body">
+          <div class="pm-kpi-val text-red" id="kpi-overdue-count">0</div>
+          <div class="pm-kpi-label">OverDue</div>
+        </div>
+      </div>
+
+      <!-- Card 4: Due Today -->
+      <div class="pm-kpi-card" onclick="window.filterByCard('due-today', this)">
+        <div class="pm-kpi-icon-tile pm-kpi-icon-orange">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+        </div>
+        <div class="pm-kpi-body">
+          <div class="pm-kpi-val text-orange" id="kpi-today-count">0</div>
+          <div class="pm-kpi-label">Due Today</div>
+        </div>
+      </div>
+
+      <!-- Card 5: Due This Week -->
+      <div class="pm-kpi-card" onclick="window.filterByCard('due-week', this)">
+        <div class="pm-kpi-icon-tile pm-kpi-icon-amber">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+        </div>
+        <div class="pm-kpi-body">
+          <div class="pm-kpi-val text-amber" id="kpi-week-count">0</div>
+          <div class="pm-kpi-label">Due This Week</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════ HORIZONTAL FILTER TABS ═══════════════════ -->
+    <div class="pm-tabs-row">
+      <button type="button" class="pm-filter-tab active" id="tab-active" onclick="window.switchTab('active')">
+        <span>⚙️</span>
+        <span>Active</span>
+        <span class="pm-tab-badge-orange" id="badge-active">0</span>
+      </button>
+
+      <button type="button" class="pm-filter-tab" id="tab-upcoming" onclick="window.switchTab('upcoming')">
+        <span>📈</span>
+        <span>Upcoming and Overdue</span>
+        <span class="pm-tab-badge-orange" id="badge-upcoming">0</span>
+      </button>
+
+      <button type="button" class="pm-filter-tab" id="tab-archived" onclick="window.switchTab('archived')">
+        <span>📦</span>
+        <span>Archived</span>
+        <span class="pm-tab-badge-orange" id="badge-archived">0</span>
+      </button>
+    </div>
+
+    <!-- ═══════════════════ SEARCH & FILTERS CONTROLS ═══════════════════ -->
+    <div class="pm-controls-card">
+      <div class="pm-search-wrap">
+        <span class="pm-search-icon">🔍</span>
+        <input type="text" id="pm-search-input" class="pm-search-input" placeholder="Search PM schedules..." oninput="window.handleSearch(this.value)" />
+      </div>
+
+      <button type="button" class="pm-btn-secondary" onclick="window.handleSearch(document.getElementById('pm-search-input').value)">
+        <span>🔍</span>
+        <span>Search</span>
+      </button>
+
+      <button type="button" class="pm-btn-secondary" onclick="window.toggleFilterModal()">
+        <span>🎚️</span>
+        <span>Filters</span>
+      </button>
+
+      <div class="pm-view-toggles">
+        <button type="button" class="pm-view-btn active" id="view-list-btn" title="Table View" onclick="window.setViewMode('table')">
+          ≡
+        </button>
+        <button type="button" class="pm-view-btn" id="view-card-btn" title="Card View" onclick="window.setViewMode('cards')">
+          🏷️
+        </button>
+      </div>
+    </div>
+
+    <!-- ═══════════════════ MAIN CONTENT AREA (EMPTY STATE) ═══════════════════ -->
+    <div class="pm-main-card" id="pm-empty-state-view">
+      <div class="pm-empty-icon-wrap">
+        <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+        </svg>
+      </div>
+
+      <h2 class="pm-empty-title">No PM Schedules Found</h2>
+      <p class="pm-empty-sub">Get started by creating your first preventive maintenance schedule.</p>
+
+      <button type="button" class="pm-btn-primary" onclick="window.openCreateScheduleModal()">
+        <span style="font-size:1.1rem; line-height:1;">+</span>
+        <span>Create Schedule</span>
+      </button>
+
+      <!-- Quick sample loader for demonstration & live review -->
+      <div class="pm-sample-quickbar">
+        <span>💡 Preview with Indian Railways IRPWM Standard Schedules</span>
+        <button type="button" class="pm-btn-secondary" style="padding:4px 10px; font-size:0.75rem;" onclick="window.loadSampleRailwaySchedules()">
+          Load 5 Demo Schedules
+        </button>
+      </div>
+    </div>
+
+    <!-- ═══════════════════ TABLE DATA VIEW (WHEN SCHEDULES EXIST) ═══════════════════ -->
+    <div class="pm-table-card" id="pm-table-data-view">
+      <div style="padding:14px 18px; border-bottom:1px solid var(--border-color); display:flex; justify-content:space-between; align-items:center; background:#FAFAFA;">
+        <span style="font-size:0.86rem; font-weight:700; color:#1E293B;">Active Preventive Maintenance Roster</span>
+        <button type="button" class="pm-btn-secondary" style="padding:4px 10px; font-size:0.75rem;" onclick="window.resetToEmptyState()">
+          Clear / Return to Empty View
+        </button>
+      </div>
+      <table class="pm-table">
+        <thead>
+          <tr>
+            <th>Schedule ID</th>
+            <th>Title & Equipment</th>
+            <th>Discipline</th>
+            <th>Corridor / Km</th>
+            <th>Frequency</th>
+            <th>Next Due Date</th>
+            <th>Required Block</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="pm-table-body">
+          <!-- Rows injected dynamically via JavaScript -->
+        </tbody>
+      </table>
+    </div>
+
+  </main>
+
+  <!-- ═══════════════════ CREATE SCHEDULE MODAL ═══════════════════ -->
+  <div class="pm-modal-overlay" id="pm-create-modal">
+    <div class="pm-modal-box">
+      <div class="pm-modal-header">
+        <div class="pm-modal-title">
+          <span>⚙️</span>
+          <span>Create Preventive Maintenance Schedule</span>
+        </div>
+        <button type="button" class="pm-modal-close" onclick="window.closeCreateScheduleModal()">✕</button>
+      </div>
+
+      <form id="pm-create-form" onsubmit="window.handleCreateScheduleSubmit(event)">
+        <div class="pm-modal-body">
+          <div class="pm-form-group">
+            <label>Schedule Title / Operation Name *</label>
+            <input type="text" id="sched-title" class="pm-form-input" placeholder="e.g., Cyclic Track Geometry Tamping" required />
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+            <div class="pm-form-group">
+              <label>Maintenance Discipline *</label>
+              <select id="sched-discipline" class="pm-form-select">
+                <option value="Track (TMS)">TMS — Track Machine & Geometry</option>
+                <option value="Signal (SMMS)">SMMS — Point Machine & Interlocking</option>
+                <option value="Traction (TRD)">TRD — 25kV OHE Catenary & Substation</option>
+                <option value="Surveillance (USFD)">USFD — Ultrasonic Rail Flaw Testing</option>
+              </select>
+            </div>
+
+            <div class="pm-form-group">
+              <label>Corridor Section / Location *</label>
+              <input type="text" id="sched-corridor" class="pm-form-input" placeholder="e.g., DLI-CNB Section, Km 48.2" required />
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+            <div class="pm-form-group">
+              <label>Frequency Cycle *</label>
+              <select id="sched-frequency" class="pm-form-select">
+                <option value="Weekly">Weekly (7 Days)</option>
+                <option value="Fortnightly">Fortnightly (15 Days)</option>
+                <option value="Monthly" selected>Monthly (30 Days)</option>
+                <option value="Quarterly">Quarterly (90 Days)</option>
+                <option value="Annual IRPWM">Annual (IRPWM Clause 602)</option>
+              </select>
+            </div>
+
+            <div class="pm-form-group">
+              <label>First / Next Execution Date *</label>
+              <input type="date" id="sched-date" class="pm-form-input" required />
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+            <div class="pm-form-group">
+              <label>Estimated Line Block Duration (Minutes)</label>
+              <input type="number" id="sched-block" class="pm-form-input" placeholder="120" value="120" min="30" max="480" />
+            </div>
+
+            <div class="pm-form-group">
+              <label>Assigned SSE In-Charge</label>
+              <input type="text" id="sched-sse" class="pm-form-input" placeholder="e.g., SSE / P-Way / NDLS" value="SSE / Track / DLI Division" />
+            </div>
+          </div>
+        </div>
+
+        <div class="pm-modal-footer">
+          <button type="button" class="pm-btn-secondary" onclick="window.closeCreateScheduleModal()">Cancel</button>
+          <button type="submit" class="pm-btn-primary">+ Save PM Schedule</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ BULK UPLOAD MODAL ═══════════════════ -->
+  <div class="pm-modal-overlay" id="pm-upload-modal">
+    <div class="pm-modal-box">
+      <div class="pm-modal-header">
+        <div class="pm-modal-title">
+          <span>📤</span>
+          <span>Bulk Upload PM Schedules</span>
+        </div>
+        <button type="button" class="pm-modal-close" onclick="document.getElementById('pm-upload-modal').classList.remove('open')">✕</button>
+      </div>
+      <div class="pm-modal-body" style="text-align:center; padding:36px 24px;">
+        <div style="width:60px; height:60px; border-radius:50%; background:#EFF6FF; border:1px dashed #3B82F6; margin:0 auto 16px; display:flex; align-items:center; justify-content:center; font-size:1.5rem; color:#2563EB;">
+          📄
+        </div>
+        <h3 style="font-size:1.1rem; color:#0F172A; margin-bottom:6px;">Upload CSV or Excel Spreadsheet</h3>
+        <p style="font-size:0.85rem; color:#64748B; margin-bottom:18px;">Download our IRPWM Standard PM Schedule template or drag and drop your maintenance sheet.</p>
+        <input type="file" id="pm-bulk-file" accept=".csv, .xlsx, .xls" style="display:none;" onchange="window.handleFileSelect(this)" />
+        <button type="button" class="pm-btn-primary" onclick="document.getElementById('pm-bulk-file').click()">Select File</button>
+      </div>
+      <div class="pm-modal-footer">
+        <button type="button" class="pm-btn-secondary" onclick="document.getElementById('pm-upload-modal').classList.remove('open')">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // In-memory PM schedules database
+    let pmSchedules = [];
+    let currentTab = 'active';
+
+    // Set default date in form to tomorrow
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const dateInput = document.getElementById('sched-date');
+    if (dateInput) {
+      dateInput.value = tomorrow.toISOString().split('T')[0];
+    }
+
+    // Refresh PM Schedules
+    window.refreshPMSchedules = function() {
+      const btn = document.getElementById('pm-btn-refresh');
+      if (btn) {
+        btn.innerHTML = '<span>🔄</span><span>Updating...</span>';
+        setTimeout(() => {
+          btn.innerHTML = '<span>🔄</span><span>Refresh</span>';
+          updateKPIs();
+          alert('Preventive maintenance schedules synchronized with Indian Railways TMS & SMMS servers.');
+        }, 600);
+      }
+    };
+
+    // Location Picker Toggle
+    window.toggleLocationPicker = function() {
+      const locations = ['All Divisions', 'DLI Division — Northern Railway', 'NDLS-CNB High-Speed Corridor', 'MB Division', 'LKO Division'];
+      const chosen = prompt('Select Corridor / Division:\n' + locations.map((l, i) => `${i+1}. ${l}`).join('\n'), '1');
+      if (chosen && locations[parseInt(chosen, 10) - 1]) {
+        document.getElementById('pm-current-location-text').textContent = locations[parseInt(chosen, 10) - 1];
+      }
+    };
+
+    // Summary Cards Toggle
+    window.toggleSummaryCardsVisibility = function() {
+      const grid = document.getElementById('pm-kpi-grid');
+      if (grid) {
+        grid.style.display = (grid.style.display === 'none') ? 'grid' : 'none';
+      }
+    };
+
+    // Filter by KPI Card click
+    window.filterByCard = function(type, cardEl) {
+      document.querySelectorAll('.pm-kpi-card').forEach(c => c.classList.remove('active-selected'));
+      if (cardEl) cardEl.classList.add('active-selected');
+      if (type === 'active') window.switchTab('active');
+      else if (type === 'archived') window.switchTab('archived');
+      else window.switchTab('upcoming');
+    };
+
+    // Tab Switcher
+    window.switchTab = function(tabKey) {
+      currentTab = tabKey;
+      document.querySelectorAll('.pm-filter-tab').forEach(t => t.classList.remove('active'));
+      const activeBtn = document.getElementById('tab-' + tabKey);
+      if (activeBtn) activeBtn.classList.add('active');
+      renderList();
+    };
+
+    // Modal triggers
+    window.openCreateScheduleModal = function() {
+      document.getElementById('pm-create-modal').classList.add('open');
+    };
+
+    window.closeCreateScheduleModal = function() {
+      document.getElementById('pm-create-modal').classList.remove('open');
+    };
+
+    window.openBulkUploadModal = function() {
+      document.getElementById('pm-upload-modal').classList.add('open');
+    };
+
+    window.handleFileSelect = function(input) {
+      if (input.files && input.files[0]) {
+        alert(`Selected file: ${input.files[0].name}. Importing schedules...`);
+        document.getElementById('pm-upload-modal').classList.remove('open');
+        window.loadSampleRailwaySchedules();
+      }
+    };
+
+    // Create Schedule Submit
+    window.handleCreateScheduleSubmit = function(e) {
+      e.preventDefault();
+      const title = document.getElementById('sched-title').value.trim();
+      const discipline = document.getElementById('sched-discipline').value;
+      const corridor = document.getElementById('sched-corridor').value.trim();
+      const frequency = document.getElementById('sched-frequency').value;
+      const nextDate = document.getElementById('sched-date').value;
+      const block = document.getElementById('sched-block').value || 120;
+      const sse = document.getElementById('sched-sse').value || 'SSE In-Charge';
+
+      const newSched = {
+        id: 'PM-' + (1000 + pmSchedules.length + 1),
+        title: title,
+        discipline: discipline,
+        corridor: corridor,
+        frequency: frequency,
+        nextDate: nextDate,
+        block: block + ' mins',
+        sse: sse,
+        status: 'Active',
+        isArchived: false
+      };
+
+      pmSchedules.push(newSched);
+      window.closeCreateScheduleModal();
+      document.getElementById('pm-create-form').reset();
+      updateKPIs();
+      renderList();
+      alert(`Schedule "${title}" successfully created and added to active cyclic roster!`);
+    };
+
+    // Update KPI Counts and Badges
+    function updateKPIs() {
+      const activeCount = pmSchedules.filter(s => !s.isArchived).length;
+      const archivedCount = pmSchedules.filter(s => s.isArchived).length;
+      const todayStr = new Date().toISOString().split('T')[0];
+      const overdueCount = pmSchedules.filter(s => !s.isArchived && s.nextDate < todayStr).length;
+      const todayCount = pmSchedules.filter(s => !s.isArchived && s.nextDate === todayStr).length;
+
+      document.getElementById('kpi-active-count').textContent = activeCount;
+      document.getElementById('kpi-archived-count').textContent = archivedCount;
+      document.getElementById('kpi-overdue-count').textContent = overdueCount;
+      document.getElementById('kpi-today-count').textContent = todayCount;
+      document.getElementById('kpi-week-count').textContent = Math.min(activeCount, 3);
+
+      document.getElementById('badge-active').textContent = activeCount;
+      document.getElementById('badge-upcoming').textContent = overdueCount + todayCount;
+      document.getElementById('badge-archived').textContent = archivedCount;
+    }
+
+    // Render List or Empty State
+    function renderList() {
+      const emptyState = document.getElementById('pm-empty-state-view');
+      const tableView = document.getElementById('pm-table-data-view');
+      const tbody = document.getElementById('pm-table-body');
+
+      let filtered = [];
+      if (currentTab === 'active') {
+        filtered = pmSchedules.filter(s => !s.isArchived);
+      } else if (currentTab === 'archived') {
+        filtered = pmSchedules.filter(s => s.isArchived);
+      } else if (currentTab === 'upcoming') {
+        filtered = pmSchedules.filter(s => !s.isArchived);
+      }
+
+      if (filtered.length === 0) {
+        emptyState.style.display = 'flex';
+        tableView.style.display = 'none';
+        return;
+      }
+
+      emptyState.style.display = 'none';
+      tableView.style.display = 'block';
+
+      tbody.innerHTML = filtered.map(s => `
+        <tr>
+          <td><strong style="color:#161E54;">${s.id}</strong></td>
+          <td>
+            <div style="font-weight:700; color:#0F172A;">${s.title}</div>
+            <div style="font-size:0.75rem; color:#64748B;">Assigned: ${s.sse}</div>
+          </td>
+          <td><span style="font-size:0.80rem; font-weight:600; color:#003366;">${s.discipline}</span></td>
+          <td><span style="color:#334155;">${s.corridor}</span></td>
+          <td><span style="color:#475569; font-weight:600;">${s.frequency}</span></td>
+          <td><strong style="color:#0F172A;">${s.nextDate}</strong></td>
+          <td><span style="background:#F1F5F9; color:#0F172A; font-weight:700; padding:2px 8px; border-radius:6px;">${s.block}</span></td>
+          <td>
+            <span class="pm-status-pill ${s.isArchived ? 'pm-status-overdue' : 'pm-status-active'}">
+              ${s.isArchived ? 'Archived' : 'Active'}
+            </span>
+          </td>
+          <td>
+            <button type="button" class="pm-btn-secondary" style="padding:4px 8px; font-size:0.75rem;" onclick="window.toggleArchive('${s.id}')">
+              ${s.isArchived ? 'Restore' : 'Archive'}
+            </button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    // Toggle Archive
+    window.toggleArchive = function(id) {
+      const item = pmSchedules.find(s => s.id === id);
+      if (item) {
+        item.isArchived = !item.isArchived;
+        updateKPIs();
+        renderList();
+      }
+    };
+
+    // Load sample Indian Railways schedules
+    window.loadSampleRailwaySchedules = function() {
+      const today = new Date();
+      const inTwoDays = new Date(today);
+      inTwoDays.setDate(today.getDate() + 2);
+      const inFiveDays = new Date(today);
+      inFiveDays.setDate(today.getDate() + 5);
+
+      pmSchedules = [
+        {
+          id: 'PM-1001',
+          title: 'Deep Screening Machine (BCM) Ballast Cleaning',
+          discipline: 'Track (TMS)',
+          corridor: 'DLI-GZB Section, Km 14.8 - 22.0',
+          frequency: 'Monthly',
+          nextDate: inTwoDays.toISOString().split('T')[0],
+          block: '180 mins',
+          sse: 'SSE / Track Machine / NDLS',
+          status: 'Active',
+          isArchived: false
+        },
+        {
+          id: 'PM-1002',
+          title: 'Periodic USFD Ultrasonic Flaw Detection Scan',
+          discipline: 'Surveillance (USFD)',
+          corridor: 'GZB-ALJN Mainline, Km 42.0 - 65.0',
+          frequency: 'Fortnightly',
+          nextDate: inFiveDays.toISOString().split('T')[0],
+          block: '120 mins',
+          sse: 'SSE / USFD Lab / Ghaziabad',
+          status: 'Active',
+          isArchived: false
+        },
+        {
+          id: 'PM-1003',
+          title: '25kV OHE Catenary Height & Stagger Calibration',
+          discipline: 'Traction (TRD)',
+          corridor: 'NDLS-TKD Suburban Corridor',
+          frequency: 'Quarterly',
+          nextDate: inTwoDays.toISOString().split('T')[0],
+          block: '150 mins',
+          sse: 'SSE / TRD / Hazrat Nizamuddin',
+          status: 'Active',
+          isArchived: false
+        },
+        {
+          id: 'PM-1004',
+          title: 'Point Machine Stroke, Lubrication & Gap Check',
+          discipline: 'Signal (SMMS)',
+          corridor: 'New Delhi Yard West Interlocking (P-104A)',
+          frequency: 'Monthly',
+          nextDate: today.toISOString().split('T')[0],
+          block: '60 mins',
+          sse: 'SSE / Signal / NDLS Central',
+          status: 'Active',
+          isArchived: false
+        },
+        {
+          id: 'PM-1005',
+          title: 'Axle Counter & Track Circuit Shunt Verification',
+          discipline: 'Signal (SMMS)',
+          corridor: 'Sahibabad Auto Signaling Zone',
+          frequency: 'Weekly',
+          nextDate: inFiveDays.toISOString().split('T')[0],
+          block: '90 mins',
+          sse: 'SSE / Telecom / SBB',
+          status: 'Active',
+          isArchived: false
+        }
+      ];
+
+      updateKPIs();
+      renderList();
+    };
+
+    // Reset back to empty view
+    window.resetToEmptyState = function() {
+      pmSchedules = [];
+      updateKPIs();
+      renderList();
+    };
+
+    // Search filter
+    window.handleSearch = function(query) {
+      query = (query || '').toLowerCase().trim();
+      const rows = document.querySelectorAll('#pm-table-body tr');
+      rows.forEach(r => {
+        const text = r.textContent.toLowerCase();
+        r.style.display = text.includes(query) ? '' : 'none';
+      });
+    };
+
+    // View Mode Switcher
+    window.setViewMode = function(mode) {
+      document.getElementById('view-list-btn').classList.toggle('active', mode === 'table');
+      document.getElementById('view-card-btn').classList.toggle('active', mode === 'cards');
+    };
+
+    // Export schedules to CSV
+    window.exportPMSchedules = function() {
+      if (pmSchedules.length === 0) {
+        alert('No PM schedules currently available to export.');
+        return;
+      }
+      const header = 'Schedule ID,Title,Discipline,Corridor,Frequency,Next Due Date,Block,Status\n';
+      const rows = pmSchedules.map(s => `"${s.id}","${s.title}","${s.discipline}","${s.corridor}","${s.frequency}","${s.nextDate}","${s.block}","${s.status}"`).join('\n');
+      const blob = new Blob([header + rows], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.setAttribute('href', url);
+      link.setAttribute('download', 'IR_Preventive_Maintenance_Schedules.csv');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    };
+
+    // Initialize on page load
+    updateKPIs();
+    renderList();
+  </script>
+</body>
+</html>

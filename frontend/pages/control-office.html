@@ -21,7 +21,7 @@
   <link rel="stylesheet" href="../styles/main.css" />
 
   <!-- Shared Navigation & Real-Time Sync -->
-  <script src="../components/SharedNav.js"></script>
+  <script src="../components/SharedNav.js?v=2.5.3"></script>
   <script src="../components/shared-live-sync.js"></script>
 
   <!-- Mapbox GL JS & Resilient Leaflet GIS Integration -->
@@ -287,6 +287,31 @@
   <div id="shared-nav"></div>
 
   <main class="ctrl-container">
+
+    <!-- ═══════════════════ OVERVIEW DASHBOARD HEADER BANNER ═══════════════════ -->
+    <div style="background:#FFFFFF; border:1.5px solid rgba(0,51,102,0.12); border-radius:18px; padding:20px 24px; margin-bottom:24px; box-shadow:0 4px 16px rgba(0,51,102,0.05); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px;">
+      <div style="display:flex; align-items:center; gap:14px;">
+        <div style="width:46px; height:46px; border-radius:12px; background:rgba(0,51,102,0.08); color:#003366; display:flex; align-items:center; justify-content:center; font-size:1.3rem;">🎛️</div>
+        <div>
+          <h1 style="font-family:var(--font-display); font-size:1.6rem; font-weight:800; color:#003366; margin:0 0 2px 0;">Control Office Block Command</h1>
+          <p style="font-size:0.88rem; color:#64748B; margin:0;">Train punctuality, corridor line blocks, and CP-SAT delay optimization engine</p>
+        </div>
+      </div>
+
+      <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+        <span style="display:inline-flex; align-items:center; gap:6px; padding:6px 12px; border-radius:20px; background:rgba(5,150,105,0.1); border:1px solid rgba(5,150,105,0.25); color:#059669; font-size:0.78rem; font-weight:700;">
+          <span style="width:7px; height:7px; border-radius:50%; background:#059669; box-shadow:0 0 0 2px rgba(5,150,105,0.25);"></span> Live RailRadar Telemetry
+        </span>
+
+        <button type="button" onclick="window.location.reload();" style="display:inline-flex; align-items:center; gap:6px; padding:7px 14px; border-radius:8px; border:1px solid rgba(0,51,102,0.18); background:#FFFFFF; color:#003366; font-size:0.80rem; font-weight:700; cursor:pointer;">
+          🔄 Refresh
+        </button>
+
+        <button type="button" onclick="window.openIRReportModal('control-office');" style="display:inline-flex; align-items:center; gap:6px; padding:7px 14px; border-radius:8px; border:1px solid rgba(0,51,102,0.18); background:#FFFFFF; color:#003366; font-size:0.80rem; font-weight:700; cursor:pointer;">
+          📥 Export ▾
+        </button>
+      </div>
+    </div>
 
     <div class="conflict-alert-banner">
       <div class="alert-header">
