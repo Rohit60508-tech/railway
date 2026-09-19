@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Welcome & Getting Started — RAKSHA PATH | Indian Railways AI</title>
+  <meta name="description"
+    content="RAKSHA PATH — Indian Railways AI Maintenance Platform Getting Started & Onboarding Portal" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+    rel="stylesheet" />
+
+  <!-- Auth Guard (ensures user is logged in) -->
+  <script src="../components/auth-guard.js"></script>
+
+  <!-- User Store -->
+  <script src="../components/user-store.js"></script>
+
+  <!-- Core Styles -->
+  <link rel="stylesheet" href="../styles/main.css" />
+
+  <!-- Shared Navigation -->
+  <script src="../components/SharedNav.js?v=2.5.3"></script>
+
+  <style>
+    :root {
+      --navy: #003366;
+      --navy-light: #0056B3;
+      --saffron: #D9531E;
+      --green: #059669;
+      --bg-cream: #FAF6EE;
+      --card-white: #FFFFFF;
+      --border-subtle: rgba(0, 51, 102, 0.12);
+      --shadow-card: 0 4px 20px rgba(0, 51, 102, 0.06), 0 1px 3px rgba(0, 51, 102, 0.08);
+      --font-display: 'Exo 2', 'Calibri', 'Arial', sans-serif;
+      --font-body: 'Inter', 'Calibri', 'Arial', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: var(--font-body);
+    }
+
+    body {
+      background: radial-gradient(circle at 50% 0%, #FFFFFF 0%, #FAF6EE 100%);
+      color: #0F172A;
+      min-height: 100vh;
+      padding-bottom: 40px;
+    }
+
+    .onboarding-container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 32px 24px;
+    }
+
+    /* ── Top Hero Welcome Header ── */
+    .hero-welcome {
+      text-align: center;
+      margin-bottom: 36px;
+      padding: 20px 10px;
+    }
+
+    .hero-emblem {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 16px;
+      background: linear-gradient(135deg, #003366 0%, #0056B3 100%);
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 12px 30px rgba(0, 51, 102, 0.22);
+      position: relative;
+    }
+
+    .hero-emblem img {
+      width: 54px;
+      height: 54px;
+      object-fit: contain;
+    }
+
+    .hero-emblem-badge {
+      position: absolute;
+      bottom: -6px;
+      right: -6px;
+      background: #D9531E;
+      color: #FFF;
+      font-size: 0.65rem;
+      font-weight: 800;
+      padding: 2px 7px;
+      border-radius: 10px;
+      border: 2px solid #FAF6EE;
+      letter-spacing: 0.5px;
+    }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: #003366;
+      margin-bottom: 10px;
+      letter-spacing: -0.5px;
+    }
+
+    .hero-subtitle {
+      font-size: 1.05rem;
+      color: #475569;
+      max-width: 680px;
+      margin: 0 auto 20px;
+      line-height: 1.6;
+    }
+
+    .hero-badges {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .hero-badge-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #003366;
+      background: rgba(0, 51, 102, 0.06);
+      padding: 6px 14px;
+      border-radius: 20px;
+      border: 1px solid rgba(0, 51, 102, 0.12);
+    }
+
+    /* ── Section Header Cards ── */
+    .section-card {
+      background: var(--card-white);
+      border: 1.5px solid var(--border-subtle);
+      border-radius: 18px;
+      box-shadow: var(--shadow-card);
+      overflow: hidden;
+      margin-bottom: 28px;
+      transition: all 0.25s ease;
+    }
+
+    .section-header-banner {
+      background: linear-gradient(90deg, #F8FAFC 0%, #FAF6EE 100%);
+      padding: 20px 28px;
+      border-bottom: 1.5px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .section-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .section-title-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: rgba(0, 51, 102, 0.08);
+      color: #003366;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      flex-shrink: 0;
+    }
+
+    .section-title-text h3 {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #003366;
+      margin-bottom: 2px;
+    }
+
+    .section-title-text p {
+      font-size: 0.88rem;
+      color: #64748B;
+    }
+
+    .btn-explore {
+      background: #FFFFFF;
+      color: #0056B3;
+      border: 1.5px solid rgba(0, 86, 179, 0.3);
+      font-size: 0.88rem;
+      font-weight: 700;
+      padding: 9px 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-explore:hover {
+      background: #0056B3;
+      color: #FFFFFF;
+      border-color: #0056B3;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 86, 179, 0.25);
+    }
+
+    /* ── Key Performance Indicators Row ── */
+    .kpi-row-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      padding: 24px;
+    }
+
+    .kpi-mini-box {
+      background: #FAF6EE;
+      border: 1px solid rgba(0, 51, 102, 0.08);
+      border-radius: 14px;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      transition: all 0.2s ease;
+    }
+
+    .kpi-mini-box:hover {
+      background: #FFFFFF;
+      border-color: rgba(0, 51, 102, 0.2);
+      box-shadow: 0 6px 18px rgba(0, 51, 102, 0.08);
+      transform: translateY(-2px);
+    }
+
+    .kpi-icon-square {
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      flex-shrink: 0;
+    }
+
+    .kpi-val-number {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: #0F172A;
+      line-height: 1.1;
+    }
+
+    .kpi-val-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #334155;
+      margin-top: 2px;
+    }
+
+    .kpi-val-sub {
+      font-size: 0.75rem;
+      color: #64748B;
+    }
+
+    /* ── Collapsible Overview Rows ── */
+    .overview-strip {
+      background: #FFFFFF;
+      border: 1.5px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 18px 24px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      box-shadow: var(--shadow-card);
+      transition: all 0.2s ease;
+    }
+
+    .overview-strip:hover {
+      border-color: rgba(0, 86, 179, 0.3);
+      box-shadow: 0 6px 20px rgba(0, 51, 102, 0.08);
+      transform: translateY(-1px);
+    }
+
+    .strip-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .strip-icon-box {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .strip-text h4 {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #003366;
+      margin-bottom: 2px;
+    }
+
+    .strip-text p {
+      font-size: 0.85rem;
+      color: #64748B;
+    }
+
+    /* ── Bottom Grid (Next Steps & Assistance) ── */
+    .bottom-grid {
+      display: grid;
+      grid-template-columns: 1.3fr 1fr;
+      gap: 24px;
+      margin-top: 12px;
+    }
+
+    .next-steps-card {
+      background: #FFFFFF;
+      border: 1.5px solid var(--border-subtle);
+      border-radius: 18px;
+      padding: 24px;
+      box-shadow: var(--shadow-card);
+    }
+
+    .step-item-box {
+      background: #FAF6EE;
+      border: 1px solid rgba(0, 51, 102, 0.08);
+      border-radius: 12px;
+      padding: 16px 18px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      transition: all 0.2s ease;
+    }
+
+    .step-item-box:hover {
+      background: #FFFFFF;
+      border-color: rgba(0, 51, 102, 0.2);
+    }
+
+    .step-item-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .step-item-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: rgba(0, 51, 102, 0.08);
+      color: #003366;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+    }
+
+    .step-item-info h5 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #0F172A;
+    }
+
+    .step-item-info p {
+      font-size: 0.8rem;
+      color: #64748B;
+    }
+
+    .status-tag {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 12px;
+      background: rgba(100, 116, 139, 0.12);
+      color: #475569;
+    }
+
+    .status-tag.active {
+      background: rgba(5, 150, 105, 0.12);
+      color: #059669;
+    }
+
+    .btn-demo-gen {
+      width: 100%;
+      margin-top: 14px;
+      background: linear-gradient(135deg, #0056B3 0%, #003366 100%);
+      color: #FFFFFF;
+      border: none;
+      font-size: 0.92rem;
+      font-weight: 700;
+      padding: 12px;
+      border-radius: 12px;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(0, 51, 102, 0.25);
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-demo-gen:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(0, 51, 102, 0.35);
+    }
+
+    .assistance-card {
+      background: #FFFFFF;
+      border: 1.5px solid var(--border-subtle);
+      border-radius: 18px;
+      padding: 32px 24px;
+      box-shadow: var(--shadow-card);
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .assistance-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 20px;
+      background: rgba(0, 86, 179, 0.08);
+      color: #0056B3;
+      font-size: 1.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+    }
+
+    .assistance-card h4 {
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: #003366;
+      margin-bottom: 8px;
+    }
+
+    .assistance-card p {
+      font-size: 0.9rem;
+      color: #64748B;
+      margin-bottom: 24px;
+      max-width: 320px;
+    }
+
+    .assistance-btn-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn-assist-outline {
+      border: 1.5px solid rgba(0, 51, 102, 0.25);
+      background: #FFFFFF;
+      color: #003366;
+      font-size: 0.88rem;
+      font-weight: 700;
+      padding: 10px 18px;
+      border-radius: 10px;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-assist-outline:hover {
+      background: #FAF6EE;
+      border-color: #003366;
+    }
+
+    .btn-assist-filled {
+      background: #003366;
+      color: #FFFFFF;
+      border: none;
+      font-size: 0.88rem;
+      font-weight: 700;
+      padding: 10px 18px;
+      border-radius: 10px;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-assist-filled:hover {
+      background: #0056B3;
+      transform: translateY(-1px);
+    }
+
+    @media (max-width: 1024px) {
+      .kpi-row-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .bottom-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .kpi-row-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-title {
+        font-size: 1.7rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Mount Container for Shared Navigation -->
+  <div id="shared-nav"></div>
+
+  <main class="onboarding-container">
+    <!-- 1. Top Hero Welcome Banner -->
+    <section class="hero-welcome">
+      <div class="hero-emblem">
+        <img src="../public/raksha_path_logo.png" alt="RAKSHA PATH Logo"
+          onerror="this.onerror=null; this.src='../raksha_path_logo.png';" />
+        <span class="hero-emblem-badge">AI 2.4</span>
+      </div>
+      <h1 class="hero-title" id="welcome-user-heading">Welcome to RAKSHA PATH AI</h1>
+      <p class="hero-subtitle">
+        Get ready to transform Indian Railways corridor maintenance operations with our intelligent AI-Powered Automatic
+        Block Planning Platform.
+      </p>
+      <div class="hero-badges">
+        <span class="hero-badge-tag">✨ AI-Powered CP-SAT</span>
+        <span class="hero-badge-tag">⚡ Smart Block Automation</span>
+        <span class="hero-badge-tag">🛡️ IRPWM 2020 Certified</span>
+      </div>
+    </section>
+
+    <!-- 2. Key Performance Indicators Section -->
+    <section class="section-card">
+      <div class="section-header-banner">
+        <div class="section-title-wrap">
+          <div class="section-title-icon">📊</div>
+          <div class="section-title-text">
+            <h3>Key Performance Indicators</h3>
+            <p>Overview of your corridor maintenance operations at a glance</p>
+          </div>
+        </div>
+        <a href="admin-dashboard.html" class="btn-explore">Explore Dashboard →</a>
+      </div>
+
+      <div class="kpi-row-grid">
+        <div class="kpi-mini-box">
+          <div class="kpi-icon-square" style="background: rgba(0, 86, 179, 0.1); color: #0056B3;">📦</div>
+          <div>
+            <div class="kpi-val-number">128</div>
+            <div class="kpi-val-title">Total Assets</div>
+            <div class="kpi-val-sub">Track, Signal & Traction</div>
+          </div>
+        </div>
+
+        <div class="kpi-mini-box">
+          <div class="kpi-icon-square" style="background: rgba(5, 150, 105, 0.1); color: #059669;">📋</div>
+          <div>
+            <div class="kpi-val-number">42</div>
+            <div class="kpi-val-title">Total Inspections</div>
+            <div class="kpi-val-sub">USFD & Drone Telemetry</div>
+          </div>
+        </div>
+
+        <div class="kpi-mini-box">
+          <div class="kpi-icon-square" style="background: rgba(217, 119, 6, 0.1); color: #D97706;">🔧</div>
+          <div>
+            <div class="kpi-val-number">19</div>
+            <div class="kpi-val-title">Active Work Orders</div>
+            <div class="kpi-val-sub">Pending Possession</div>
+          </div>
+        </div>
+
+        <div class="kpi-mini-box">
+          <div class="kpi-icon-square" style="background: rgba(147, 51, 234, 0.1); color: #9333EA;">📝</div>
+          <div>
+            <div class="kpi-val-number">8</div>
+            <div class="kpi-val-title">Line Block Requests</div>
+            <div class="kpi-val-sub">Pending Sanction</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2.5 Operational Stats (Oxmaint AI Layout) -->
+    <section class="section-card" style="margin-bottom:28px;">
+      <div class="section-header-banner">
+        <div class="section-title-wrap">
+          <div class="section-title-icon" style="background:rgba(0,51,102,0.08); color:#003366;">📊</div>
+          <div class="section-title-text">
+            <h3 style="margin:0; font-family:var(--font-display); font-size:1.2rem; font-weight:800; color:#003366;">
+              Operational Stats</h3>
+            <p style="margin:0; font-size:0.82rem; color:#64748B;">Requests &amp; work orders — created vs completed,
+              grouped by period created</p>
+          </div>
+        </div>
+
+        <div
+          style="background:rgba(0,51,102,0.04); border:1px solid rgba(0,51,102,0.12); border-radius:8px; padding:3px; display:flex; gap:4px;">
+          <button type="button"
+            style="padding:5px 12px; border-radius:6px; border:none; background:transparent; color:#64748B; font-size:0.76rem; font-weight:600; cursor:pointer;">Weekly</button>
+          <button type="button"
+            style="padding:5px 12px; border-radius:6px; border:none; background:#003366; color:#FFFFFF; font-size:0.76rem; font-weight:700; cursor:pointer;">Monthly</button>
+          <button type="button"
+            style="padding:5px 12px; border-radius:6px; border:none; background:transparent; color:#64748B; font-size:0.76rem; font-weight:600; cursor:pointer;">Yearly</button>
+        </div>
+      </div>
+
+      <div style="padding:28px; background:#FFFFFF;">
+        <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:16px; margin-bottom:20px;">
+          <div
+            style="background:#FAF6EE; border:1px solid rgba(0,51,102,0.1); border-radius:12px; padding:16px; border-left:4px solid #003366;">
+            <div style="font-size:0.72rem; color:#64748B; font-weight:700; text-transform:uppercase;">Created
+              Requisitions</div>
+            <div style="font-size:1.6rem; font-weight:800; color:#003366; margin:4px 0;">148</div>
+            <div style="font-size:0.72rem; color:#059669; font-weight:600;">+12.4% vs last period</div>
+          </div>
+          <div
+            style="background:#FAF6EE; border:1px solid rgba(0,51,102,0.1); border-radius:12px; padding:16px; border-left:4px solid #059669;">
+            <div style="font-size:0.72rem; color:#64748B; font-weight:700; text-transform:uppercase;">Completed Work
+              Orders</div>
+            <div style="font-size:1.6rem; font-weight:800; color:#059669; margin:4px 0;">136</div>
+            <div style="font-size:0.72rem; color:#059669; font-weight:600;">91.8% Completion Rate</div>
+          </div>
+          <div
+            style="background:#FAF6EE; border:1px solid rgba(0,51,102,0.1); border-radius:12px; padding:16px; border-left:4px solid #D97706;">
+            <div style="font-size:0.72rem; color:#64748B; font-weight:700; text-transform:uppercase;">Avg Block Sanction
+              Time</div>
+            <div style="font-size:1.6rem; font-weight:800; color:#D97706; margin:4px 0;">42 min</div>
+            <div style="font-size:0.72rem; color:#059669; font-weight:600;">-18 min via AI CP-SAT</div>
+          </div>
+          <div
+            style="background:#FAF6EE; border:1px solid rgba(0,51,102,0.1); border-radius:12px; padding:16px; border-left:4px solid #7C3AED;">
+            <div style="font-size:0.72rem; color:#64748B; font-weight:700; text-transform:uppercase;">Punctuality Index
+              Saved</div>
+            <div style="font-size:1.6rem; font-weight:800; color:#7C3AED; margin:4px 0;">+4.8%</div>
+            <div style="font-size:0.72rem; color:#059669; font-weight:600;">Zero train cancellation</div>
+          </div>
+        </div>
+
+        <div
+          style="background:#FAF6EE; border:1px dashed rgba(0,51,102,0.18); border-radius:12px; padding:32px; text-align:center;">
+          <div style="font-size:2rem; margin-bottom:8px;">📈</div>
+          <div style="font-weight:700; color:#003366; font-size:0.95rem;">Operational Activity Telemetry</div>
+          <div style="font-size:0.80rem; color:#64748B; margin-top:2px;">Showing real-time work orders &amp; block
+            possession telemetry for Northern Railway (DLI Division)</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Work Orders by Source -->
+    <section class="section-card" style="margin-bottom:28px;">
+      <div class="section-header-banner">
+        <div class="section-title-wrap">
+          <div class="section-title-icon" style="background:rgba(0,51,102,0.08); color:#003366;">🔑</div>
+          <div class="section-title-text">
+            <h3 style="margin:0; font-family:var(--font-display); font-size:1.2rem; font-weight:800; color:#003366;">
+              Work Orders by Source</h3>
+            <p style="margin:0; font-size:0.82rem; color:#64748B;">Breakdown of maintenance requisitions grouped by
+              originating system</p>
+          </div>
+        </div>
+      </div>
+
+      <div style="padding:24px; background:#FFFFFF;">
+        <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:16px;">
+          <div style="background:#FAF6EE; border:1px solid rgba(0,51,102,0.1); border-radius:12px; padding:18px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+              <span style="font-size:1.1rem;">🛤️</span>
+              <span
+                style="background:rgba(0,51,102,0.1); color:#003366; font-size:0.70rem; font-weight:800; padding:2px 8px; border-radius:6px;">TMS
+                TRACK</span>
+            </div>
+            <div style="font-size:1.4rem; font-weight:800; color:#003366;">18 Orders</div>
+            <div style="font-size:0.75rem; color:#64748B; margin-top:2px;">42% of total work orders</div>
+            <div style="height:6px; background:#E2E8F0; border-radius:3px; margin-top:10px; overflow:hidden;">
+              <div style="width:42%; height:100%; background:#003366; border-radius:3px;"></div>
+            </div>
+          </div>
+
+          <div style="background:#FAF6EE; border:1px solid rgba(0,51,102,0.1); border-radius:12px; padding:18px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+              <span style="font-size:1.1rem;">🚦</span>
+              <span
+                style="background:rgba(2,132,199,0.1); color:#0284C7; font-size:0.70rem; font-weight:800; padding:2px 8px; border-radius:6px;">SMMS
+                SIGNAL</span>
+            </div>
+            <div style="font-size:1.4rem; font-weight:800; color:#0284C7;">12 Orders</div>
+            <div style="font-size:0.75rem; color:#64748B; margin-top:2px;">28% of total work orders</div>
+            <div style="height:6px; background:#E2E8F0; border-radius:3px; margin-top:10px; overflow:hidden;">
+              <div style="width:28%; height:100%; background:#0284C7; border-radius:3px;"></div>
+            </div>
+          </div>
+
+          <div style="background:#FAF6EE; border:1px solid rgba(0,51,102,0.1); border-radius:12px; padding:18px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+              <span style="font-size:1.1rem;">⚡</span>
+              <span
+                style="background:rgba(234,179,8,0.1); color:#D97706; font-size:0.70rem; font-weight:800; padding:2px 8px; border-radius:6px;">TRD
+                TRACTION</span>
+            </div>
+            <div style="font-size:1.4rem; font-weight:800; color:#D97706;">8 Orders</div>
+            <div style="font-size:0.75rem; color:#64748B; margin-top:2px;">19% of total work orders</div>
+            <div style="height:6px; background:#E2E8F0; border-radius:3px; margin-top:10px; overflow:hidden;">
+              <div style="width:19%; height:100%; background:#D97706; border-radius:3px;"></div>
+            </div>
+          </div>
+
+          <div style="background:#FAF6EE; border:1px solid rgba(0,51,102,0.1); border-radius:12px; padding:18px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+              <span style="font-size:1.1rem;">📡</span>
+              <span
+                style="background:rgba(5,150,105,0.1); color:#059669; font-size:0.70rem; font-weight:800; padding:2px 8px; border-radius:6px;">USFD
+                &amp; SENSORS</span>
+            </div>
+            <div style="font-size:1.4rem; font-weight:800; color:#059669;">5 Orders</div>
+            <div style="font-size:0.75rem; color:#64748B; margin-top:2px;">11% of total work orders</div>
+            <div style="height:6px; background:#E2E8F0; border-radius:3px; margin-top:10px; overflow:hidden;">
+              <div style="width:11%; height:100%; background:#059669; border-radius:3px;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. Module Overview Strips -->
+    <section>
+      <div class="overview-strip">
+        <div class="strip-left">
+          <div class="strip-icon-box" style="background: rgba(147, 51, 234, 0.1); color: #9333EA;">⚡</div>
+          <div class="strip-text">
+            <h4>Quick Maintenance Requests</h4>
+            <p>Track and manage line block requisitions from submission to completion</p>
+          </div>
+        </div>
+        <a href="maintenance-dashboard.html" class="btn-explore"
+          style="color: #9333EA; border-color: rgba(147, 51, 234, 0.3);">Explore Maintenance Requests →</a>
+      </div>
+
+      <div class="overview-strip">
+        <div class="strip-left">
+          <div class="strip-icon-box" style="background: rgba(217, 119, 6, 0.1); color: #D97706;">🔧</div>
+          <div class="strip-text">
+            <h4>Work Orders Overview</h4>
+            <p>Manage track, signaling, and overhead traction work orders across all divisions</p>
+          </div>
+        </div>
+        <a href="maintenance-dashboard.html" class="btn-explore"
+          style="color: #D97706; border-color: rgba(217, 119, 6, 0.3);">Explore Work Orders →</a>
+      </div>
+
+      <div class="overview-strip">
+        <div class="strip-left">
+          <div class="strip-icon-box" style="background: rgba(5, 150, 105, 0.1); color: #059669;">📅</div>
+          <div class="strip-text">
+            <h4>PM Schedules Overview</h4>
+            <p>Automated preventive maintenance scheduling and CP-SAT timetable optimization</p>
+          </div>
+        </div>
+        <a href="control-office.html" class="btn-explore"
+          style="color: #059669; border-color: rgba(5, 150, 105, 0.3);">Explore PM Schedules →</a>
+      </div>
+    </section>
+
+    <!-- 4. Recommended Next Steps & Support Assistance Row -->
+    <section class="bottom-grid">
+      <div class="next-steps-card">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 18px;">
+          <span style="font-size: 1.4rem;">✨</span>
+          <h4 style="font-family: var(--font-display); font-size: 1.2rem; font-weight: 800; color: #003366;"
+            id="next-steps-heading">
+            Recommended Next Steps for Officer
+          </h4>
+        </div>
+
+        <div class="step-item-box">
+          <div class="step-item-left">
+            <div class="step-item-icon">🛠️</div>
+            <div class="step-item-info">
+              <h5>Corridor Asset Management</h5>
+              <p>Track geometry, turnout turnouts, and infrastructure setup</p>
+            </div>
+          </div>
+          <span class="status-tag active">Ready</span>
+        </div>
+
+        <div class="step-item-box">
+          <div class="step-item-left">
+            <div class="step-item-icon">📋</div>
+            <div class="step-item-info">
+              <h5>Inspection Checklists</h5>
+              <p>IRPWM 2020 flaw categorization &amp; USFD safety logs</p>
+            </div>
+          </div>
+          <span class="status-tag active">Active</span>
+        </div>
+
+        <div class="step-item-box">
+          <div class="step-item-left">
+            <div class="step-item-icon">📅</div>
+            <div class="step-item-info">
+              <h5>Block Possession Schedules</h5>
+              <p>CP-SAT optimization for night-shadow &amp; afternoon lull windows</p>
+            </div>
+          </div>
+          <span class="status-tag">In Progress</span>
+        </div>
+
+        <button type="button" class="btn-demo-gen" onclick="window.location.href='admin-dashboard.html';">
+          <span>✨</span>
+          <span>Launch AI Command Dashboard</span>
+        </button>
+      </div>
+
+      <div class="assistance-card">
+        <div class="assistance-icon">🎧</div>
+        <h4>Need assistance?</h4>
+        <p>Our CRIS technical support &amp; Railway SOC team is here to help you with any operational queries.</p>
+        <div class="assistance-btn-row">
+          <a href="project-summary.html#contacts" class="btn-assist-outline">📖 Check Documentation →</a>
+          <a href="mailto:soc-incident@railnet.gov.in" class="btn-assist-filled">✉️ Contact SOC →</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      'use strict';
+      // Dynamically personalize page for logged in officer
+      document.addEventListener('DOMContentLoaded', () => {
+        if (window.IR_AUTH) {
+          const name = window.IR_AUTH.name || 'Authorized Officer';
+          const heading = document.getElementById('welcome-user-heading');
+          const nextSteps = document.getElementById('next-steps-heading');
+
+          if (heading) heading.textContent = `Welcome to RAKSHA PATH AI, ${name.split(' ')[0]}`;
+          if (nextSteps) nextSteps.textContent = `Recommended Next Steps for ${name}`;
+        }
+      });
+    })();
+  </script>
+</body>
+
+</html>

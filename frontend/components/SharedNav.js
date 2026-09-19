@@ -60,6 +60,14 @@
 
   const NAV_LINKS = [
     {
+      key: 'getting-started',
+      label: 'Getting Started',
+      icon: '🚀',
+      href: 'getting-started.html',
+      pageMatch: 'getting-started',
+      desc: 'Onboarding, platform overview & quick start'
+    },
+    {
       key: 'admin',
       label: 'Executive Admin',
       icon: '🛡️',
@@ -69,11 +77,17 @@
     },
     {
       key: 'work-orders',
-      label: 'Work Orders',
-      icon: '🔧',
+      label: 'Maintenance',
+      icon: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#161E54" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>`,
       href: 'maintenance-dashboard.html',
       pageMatch: 'maintenance-dashboard',
-      desc: 'Track (TMS), Signal (SMMS) & Traction (TRD)'
+      desc: 'Track (TMS), Signal (SMMS) & Traction (TRD)',
+      subItems: [
+        { label: 'Work Orders', href: 'maintenance-dashboard.html', activePattern: 'maintenance-dashboard' },
+        { label: 'Request Maintenance', href: 'maintenance-dashboard.html#request', activePattern: '#request' },
+        { label: 'PM Schedules', href: 'pm-schedules.html', activePattern: 'pm-schedules' },
+        { label: 'Labor', href: 'maintenance-dashboard.html#labor', activePattern: '#labor' }
+      ]
     },
     {
       key: 'control-office',
@@ -98,26 +112,13 @@
       href: 'ai-model-management.html',
       pageMatch: 'ai-model-management',
       desc: '6 AI agents, retraining & CP-SAT solver'
-    },
-    {
-      key: 'data-sources',
-      label: 'Data Feeds',
-      icon: '🌐',
-      href: 'data-sources.html',
-      pageMatch: 'data-sources',
-      desc: '3D visualization of 15 system data feeds'
-    },
-    {
-      key: 'project-summary',
-      label: 'Executive Summary',
-      icon: '📋',
-      href: 'project-summary.html',
-      pageMatch: 'project-summary',
-      desc: 'Platform architecture & ROI summary'
     }
   ];
 
   function isActive(link) {
+    if (link.key === 'work-orders') {
+      return window.location.pathname.includes('maintenance-dashboard') || window.location.pathname.includes('pm-schedules');
+    }
     return window.location.pathname.includes(link.pageMatch);
   }
 
@@ -132,12 +133,11 @@
   function getActivePageTitle() {
     const p = window.location.pathname;
     if (p.includes('admin-dashboard')) return { title: 'Executive Admin Command', sub: 'High-Speed Corridor Oversight & AI Decision Matrix', icon: '🛡️' };
+    if (p.includes('pm-schedules')) return { title: 'Preventive Maintenance Schedules', sub: 'IRPWM Track, Signaling & Traction Automated Cyclic Schedules', icon: '📅' };
     if (p.includes('maintenance-dashboard')) return { title: 'Field Maintenance & Work Orders', sub: 'TMS (Track), SMMS (Signal) & TRD (Traction) Coordination', icon: '🔧' };
     if (p.includes('control-office')) return { title: 'Section Control Office', sub: 'Corridor Movement Authority & Traffic Block Management', icon: '🎛️' };
     if (p.includes('surveillance-dashboard')) return { title: 'Corridor Safety & Surveillance', sub: 'USFD Ultrasonic Flaws, Drone Telemetry & Vibration Sensors', icon: '📡' };
     if (p.includes('ai-model-management')) return { title: 'AI Model Intelligence & MLOps', sub: '6 Multi-Agent Systems, Drift Monitoring & CP-SAT Solver', icon: '🧠' };
-    if (p.includes('data-sources')) return { title: 'Corridor Data Feeds & 3D Gateway', sub: 'Interactive Telemetry & Multi-System Data Pipeline', icon: '🌐' };
-    if (p.includes('project-summary')) return { title: 'Executive Summary & Dossier', sub: 'High-Speed Railway AI Platform Architecture & Roadmap', icon: '📋' };
     return { title: 'Operational Command Portal', sub: 'Indian Railways High-Speed AI Corridor Hub', icon: '🚆' };
   }
 
@@ -145,8 +145,7 @@
     /* ── Shared Left Sidebar & Topbar Layout ──────────────────────── */
     :root {
       --snav-sidebar-collapsed-width: 68px;
-      --snav-sidebar-expanded-width: 255px;
-      --snav-sidebar-width: 68px;
+      --snav-sidebar-expanded-width: 290px;
       --snav-topbar-height: 60px;
       --snav-navy-900: #002244;
       --snav-navy-800: #003366;
@@ -162,264 +161,567 @@
       padding-top: var(--snav-topbar-height) !important;
       box-sizing: border-box !important;
       margin: 0 !important;
-      transition: padding-left 0.28s cubic-bezier(0.4, 0, 0.2, 1) !important;
+      transition: padding-left 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+      background: #FAF6EE !important;
     }
 
-    /* Left Sidebar */
+    @media (max-width: 1024px) {
+      body {
+        padding-left: 0 !important;
+      }
+    }
+
+    /* Left Sidebar: Fixed navigation rail with smooth drawer expansion */
     #ir-left-sidebar {
       position: fixed !important;
       top: 0 !important;
       left: 0 !important;
       bottom: 0 !important;
+      height: 100vh !important;
       width: var(--snav-sidebar-collapsed-width) !important;
       background: #FFFFFF !important;
       border-right: 1.5px solid var(--snav-border) !important;
-      box-shadow: 2px 0 16px rgba(0, 51, 102, 0.12) !important;
+      box-shadow: 2px 0 16px rgba(0, 51, 102, 0.08) !important;
       display: flex !important;
       flex-direction: column !important;
       justify-content: space-between !important;
       z-index: 999999 !important;
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
       user-select: none;
-      overflow-x: hidden !important;
-      overflow-y: auto !important;
-      scrollbar-width: none;
-      transition: width 0.28s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.28s ease !important;
+      overflow: hidden !important;
+      transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s ease !important;
     }
 
-    #ir-left-sidebar::-webkit-scrollbar {
-      display: none;
+    /* ══════════════════════════════════════════════════════════════
+       COLLAPSED STATE (Default, 68px width)
+       - Clean, centered icons only
+       - Absolutely NO scrollbar overlapping icons
+       - All labels, badges, What's New, and footer text hidden
+       ══════════════════════════════════════════════════════════════ */
+    #ir-left-sidebar:not(:hover):not(.expanded):not(.open) {
+      width: var(--snav-sidebar-collapsed-width) !important;
+      overflow: hidden !important;
     }
 
+    #ir-left-sidebar:not(:hover):not(.expanded):not(.open) .snav-brand-wrapper {
+      padding: 12px 0 8px 0 !important;
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+      flex-shrink: 0 !important;
+    }
+
+    #ir-left-sidebar:not(:hover):not(.expanded):not(.open) .snav-sidebar-brand-card {
+      padding: 0 !important;
+      margin: 0 !important;
+      background: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+    }
+
+    #ir-left-sidebar:not(:hover):not(.expanded):not(.open) .snav-brand-logo-tile {
+      width: 42px !important;
+      height: 42px !important;
+      border-radius: 12px !important;
+      background: linear-gradient(135deg, #001F3F 0%, #003366 100%) !important;
+      border: 2px solid #FFC107 !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      box-shadow: 0 4px 12px rgba(0, 31, 63, 0.25) !important;
+      margin: 0 auto !important;
+      flex-shrink: 0 !important;
+    }
+
+    #ir-left-sidebar:not(:hover):not(.expanded):not(.open) .snav-menu {
+      padding: 6px 0 !important;
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      gap: 3px !important;
+      overflow: hidden !important; /* CRITICAL: No scrollbar rendered in collapsed view */
+      flex: 1 1 auto !important;
+      min-height: 0 !important;
+    }
+
+    #ir-left-sidebar:not(:hover):not(.expanded):not(.open) .snav-item,
+    #ir-left-sidebar:not(:hover):not(.expanded):not(.open) .snav-item-parent {
+      width: 44px !important;
+      height: 44px !important;
+      min-height: 44px !important;
+      max-height: 44px !important;
+      padding: 0 !important;
+      margin: 2px auto !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      border-radius: 12px !important;
+      border: 1px solid transparent !important;
+      background: transparent !important;
+      box-sizing: border-box !important;
+      position: relative !important;
+      overflow: hidden !important;
+      cursor: pointer !important;
+    }
+
+    #ir-left-sidebar:not(:hover):not(.expanded):not(.open) .snav-item:hover,
+    #ir-left-sidebar:not(:hover):not(.expanded):not(.open) .snav-item-parent:hover {
+      background: rgba(0, 51, 102, 0.06) !important;
+    }
+
+    #ir-left-sidebar:not(:hover):not(.expanded):not(.open) .snav-item--active {
+      background: #EEF2FF !important;
+      border: 1.5px solid #C7D2FE !important;
+      box-shadow: 0 2px 6px rgba(0, 31, 63, 0.08) !important;
+    }
+
+    #ir-left-sidebar:not(:hover):not(.expanded):not(.open) .snav-item--active::before {
+      display: none !important;
+    }
+
+    #ir-left-sidebar:not(:hover):not(.expanded):not(.open) .snav-item-icon {
+      width: 26px !important;
+      height: 26px !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      font-size: 1.25rem !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      flex-shrink: 0 !important;
+    }
+
+    /* Strictly hide all secondary elements in collapsed mode */
+    #ir-left-sidebar:not(:hover):not(.expanded):not(.open) .snav-sidebar-brand-text,
+    #ir-left-sidebar:not(:hover):not(.expanded):not(.open) .snav-group-heading,
+    #ir-left-sidebar:not(:hover):not(.expanded):not(.open) .snav-item-text,
+    #ir-left-sidebar:not(:hover):not(.expanded):not(.open) .snav-item-chevron,
+    #ir-left-sidebar:not(:hover):not(.expanded):not(.open) .snav-item-chevron-svg,
+    #ir-left-sidebar:not(:hover):not(.expanded):not(.open) .snav-item-badge,
+    #ir-left-sidebar:not(:hover):not(.expanded):not(.open) .snav-submenu,
+    #ir-left-sidebar:not(:hover):not(.expanded):not(.open) .snav-whats-new-box,
+    #ir-left-sidebar:not(:hover):not(.expanded):not(.open) .snav-sidebar-divider,
+    #ir-left-sidebar:not(:hover):not(.expanded):not(.open) .snav-footer-status span:last-child,
+    #ir-left-sidebar:not(:hover):not(.expanded):not(.open) .snav-footer-meta {
+      display: none !important;
+      opacity: 0 !important;
+      visibility: hidden !important;
+      pointer-events: none !important;
+      max-width: 0 !important;
+      height: 0 !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      border: none !important;
+    }
+
+    #ir-left-sidebar:not(:hover):not(.expanded):not(.open) .snav-sidebar-footer {
+      padding: 14px 0 !important;
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+      background: #FFFFFF !important;
+      border-top: 1px solid rgba(0, 51, 102, 0.08) !important;
+      flex-shrink: 0 !important;
+    }
+
+    #ir-left-sidebar:not(:hover):not(.expanded):not(.open) .snav-footer-status {
+      margin: 0 !important;
+      padding: 0 !important;
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+    }
+
+    #ir-left-sidebar:not(:hover):not(.expanded):not(.open) .snav-footer-dot {
+      width: 10px !important;
+      height: 10px !important;
+      margin: 0 auto !important;
+      border-radius: 50% !important;
+      background: #059669 !important;
+      box-shadow: 0 0 0 2px rgba(5, 150, 105, 0.25) !important;
+      animation: snavPulse 2s infinite !important;
+      flex-shrink: 0 !important;
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       EXPANDED STATE (Hovered / Expanded / Open, 290px width)
+       - Smooth full width with ample room for long labels
+       - No text truncation ("Defect Auto-Triage", "Personnel Credentials")
+       - Smooth vertical scrolling on menu with sleek scrollbar
+       ══════════════════════════════════════════════════════════════ */
     #ir-left-sidebar:hover,
-    #ir-left-sidebar.expanded {
+    #ir-left-sidebar.expanded,
+    #ir-left-sidebar.open {
       width: var(--snav-sidebar-expanded-width) !important;
       box-shadow: 8px 0 32px rgba(0, 51, 102, 0.18) !important;
     }
 
-    /* Brand Header in Sidebar */
-    .snav-sidebar-brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 11px 13px;
-      border-bottom: 1px solid var(--snav-border);
-      text-decoration: none;
-      color: inherit;
-      background: linear-gradient(180deg, #FAF6EE 0%, #FFFFFF 100%);
-      overflow: hidden;
-      white-space: nowrap;
+    #ir-left-sidebar:hover .snav-brand-wrapper,
+    #ir-left-sidebar.expanded .snav-brand-wrapper,
+    #ir-left-sidebar.open .snav-brand-wrapper {
+      padding: 12px 14px 6px 14px !important;
+      display: block !important;
+      flex-shrink: 0 !important;
     }
 
-    .snav-sidebar-logo {
-      width: 42px;
-      height: 42px;
-      border-radius: 10px;
-      background: linear-gradient(135deg, #003366 0%, #0056B3 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 3px 10px rgba(0, 51, 102, 0.25);
-      flex-shrink: 0;
-      cursor: pointer;
-      transition: transform 0.2s ease;
+    #ir-left-sidebar:hover .snav-sidebar-brand-card,
+    #ir-left-sidebar.expanded .snav-sidebar-brand-card,
+    #ir-left-sidebar.open .snav-sidebar-brand-card {
+      margin: 0 !important;
+      padding: 10px 12px !important;
+      background: #FFFFFF !important;
+      border: 1.5px solid rgba(0, 51, 102, 0.12) !important;
+      border-radius: 14px !important;
+      display: flex !important;
+      flex-direction: row !important;
+      align-items: center !important;
+      gap: 10px !important;
+      text-decoration: none !important;
+      box-shadow: 0 4px 16px rgba(0, 51, 102, 0.04) !important;
     }
 
-    #ir-left-sidebar:hover .snav-sidebar-logo,
-    #ir-left-sidebar.expanded .snav-sidebar-logo {
-      transform: scale(1.05);
-    }
-
-    .snav-sidebar-brand-text {
-      display: flex;
-      flex-direction: column;
-      gap: 1px;
-      min-width: 0;
-      opacity: 0;
-      max-width: 0;
-      overflow: hidden;
-      white-space: nowrap;
-      transition: opacity 0.2s ease, max-width 0.28s ease;
+    #ir-left-sidebar:hover .snav-brand-logo-tile,
+    #ir-left-sidebar.expanded .snav-brand-logo-tile,
+    #ir-left-sidebar.open .snav-brand-logo-tile {
+      width: 44px !important;
+      height: 44px !important;
+      border-radius: 12px !important;
+      background: linear-gradient(135deg, #001F3F 0%, #003366 100%) !important;
+      border: 2px solid #FFC107 !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      box-shadow: 0 4px 12px rgba(0, 31, 63, 0.25) !important;
+      margin: 0 !important;
+      flex-shrink: 0 !important;
     }
 
     #ir-left-sidebar:hover .snav-sidebar-brand-text,
-    #ir-left-sidebar.expanded .snav-sidebar-brand-text {
-      opacity: 1;
-      max-width: 190px;
+    #ir-left-sidebar.expanded .snav-sidebar-brand-text,
+    #ir-left-sidebar.open .snav-sidebar-brand-text {
+      display: flex !important;
+      flex-direction: column !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+      pointer-events: auto !important;
+      max-width: none !important;
     }
 
-    .snav-sidebar-title {
-      font-size: 0.95rem;
-      font-weight: 800;
-      color: #003366;
-      letter-spacing: 0.8px;
-      line-height: 1.15;
-      white-space: nowrap;
+    #ir-left-sidebar:hover .snav-menu,
+    #ir-left-sidebar.expanded .snav-menu,
+    #ir-left-sidebar.open .snav-menu {
+      padding: 8px 10px !important;
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: stretch !important;
+      gap: 2px !important;
+      flex: 1 1 auto !important;
+      min-height: 0 !important;
+      overflow-y: auto !important;
+      overflow-x: hidden !important;
+      scrollbar-width: thin !important;
+      scrollbar-color: rgba(0, 51, 102, 0.25) transparent !important;
+      -webkit-overflow-scrolling: touch;
     }
 
-    .snav-sidebar-sub {
-      font-size: 0.58rem;
-      font-weight: 700;
-      color: #D9531E;
-      text-transform: uppercase;
-      letter-spacing: 0.6px;
-      white-space: nowrap;
+    #ir-left-sidebar:hover .snav-menu::-webkit-scrollbar,
+    #ir-left-sidebar.expanded .snav-menu::-webkit-scrollbar,
+    #ir-left-sidebar.open .snav-menu::-webkit-scrollbar {
+      width: 5px !important;
     }
 
-    /* Sidebar Navigation Menu */
-    .snav-menu {
-      padding: 10px 8px;
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-      flex: 1;
-      overflow: hidden;
+    #ir-left-sidebar:hover .snav-menu::-webkit-scrollbar-track,
+    #ir-left-sidebar.expanded .snav-menu::-webkit-scrollbar-track,
+    #ir-left-sidebar.open .snav-menu::-webkit-scrollbar-track {
+      background: transparent !important;
     }
 
-    .snav-group-heading {
-      font-size: 0.60rem;
-      font-weight: 800;
-      color: #94A3B8;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      padding: 8px 10px 3px;
-      white-space: nowrap;
-      opacity: 0;
-      max-height: 0;
-      overflow: hidden;
-      transition: opacity 0.2s ease, max-height 0.28s ease, padding 0.28s ease;
+    #ir-left-sidebar:hover .snav-menu::-webkit-scrollbar-thumb,
+    #ir-left-sidebar.expanded .snav-menu::-webkit-scrollbar-thumb,
+    #ir-left-sidebar.open .snav-menu::-webkit-scrollbar-thumb {
+      background: rgba(0, 51, 102, 0.22) !important;
+      border-radius: 4px !important;
     }
 
     #ir-left-sidebar:hover .snav-group-heading,
-    #ir-left-sidebar.expanded .snav-group-heading {
-      opacity: 1;
-      max-height: 30px;
-      padding: 8px 10px 3px;
+    #ir-left-sidebar.expanded .snav-group-heading,
+    #ir-left-sidebar.open .snav-group-heading {
+      display: block !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+      pointer-events: auto !important;
+      font-size: 0.62rem !important;
+      font-weight: 800 !important;
+      color: #94A3B8 !important;
+      text-transform: uppercase !important;
+      letter-spacing: 0.8px !important;
+      padding: 8px 6px 2px !important;
+      white-space: nowrap !important;
     }
 
-    .snav-item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 8px 11px;
-      border-radius: 8px;
-      text-decoration: none;
-      color: #334155;
-      font-size: 0.80rem;
-      font-weight: 500;
-      transition: all 0.16s ease;
-      cursor: pointer;
-      border: 1px solid transparent;
-      background: transparent;
-      width: 100%;
-      text-align: left;
-      box-sizing: border-box;
-      position: relative;
-      overflow: hidden;
-      white-space: nowrap;
+    #ir-left-sidebar:hover .snav-item,
+    #ir-left-sidebar.expanded .snav-item,
+    #ir-left-sidebar.open .snav-item,
+    #ir-left-sidebar:hover .snav-item-parent,
+    #ir-left-sidebar.expanded .snav-item-parent,
+    #ir-left-sidebar.open .snav-item-parent {
+      width: 100% !important;
+      height: auto !important;
+      min-height: 38px !important;
+      max-height: none !important;
+      padding: 8px 10px !important;
+      margin: 2px 0 !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: flex-start !important;
+      border-radius: 10px !important;
+      box-sizing: border-box !important;
+      position: relative !important;
+      text-decoration: none !important;
+      background: transparent !important;
+      border: 1px solid transparent !important;
+      cursor: pointer !important;
     }
 
-    .snav-item:hover {
-      background: rgba(0, 51, 102, 0.06);
-      color: #003366;
+    #ir-left-sidebar:hover .snav-item:hover,
+    #ir-left-sidebar.expanded .snav-item:hover,
+    #ir-left-sidebar.open .snav-item:hover,
+    #ir-left-sidebar:hover .snav-item-parent:hover,
+    #ir-left-sidebar.expanded .snav-item-parent:hover,
+    #ir-left-sidebar.open .snav-item-parent:hover {
+      background: rgba(0, 51, 102, 0.06) !important;
+      color: #003366 !important;
     }
 
-    .snav-item--active {
-      background: linear-gradient(90deg, rgba(0, 51, 102, 0.12) 0%, rgba(0, 86, 179, 0.06) 100%);
-      color: #003366;
-      font-weight: 700;
-      border-color: rgba(0, 51, 102, 0.2);
+    #ir-left-sidebar:hover .snav-item--active,
+    #ir-left-sidebar.expanded .snav-item--active,
+    #ir-left-sidebar.open .snav-item--active {
+      background: rgba(0, 51, 102, 0.08) !important;
+      color: #003366 !important;
+      font-weight: 800 !important;
+      border-color: rgba(0, 51, 102, 0.18) !important;
     }
 
-    .snav-item--active::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 6px;
-      bottom: 6px;
-      width: 3.5px;
-      border-radius: 0 3px 3px 0;
-      background: #003366;
+    #ir-left-sidebar:hover .snav-item--active::before,
+    #ir-left-sidebar.expanded .snav-item--active::before,
+    #ir-left-sidebar.open .snav-item--active::before {
+      content: '' !important;
+      position: absolute !important;
+      left: 0 !important;
+      top: 6px !important;
+      bottom: 6px !important;
+      width: 4px !important;
+      border-radius: 0 4px 4px 0 !important;
+      background: #003366 !important;
+      display: block !important;
     }
 
-    .snav-item-icon {
-      font-size: 1.25rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 30px;
-      height: 30px;
-      flex-shrink: 0;
-    }
-
-    .snav-item-text {
-      flex: 1;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      opacity: 0;
-      max-width: 0;
-      transition: opacity 0.2s ease, max-width 0.28s ease;
+    #ir-left-sidebar:hover .snav-item-icon,
+    #ir-left-sidebar.expanded .snav-item-icon,
+    #ir-left-sidebar.open .snav-item-icon {
+      width: 22px !important;
+      height: 22px !important;
+      margin-right: 8px !important;
+      font-size: 1.12rem !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      flex-shrink: 0 !important;
     }
 
     #ir-left-sidebar:hover .snav-item-text,
-    #ir-left-sidebar.expanded .snav-item-text {
-      opacity: 1;
-      max-width: 160px;
-    }
-
-    .snav-item-badge {
-      font-size: 0.60rem;
-      font-weight: 700;
-      padding: 2px 6px;
-      border-radius: 8px;
-      background: rgba(0, 51, 102, 0.08);
-      color: #003366;
-      opacity: 0;
-      max-width: 0;
-      overflow: hidden;
-      transition: opacity 0.2s ease, max-width 0.28s ease;
+    #ir-left-sidebar.expanded .snav-item-text,
+    #ir-left-sidebar.open .snav-item-text {
+      display: block !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+      pointer-events: auto !important;
+      flex: 1 1 auto !important;
+      min-width: 0 !important;
+      max-width: none !important;
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: clip !important;
+      font-size: 0.85rem !important;
+      font-weight: 600 !important;
+      color: #1E293B !important;
+      letter-spacing: -0.1px !important;
     }
 
     #ir-left-sidebar:hover .snav-item-badge,
-    #ir-left-sidebar.expanded .snav-item-badge {
-      opacity: 1;
-      max-width: 60px;
+    #ir-left-sidebar.expanded .snav-item-badge,
+    #ir-left-sidebar.open .snav-item-badge {
+      display: inline-flex !important;
+      align-items: center !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+      pointer-events: auto !important;
+      margin-left: auto !important;
+      margin-right: 4px !important;
+      padding: 2px 6px !important;
+      font-size: 0.64rem !important;
+      font-weight: 700 !important;
+      border-radius: 6px !important;
+      flex-shrink: 0 !important;
+      max-width: none !important;
     }
 
-    /* Sidebar Footer Info */
-    .snav-sidebar-footer {
-      padding: 10px 12px;
-      border-top: 1px solid var(--snav-border);
-      background: #FAF6EE;
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-      overflow: hidden;
+    #ir-left-sidebar:hover .snav-item-chevron,
+    #ir-left-sidebar.expanded .snav-item-chevron,
+    #ir-left-sidebar.open .snav-item-chevron {
+      display: inline-flex !important;
+      align-items: center !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+      pointer-events: auto !important;
+      color: #94A3B8 !important;
+      font-size: 0.82rem !important;
+      flex-shrink: 0 !important;
     }
 
-    .snav-footer-status {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.68rem;
-      font-weight: 700;
-      color: #059669;
-      white-space: nowrap;
+    #ir-left-sidebar:hover .snav-item-chevron-svg,
+    #ir-left-sidebar.expanded .snav-item-chevron-svg,
+    #ir-left-sidebar.open .snav-item-chevron-svg {
+      display: inline-flex !important;
+      align-items: center !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+      pointer-events: auto !important;
+      margin-left: auto !important;
+      color: #161E54 !important;
+      transition: transform 0.22s cubic-bezier(0.4, 0, 0.2, 1) !important;
+      flex-shrink: 0 !important;
     }
 
-    .snav-footer-status span:last-child {
-      opacity: 0;
-      max-width: 0;
-      overflow: hidden;
-      white-space: nowrap;
-      transition: opacity 0.2s ease, max-width 0.28s ease;
+    #ir-left-sidebar:hover .snav-submenu.open,
+    #ir-left-sidebar.expanded .snav-submenu.open,
+    #ir-left-sidebar.open .snav-submenu.open {
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 3px !important;
+      margin-left: 17px !important;
+      padding-left: 14px !important;
+      border-left: 2px solid #E2E8F0 !important;
+      margin-top: 4px !important;
+      margin-bottom: 8px !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+    }
+
+    #ir-left-sidebar:hover .snav-whats-new-box,
+    #ir-left-sidebar.expanded .snav-whats-new-box,
+    #ir-left-sidebar.open .snav-whats-new-box {
+      display: block !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+      pointer-events: auto !important;
+      margin: 10px 4px 6px 4px !important;
+      background: #FFFFFF !important;
+      border: 1.5px solid rgba(0, 51, 102, 0.1) !important;
+      border-radius: 12px !important;
+      padding: 10px 12px !important;
+      box-shadow: 0 2px 8px rgba(0, 51, 102, 0.03) !important;
+      flex-shrink: 0 !important;
+    }
+
+    #ir-left-sidebar:hover .snav-sidebar-divider,
+    #ir-left-sidebar.expanded .snav-sidebar-divider,
+    #ir-left-sidebar.open .snav-sidebar-divider {
+      display: block !important;
+      height: 1px !important;
+      background: rgba(0, 51, 102, 0.1) !important;
+      margin: 6px 4px !important;
+      flex-shrink: 0 !important;
+    }
+
+    #ir-left-sidebar:hover .snav-sidebar-footer,
+    #ir-left-sidebar.expanded .snav-sidebar-footer,
+    #ir-left-sidebar.open .snav-sidebar-footer {
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 4px !important;
+      padding: 10px 14px !important;
+      border-top: 1px solid rgba(0, 51, 102, 0.08) !important;
+      background: #FAF6EE !important;
+      flex-shrink: 0 !important;
+    }
+
+    #ir-left-sidebar:hover .snav-footer-status,
+    #ir-left-sidebar.expanded .snav-footer-status,
+    #ir-left-sidebar.open .snav-footer-status {
+      display: flex !important;
+      align-items: center !important;
+      gap: 8px !important;
+      font-size: 0.72rem !important;
+      font-weight: 700 !important;
+      color: #059669 !important;
     }
 
     #ir-left-sidebar:hover .snav-footer-status span:last-child,
-    #ir-left-sidebar.expanded .snav-footer-status span:last-child {
-      opacity: 1;
-      max-width: 180px;
+    #ir-left-sidebar.expanded .snav-footer-status span:last-child,
+    #ir-left-sidebar.open .snav-footer-status span:last-child {
+      display: inline !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+    }
+
+    #ir-left-sidebar:hover .snav-footer-meta,
+    #ir-left-sidebar.expanded .snav-footer-meta,
+    #ir-left-sidebar.open .snav-footer-meta {
+      display: block !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+      font-size: 0.62rem !important;
+      color: #64748B !important;
+      line-height: 1.35 !important;
+    }
+
+    /* Submenu item default styles */
+    .snav-has-submenu {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+    }
+
+    .snav-item-chevron-svg.open {
+      transform: rotate(0deg);
+    }
+
+    .snav-item-chevron-svg.collapsed {
+      transform: rotate(-90deg);
+    }
+
+    .snav-submenu {
+      display: none;
+    }
+
+    .snav-sub-item {
+      display: flex;
+      align-items: center;
+      padding: 8px 14px;
+      border-radius: 8px;
+      text-decoration: none;
+      color: #5C6F84;
+      font-size: 0.88rem;
+      font-weight: 500;
+      transition: all 0.16s ease;
+      white-space: nowrap;
+      overflow: hidden;
+      line-height: 1.25;
+    }
+
+    .snav-sub-item:hover {
+      background: rgba(238, 242, 255, 0.6);
+      color: #161E54;
+    }
+
+    .snav-sub-item.active {
+      background: #EEF2FF !important;
+      color: #161E54 !important;
+      font-weight: 600 !important;
     }
 
     .snav-footer-dot {
@@ -430,24 +732,6 @@
       box-shadow: 0 0 0 2px rgba(5, 150, 105, 0.25);
       animation: snavPulse 2s infinite;
       flex-shrink: 0;
-    }
-
-    .snav-footer-meta {
-      font-size: 0.60rem;
-      color: #64748B;
-      font-weight: 500;
-      line-height: 1.3;
-      white-space: nowrap;
-      opacity: 0;
-      max-height: 0;
-      overflow: hidden;
-      transition: opacity 0.2s ease, max-height 0.28s ease;
-    }
-
-    #ir-left-sidebar:hover .snav-footer-meta,
-    #ir-left-sidebar.expanded .snav-footer-meta {
-      opacity: 1;
-      max-height: 40px;
     }
 
     /* Topbar Header */
@@ -538,6 +822,73 @@
       align-items: center;
       gap: 14px;
       flex-shrink: 0;
+    }
+
+    .snav-topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .snav-icon-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      border: 1px solid rgba(0, 51, 102, 0.12);
+      background: #FFFFFF;
+      color: #003366;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.92rem;
+      transition: all 0.18s ease;
+      position: relative;
+    }
+
+    .snav-icon-btn:hover {
+      background: #FAF6EE;
+      border-color: rgba(0, 86, 179, 0.3);
+      color: #0056B3;
+      transform: translateY(-1px);
+    }
+
+    .snav-icon-btn-badge {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #D9531E;
+    }
+
+    .snav-lang-select {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 5px 10px;
+      border-radius: 8px;
+      border: 1px solid rgba(0, 51, 102, 0.12);
+      background: #FFFFFF;
+      color: #003366;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .snav-site-selector {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 5px 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(0, 51, 102, 0.15);
+      background: #FAF6EE;
+      color: #003366;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
     }
 
     .snav-status-pill {
@@ -1281,6 +1632,233 @@
         display: none;
       }
     }
+
+    /* ─── Global Stakeholder & Governance Footer Styles (Seamless Page Integration) ─── */
+    .ir-global-footer-wrapper {
+      margin-top: 40px !important;
+      margin-bottom: 20px !important;
+      padding: 24px 0 0 0 !important;
+      width: 100% !important;
+      box-sizing: border-box !important;
+      clear: both !important;
+      font-family: 'Exo 2', 'Inter', 'Calibri', sans-serif !important;
+      border-top: 1px solid rgba(0, 51, 102, 0.12) !important;
+    }
+
+    .ir-footer-glass-banner {
+      background: transparent !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      border: none !important;
+      border-radius: 0 !important;
+      padding: 0 !important;
+      box-shadow: none !important;
+      position: relative !important;
+      overflow: visible !important;
+    }
+
+    .ir-footer-header {
+      margin-bottom: 16px !important;
+    }
+
+    .ir-footer-title {
+      font-family: 'Exo 2', 'Inter', 'Calibri', sans-serif !important;
+      font-size: 1.3rem !important;
+      font-weight: 800 !important;
+      color: #003366 !important;
+      display: flex !important;
+      align-items: center !important;
+      gap: 10px !important;
+      margin-bottom: 4px !important;
+      letter-spacing: -0.3px !important;
+    }
+
+    .ir-footer-title-icon {
+      font-size: 1.2rem !important;
+    }
+
+    .ir-footer-sub {
+      font-size: 0.88rem !important;
+      color: #475569 !important;
+      font-weight: 500 !important;
+    }
+
+    .ir-footer-cards-grid {
+      display: grid !important;
+      grid-template-columns: repeat(3, 1fr) !important;
+      gap: 16px !important;
+      margin-bottom: 20px !important;
+    }
+
+    .ir-footer-card {
+      background: rgba(255, 255, 255, 0.75) !important;
+      backdrop-filter: blur(10px) !important;
+      -webkit-backdrop-filter: blur(10px) !important;
+      border: 1px solid rgba(0, 51, 102, 0.1) !important;
+      border-radius: 12px !important;
+      padding: 16px 18px !important;
+      box-shadow: 0 2px 8px rgba(0, 51, 102, 0.03) !important;
+      transition: all 0.2s ease !important;
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: space-between !important;
+    }
+
+    .ir-footer-card:hover {
+      background: #FFFFFF !important;
+      border-color: rgba(0, 86, 179, 0.25) !important;
+      box-shadow: 0 4px 14px rgba(0, 51, 102, 0.08) !important;
+    }
+
+    .ir-footer-card-role {
+      font-family: 'Exo 2', 'Inter', 'Calibri', sans-serif !important;
+      font-size: 0.98rem !important;
+      font-weight: 800 !important;
+      color: #003366 !important;
+      margin-bottom: 2px !important;
+    }
+
+    .ir-footer-card-org {
+      font-size: 0.8rem !important;
+      font-weight: 700 !important;
+      color: #D9531E !important;
+      margin-bottom: 12px !important;
+    }
+
+    .ir-footer-card-detail {
+      font-size: 0.82rem !important;
+      color: #334155 !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      gap: 6px !important;
+      margin-bottom: 6px !important;
+      font-weight: 500 !important;
+      padding: 3px 6px !important;
+      border-radius: 6px !important;
+      background: transparent !important;
+      transition: background 0.15s ease !important;
+    }
+
+    .ir-footer-card-detail:hover {
+      background: rgba(0, 51, 102, 0.04) !important;
+    }
+
+    .ir-footer-card-detail:last-child {
+      margin-bottom: 0 !important;
+    }
+
+    .ir-footer-detail-left {
+      display: flex !important;
+      align-items: center !important;
+      gap: 8px !important;
+      min-width: 0 !important;
+    }
+
+    .ir-footer-detail-left span:first-child {
+      font-size: 0.9rem !important;
+      flex-shrink: 0 !important;
+    }
+
+    .ir-footer-link {
+      color: #003366 !important;
+      text-decoration: none !important;
+      font-weight: 700 !important;
+      transition: color 0.2s ease !important;
+      word-break: break-all !important;
+    }
+
+    .ir-footer-link:hover {
+      color: #0056B3 !important;
+      text-decoration: underline !important;
+    }
+
+    .ir-copy-btn {
+      background: transparent !important;
+      border: 1px solid rgba(0, 51, 102, 0.18) !important;
+      border-radius: 4px !important;
+      padding: 2px 6px !important;
+      font-size: 0.68rem !important;
+      font-weight: 700 !important;
+      color: #003366 !important;
+      cursor: pointer !important;
+      transition: all 0.15s ease !important;
+      flex-shrink: 0 !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 3px !important;
+    }
+
+    .ir-copy-btn:hover {
+      background: #003366 !important;
+      color: #FFFFFF !important;
+      border-color: #003366 !important;
+    }
+
+    .ir-copy-btn.copied {
+      background: #059669 !important;
+      color: #FFFFFF !important;
+      border-color: #059669 !important;
+    }
+
+    .ir-footer-divider {
+      height: 1px !important;
+      width: 100% !important;
+      background: rgba(0, 51, 102, 0.12) !important;
+      margin: 16px 0 12px 0 !important;
+    }
+
+    .ir-footer-bottom-text {
+      text-align: center !important;
+      color: #475569 !important;
+      font-size: 0.82rem !important;
+      font-weight: 600 !important;
+    }
+
+    .ir-footer-version-tag {
+      font-size: 0.74rem !important;
+      margin-top: 4px !important;
+      color: #64748B !important;
+      font-weight: 600 !important;
+      letter-spacing: 0.3px !important;
+    }
+
+    /* Floating Copy Toast */
+    #ir-copy-toast {
+      position: fixed !important;
+      bottom: 28px !important;
+      right: 28px !important;
+      background: #003366 !important;
+      color: #FFFFFF !important;
+      padding: 11px 20px !important;
+      border-radius: 10px !important;
+      font-size: 0.85rem !important;
+      font-weight: 700 !important;
+      box-shadow: 0 10px 30px rgba(0, 51, 102, 0.35) !important;
+      z-index: 9999999 !important;
+      display: flex !important;
+      align-items: center !important;
+      gap: 8px !important;
+      opacity: 0 !important;
+      transform: translateY(12px) !important;
+      transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1) !important;
+      pointer-events: none !important;
+      border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    }
+
+    #ir-copy-toast.show {
+      opacity: 1 !important;
+      transform: translateY(0) !important;
+    }
+
+    @media (max-width: 1024px) {
+      .ir-footer-cards-grid {
+        grid-template-columns: 1fr !important;
+      }
+      .ir-footer-glass-banner {
+        padding: 24px 20px !important;
+      }
+    }
   `;
 
   function buildSidebarHTML() {
@@ -1292,6 +1870,51 @@
       const allowed = hasPermission(link.key);
       if (!allowed) return '';
 
+      if (link.subItems && link.subItems.length > 0) {
+        const isMaintenanceOpen = true;
+        const currentHash = window.location.hash;
+        const currentPath = window.location.pathname;
+
+        const subItemsHTML = link.subItems.map(sub => {
+          let isSubActive = false;
+          if (sub.activePattern === '#request') {
+            isSubActive = currentHash === '#request';
+          } else if (sub.activePattern === '#labor') {
+            isSubActive = currentHash === '#labor';
+          } else if (sub.activePattern === 'maintenance-dashboard') {
+            isSubActive = (currentPath.includes('maintenance-dashboard') || currentPath.endsWith('/')) && (!currentHash || currentHash === '#');
+          } else if (sub.activePattern === 'pm-schedules') {
+            isSubActive = currentPath.includes('pm-schedules');
+          }
+          return `
+            <a href="${sub.href}" class="snav-sub-item${isSubActive ? ' active' : ''}" onclick="window.handleSubItemClick && window.handleSubItemClick(this, event)">
+              ${sub.label}
+            </a>
+          `;
+        }).join('');
+
+        return `
+          <div class="snav-has-submenu">
+            <div class="snav-item-parent"
+                 onclick="window.toggleSubmenu && window.toggleSubmenu(this)"
+                 role="button"
+                 tabindex="0"
+                 title="${link.desc}">
+              <span class="snav-item-icon">${link.icon}</span>
+              <span class="snav-item-text">${link.label}</span>
+              <span class="snav-item-chevron-svg ${isMaintenanceOpen ? 'open' : 'collapsed'}">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#161E54" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </span>
+            </div>
+            <div class="snav-submenu ${isMaintenanceOpen ? 'open' : ''}">
+              ${subItemsHTML}
+            </div>
+          </div>
+        `;
+      }
+
       return `
         <a href="${link.href}"
            class="snav-item${active ? ' snav-item--active' : ''}"
@@ -1299,85 +1922,111 @@
           <span class="snav-item-icon">${link.icon}</span>
           <span class="snav-item-text">${link.label}</span>
           ${active ? '<span class="snav-item-badge">Active</span>' : ''}
+          <span class="snav-item-chevron">›</span>
         </a>`;
     }).join('');
 
     return `
       <aside id="ir-left-sidebar">
-        <div>
-          <!-- Brand -->
-          <a href="admin-dashboard.html" class="snav-sidebar-brand" title="RAKSHA PATH Command Center">
-            <div class="snav-sidebar-logo">
-              <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" width="26" height="26">
-                <circle cx="20" cy="20" r="18" stroke="#FFFFFF" stroke-width="2"/>
-                <path d="M8 24 L20 10 L32 24 L8 24Z" fill="#FFFFFF" opacity="0.95"/>
-                <rect x="14" y="24" width="12" height="6" rx="2" fill="#D9531E"/>
-                <circle cx="16" cy="32" r="2" fill="#FFFFFF"/>
-                <circle cx="24" cy="32" r="2" fill="#FFFFFF"/>
+        <!-- Brand Logo Card (Oxmaint AI Style - Simple & Clean Emblem) -->
+        <div class="snav-brand-wrapper">
+          <a href="admin-dashboard.html" class="snav-sidebar-brand-card" title="RAKSHA PATH Command Center">
+            <div class="snav-brand-logo-tile">
+              <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" width="36" height="36">
+                <path d="M22 38 C25 22, 42 16, 62 26 C72 16, 88 24, 78 42 C88 48, 82 68, 66 68 C60 80, 40 78, 46 62 C30 68, 20 52, 22 38 Z" fill="#003366" stroke="#FFC107" stroke-width="4"/>
+                <path d="M42 40 L65 26 L55 42 Z" fill="#FFC107"/>
+                <circle cx="50" cy="52" r="6" fill="#D9531E"/>
               </svg>
             </div>
             <div class="snav-sidebar-brand-text">
-              <span class="snav-sidebar-title">RAKSHA PATH</span>
-              <span class="snav-sidebar-sub">INDIAN RAILWAYS AI COMMAND</span>
+              <span style="font-weight: 800; font-size: 0.88rem; color: #002244; letter-spacing: -0.2px; white-space: nowrap;">RAKSHA PATH</span>
+              <span style="font-size: 0.65rem; font-weight: 600; color: #64748B; white-space: nowrap;">Indian Railways AI</span>
             </div>
           </a>
-
-          <!-- Menu -->
-          <nav class="snav-menu" aria-label="Command modules">
-            <div class="snav-group-heading">OPERATIONAL COMMAND</div>
-            ${linksHTML}
-
-            <div class="snav-group-heading" style="margin-top:6px;">OPERATIONAL WORKSPACES</div>
-            <button class="snav-item" onclick="window.openTabWorkspace('gis')" type="button" title="Corridor GIS & Satellite Photogrammetry">
-              <span class="snav-item-icon">🗺️</span>
-              <span class="snav-item-text">Corridor GIS Satellite</span>
-              <span class="snav-item-badge" style="background:rgba(0,86,179,0.1);color:#0056B3;">HD</span>
-            </button>
-
-            <button class="snav-item" onclick="window.openTabWorkspace('weather')" type="button" title="Live Meteorology & Track Buckling Safety">
-              <span class="snav-item-icon">⛅</span>
-              <span class="snav-item-text">Meteorology &amp; Buckling</span>
-              <span class="snav-item-badge" style="background:rgba(217,119,6,0.1);color:#D97706;">Live</span>
-            </button>
-
-            <button class="snav-item" onclick="window.openTabWorkspace('ingest')" type="button" title="Defect Ingestion & IRPWM 2020 Auto-Triage">
-              <span class="snav-item-icon">📥</span>
-              <span class="snav-item-text">Defect Auto-Triage</span>
-              <span class="snav-item-badge">IRPWM</span>
-            </button>
-
-            <button class="snav-item" onclick="window.openTabWorkspace('conflicts')" type="button" title="Corridor Conflict & Delay Simulation">
-              <span class="snav-item-icon">🛡️</span>
-              <span class="snav-item-text">Conflict Simulation</span>
-              <span class="snav-item-badge" style="background:#FEF2F2;color:#DC2626;border:1px solid rgba(220,38,38,0.25);">Live</span>
-            </button>
-
-            <button class="snav-item" onclick="window.openTabWorkspace('supabase-audit')" type="button" title="Supabase & Server Database Immutable Ledger">
-              <span class="snav-item-icon">🔒</span>
-              <span class="snav-item-text">Supabase Audit Ledger</span>
-              <span class="snav-item-badge" style="background:rgba(5,150,105,0.12);color:#059669;">SHA-256</span>
-            </button>
-
-            <div class="snav-group-heading" style="margin-top:6px;">INTELLIGENCE &amp; AUDIT</div>
-            <button class="snav-item" id="snav-btn-reports" onclick="window.openTabWorkspace('reports')" type="button" title="Generate and export official reports in full tab">
-              <span class="snav-item-icon">📊</span>
-              <span class="snav-item-text">Operational Reports</span>
-              <span class="snav-item-badge" style="background:rgba(217,83,30,0.12);color:#D9531E;">Full Tab</span>
-            </button>
-
-            ${isAdmin ? `
-              <div class="snav-group-heading" style="margin-top:6px;">GOVERNANCE &amp; SECURITY</div>
-              <button class="snav-item" id="snav-btn-credentials" type="button" title="Manage authorized personnel credentials">
-                <span class="snav-item-icon">🔐</span>
-                <span class="snav-item-text">Personnel Credentials</span>
-                <span class="snav-item-badge">RBAC</span>
-              </button>
-            ` : ''}
-          </nav>
         </div>
 
+        <!-- Menu (Direct Flex Child with smooth scroll) -->
+        <nav class="snav-menu" aria-label="Command modules">
+          <div class="snav-group-heading">OPERATIONAL COMMAND</div>
+          ${linksHTML}
+
+          <div class="snav-group-heading" style="margin-top:6px;">OPERATIONAL WORKSPACES</div>
+          <button class="snav-item" onclick="window.openTabWorkspace('gis')" type="button" title="Corridor GIS & Satellite Photogrammetry">
+            <span class="snav-item-icon">🗺️</span>
+            <span class="snav-item-text">Corridor GIS</span>
+            <span class="snav-item-badge" style="background:rgba(0,86,179,0.1);color:#0056B3;">HD</span>
+            <span class="snav-item-chevron">›</span>
+          </button>
+
+          <button class="snav-item" onclick="window.openTabWorkspace('weather')" type="button" title="Live Meteorology & Track Buckling Safety">
+            <span class="snav-item-icon">⛅</span>
+            <span class="snav-item-text">Meteorology</span>
+            <span class="snav-item-badge" style="background:rgba(217,119,6,0.1);color:#D97706;">Live</span>
+            <span class="snav-item-chevron">›</span>
+          </button>
+
+          <button class="snav-item" onclick="window.openTabWorkspace('ingest')" type="button" title="Defect Ingestion & IRPWM 2020 Auto-Triage">
+            <span class="snav-item-icon">📥</span>
+            <span class="snav-item-text">Defect Auto-Triage</span>
+            <span class="snav-item-badge">IRPWM</span>
+            <span class="snav-item-chevron">›</span>
+          </button>
+
+          <button class="snav-item" onclick="window.openTabWorkspace('conflicts')" type="button" title="Corridor Conflict & Delay Simulation">
+            <span class="snav-item-icon">🛡️</span>
+            <span class="snav-item-text">Conflict Simulation</span>
+            <span class="snav-item-badge" style="background:#FEF2F2;color:#DC2626;border:1px solid rgba(220,38,38,0.25);">Live</span>
+            <span class="snav-item-chevron">›</span>
+          </button>
+
+          <button class="snav-item" onclick="window.openTabWorkspace('supabase-audit')" type="button" title="Supabase & Server Database Immutable Ledger">
+            <span class="snav-item-icon">🔒</span>
+            <span class="snav-item-text">Supabase Audit</span>
+            <span class="snav-item-badge" style="background:rgba(5,150,105,0.12);color:#059669;">SHA</span>
+            <span class="snav-item-chevron">›</span>
+          </button>
+
+          <div class="snav-group-heading" style="margin-top:6px;">INTELLIGENCE &amp; AUDIT</div>
+          <button class="snav-item" id="snav-btn-reports" onclick="window.openTabWorkspace('reports')" type="button" title="Generate and export official reports in full tab">
+            <span class="snav-item-icon">📊</span>
+            <span class="snav-item-text">Operational Reports</span>
+            <span class="snav-item-badge" style="background:rgba(217,83,30,0.12);color:#D9531E;">Full</span>
+            <span class="snav-item-chevron">›</span>
+          </button>
+
+          ${isAdmin ? `
+            <div class="snav-group-heading" style="margin-top:6px;">GOVERNANCE &amp; SECURITY</div>
+            <button class="snav-item" id="snav-btn-credentials" type="button" title="Manage authorized personnel credentials">
+              <span class="snav-item-icon">🔐</span>
+              <span class="snav-item-text">Personnel Credentials</span>
+              <span class="snav-item-badge">RBAC</span>
+              <span class="snav-item-chevron">›</span>
+            </button>
+          ` : ''}
+
+          <!-- What's New Card (Oxmaint AI Style) -->
+          <div class="snav-whats-new-box">
+            <div style="display:flex; align-items:center; gap:8px; color:#003366; font-weight:800; font-size:0.82rem; margin-bottom:4px;">
+              <span>📢</span>
+              <span>What's New</span>
+            </div>
+            <div style="font-size:0.72rem; color:#64748B; font-weight:500; line-height:1.35;">
+              View our latest update<br/>
+              <strong style="color:#003366;">v1.4.6</strong>
+            </div>
+          </div>
+
+          <div class="snav-sidebar-divider"></div>
+
+          <a href="getting-started.html" class="snav-item snav-settings-link" style="flex-shrink:0;">
+            <span class="snav-item-icon">⚙️</span>
+            <span class="snav-item-text">Settings</span>
+            <span class="snav-item-chevron">›</span>
+          </a>
+        </nav>
+
         <!-- Sidebar Footer -->
-        <div class="snav-sidebar-footer">
+        <div class="snav-sidebar-footer" style="flex-shrink:0;">
           <div class="snav-footer-status">
             <span class="snav-footer-dot"></span>
             <span>FastAPI &amp; CP-SAT Active</span>
@@ -1420,8 +2069,31 @@
           </button>
         </div>
 
-        <!-- Right side: Name of login id and sign out -->
+        <!-- Right side: Notifications, utilities, user & sign out -->
         <div class="snav-topbar-right">
+          <div class="snav-topbar-actions">
+            <button type="button" class="snav-icon-btn" title="Alert Notifications">
+              🔔
+              <span class="snav-icon-btn-badge"></span>
+            </button>
+            <button type="button" class="snav-icon-btn" title="Scanner &amp; QR Code">
+              📷
+            </button>
+            <button type="button" class="snav-icon-btn" onclick="if(document.fullscreenElement){document.exitFullscreen();}else{document.documentElement.requestFullscreen();}" title="Toggle Fullscreen">
+              ⛶
+            </button>
+            <div class="snav-lang-select" title="Select System Language">
+              <span>🌐</span>
+              <span>EN</span>
+              <small>▾</small>
+            </div>
+            <div class="snav-site-selector" title="Active Railway Zone / Division">
+              <span>🏢</span>
+              <span>All Divisions</span>
+              <small>▾</small>
+            </div>
+          </div>
+
           <div class="snav-status-pill" title="Gateway connection active">
             <span class="snav-status-dot"></span>
             <span>System Live</span>
@@ -1445,6 +2117,133 @@
           </button>
         </div>
       </header>
+    `;
+  }
+
+  function buildGlobalStakeholderFooterHTML() {
+    return `
+      <div class="ir-global-footer-wrapper">
+        <footer class="ir-footer-glass-banner">
+          <div class="ir-footer-header">
+            <h2 class="ir-footer-title">
+              <span class="ir-footer-title-icon">📞</span>
+              <span>Stakeholder &amp; Governance Directory</span>
+            </h2>
+            <p class="ir-footer-sub">Key institutional leadership and operational points of contact across Ministry of Railways and CRIS.</p>
+          </div>
+
+          <div class="ir-footer-cards-grid">
+            <div class="ir-footer-card">
+              <div>
+                <div class="ir-footer-card-role">Principal Chief Engineer (PCE)</div>
+                <div class="ir-footer-card-org">Northern Railway • Railway Board</div>
+                
+                <div class="ir-footer-card-detail">
+                  <div class="ir-footer-detail-left">
+                    <span>📍</span>
+                    <span style="color:#334155; font-weight:600;">Rail Bhavan, Raisina Road, New Delhi</span>
+                  </div>
+                </div>
+
+                <div class="ir-footer-card-detail">
+                  <div class="ir-footer-detail-left">
+                    <span>📧</span>
+                    <a href="mailto:pce@nr.railnet.gov.in" class="ir-footer-link" title="Click to send email">pce@nr.railnet.gov.in</a>
+                  </div>
+                  <button type="button" class="ir-copy-btn" onclick="window.copyToClipboard('pce@nr.railnet.gov.in', this)">
+                    📋 Copy
+                  </button>
+                </div>
+
+                <div class="ir-footer-card-detail">
+                  <div class="ir-footer-detail-left">
+                    <span>📞</span>
+                    <a href="tel:+911123387820" class="ir-footer-link" title="Click to call">+91-11-2338-7820</a>
+                  </div>
+                  <button type="button" class="ir-copy-btn" onclick="window.copyToClipboard('+91-11-2338-7820', this)">
+                    📋 Copy
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="ir-footer-card">
+              <div>
+                <div class="ir-footer-card-role">General Manager (AI &amp; Block Planning)</div>
+                <div class="ir-footer-card-org">Centre for Railway Information Systems (CRIS)</div>
+                
+                <div class="ir-footer-card-detail">
+                  <div class="ir-footer-detail-left">
+                    <span>📍</span>
+                    <span style="color:#334155; font-weight:600;">Chanakyapuri, New Delhi – 110021</span>
+                  </div>
+                </div>
+
+                <div class="ir-footer-card-detail">
+                  <div class="ir-footer-detail-left">
+                    <span>📧</span>
+                    <a href="mailto:gm.ai@cris.org.in" class="ir-footer-link" title="Click to send email">gm.ai@cris.org.in</a>
+                  </div>
+                  <button type="button" class="ir-copy-btn" onclick="window.copyToClipboard('gm.ai@cris.org.in', this)">
+                    📋 Copy
+                  </button>
+                </div>
+
+                <div class="ir-footer-card-detail">
+                  <div class="ir-footer-detail-left">
+                    <span>📞</span>
+                    <a href="tel:+911124104521" class="ir-footer-link" title="Click to call">+91-11-2410-4521</a>
+                  </div>
+                  <button type="button" class="ir-copy-btn" onclick="window.copyToClipboard('+91-11-2410-4521', this)">
+                    📋 Copy
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="ir-footer-card">
+              <div>
+                <div class="ir-footer-card-role">Central Railway SOC &amp; Hot-Line</div>
+                <div class="ir-footer-card-org">Security Operations Centre • RailTel</div>
+                
+                <div class="ir-footer-card-detail">
+                  <div class="ir-footer-detail-left">
+                    <span>📍</span>
+                    <span style="color:#334155; font-weight:600;">24/7 Security Operations Room</span>
+                  </div>
+                </div>
+
+                <div class="ir-footer-card-detail">
+                  <div class="ir-footer-detail-left">
+                    <span>📧</span>
+                    <a href="mailto:soc-incident@railnet.gov.in" class="ir-footer-link" title="Click to send email">soc-incident@railnet.gov.in</a>
+                  </div>
+                  <button type="button" class="ir-copy-btn" onclick="window.copyToClipboard('soc-incident@railnet.gov.in', this)">
+                    📋 Copy
+                  </button>
+                </div>
+
+                <div class="ir-footer-card-detail">
+                  <div class="ir-footer-detail-left">
+                    <span>🚨</span>
+                    <a href="tel:1800110139" class="ir-footer-link" style="color:#DC2626 !important; font-weight:700;" title="Click to call Hotline">Toll-Free Hotline: 1800-110-139</a>
+                  </div>
+                  <button type="button" class="ir-copy-btn" onclick="window.copyToClipboard('1800-110-139', this)">
+                    📋 Copy
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ir-footer-divider"></div>
+
+          <div class="ir-footer-bottom-text">
+            <p>© 2026 Ministry of Railways, Government of India • Centre for Railway Information Systems (CRIS). All rights reserved.</p>
+            <p class="ir-footer-version-tag">RAKSHA PATH • Version 2.4.0-PROD • Certified under IRPWM 2020 &amp; RDSO Standards</p>
+          </div>
+        </footer>
+      </div>
     `;
   }
 
@@ -4339,6 +5138,36 @@
     renderCredentialsTable();
   };
 
+  window.copyToClipboard = function (text, btnElement) {
+    if (!text) return;
+    navigator.clipboard.writeText(text).then(() => {
+      let toast = document.getElementById('ir-copy-toast');
+      if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'ir-copy-toast';
+        document.body.appendChild(toast);
+      }
+      toast.innerHTML = `<span>✅</span> Copied <strong>"${text}"</strong> to clipboard!`;
+      toast.classList.add('show');
+
+      if (btnElement) {
+        const origText = btnElement.innerHTML;
+        btnElement.classList.add('copied');
+        btnElement.innerHTML = '✓ Copied';
+        setTimeout(() => {
+          btnElement.classList.remove('copied');
+          btnElement.innerHTML = origText;
+        }, 2000);
+      }
+
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2500);
+    }).catch(err => {
+      alert('Copied: ' + text);
+    });
+  };
+
   window.deleteUserCred = function (userId) {
     const u = window.IR_UserStore.getAll().find(x => x.id === userId);
     if (!u) return;
@@ -4369,6 +5198,25 @@
       ${buildReportModalHTML()}
       ${buildCredentialsModalHTML()}
     `;
+
+    // Append global Stakeholder & Governance Directory footer to the end of every page (except login)
+    if (!window.location.pathname.includes('login.html')) {
+      const existingFooter = document.getElementById('ir-global-stakeholder-footer');
+      if (existingFooter) existingFooter.remove();
+
+      const footerMount = document.createElement('div');
+      footerMount.id = 'ir-global-stakeholder-footer';
+      footerMount.innerHTML = buildGlobalStakeholderFooterHTML();
+
+      // If page has a main content container or master frame, append into it or body
+      const mainContent = document.querySelector('.admin-container') ||
+        document.querySelector('main') ||
+        document.querySelector('.main-content') ||
+        document.querySelector('.master-glass-frame') ||
+        document.querySelector('#app-container') ||
+        document.body;
+      mainContent.appendChild(footerMount);
+    }
 
     // Wire up events
     const logoutBtn = document.getElementById('snav-logout-btn');
@@ -4658,6 +5506,51 @@
       });
     }
 
+    // Global functions for submenu & sidebar collapse
+    window.toggleSubmenu = function (el) {
+      const parent = el.closest('.snav-has-submenu');
+      if (!parent) return;
+      const sub = parent.querySelector('.snav-submenu');
+      const chev = parent.querySelector('.snav-item-chevron-svg');
+      if (sub) {
+        const isOpen = sub.classList.contains('open');
+        if (isOpen) {
+          sub.classList.remove('open');
+          if (chev) {
+            chev.classList.remove('open');
+            chev.classList.add('collapsed');
+          }
+        } else {
+          sub.classList.add('open');
+          if (chev) {
+            chev.classList.add('open');
+            chev.classList.remove('collapsed');
+          }
+        }
+      }
+    };
+
+    window.toggleSidebarCollapse = function () {
+      const sb = document.getElementById('ir-left-sidebar');
+      if (!sb) return;
+      const isCollapsed = sb.classList.toggle('collapsed-manual');
+      document.body.classList.toggle('sidebar-collapsed', isCollapsed);
+    };
+
+    window.handleSubItemClick = function (el, evt) {
+      const href = el.getAttribute('href') || '';
+      if (href.includes('#') && window.location.pathname.includes('maintenance-dashboard')) {
+        const hash = href.split('#')[1];
+        if (hash) {
+          window.location.hash = '#' + hash;
+          const allSubs = document.querySelectorAll('.snav-sub-item');
+          allSubs.forEach(s => s.classList.remove('active'));
+          el.classList.add('active');
+          evt.preventDefault();
+        }
+      }
+    };
+
     // Escape key closes tab workspace or modals
     window.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
@@ -4666,6 +5559,49 @@
         window.closeUserCredentialsModal();
       }
     });
+
+    // Injects floating AI Mascot Button (Oxmaint AI Style)
+    if (!document.getElementById('ir-floating-ai-mascot')) {
+      const mascotBtn = document.createElement('button');
+      mascotBtn.id = 'ir-floating-ai-mascot';
+      mascotBtn.type = 'button';
+      mascotBtn.title = 'Ask Oxmaint AI Copilot';
+      mascotBtn.style.cssText = `
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        z-index: 99999;
+        width: 58px;
+        height: 58px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #001F3F 0%, #003366 100%);
+        border: 2px solid #FFC107;
+        box-shadow: 0 8px 24px rgba(0, 31, 63, 0.35);
+        color: #FFFFFF;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      `;
+      mascotBtn.innerHTML = `
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" width="38" height="38">
+          <path d="M22 38 C25 22, 42 16, 62 26 C72 16, 88 24, 78 42 C88 48, 82 68, 66 68 C60 80, 40 78, 46 62 C30 68, 20 52, 22 38 Z" fill="#003366" stroke="#FFC107" stroke-width="4"/>
+          <path d="M42 40 L65 26 L55 42 Z" fill="#FFC107"/>
+          <circle cx="50" cy="52" r="6" fill="#D9531E"/>
+        </svg>
+      `;
+
+      mascotBtn.addEventListener('mouseenter', () => mascotBtn.style.transform = 'scale(1.08)');
+      mascotBtn.addEventListener('mouseleave', () => mascotBtn.style.transform = 'scale(1)');
+      mascotBtn.addEventListener('click', () => {
+        if (typeof window.openTabWorkspace === 'function') {
+          window.openTabWorkspace('reports');
+        }
+      });
+
+      document.body.appendChild(mascotBtn);
+    }
   }
 
   if (document.readyState === 'loading') {

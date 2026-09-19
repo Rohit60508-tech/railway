@@ -97,6 +97,7 @@
   /** Determine which "page key" the current URL corresponds to */
   function getCurrentPageKey() {
     const path = window.location.pathname;
+    if (path.includes('getting-started')) return 'getting-started';
     if (path.includes('admin-dashboard')) return 'admin';
     if (path.includes('maintenance-dashboard')) return 'work-orders';
     if (path.includes('control-office')) return 'control-office';
