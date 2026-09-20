@@ -62,7 +62,7 @@
     {
       key: 'getting-started',
       label: 'Getting Started',
-      icon: '🚀',
+      icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>`,
       href: 'getting-started.html',
       pageMatch: 'getting-started',
       desc: 'Onboarding, platform overview & quick start'
@@ -70,7 +70,7 @@
     {
       key: 'admin',
       label: 'Executive Admin',
-      icon: '🛡️',
+      icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/></svg>`,
       href: 'admin-dashboard.html',
       pageMatch: 'admin-dashboard',
       desc: 'High-speed corridor oversight & policy overrides'
@@ -78,7 +78,7 @@
     {
       key: 'work-orders',
       label: 'Maintenance',
-      icon: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#161E54" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>`,
+      icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>`,
       href: 'maintenance-dashboard.html',
       pageMatch: 'maintenance-dashboard',
       desc: 'Track (TMS), Signal (SMMS) & Traction (TRD)',
@@ -92,7 +92,7 @@
     {
       key: 'control-office',
       label: 'Control Office',
-      icon: '🎛️',
+      icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`,
       href: 'control-office.html',
       pageMatch: 'control-office',
       desc: 'Train punctuality & corridor line blocks'
@@ -100,7 +100,7 @@
     {
       key: 'surveillance',
       label: 'Surveillance',
-      icon: '📡',
+      icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`,
       href: 'surveillance-dashboard.html',
       pageMatch: 'surveillance-dashboard',
       desc: 'Ultrasonic flaws, drones & track sensors'
@@ -108,7 +108,7 @@
     {
       key: 'ai-models',
       label: 'AI MLOps',
-      icon: '🧠',
+      icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>`,
       href: 'ai-model-management.html',
       pageMatch: 'ai-model-management',
       desc: '6 AI agents, retraining & CP-SAT solver'
@@ -288,11 +288,29 @@
       height: 26px !important;
       margin: 0 !important;
       padding: 0 !important;
-      font-size: 1.25rem !important;
       display: flex !important;
       align-items: center !important;
       justify-content: center !important;
       flex-shrink: 0 !important;
+      color: #8E9CAE !important;
+    }
+
+    #ir-left-sidebar:not(:hover):not(.expanded):not(.open) .snav-item-icon svg {
+      width: 22px !important;
+      height: 22px !important;
+      stroke: #8E9CAE !important;
+      stroke-width: 2 !important;
+      stroke-linecap: round !important;
+      stroke-linejoin: round !important;
+      fill: none !important;
+      display: block !important;
+      transition: stroke 0.15s ease, transform 0.15s ease !important;
+    }
+
+    #ir-left-sidebar:not(:hover):not(.expanded):not(.open) .snav-item--active .snav-item-icon svg,
+    #ir-left-sidebar:not(:hover):not(.expanded):not(.open) .snav-item:hover .snav-item-icon svg,
+    #ir-left-sidebar:not(:hover):not(.expanded):not(.open) .snav-item-parent:hover .snav-item-icon svg {
+      stroke: #003366 !important;
     }
 
     /* Strictly hide all secondary elements in collapsed mode */
@@ -525,12 +543,38 @@
     #ir-left-sidebar.open .snav-item-icon {
       width: 22px !important;
       height: 22px !important;
-      margin-right: 8px !important;
-      font-size: 1.12rem !important;
+      margin-right: 10px !important;
       display: flex !important;
       align-items: center !important;
       justify-content: center !important;
       flex-shrink: 0 !important;
+      color: #8E9CAE !important;
+    }
+
+    #ir-left-sidebar:hover .snav-item-icon svg,
+    #ir-left-sidebar.expanded .snav-item-icon svg,
+    #ir-left-sidebar.open .snav-item-icon svg {
+      width: 20px !important;
+      height: 20px !important;
+      stroke: #8E9CAE !important;
+      stroke-width: 2 !important;
+      stroke-linecap: round !important;
+      stroke-linejoin: round !important;
+      fill: none !important;
+      display: block !important;
+      transition: stroke 0.15s ease, transform 0.15s ease !important;
+    }
+
+    #ir-left-sidebar:hover .snav-item:hover .snav-item-icon svg,
+    #ir-left-sidebar.expanded .snav-item:hover .snav-item-icon svg,
+    #ir-left-sidebar.open .snav-item:hover .snav-item-icon svg,
+    #ir-left-sidebar:hover .snav-item-parent:hover .snav-item-icon svg,
+    #ir-left-sidebar.expanded .snav-item-parent:hover .snav-item-icon svg,
+    #ir-left-sidebar.open .snav-item-parent:hover .snav-item-icon svg,
+    #ir-left-sidebar:hover .snav-item--active .snav-item-icon svg,
+    #ir-left-sidebar.expanded .snav-item--active .snav-item-icon svg,
+    #ir-left-sidebar.open .snav-item--active .snav-item-icon svg {
+      stroke: #003366 !important;
     }
 
     #ir-left-sidebar:hover .snav-item-text,
@@ -1949,35 +1993,35 @@
 
           <div class="snav-group-heading" style="margin-top:6px;">OPERATIONAL WORKSPACES</div>
           <button class="snav-item" onclick="window.openTabWorkspace('gis')" type="button" title="Corridor GIS & Satellite Photogrammetry">
-            <span class="snav-item-icon">🗺️</span>
+            <span class="snav-item-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg></span>
             <span class="snav-item-text">Corridor GIS</span>
             <span class="snav-item-badge" style="background:rgba(0,86,179,0.1);color:#0056B3;">HD</span>
             <span class="snav-item-chevron">›</span>
           </button>
 
           <button class="snav-item" onclick="window.openTabWorkspace('weather')" type="button" title="Live Meteorology & Track Buckling Safety">
-            <span class="snav-item-icon">⛅</span>
+            <span class="snav-item-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg></span>
             <span class="snav-item-text">Meteorology</span>
             <span class="snav-item-badge" style="background:rgba(217,119,6,0.1);color:#D97706;">Live</span>
             <span class="snav-item-chevron">›</span>
           </button>
 
           <button class="snav-item" onclick="window.openTabWorkspace('ingest')" type="button" title="Defect Ingestion & IRPWM 2020 Auto-Triage">
-            <span class="snav-item-icon">📥</span>
+            <span class="snav-item-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="15" y2="16"/></svg></span>
             <span class="snav-item-text">Defect Auto-Triage</span>
             <span class="snav-item-badge">IRPWM</span>
             <span class="snav-item-chevron">›</span>
           </button>
 
           <button class="snav-item" onclick="window.openTabWorkspace('conflicts')" type="button" title="Corridor Conflict & Delay Simulation">
-            <span class="snav-item-icon">🛡️</span>
+            <span class="snav-item-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>
             <span class="snav-item-text">Conflict Simulation</span>
             <span class="snav-item-badge" style="background:#FEF2F2;color:#DC2626;border:1px solid rgba(220,38,38,0.25);">Live</span>
             <span class="snav-item-chevron">›</span>
           </button>
 
           <button class="snav-item" onclick="window.openTabWorkspace('supabase-audit')" type="button" title="Supabase & Server Database Immutable Ledger">
-            <span class="snav-item-icon">🔒</span>
+            <span class="snav-item-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/><line x1="8" y1="6" x2="8.01" y2="6"/><line x1="16" y1="6" x2="16.01" y2="6"/><line x1="12" y1="6" x2="12.01" y2="6"/><line x1="12" y1="10" x2="12.01" y2="10"/><line x1="12" y1="14" x2="12.01" y2="14"/><line x1="16" y1="10" x2="16.01" y2="10"/><line x1="16" y1="14" x2="16.01" y2="14"/><line x1="8" y1="10" x2="8.01" y2="10"/><line x1="8" y1="14" x2="8.01" y2="14"/></svg></span>
             <span class="snav-item-text">Supabase Audit</span>
             <span class="snav-item-badge" style="background:rgba(5,150,105,0.12);color:#059669;">SHA</span>
             <span class="snav-item-chevron">›</span>
@@ -1985,7 +2029,7 @@
 
           <div class="snav-group-heading" style="margin-top:6px;">INTELLIGENCE &amp; AUDIT</div>
           <button class="snav-item" id="snav-btn-reports" onclick="window.openTabWorkspace('reports')" type="button" title="Generate and export official reports in full tab">
-            <span class="snav-item-icon">📊</span>
+            <span class="snav-item-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></span>
             <span class="snav-item-text">Operational Reports</span>
             <span class="snav-item-badge" style="background:rgba(217,83,30,0.12);color:#D9531E;">Full</span>
             <span class="snav-item-chevron">›</span>
@@ -1994,7 +2038,7 @@
           ${isAdmin ? `
             <div class="snav-group-heading" style="margin-top:6px;">GOVERNANCE &amp; SECURITY</div>
             <button class="snav-item" id="snav-btn-credentials" type="button" title="Manage authorized personnel credentials">
-              <span class="snav-item-icon">🔐</span>
+              <span class="snav-item-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
               <span class="snav-item-text">Personnel Credentials</span>
               <span class="snav-item-badge">RBAC</span>
               <span class="snav-item-chevron">›</span>
@@ -2004,7 +2048,7 @@
           <!-- What's New Card (Oxmaint AI Style) -->
           <div class="snav-whats-new-box">
             <div style="display:flex; align-items:center; gap:8px; color:#003366; font-weight:800; font-size:0.82rem; margin-bottom:4px;">
-              <span>📢</span>
+              <span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m11 17 2 2a1 1 0 0 0 1.4 0l4.3-4.3a1 1 0 0 0 0-1.4l-2.6-2.6a1 1 0 0 0-1.4 0L11 14"/><path d="m18 10 3.3-3.3a1 1 0 0 0 0-1.4l-2.6-2.6a1 1 0 0 0-1.4 0L14 6"/><path d="m2 14 3.3 3.3a1 1 0 0 0 1.4 0l4.3-4.3"/><path d="m6 10-3.3-3.3a1 1 0 0 1 0-1.4l2.6-2.6a1 1 0 0 1 1.4 0L10 6"/></svg></span>
               <span>What's New</span>
             </div>
             <div style="font-size:0.72rem; color:#64748B; font-weight:500; line-height:1.35;">
@@ -2016,7 +2060,7 @@
           <div class="snav-sidebar-divider"></div>
 
           <a href="getting-started.html" class="snav-item snav-settings-link" style="flex-shrink:0;">
-            <span class="snav-item-icon">⚙️</span>
+            <span class="snav-item-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span>
             <span class="snav-item-text">Settings</span>
             <span class="snav-item-chevron">›</span>
           </a>

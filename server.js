@@ -730,7 +730,19 @@ const server = http.createServer(async (req, res) => {
   if (pathname === '/api/v1/live-conflicts') {
     const storeRes = await supabaseAuditService.queryTable('requested_windows');
     const reqWindows = storeRes.data || [];
-    const conflicts = reqWindows.map((rw, i) => {
+    
+    // Strict deduplication safeguard by unique request ID
+    const seenReqs = new Set();
+    const uniqueReqWindows = [];
+    for (const rw of reqWindows) {
+      const key = rw.request_id || rw.id;
+      if (key && !seenReqs.has(key)) {
+        seenReqs.add(key);
+        uniqueReqWindows.push(rw);
+      }
+    }
+
+    const conflicts = uniqueReqWindows.map((rw, i) => {
       const reqId = rw.request_id || rw.id || `REQ-WIN-${i + 1}`;
       const sec = rw.section_id || 'NDLS-GZB-DN';
       const stFrom = rw.station_from || 'NDLS';
@@ -742,20 +754,32 @@ const server = http.createServer(async (req, res) => {
       const status = rw.status || 'PENDING_REVIEW';
       const appliedAlt = rw.applied_alternative;
 
+      const isAfternoon = startTime.includes('14:') || propTime.includes('14:00') || propTime.includes('Afternoon');
+      const conflictedTrains = isAfternoon
+        ? ["12874 ANVT Express (14:35)", "Freight BCN-5521 (15:10)"]
+        : ["12004 Lucknow Shatabdi (10:15)", "12424 DBRG Rajdhani (09:40)", "EMU-64402 Local (09:10)"];
+      
+      const warningText = isAfternoon
+        ? `Afternoon inter-peak congestion between ${stFrom} & ${stTo}. Freight path requires loop siding regulation.`
+        : `Direct timetable encroachment at ${stFrom}–${stTo} between ${startTime} & ${endTime}. Heavy passenger traffic path collision.`;
+
+      const altWindow = isAfternoon ? "13:45 – 16:30 (Afternoon Lull)" : "01:30 – 04:30 (Night Shadow)";
+      const savedDelayText = isAfternoon ? "Saved: 85 min freight regulation delay" : "Saved: 195 min passenger train delay";
+
       return {
         id: i + 1,
         conflictId: reqId,
         section: `${sec} (${stFrom} ➔ ${stTo})`,
         proposedTime: propTime,
         department: dept,
-        conflictedTrains: ["12004 Lucknow Shatabdi (10:15)", "12424 DBRG Rajdhani (09:40)", "EMU-64402 Local (09:10)"],
-        warning: `Direct timetable encroachment at ${stFrom}–${stTo} between ${startTime} & ${endTime}. Heavy passenger traffic path collision.`,
+        conflictedTrains: conflictedTrains,
+        warning: warningText,
         confidence: 0.96,
         status: status,
         appliedAlternative: appliedAlt,
         alternative: {
-          recommendedWindow: "01:30 – 04:30 (Night Shadow)",
-          savedDelay: "Saved: 195 min passenger train delay"
+          recommendedWindow: altWindow,
+          savedDelay: savedDelayText
         }
       };
     });
