@@ -516,53 +516,9 @@
               <div style="font-size: 0.68rem; color: #64748B; font-weight: 600; margin-top: 2px;">Saved vs Non-Bundled Blocks</div>
             </div>
           </div>
-        </div>
-
-        <!-- ═══════════════════ RIGHT COLUMN: CONFLICTS & ALTERNATIVES ═══════════════════ -->
-        <div class="panel-card">
-          <div class="panel-title"
-            style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-bottom: 12px;">
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <span>Active Conflict Analysis &amp; AI Alternatives</span>
-              <span
-                style="font-size: 0.68rem; background: #FAF6EE; border: 1px solid #C3B296; color: #003366; padding: 2px 6px; border-radius: 4px; font-weight: 700;">☁️
-                Supabase: requested_windows</span>
-            </div>
-            <div style="display: flex; align-items: center; gap: 6px;">
-              <span style="font-size: 0.72rem; color: #D9531E; font-family: var(--font-mono); font-weight: 700;">Live
-                Disruption Engine</span>
-              <button onclick="window.openSubmitWindowModal()"
-                style="background: #003366; color: #FFFFFF; border: none; padding: 4px 10px; border-radius: 5px; font-size: 0.72rem; font-weight: 700; cursor: pointer; box-shadow: 0 1px 4px rgba(0,51,102,0.2);">➕
-                Request Window</button>
-              <button onclick="window.triggerCsvSupabaseImport()"
-                title="Import maintenance window requests from CSV file or Supabase table"
-                style="background: #ECFDF5; color: #059669; border: 1px solid #A7F3D0; padding: 4px 10px; border-radius: 5px; font-size: 0.72rem; font-weight: 700; cursor: pointer;">📥
-                Import CSV / Supabase</button>
-              <input type="file" id="csv-file-input" accept=".csv" style="display:none;"
-                onchange="window.handleCsvFileSelected(event)" />
-              <button onclick="window.fetchLiveConflicts(); window.fetchLiveRecommendedSlots();"
-                title="Re-evaluate with Live Train API"
-                style="background: #FAF6EE; color: #003366; border: 1px solid #C3B296; padding: 3px 8px; border-radius: 5px; font-size: 0.72rem; font-weight: 700; cursor: pointer;">↻
-                Live API</button>
-            </div>
-          </div>
-
-          <!-- Quick Filter Tabs & Search for Conflicts -->
-          <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(195,178,150,0.35); flex-wrap: wrap;">
-            <div style="display: flex; gap: 6px;" id="conflict-filter-tabs">
-              <button type="button" id="cfilter-all" onclick="window.setConflictFilter('ALL')" style="background: #003366; color: #FFF; border: none; padding: 4px 10px; border-radius: 5px; font-size: 0.72rem; font-weight: 700; cursor: pointer;">All</button>
-              <button type="button" id="cfilter-pending" onclick="window.setConflictFilter('PENDING')" style="background: #FAF6EE; color: #DC2626; border: 1px solid rgba(220,38,38,0.3); padding: 4px 10px; border-radius: 5px; font-size: 0.72rem; font-weight: 700; cursor: pointer;">⚠️ Pending</button>
-              <button type="button" id="cfilter-applied" onclick="window.setConflictFilter('APPLIED')" style="background: #FAF6EE; color: #059669; border: 1px solid rgba(5,150,105,0.3); padding: 4px 10px; border-radius: 5px; font-size: 0.72rem; font-weight: 700; cursor: pointer;">✓ Applied</button>
-            </div>
-            <input type="text" id="conflict-search-box" oninput="window.handleConflictSearch(this.value)" placeholder="Search train (e.g. 12004) or ID..." style="padding: 4px 10px; border: 1px solid #C3B296; border-radius: 5px; font-size: 0.74rem; width: 190px; box-sizing: border-box;" />
-          </div>
-
-          <div id="conflicts-alternatives-list">
-            <!-- Populated dynamically with AI Warnings and Suggested Alternatives -->
-          </div>
 
           <!-- ── 3. INSTANT "WHAT-IF" AI FEASIBILITY SIMULATOR ── -->
-          <div style="margin-top: 18px; background: #FFFFFF; border: 1.5px solid #003366; border-radius: 10px; padding: 14px 16px; box-shadow: 0 4px 12px rgba(0,51,102,0.06);">
+          <div style="margin-top: 16px; background: #FFFFFF; border: 1.5px solid #003366; border-radius: 10px; padding: 14px 16px; box-shadow: 0 4px 12px rgba(0,51,102,0.06);">
             <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
               <div style="font-weight: 800; font-size: 0.82rem; color: #003366; display: flex; align-items: center; gap: 6px;">
                 <span>⚡ Instant "What-If" Possession Feasibility Simulator</span>
@@ -629,6 +585,50 @@
             <div style="font-size: 0.72rem; color: #475569; line-height: 1.4;">
               Asset gangs from <strong>Civil (KM 68/4)</strong> and <strong>TRD OHE (KM 69/2)</strong> are matched for co-deployment in the upcoming 01:30 window with zero additional traffic block requirement.
             </div>
+          </div>
+        </div>
+
+        <!-- ═══════════════════ RIGHT COLUMN: CONFLICTS & ALTERNATIVES ═══════════════════ -->
+        <div class="panel-card">
+          <div class="panel-title"
+            style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-bottom: 12px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span>Active Conflict Analysis &amp; AI Alternatives</span>
+              <span
+                style="font-size: 0.68rem; background: #FAF6EE; border: 1px solid #C3B296; color: #003366; padding: 2px 6px; border-radius: 4px; font-weight: 700;">☁️
+                Supabase: requested_windows</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <span style="font-size: 0.72rem; color: #D9531E; font-family: var(--font-mono); font-weight: 700;">Live
+                Disruption Engine</span>
+              <button onclick="window.openSubmitWindowModal()"
+                style="background: #003366; color: #FFFFFF; border: none; padding: 4px 10px; border-radius: 5px; font-size: 0.72rem; font-weight: 700; cursor: pointer; box-shadow: 0 1px 4px rgba(0,51,102,0.2);">➕
+                Request Window</button>
+              <button onclick="window.triggerCsvSupabaseImport()"
+                title="Import maintenance window requests from CSV file or Supabase table"
+                style="background: #ECFDF5; color: #059669; border: 1px solid #A7F3D0; padding: 4px 10px; border-radius: 5px; font-size: 0.72rem; font-weight: 700; cursor: pointer;">📥
+                Import CSV / Supabase</button>
+              <input type="file" id="csv-file-input" accept=".csv" style="display:none;"
+                onchange="window.handleCsvFileSelected(event)" />
+              <button onclick="window.fetchLiveConflicts(); window.fetchLiveRecommendedSlots();"
+                title="Re-evaluate with Live Train API"
+                style="background: #FAF6EE; color: #003366; border: 1px solid #C3B296; padding: 3px 8px; border-radius: 5px; font-size: 0.72rem; font-weight: 700; cursor: pointer;">↻
+                Live API</button>
+            </div>
+          </div>
+
+          <!-- Quick Filter Tabs & Search for Conflicts -->
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(195,178,150,0.35); flex-wrap: wrap;">
+            <div style="display: flex; gap: 6px;" id="conflict-filter-tabs">
+              <button type="button" id="cfilter-all" onclick="window.setConflictFilter('ALL')" style="background: #003366; color: #FFF; border: none; padding: 4px 10px; border-radius: 5px; font-size: 0.72rem; font-weight: 700; cursor: pointer;">All</button>
+              <button type="button" id="cfilter-pending" onclick="window.setConflictFilter('PENDING')" style="background: #FAF6EE; color: #DC2626; border: 1px solid rgba(220,38,38,0.3); padding: 4px 10px; border-radius: 5px; font-size: 0.72rem; font-weight: 700; cursor: pointer;">⚠️ Pending</button>
+              <button type="button" id="cfilter-applied" onclick="window.setConflictFilter('APPLIED')" style="background: #FAF6EE; color: #059669; border: 1px solid rgba(5,150,105,0.3); padding: 4px 10px; border-radius: 5px; font-size: 0.72rem; font-weight: 700; cursor: pointer;">✓ Applied</button>
+            </div>
+            <input type="text" id="conflict-search-box" oninput="window.handleConflictSearch(this.value)" placeholder="Search train (e.g. 12004) or ID..." style="padding: 4px 10px; border: 1px solid #C3B296; border-radius: 5px; font-size: 0.74rem; width: 190px; box-sizing: border-box;" />
+          </div>
+
+          <div id="conflicts-alternatives-list">
+            <!-- Populated dynamically with AI Warnings and Suggested Alternatives -->
           </div>
 
         </div>
