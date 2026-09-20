@@ -342,6 +342,26 @@
       "department": "Civil (P-Way)",
       "work_description": "Supabase Corridor Schedule",
       "priority": "P1"
+    },
+    {
+      "id": "REQ-CIV-4708",
+      "created_at": "2026-09-20T19:25:16.741Z",
+      "status": "PENDING_REVIEW",
+      "request_id": "REQ-CIV-4708",
+      "section_id": "NDLS-GZB-DN",
+      "station_from": "NDLS",
+      "station_to": "GZB",
+      "start_km": 12,
+      "end_km": 16,
+      "km_pole": "KM 12–16",
+      "requested_window": "09:00 – 11:00 (Morning Peak)",
+      "window_start_time": "09:00",
+      "window_end_time": "11:00",
+      "duration_minutes": 120,
+      "department": "Civil (P-Way)",
+      "work_description": "Routine maintenance as per schedule",
+      "defect_ref_id": null,
+      "priority": "P1"
     }
   ]
 }

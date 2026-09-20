@@ -178,6 +178,7 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 24px;
+      align-items: start;
     }
 
     @media (max-width: 1024px) {
@@ -626,7 +627,7 @@
             <input type="text" id="conflict-search-box" oninput="window.handleConflictSearch(this.value)" placeholder="Search train (e.g. 12004) or ID..." style="padding: 4px 10px; border: 1px solid #C3B296; border-radius: 5px; font-size: 0.74rem; width: 190px; box-sizing: border-box;" />
           </div>
 
-          <div id="conflicts-alternatives-list" style="max-height: 820px; overflow-y: auto; padding-right: 6px;">
+          <div id="conflicts-alternatives-list">
             <!-- Populated dynamically with AI Warnings and Suggested Alternatives -->
           </div>
         </div>
