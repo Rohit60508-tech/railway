@@ -1438,6 +1438,15 @@
       });
     });
 
+    if (window.location.hash === '#request') {
+      window.location.replace('maintenance-requests.html');
+    }
+    window.addEventListener('hashchange', () => {
+      if (window.location.hash === '#request') {
+        window.location.replace('maintenance-requests.html');
+      }
+    });
+
     // Initialize Page
     applyRoleRestrictions();
     fetchApprovedWorkOrders().then(() => {

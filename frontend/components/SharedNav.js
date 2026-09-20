@@ -84,7 +84,7 @@
       desc: 'Track (TMS), Signal (SMMS) & Traction (TRD)',
       subItems: [
         { label: 'Work Orders', href: 'maintenance-dashboard.html', activePattern: 'maintenance-dashboard' },
-        { label: 'Request Maintenance', href: 'maintenance-dashboard.html#request', activePattern: '#request' },
+        { label: 'Request Maintenance', href: 'maintenance-requests.html', activePattern: 'maintenance-requests' },
         { label: 'PM Schedules', href: 'pm-schedules.html', activePattern: 'pm-schedules' },
         { label: 'Labor', href: 'maintenance-dashboard.html#labor', activePattern: '#labor' }
       ]
@@ -117,7 +117,7 @@
 
   function isActive(link) {
     if (link.key === 'work-orders') {
-      return window.location.pathname.includes('maintenance-dashboard') || window.location.pathname.includes('pm-schedules');
+      return window.location.pathname.includes('maintenance-dashboard') || window.location.pathname.includes('pm-schedules') || window.location.pathname.includes('maintenance-requests');
     }
     return window.location.pathname.includes(link.pageMatch);
   }
@@ -134,6 +134,7 @@
     const p = window.location.pathname;
     if (p.includes('admin-dashboard')) return { title: 'Executive Admin Command', sub: 'High-Speed Corridor Oversight & AI Decision Matrix', icon: '🛡️' };
     if (p.includes('pm-schedules')) return { title: 'Preventive Maintenance Schedules', sub: 'IRPWM Track, Signaling & Traction Automated Cyclic Schedules', icon: '📅' };
+    if (p.includes('maintenance-requests')) return { title: 'Maintenance Requests Portal', sub: 'External & Internal Requisition Gateway', icon: '📋' };
     if (p.includes('maintenance-dashboard')) return { title: 'Field Maintenance & Work Orders', sub: 'TMS (Track), SMMS (Signal) & TRD (Traction) Coordination', icon: '🔧' };
     if (p.includes('control-office')) return { title: 'Section Control Office', sub: 'Corridor Movement Authority & Traffic Block Management', icon: '🎛️' };
     if (p.includes('surveillance-dashboard')) return { title: 'Corridor Safety & Surveillance', sub: 'USFD Ultrasonic Flaws, Drone Telemetry & Vibration Sensors', icon: '📡' };
@@ -1877,8 +1878,8 @@
 
         const subItemsHTML = link.subItems.map(sub => {
           let isSubActive = false;
-          if (sub.activePattern === '#request') {
-            isSubActive = currentHash === '#request';
+          if (sub.activePattern === 'maintenance-requests' || sub.activePattern === '#request') {
+            isSubActive = currentPath.includes('maintenance-requests') || currentHash === '#request';
           } else if (sub.activePattern === '#labor') {
             isSubActive = currentHash === '#labor';
           } else if (sub.activePattern === 'maintenance-dashboard') {
@@ -1928,15 +1929,11 @@
 
     return `
       <aside id="ir-left-sidebar">
-        <!-- Brand Logo Card (Oxmaint AI Style - Simple & Clean Emblem) -->
+        <!-- Brand Logo Card -->
         <div class="snav-brand-wrapper">
           <a href="admin-dashboard.html" class="snav-sidebar-brand-card" title="RAKSHA PATH Command Center">
             <div class="snav-brand-logo-tile">
-              <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" width="36" height="36">
-                <path d="M22 38 C25 22, 42 16, 62 26 C72 16, 88 24, 78 42 C88 48, 82 68, 66 68 C60 80, 40 78, 46 62 C30 68, 20 52, 22 38 Z" fill="#003366" stroke="#FFC107" stroke-width="4"/>
-                <path d="M42 40 L65 26 L55 42 Z" fill="#FFC107"/>
-                <circle cx="50" cy="52" r="6" fill="#D9531E"/>
-              </svg>
+              <img src="/raksha_path_logo.png" alt="Indian Railways Logo" style="width: 32px; height: 32px; object-fit: contain; border-radius: 6px;" onerror="this.onerror=null; this.src='../raksha_path_logo.png';" />
             </div>
             <div class="snav-sidebar-brand-text">
               <span style="font-weight: 800; font-size: 0.88rem; color: #002244; letter-spacing: -0.2px; white-space: nowrap;">RAKSHA PATH</span>
@@ -5560,47 +5557,10 @@
       }
     });
 
-    // Injects floating AI Mascot Button (Oxmaint AI Style)
-    if (!document.getElementById('ir-floating-ai-mascot')) {
-      const mascotBtn = document.createElement('button');
-      mascotBtn.id = 'ir-floating-ai-mascot';
-      mascotBtn.type = 'button';
-      mascotBtn.title = 'Ask Oxmaint AI Copilot';
-      mascotBtn.style.cssText = `
-        position: fixed;
-        bottom: 24px;
-        right: 24px;
-        z-index: 99999;
-        width: 58px;
-        height: 58px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, #001F3F 0%, #003366 100%);
-        border: 2px solid #FFC107;
-        box-shadow: 0 8px 24px rgba(0, 31, 63, 0.35);
-        color: #FFFFFF;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-      `;
-      mascotBtn.innerHTML = `
-        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" width="38" height="38">
-          <path d="M22 38 C25 22, 42 16, 62 26 C72 16, 88 24, 78 42 C88 48, 82 68, 66 68 C60 80, 40 78, 46 62 C30 68, 20 52, 22 38 Z" fill="#003366" stroke="#FFC107" stroke-width="4"/>
-          <path d="M42 40 L65 26 L55 42 Z" fill="#FFC107"/>
-          <circle cx="50" cy="52" r="6" fill="#D9531E"/>
-        </svg>
-      `;
-
-      mascotBtn.addEventListener('mouseenter', () => mascotBtn.style.transform = 'scale(1.08)');
-      mascotBtn.addEventListener('mouseleave', () => mascotBtn.style.transform = 'scale(1)');
-      mascotBtn.addEventListener('click', () => {
-        if (typeof window.openTabWorkspace === 'function') {
-          window.openTabWorkspace('reports');
-        }
-      });
-
-      document.body.appendChild(mascotBtn);
+    // Ensure any previously injected floating mascot button is removed
+    const existingMascot = document.getElementById('ir-floating-ai-mascot');
+    if (existingMascot) {
+      existingMascot.remove();
     }
   }
 
