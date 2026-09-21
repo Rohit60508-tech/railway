@@ -475,8 +475,16 @@ class SupabaseAuditService {
     }
   }
 
+  mapTableName(table) {
+    if (table === 'requested_windows') {
+      return 'requested_maintenance_windows';
+    }
+    return table;
+  }
+
   async queryTable(table, queryParams = {}) {
-    // 1. If Supabase configured, attempt live fetch
+    const cloudTable = this.mapTableName(table);
+    // 1. If Supabase configured, attempt live fetch from Cloud source of truth
     if (this.isConfigured) {
       try {
         let queryStr = '?select=*';
@@ -486,7 +494,7 @@ class SupabaseAuditService {
           queryStr += `&${queryParams.filterKey}=eq.${encodeURIComponent(queryParams.filterVal)}`;
         }
 
-        const res = await fetch(`${this.url}/rest/v1/${table}${queryStr}`, {
+        const res = await fetch(`${this.url}/rest/v1/${cloudTable}${queryStr}`, {
           headers: {
             apikey: this.key,
             Authorization: `Bearer ${this.key}`,
@@ -495,38 +503,115 @@ class SupabaseAuditService {
 
         if (res.ok) {
           const data = await res.json();
-          if (Array.isArray(data) && data.length > 0) {
+          if (Array.isArray(data)) {
+            // Hydrate local mirror cache with latest cloud truth
+            const store = this.readLocalStore();
+            if (data.length > 0) {
+              store[table] = data;
+              this.writeLocalStore(store);
+            }
             return { success: true, source: 'SUPABASE_CLOUD', data };
           }
         }
       } catch (err) {
-        console.warn(`[SupabaseClient] queryTable(${table}) cloud fallback:`, err.message);
+        console.warn(`[SupabaseClient] queryTable(${cloudTable}) cloud fallback:`, err.message);
       }
     }
 
-    // 2. Resilient local dataset store
+    // 2. Resilient local dataset store fallback
     const store = this.readLocalStore();
     let rows = store[table] || [];
     if (queryParams.filterKey && queryParams.filterVal) {
-      rows = rows.filter(r => String(r[queryParams.filterKey]) === String(queryParams.filterVal));
+      rows = rows.filter(r => String(r[queryParams.filterKey]) === String(queryParams.filterVal) ||
+                              (r.id !== undefined && String(r.id) === String(queryParams.filterVal)) ||
+                              (r.request_id !== undefined && String(r.request_id) === String(queryParams.filterVal)));
     }
     return { success: true, source: 'LOCAL_DEDICATED_STORE', data: rows };
   }
 
+  filterPayloadForTable(table, payload) {
+    const TABLE_COLUMNS = {
+      requested_maintenance_windows: [
+        'request_id', 'section_id', 'station_from', 'station_to', 'start_km', 'end_km', 'km_pole',
+        'requested_window', 'window_start_time', 'window_end_time', 'duration_minutes', 'department',
+        'work_description', 'priority', 'status', 'applied_alternative', 'created_at', 'updated_at'
+      ],
+      maintenance_defects: [
+        'defect_id', 'external_ref_id', 'source_system', 'department', 'section_id', 'start_km',
+        'end_km', 'defect_type', 'severity', 'criticality_score', 'days_overdue', 'priority_score',
+        'priority_category', 'required_track_closure', 'requires_power_cut', 'estimated_duration_minutes',
+        'assigned_gang_id', 'status', 'created_at', 'rectified_at'
+      ],
+      track_sections: [
+        'section_id', 'division', 'sub_division', 'start_station', 'end_station', 'start_km', 'end_km',
+        'max_permissible_speed', 'line_type', 'electrification_type', 'traffic_density_gmt', 'track_structure',
+        'created_at', 'updated_at'
+      ],
+      block_schedules: [
+        'block_id', 'section_id', 'start_km', 'end_km', 'start_time', 'end_time', 'duration_minutes',
+        'status', 'departments_involved', 'efficiency_score', 'closure_time_saved_minutes',
+        'tasks_bundled_count', 'bundled_task_ids', 'granted_by', 'granted_at', 'override_reason',
+        'audit_hash', 'created_at', 'updated_at'
+      ],
+      corridor_windows: [
+        'window_id', 'section_id', 'window_start', 'window_end', 'duration_minutes', 'headway_buffer_minutes',
+        'traffic_density_score', 'conflicting_passenger_trains', 'conflicting_freight_trains', 'status', 'created_at'
+      ],
+      immutable_action_audit_log: [
+        'id', 'seq_id', 'entry_name', 'event_type', 'staff_id', 'user_name', 'user_role', 'user_division',
+        'section', 'target_entity_id', 'reason', 'disruption_score', 'delay_minutes', 'action_payload',
+        'prev_hash', 'record_hash', 'is_immutable', 'client_ip', 'created_at'
+      ],
+      audit_records: [
+        'record_id', 'entry_name', 'event_type', 'staff_id', 'user_name', 'user_role', 'user_division',
+        'section', 'block_id', 'target_entity_id', 'reason', 'disruption_score', 'delay_minutes',
+        'action_payload', 'prev_hash', 'record_hash', 'is_immutable', 'client_ip', 'created_at', 'timestamp'
+      ]
+    };
+
+    const allowed = TABLE_COLUMNS[table];
+    if (!allowed) return payload;
+    const filtered = {};
+    for (const key of allowed) {
+      if (payload[key] !== undefined) {
+        filtered[key] = payload[key];
+      }
+    }
+    return filtered;
+  }
+
   async insertRecord(table, record) {
-    const recordId = record.request_id || record.id || record.defect_id || ('REQ-' + Math.floor(1000 + Math.random() * 9000));
+    const cloudTable = this.mapTableName(table);
+    const nowIso = new Date().toISOString();
+    
+    // Determine canonical primary identifier
+    let canonicalId = record.request_id || record.defect_id || record.external_ref_id || record.section_id || record.block_id || record.id;
+    if (!canonicalId) {
+      canonicalId = (table.includes('window') ? 'REQ-' : 'REC-') + Math.floor(1000 + Math.random() * 9000);
+    }
+
     const fullRecord = {
-      id: recordId,
-      created_at: new Date().toISOString(),
+      id: canonicalId,
+      created_at: nowIso,
+      updated_at: nowIso,
       status: 'PENDING_REVIEW',
       ...record,
     };
+    if (cloudTable === 'requested_maintenance_windows') {
+      fullRecord.request_id = canonicalId;
+    }
+
+    const cloudPayload = this.filterPayloadForTable(cloudTable, fullRecord);
+    if (cloudTable === 'requested_maintenance_windows' || typeof cloudPayload.id === 'string') {
+      delete cloudPayload.id;
+    }
 
     // 1. Save to Supabase Cloud if configured
     let cloudSaved = false;
+    let cloudError = null;
     if (this.isConfigured) {
       try {
-        const res = await fetch(`${this.url}/rest/v1/${table}`, {
+        const res = await fetch(`${this.url}/rest/v1/${cloudTable}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -534,22 +619,37 @@ class SupabaseAuditService {
             Authorization: `Bearer ${this.key}`,
             Prefer: 'return=representation',
           },
-          body: JSON.stringify(fullRecord),
+          body: JSON.stringify(cloudPayload),
         });
 
-        if (res.ok) {
+        if (res.ok || res.status === 201) {
           cloudSaved = true;
+        } else {
+          const errText = await res.text();
+          cloudError = `Supabase ${res.status}: ${errText}`;
+          console.error(`[SupabaseClient] insertRecord(${cloudTable}) failed:`, cloudError);
         }
       } catch (err) {
-        console.warn(`[SupabaseClient] insertRecord(${table}) cloud fallback:`, err.message);
+        cloudError = err.message;
+        console.error(`[SupabaseClient] insertRecord(${cloudTable}) network error:`, err.message);
       }
     }
 
-    // 2. Persist to dedicated local store
+    // 2. Persist to dedicated local store mirror
     const store = this.readLocalStore();
     if (!store[table]) store[table] = [];
+    store[table] = store[table].filter(r => (r.request_id || r.external_ref_id || r.defect_id || r.id) !== canonicalId);
     store[table].push(fullRecord);
     this.writeLocalStore(store);
+
+    if (this.isConfigured && !cloudSaved) {
+      return {
+        success: false,
+        error: cloudError || `Failed to persist to Supabase ${cloudTable}`,
+        data: fullRecord,
+        storage_destination: 'LOCAL_ONLY_SUPABASE_FAILED'
+      };
+    }
 
     return {
       success: true,
@@ -559,10 +659,32 @@ class SupabaseAuditService {
   }
 
   async updateRecord(table, filterKey, filterVal, updatePayload) {
+    const cloudTable = this.mapTableName(table);
+    const nowIso = new Date().toISOString();
+    const payloadWithTime = { ...updatePayload, updated_at: nowIso };
+
+    // Resolve canonical key based on table domain
+    let canonicalKey = filterKey;
+    if (cloudTable === 'requested_maintenance_windows') {
+      canonicalKey = 'request_id';
+    } else if (cloudTable === 'maintenance_defects') {
+      const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(String(filterVal));
+      canonicalKey = isUuid ? 'defect_id' : (filterKey || 'external_ref_id');
+    } else if (cloudTable === 'track_sections') {
+      canonicalKey = filterKey || 'section_id';
+    } else if (cloudTable === 'block_schedules') {
+      canonicalKey = filterKey || 'block_id';
+    } else if (!canonicalKey) {
+      canonicalKey = 'id';
+    }
+
     let cloudUpdated = false;
+    let cloudError = null;
+
     if (this.isConfigured) {
       try {
-        const res = await fetch(`${this.url}/rest/v1/${table}?${filterKey}=eq.${encodeURIComponent(filterVal)}`, {
+        const cloudPayload = this.filterPayloadForTable(cloudTable, payloadWithTime);
+        const res = await fetch(`${this.url}/rest/v1/${cloudTable}?${canonicalKey}=eq.${encodeURIComponent(filterVal)}`, {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
@@ -570,23 +692,65 @@ class SupabaseAuditService {
             Authorization: `Bearer ${this.key}`,
             Prefer: 'return=representation',
           },
-          body: JSON.stringify(updatePayload),
+          body: JSON.stringify(cloudPayload),
         });
-        if (res.ok) cloudUpdated = true;
+
+        if (res.ok) {
+          const data = await res.json();
+          if (Array.isArray(data) && data.length > 0) {
+            cloudUpdated = true;
+          } else if (!res.headers.get('content-length') || res.status === 204) {
+            cloudUpdated = true;
+          } else {
+            cloudUpdated = true;
+          }
+        } else {
+          const errText = await res.text();
+          cloudError = `Supabase ${res.status}: ${errText}`;
+          console.error(`[SupabaseClient] updateRecord(${cloudTable}) failed:`, cloudError);
+        }
       } catch (err) {
-        console.warn(`[SupabaseClient] updateRecord(${table}) cloud fallback:`, err.message);
+        cloudError = err.message;
+        console.error(`[SupabaseClient] updateRecord(${cloudTable}) error:`, err.message);
       }
     }
 
+    // Update Local Mirror
     const store = this.readLocalStore();
     if (store[table]) {
       store[table] = store[table].map(item => {
-        if (String(item[filterKey]) === String(filterVal)) {
-          return { ...item, ...updatePayload, updated_at: new Date().toISOString() };
+        const match = (item[canonicalKey] !== undefined && String(item[canonicalKey]) === String(filterVal)) ||
+                      (item.id !== undefined && String(item.id) === String(filterVal)) ||
+                      (item.request_id !== undefined && String(item.request_id) === String(filterVal)) ||
+                      (item.external_ref_id !== undefined && String(item.external_ref_id) === String(filterVal)) ||
+                      (item.defect_id !== undefined && String(item.defect_id) === String(filterVal));
+        if (match) {
+          return { ...item, ...payloadWithTime };
         }
         return item;
       });
       this.writeLocalStore(store);
+    }
+
+    // ── PRIORITY 5: Defect Status Synchronization ──
+    // If completing a maintenance window associated with a defect, update maintenance_defects to RECTIFIED
+    if (updatePayload.status === 'COMPLETED' && updatePayload.defect_ref_id) {
+      try {
+        await this.updateRecord('maintenance_defects', null, updatePayload.defect_ref_id, {
+          status: 'RECTIFIED',
+          rectified_at: nowIso,
+        });
+      } catch (defectSyncErr) {
+        console.warn('[SupabaseClient] Linked defect synchronization notice:', defectSyncErr.message);
+      }
+    }
+
+    if (this.isConfigured && !cloudUpdated) {
+      return {
+        success: false,
+        error: cloudError || `Failed to update record ${filterVal} in Supabase ${cloudTable}`,
+        storage_destination: 'LOCAL_ONLY_SUPABASE_FAILED'
+      };
     }
 
     return {

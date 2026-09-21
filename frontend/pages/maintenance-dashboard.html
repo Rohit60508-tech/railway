@@ -773,14 +773,21 @@
         if (!res.ok) throw new Error('API fetch failed');
         const data = await res.json();
 
-        // Map ALL requested and sanctioned maintenance windows from local database audit_records.db & Supabase
+        // Reset tracking collections from persistent database state
+        acceptedWorkOrders = [];
+        completedWorkOrders = [];
+
+        // Map ALL requested and sanctioned maintenance windows from Supabase Cloud / local store
         const approvedFromApi = (data || []).map(item => {
           const deptCode = normalizeDeptCode(item.department);
           const st = (item.status || 'PENDING_REVIEW').toUpperCase();
-          const isSanctioned = st === 'APPROVED' || st === 'SANCTIONED' || st.includes('SANCTION') || st.includes('APPROV');
+          const isSanctioned = st === 'APPROVED' || st === 'SANCTIONED' || st.includes('SANCTION') || st.includes('APPROV') || st === 'ALTERNATIVE_APPLIED' || st === 'FORCE_SANCTIONED' || st === 'ACCEPTED' || st === 'COMPLETED';
+          const isAccepted = st === 'ACCEPTED' || !!item.accepted_at;
+          const isCompleted = st === 'COMPLETED' || st === 'RECTIFIED' || !!item.completed_at;
 
-          return {
+          const wo = {
             id: item.request_id || `WO-${deptCode}-${item.id}`,
+            request_id: item.request_id || `WO-${deptCode}-${item.id}`,
             title: item.work_description || `Requested Block Requisition (${item.section_id})`,
             dept: deptCode,
             deptLabel: normalizeDeptLabel(deptCode),
@@ -794,8 +801,22 @@
             slotFeasibility: isSanctioned ? 'HIGH_FEASIBILITY' : 'PENDING_REVIEW',
             slotConflicts: 0,
             status: item.status,
-            tooltipExplanation: `Submitted to local DB audit_records.db. Section: ${item.section_id}. Status: ${st}`,
-            explanationSummary: `Requested maintenance window from local DB for ${item.department}.`,
+            isSanctioned: isSanctioned,
+            isAccepted: isAccepted,
+            isCompleted: isCompleted,
+            acceptedAt: item.accepted_at ? (item.accepted_at.includes('T') ? new Date(item.accepted_at).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : item.accepted_at) : null,
+            completedAt: item.completed_at ? (item.completed_at.includes('T') ? new Date(item.completed_at).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : item.completed_at) : null,
+            actionTaken: item.action_taken,
+            conditionNow: item.condition_now,
+            tsrStatus: item.tsr_status,
+            fitCertNo: item.fit_cert_no,
+            t351Memo: item.t351_memo,
+            actualPossessionMinutes: item.actual_possession_minutes,
+            trackGeometry: item.track_geometry,
+            sseStaffId: item.sse_staff_id,
+            defect_ref_id: item.defect_ref_id || item.defect_id,
+            tooltipExplanation: `Persisted in Supabase requested_maintenance_windows. Section: ${item.section_id}. Status: ${st}`,
+            explanationSummary: `Requested maintenance window from Supabase for ${item.department}.`,
             detailedExplanation: item.work_description || `Maintenance window ${item.requested_window}.`,
             factors: [
               { name: "Control Office Status", weight: 0.30, value: item.status },
@@ -803,6 +824,14 @@
             ],
             action: `Proceed with field execution during window ${item.requested_window}.`
           };
+
+          if (isCompleted) {
+            completedWorkOrders.push(wo);
+          } else if (isAccepted) {
+            acceptedWorkOrders.push(wo);
+          }
+
+          return wo;
         });
 
         // Combine API approved items with baseline approved items (avoiding duplicates by ID)
@@ -810,7 +839,10 @@
         const combined = [...approvedFromApi];
         baselineApprovedWorkOrders.forEach(b => {
           if (!idSet.has(b.id)) {
-            combined.push(b);
+            combined.push({
+              ...b,
+              isSanctioned: true
+            });
           }
         });
 
@@ -882,8 +914,8 @@
       if (pendingContainer) pendingContainer.innerHTML = '';
       if (acceptedContainer) acceptedContainer.innerHTML = '';
 
-      // Work pending acceptance
-      const pendingList = activeWorkOrders.filter(w => !w.isAccepted && !w.isCompleted);
+      // Work pending acceptance (only after approval from Control Office)
+      const pendingList = activeWorkOrders.filter(w => w.isSanctioned && !w.isAccepted && !w.isCompleted);
       // Work accepted & locked (to be done)
       const acceptedList = activeWorkOrders.filter(w => w.isAccepted && !w.isCompleted);
 
@@ -1304,56 +1336,111 @@
         return;
       }
 
-      wo.isCompleted = true;
-      wo.actionTaken = actionTaken;
-      wo.conditionNow = conditionNow;
-      wo.tsrStatus = tsrStatus;
-      wo.fitCertNo = fitCertNo;
-      wo.t351Memo = t351Memo;
-      wo.actualPossessionMinutes = actualMinutes;
-      wo.trackGeometry = trackGeometry;
-      wo.sseStaffId = sseStaffId;
-      wo.completedAt = new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      const nowIso = new Date().toISOString();
+      const timeStr = new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 
-      if (!completedWorkOrders.find(c => c.id === activeCompletingWoId)) {
-        completedWorkOrders.unshift(wo);
+      try {
+        // 1. Persist directly to Supabase requested_maintenance_windows
+        const patchRes = await fetch(`/api/v1/supabase/data/requested_windows?key=request_id&val=${encodeURIComponent(activeCompletingWoId)}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            status: 'COMPLETED',
+            completed_at: nowIso,
+            action_taken: actionTaken,
+            condition_now: conditionNow,
+            tsr_status: tsrStatus,
+            fit_cert_no: fitCertNo,
+            t351_memo: t351Memo,
+            actual_possession_minutes: actualMinutes,
+            track_geometry: trackGeometry,
+            sse_staff_id: sseStaffId,
+            defect_ref_id: wo.defect_ref_id || wo.defect_id
+          })
+        });
+
+        const patchJson = await patchRes.json();
+        if (!patchRes.ok || !patchJson.success) {
+          throw new Error(patchJson.error || 'Failed to update work completion in persistent database');
+        }
+
+        wo.isCompleted = true;
+        wo.status = 'COMPLETED';
+        wo.actionTaken = actionTaken;
+        wo.conditionNow = conditionNow;
+        wo.tsrStatus = tsrStatus;
+        wo.fitCertNo = fitCertNo;
+        wo.t351Memo = t351Memo;
+        wo.actualPossessionMinutes = actualMinutes;
+        wo.trackGeometry = trackGeometry;
+        wo.sseStaffId = sseStaffId;
+        wo.completedAt = timeStr;
+
+        if (!completedWorkOrders.find(c => c.id === activeCompletingWoId)) {
+          completedWorkOrders.unshift(wo);
+        }
+
+        // 2. Log immutable audit trail to Supabase & local ledger
+        logToSupabase('WORK_ORDER_COMPLETED_AND_CLOSED', 'WORK_COMPLETED', wo, `Work order ${activeCompletingWoId} certified closed: ${wo.conditionNow}`);
+
+        window.closeCompletionModal();
+
+        if (window.showToast) {
+          window.showToast(`✅ Work order ${wo.id} certified completed & persisted to Supabase!`, 'success');
+        }
+
+        renderWorkOrders(currentDeptFilter);
+      } catch (err) {
+        console.error('[MaintenanceDashboard] Completion save error:', err);
+        alert('Work completion failed to persist: ' + err.message);
       }
-
-      // Log completion to Supabase
-      logToSupabase('WORK_ORDER_COMPLETED_AND_CLOSED', 'WORK_COMPLETED', wo, `Work order ${activeCompletingWoId} certified closed: ${wo.conditionNow}`);
-
-      window.closeCompletionModal();
-
-      if (window.showToast) {
-        window.showToast(`✅ Work order ${wo.id} certified completed with statutory safety report!`, 'success');
-      }
-
-      renderWorkOrders(currentDeptFilter);
     };
 
     // Step 1: On 1-click Accept & Lock Slot
-    window.acceptWorkOrder = function (woId, suppressToast = false) {
+    window.acceptWorkOrder = async function (woId, suppressToast = false) {
       const idx = activeWorkOrders.findIndex(w => w.id === woId);
       if (idx === -1) return;
 
       const wo = activeWorkOrders[idx];
-      wo.isAccepted = true;
-      wo.acceptedAt = new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      const nowIso = new Date().toISOString();
+      const timeStr = new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 
-      if (!acceptedWorkOrders.find(c => c.id === woId)) {
-        acceptedWorkOrders.unshift(wo);
-      }
+      try {
+        // 1. Persist directly to Supabase requested_maintenance_windows
+        const patchRes = await fetch(`/api/v1/supabase/data/requested_windows?key=request_id&val=${encodeURIComponent(woId)}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            status: 'ACCEPTED',
+            accepted_at: nowIso
+          })
+        });
 
-      // Log action to Supabase
-      logToSupabase('ACCEPT_WORK_ORDER_SLOT_LOCK', 'SLOT_LOCK', wo, `Requisition ${woId} accepted and slot locked for execution.`);
-
-      if (!suppressToast) {
-        if (window.showToast) {
-          window.showToast(`🔒 Work order ${woId} accepted & slot locked! Logged to Supabase.`, 'success');
+        const patchJson = await patchRes.json();
+        if (!patchRes.ok || !patchJson.success) {
+          throw new Error(patchJson.error || 'Failed to persist work order acceptance in database');
         }
-      }
 
-      renderWorkOrders(currentDeptFilter);
+        wo.isAccepted = true;
+        wo.status = 'ACCEPTED';
+        wo.acceptedAt = timeStr;
+
+        if (!acceptedWorkOrders.find(c => c.id === woId)) {
+          acceptedWorkOrders.unshift(wo);
+        }
+
+        // 2. Log immutable audit trail
+        logToSupabase('ACCEPT_WORK_ORDER_SLOT_LOCK', 'SLOT_LOCK', wo, `Requisition ${woId} accepted and slot locked for execution.`);
+
+        if (!suppressToast && window.showToast) {
+          window.showToast(`🔒 Work order ${woId} accepted & slot locked! Persisted to Supabase.`, 'success');
+        }
+
+        renderWorkOrders(currentDeptFilter);
+      } catch (err) {
+        console.error('[MaintenanceDashboard] Accept work order error:', err);
+        alert('Work order acceptance failed to persist: ' + err.message);
+      }
     };
 
     function applyRoleRestrictions() {

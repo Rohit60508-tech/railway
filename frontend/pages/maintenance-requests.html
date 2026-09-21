@@ -1415,6 +1415,21 @@
             </div>
           </div>
 
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;">
+            <div class="form-group-field">
+              <label>Window Start Time *</label>
+              <input type="time" class="form-input-control" id="new-req-start-time" value="09:00" required />
+            </div>
+            <div class="form-group-field">
+              <label>Window End Time *</label>
+              <input type="time" class="form-input-control" id="new-req-end-time" value="11:00" required />
+            </div>
+            <div class="form-group-field">
+              <label>Duration (mins) *</label>
+              <input type="number" class="form-input-control" id="new-req-duration" value="120" min="15" max="480" required />
+            </div>
+          </div>
+
           <div class="form-group-field">
             <label>Requester Name / Staff ID *</label>
             <input type="text" class="form-input-control" id="new-req-requester" placeholder="e.g. SSE TRD Aligarh (S. K. Verma)" required />
@@ -1427,7 +1442,7 @@
 
           <div class="modal-footer-bar" style="margin: 0 -24px -24px -24px; padding: 14px 24px;">
             <button type="button" class="btn-action-outline" onclick="window.closeCreateRequestModal()">Cancel</button>
-            <button type="submit" class="btn-action-primary">Submit Request</button>
+            <button type="submit" class="btn-action-primary" id="btn-submit-maint-req">Submit Request ➔ Send to Control Office</button>
           </div>
         </form>
       </div>
@@ -1753,8 +1768,53 @@
       document.getElementById("create-request-form").reset();
     };
 
-    window.handleCreateRequestSubmit = function (e) {
+    async function loadPersistedRequests() {
+      try {
+        const res = await fetch('/api/v1/requested-windows');
+        if (res.ok) {
+          const liveRows = await res.json();
+          if (Array.isArray(liveRows) && liveRows.length > 0) {
+            // Merge with local maintenance requests without duplicates
+            liveRows.forEach(row => {
+              const reqId = row.request_id || row.id;
+              const exists = maintenanceRequests.some(r => r.id === reqId);
+              if (!exists) {
+                const deptCode = (row.department || '').toUpperCase().includes('TRD') ? 'TRD' 
+                  : (row.department || '').toUpperCase().includes('SIG') ? 'SIG' 
+                  : (row.department || '').toUpperCase().includes('MECH') ? 'MECH' : 'CIVIL';
+
+                maintenanceRequests.unshift({
+                  id: reqId,
+                  title: row.work_description || `Track Maintenance (${row.section_id || 'NDLS-GZB-DN'})`,
+                  dept: deptCode,
+                  deptLabel: row.department || (deptCode === 'CIVIL' ? 'Civil / P-Way' : deptCode === 'TRD' ? 'Electrical / TRD' : 'Signalling & Telecom'),
+                  section: row.section_id || 'NDLS-GZB-DN',
+                  priority: row.priority === 'P1' ? 'CRITICAL' : row.priority === 'P2' ? 'HIGH' : row.priority === 'P3' ? 'MEDIUM' : 'LOW',
+                  status: row.status === 'ALTERNATIVE_APPLIED' ? 'WORK_ORDER_CREATED' : row.status === 'FORCE_SANCTIONED' ? 'WORK_ORDER_CREATED' : 'PENDING',
+                  requester: row.requester || 'Senior Section Engineer',
+                  submittedAt: (row.created_at ? new Date(row.created_at).toISOString().replace('T', ' ').slice(0, 16) : new Date().toISOString().replace('T', ' ').slice(0, 16)),
+                  score: 82.0,
+                  desc: `Requested Window: ${row.requested_window || (row.window_start_time + ' – ' + row.window_end_time)} (${row.duration_minutes || 120} mins). Live Conflict Analysis Synced.`
+                });
+              }
+            });
+            updateMetrics();
+            renderRequestsTable();
+          }
+        }
+      } catch (err) {
+        console.warn('Could not load persisted requested_windows:', err);
+      }
+    }
+
+    window.handleCreateRequestSubmit = async function (e) {
       e.preventDefault();
+      const btn = document.getElementById("btn-submit-maint-req");
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = "⏳ Transmitting to Control Office...";
+      }
+
       const title = document.getElementById("new-req-title").value.trim();
       const section = document.getElementById("new-req-section").value;
       const dept = document.getElementById("new-req-dept").value;
@@ -1762,26 +1822,89 @@
       const status = document.getElementById("new-req-status").value;
       const requester = document.getElementById("new-req-requester").value.trim();
       const desc = document.getElementById("new-req-desc").value.trim();
+      const startTime = document.getElementById("new-req-start-time")?.value || "09:00";
+      const endTime = document.getElementById("new-req-end-time")?.value || "11:00";
+      const duration = parseInt(document.getElementById("new-req-duration")?.value || "120", 10);
 
-      const newId = `REQ-2026-0${Math.floor(843 + Math.random() * 150)}`;
-      maintenanceRequests.unshift({
-        id: newId,
-        title: title,
-        dept: dept,
-        deptLabel: dept === 'CIVIL' ? 'Civil / P-Way' : dept === 'TRD' ? 'Electrical / TRD' : dept === 'SIG' ? 'Signalling & Telecom' : 'Mechanical',
-        section: section,
-        priority: priority,
-        status: status,
-        requester: requester,
-        submittedAt: new Date().toISOString().replace('T', ' ').slice(0, 16),
-        score: 80.0,
-        desc: desc
-      });
+      // Parse station from & to from section code
+      let stnFrom = "NDLS", stnTo = "GZB";
+      if (section.includes("-")) {
+        const parts = section.split("-");
+        stnFrom = parts[0] || "NDLS";
+        stnTo = parts[1] || "GZB";
+      }
 
-      updateMetrics();
-      renderRequestsTable();
-      window.closeCreateRequestModal();
-      window.showToast(`✅ Maintenance Request ${newId} created successfully!`, "success");
+      const deptLabel = dept === 'CIVIL' ? 'Civil (P-Way)' : dept === 'TRD' ? 'Electrical (TRD)' : dept === 'SIG' ? 'Signal (S&T)' : 'Mechanical';
+      const deptPrefix = dept === 'CIVIL' ? 'CIV' : dept === 'TRD' ? 'TRD' : dept === 'SIG' ? 'SIG' : 'MEC';
+      const newId = `REQ-${deptPrefix}-${Math.floor(1000 + Math.random() * 9000)}`;
+
+      const payload = {
+        request_id: newId,
+        section_id: section,
+        station_from: stnFrom,
+        station_to: stnTo,
+        start_km: 6.4,
+        end_km: 9.7,
+        requested_window: `${startTime} – ${endTime}`,
+        window_start_time: startTime,
+        window_end_time: endTime,
+        duration_minutes: duration,
+        department: deptLabel,
+        work_description: title + (desc ? ` (${desc})` : ''),
+        priority: priority === 'CRITICAL' ? 'P1' : priority === 'HIGH' ? 'P2' : priority === 'MEDIUM' ? 'P3' : 'P4',
+        status: 'PENDING_REVIEW',
+        requester: requester
+      };
+
+      try {
+        // 1. Post to local requested-windows & Supabase data store
+        await Promise.allSettled([
+          fetch('/api/v1/requested-windows', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          }),
+          fetch('/api/v1/supabase/data/requested_windows', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          })
+        ]);
+
+        // 2. Add to current page view
+        maintenanceRequests.unshift({
+          id: newId,
+          title: title,
+          dept: dept,
+          deptLabel: deptLabel,
+          section: section,
+          priority: priority,
+          status: status,
+          requester: requester,
+          submittedAt: new Date().toISOString().replace('T', ' ').slice(0, 16),
+          score: 80.0,
+          desc: `${desc ? desc + ' • ' : ''}Requested Window: ${startTime} – ${endTime} (${duration}m)`
+        });
+
+        updateMetrics();
+        renderRequestsTable();
+        window.closeCreateRequestModal();
+
+        // 3. Trigger Universal Live Sync so Control Office gets updated immediately
+        if (window.IR_LIVE_SYNC) {
+          window.IR_LIVE_SYNC.fetchAllLiveData();
+        }
+
+        window.showToast(`✅ Window Request [${newId}] submitted! Sent to Control Officer Active Conflicts.`, "success");
+      } catch (err) {
+        console.error('Error submitting request:', err);
+        window.showToast(`⚠️ Request saved locally: ${err.message}`, "error");
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.textContent = "Submit Request ➔ Send to Control Office";
+        }
+      }
     };
 
     window.switchDeptTab = function (deptCode, element) {
@@ -1812,15 +1935,23 @@
       renderRequestsTable();
     };
 
-    window.refreshPageData = function () {
+    window.refreshPageData = async function () {
+      await loadPersistedRequests();
       updateMetrics();
       renderRequestsTable();
-      window.showToast("🔄 Maintenance requests synchronized!", "success");
+      window.showToast("🔄 Maintenance requests synchronized with Control Office!", "success");
     };
 
-    document.addEventListener("DOMContentLoaded", () => {
+    document.addEventListener("DOMContentLoaded", async () => {
+      await loadPersistedRequests();
       updateMetrics();
       renderRequestsTable();
+
+      if (window.IR_LIVE_SYNC) {
+        window.IR_LIVE_SYNC.on('conflicts_updated', () => {
+          loadPersistedRequests();
+        });
+      }
     });
   </script>
 </body>
