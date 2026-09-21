@@ -171,6 +171,167 @@ const server = http.createServer(async (req, res) => {
     }
   }
 
+  // 1a2. Public & Local Requested Windows Endpoint Aliases
+  if (pathname === '/api/v1/requested-windows') {
+    if (req.method === 'GET') {
+      const queryParams = url.parse(req.url, true).query;
+      const result = await supabaseAuditService.queryTable('requested_windows', queryParams);
+      res.writeHead(result.success ? 200 : 500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify(result.data || []));
+      return;
+    }
+    if (req.method === 'POST') {
+      let body = '';
+      req.on('data', chunk => { body += chunk; });
+      req.on('end', async () => {
+        try {
+          const payload = JSON.parse(body || '{}');
+          const result = await supabaseAuditService.insertRecord('requested_windows', payload);
+          res.writeHead(result.success ? 201 : 400, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify(result));
+        } catch (err) {
+          res.writeHead(400, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ success: false, error: err.message }));
+        }
+      });
+      return;
+    }
+  }
+
+  // 1a3. Control Office: Apply Alternative Window Endpoint
+  if (pathname === '/api/v1/apply-alternative-window' && req.method === 'POST') {
+    let body = '';
+    req.on('data', chunk => { body += chunk; });
+    req.on('end', async () => {
+      try {
+        const payload = JSON.parse(body || '{}');
+        const requestId = payload.request_id || payload.conflict_id || payload.id;
+        const alternativeWindow = payload.alternative_window || payload.applied_alternative;
+
+        if (!requestId) {
+          res.writeHead(400, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ success: false, error: 'Missing required parameter: request_id' }));
+          return;
+        }
+        if (!alternativeWindow) {
+          res.writeHead(400, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ success: false, error: 'Missing required parameter: alternative_window' }));
+          return;
+        }
+
+        const nowIso = new Date().toISOString();
+        const updateResult = await supabaseAuditService.updateRecord('requested_windows', 'request_id', requestId, {
+          status: 'ALTERNATIVE_APPLIED',
+          applied_alternative: alternativeWindow,
+          sanctioned_by: payload.officer_name || payload.officer_id || 'Indian Railways Operator',
+          sanctioned_at: nowIso
+        });
+
+        if (!updateResult.success) {
+          res.writeHead(500, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({
+            success: false,
+            error: updateResult.error || 'Failed to update maintenance window in persistent database',
+            details: updateResult
+          }));
+          return;
+        }
+
+        // Record immutable audit log
+        await supabaseAuditService.saveActionAuditRecord({
+          entryName: 'APPLY_ALTERNATIVE_WINDOW',
+          eventType: 'ALTERNATIVE_APPLIED',
+          staffId: payload.officer_id || 'IR-STAFF-UNKNOWN',
+          userName: payload.officer_name || 'Indian Railways Operator',
+          userRole: payload.officer_role || 'Senior Section Controller',
+          section: payload.section_id || 'NDLS-CNB-UP',
+          targetEntityId: requestId,
+          reason: payload.reason || `Avoided collision with passenger path. Shifted to ${alternativeWindow}`,
+          disruptionScore: Number(payload.disruption_score) || 0.0,
+          delayMinutes: parseInt(payload.delay_minutes, 10) || 0,
+          actionPayload: { request_id: requestId, alternative_window: alternativeWindow },
+          timestamp: nowIso
+        });
+
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({
+          success: true,
+          status: 'ALTERNATIVE_APPLIED',
+          request_id: requestId,
+          applied_alternative: alternativeWindow,
+          storage_destination: updateResult.storage_destination
+        }));
+      } catch (err) {
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, error: err.message }));
+      }
+    });
+    return;
+  }
+
+  // 1a4. Control Office: Force Sanction Window Endpoint
+  if (pathname === '/api/v1/force-sanction-window' && req.method === 'POST') {
+    let body = '';
+    req.on('data', chunk => { body += chunk; });
+    req.on('end', async () => {
+      try {
+        const payload = JSON.parse(body || '{}');
+        const requestId = payload.request_id || payload.conflict_id || payload.id;
+
+        if (!requestId) {
+          res.writeHead(400, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ success: false, error: 'Missing required parameter: request_id' }));
+          return;
+        }
+
+        const nowIso = new Date().toISOString();
+        const updateResult = await supabaseAuditService.updateRecord('requested_windows', 'request_id', requestId, {
+          status: 'FORCE_SANCTIONED',
+          sanctioned_by: payload.officer_name || payload.officer_id || 'Indian Railways Operator',
+          sanctioned_at: nowIso
+        });
+
+        if (!updateResult.success) {
+          res.writeHead(500, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({
+            success: false,
+            error: updateResult.error || 'Failed to force-sanction maintenance window in persistent database',
+            details: updateResult
+          }));
+          return;
+        }
+
+        // Record immutable audit log
+        await supabaseAuditService.saveActionAuditRecord({
+          entryName: 'FORCE_SANCTION_WINDOW',
+          eventType: 'FORCE_SANCTION',
+          staffId: payload.officer_id || 'IR-STAFF-UNKNOWN',
+          userName: payload.officer_name || 'Indian Railways Operator',
+          userRole: payload.officer_role || 'Senior Section Controller',
+          section: payload.section_id || 'NDLS-CNB-UP',
+          targetEntityId: requestId,
+          reason: payload.reason || 'Force sanction executed by Section Controller override — operational exigency.',
+          disruptionScore: Number(payload.disruption_score) || 45.0,
+          delayMinutes: parseInt(payload.delay_minutes, 10) || 30,
+          actionPayload: { request_id: requestId },
+          timestamp: nowIso
+        });
+
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({
+          success: true,
+          status: 'FORCE_SANCTIONED',
+          request_id: requestId,
+          storage_destination: updateResult.storage_destination
+        }));
+      } catch (err) {
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, error: err.message }));
+      }
+    });
+    return;
+  }
+
   // 1b. API Gateway Route Dispatcher
   if (pathname.startsWith('/api/v1/ai')) {
     try {

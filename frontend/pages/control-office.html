@@ -1864,18 +1864,14 @@
         });
         const data = await res.json();
 
-        // 2. Also attempt updating local SQLite DB if slotId matches a request
-        await fetch('/api/v1/force-sanction-window', {
-          method: 'POST',
+        // 2. Persist status SANCTIONED to Supabase requested_maintenance_windows
+        await fetch(`/api/v1/supabase/data/requested_windows?key=request_id&val=${encodeURIComponent(slotId)}`, {
+          method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            request_id: slotId,
-            officer_id: activeUser.staffId || activeUser.id || 'IR-STAFF-UNKNOWN',
-            officer_name: activeUser.name || activeUser.username || 'Indian Railways Operator',
-            officer_role: activeUser.role || activeUser.designation || 'Senior Section Controller',
-            reason: 'Optimal AI window sanctioned by Section Controller.',
-            disruption_score: 12.5,
-            delay_minutes: 0
+            status: 'SANCTIONED',
+            sanctioned_by: activeUser.name || activeUser.username || 'Indian Railways Operator',
+            sanctioned_at: new Date().toISOString()
           })
         }).catch(() => null);
 
@@ -1906,7 +1902,7 @@
           })
         }).catch(() => null);
 
-        // 2. Update local server
+        // 1. Update backend & persistent Supabase database
         const localDbRes = await fetch('/api/v1/apply-alternative-window', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -1921,9 +1917,13 @@
         });
         const localDbData = await localDbRes.json();
 
-        alert(`✓ [${entryName}] Alternative accepted for ${conflictId}!\nShifted to: ${altWindow}\n\n☁️ Supabase Data API (requested_windows): ALTERNATIVE_APPLIED\n\nOperator: ${activeUser.name || 'Indian Railways Operator'}`);
+        if (!localDbRes.ok || !localDbData.success) {
+          throw new Error(localDbData.error || 'Failed to apply alternative window in persistent storage');
+        }
 
-        // 3. Refresh both panels from live train API
+        alert(`✓ [${entryName}] Alternative accepted for ${conflictId}!\nShifted to: ${altWindow}\n\n☁️ Supabase Cloud (requested_maintenance_windows): ALTERNATIVE_APPLIED\n\nOperator: ${activeUser.name || 'Indian Railways Operator'}`);
+
+        // 2. Refresh both panels from live train API
         await window.fetchLiveConflicts();
         await window.fetchLiveRecommendedSlots();
         if (typeof window.refreshCtrlAudit === 'function') window.refreshCtrlAudit();
@@ -1937,18 +1937,7 @@
       if (!confirm(`Force Sanction maintenance window ${conflictId}?\n\nThis will override all AI conflict warnings and sanction the originally requested window.\n\nOperator: ${activeUser.name || 'Indian Railways Operator'}\n\nProceed?`)) return;
 
       try {
-        // 1. Update Supabase requested_windows table via Data API
-        await fetch(`/api/v1/supabase/data/requested_windows?key=request_id&val=${encodeURIComponent(conflictId)}`, {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            status: 'FORCE_SANCTIONED',
-            sanctioned_by: activeUser.name || 'Indian Railways Operator',
-            sanctioned_at: new Date().toISOString()
-          })
-        }).catch(() => null);
-
-        // 2. Update local server
+        // 1. Update backend & persistent Supabase database
         const localDbRes = await fetch('/api/v1/force-sanction-window', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -1964,9 +1953,13 @@
         });
         const localDbData = await localDbRes.json();
 
-        alert(`⚡ FORCE SANCTION executed for ${conflictId}!\n\n☁️ Supabase Data API (requested_windows): FORCE_SANCTIONED\n\nOperator: ${activeUser.name || 'Indian Railways Operator'}`);
+        if (!localDbRes.ok || !localDbData.success) {
+          throw new Error(localDbData.error || 'Failed to force sanction window in persistent storage');
+        }
 
-        // 3. Refresh panels
+        alert(`⚡ FORCE SANCTION executed for ${conflictId}!\n\n☁️ Supabase Cloud (requested_maintenance_windows): FORCE_SANCTIONED\n\nOperator: ${activeUser.name || 'Indian Railways Operator'}`);
+
+        // 2. Refresh panels
         await window.fetchLiveConflicts();
         if (typeof window.refreshCtrlAudit === 'function') window.refreshCtrlAudit();
       } catch (e) {
