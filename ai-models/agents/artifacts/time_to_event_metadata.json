@@ -1,0 +1,48 @@
+{
+  "agent_id": "time_to_event_risk_agent",
+  "name": "Survival & Time-to-Failure Risk Engine",
+  "framework": "scikit-learn",
+  "algorithm": "GradientBoostingRegressor (160 estimators, max_depth=5) + Weibull Degradation",
+  "r2_score": 0.9867,
+  "mae_days": 67.35,
+  "rmse_days": 117.02,
+  "concordance_index": 0.9604,
+  "rul_accuracy_pct": 98.7,
+  "trained_samples": 4500,
+  "trained_at": "2026-09-22T20:59:15.456182+00:00",
+  "feature_importances": {
+    "wear_depth_mm": 0.0084,
+    "wear_ratio": 0.4178,
+    "cumulative_gmt": 0.0048,
+    "gmt_ratio": 0.3727,
+    "annual_gmt_rate": 0.0751,
+    "ambient_temp_extreme": 0.0011,
+    "corrosion_index": 0.0004,
+    "track_curvature_deg": 0.0006,
+    "axle_load_tonnes": 0.0002,
+    "weibull_shape_k": 0.0539,
+    "weibull_scale_lambda_gmt": 0.065
+  },
+  "feature_columns": [
+    "wear_depth_mm",
+    "wear_ratio",
+    "cumulative_gmt",
+    "gmt_ratio",
+    "annual_gmt_rate",
+    "ambient_temp_extreme",
+    "corrosion_index",
+    "track_curvature_deg",
+    "axle_load_tonnes",
+    "weibull_shape_k",
+    "weibull_scale_lambda_gmt"
+  ],
+  "calibrated_asset_classes": [
+    "60KG_90_UTS_RAIL",
+    "52KG_90_UTS_RAIL",
+    "60KG_110_UTS_HH",
+    "TURNOUT_1_IN_12",
+    "CMS_CROSSING",
+    "OHE_CONTACT_WIRE",
+    "CONCRETE_SLEEPER"
+  ]
+}

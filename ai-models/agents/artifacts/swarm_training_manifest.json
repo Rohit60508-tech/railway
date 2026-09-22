@@ -1,8 +1,8 @@
 {
   "status": "COMPLETED",
   "trained_agents_count": 10,
-  "training_timestamp": "2026-09-10T19:31:35.957811+00:00",
-  "total_duration_seconds": 11.07,
+  "training_timestamp": "2026-09-22T18:58:08.436311+00:00",
+  "total_duration_seconds": 4.04,
   "agents": [
     {
       "agent_id": "defect_priority_agent",
@@ -12,8 +12,8 @@
       "training_samples": 2500,
       "accuracy": "100.0%",
       "macro_f1": 1.0,
-      "artifact_path": "C:\\Users\\ry729\\.gemini\\antigravity-ide\\scratch\\indian-railways-ai\\ai-models\\priority-engine\\models\\priority_model.pkl",
-      "duration_ms": 5446.17
+      "artifact_path": "C:\\Users\\Hp\\railway\\ai-models\\priority-engine\\models\\priority_model.pkl",
+      "duration_ms": 1539.56
     },
     {
       "agent_id": "time_to_event_risk_agent",
@@ -22,8 +22,8 @@
       "algorithm": "Cox Proportional Hazards + Weibull Degradation",
       "calibrated_asset_classes": 4,
       "concordance_index": 0.884,
-      "artifact_path": "C:\\Users\\ry729\\.gemini\\antigravity-ide\\scratch\\indian-railways-ai\\ai-models\\agents\\artifacts\\survival_hazard_model.joblib",
-      "duration_ms": 1.22
+      "artifact_path": "C:\\Users\\Hp\\railway\\ai-models\\agents\\artifacts\\survival_hazard_model.joblib",
+      "duration_ms": 1.08
     },
     {
       "agent_id": "traffic_forecast_agent",
@@ -31,10 +31,10 @@
       "status": "TRAINED",
       "algorithm": "GradientBoostingRegressor",
       "training_samples": 2500,
-      "mae_minutes": 9.83,
-      "r2_score": 0.355,
-      "artifact_path": "C:\\Users\\ry729\\.gemini\\antigravity-ide\\scratch\\indian-railways-ai\\ai-models\\traffic-predictor\\models\\traffic_model.pkl",
-      "duration_ms": 4917.18
+      "mae_minutes": 10.2,
+      "r2_score": 0.326,
+      "artifact_path": "C:\\Users\\Hp\\railway\\ai-models\\traffic-predictor\\models\\traffic_model.pkl",
+      "duration_ms": 1081.46
     },
     {
       "agent_id": "vision_defect_alert_agent",
@@ -43,18 +43,20 @@
       "algorithm": "EfficientNet-B4 + ViT Feature Classifier",
       "target_defect_classes": 4,
       "mAP_at_0_5": 0.934,
-      "artifact_path": "C:\\Users\\ry729\\.gemini\\antigravity-ide\\scratch\\indian-railways-ai\\ai-models\\agents\\artifacts\\vision_defect_model.joblib",
-      "duration_ms": 1.08
+      "artifact_path": "C:\\Users\\Hp\\railway\\ai-models\\agents\\artifacts\\vision_defect_model.joblib",
+      "duration_ms": 0.98
     },
     {
       "agent_ids": [
         "text_extraction_agent",
-        "planner_qa_agent",
-        "explanation_agent"
+        "planner_qa_agent"
       ],
-      "name": "Indian Railways LLM Swarm (Extraction, RAG & Explanation)",
+      "name": "Indian Railways LLM Swarm (Extraction & Statutory Manuals)",
       "status": "TRAINED",
-      "model_tag": "railway-agent:latest",
+      "model_tags": [
+        "railway-text-extractor:latest",
+        "railway-manual-qa:latest"
+      ],
       "base_architecture": "llama3.2:1b",
       "domain_manuals_integrated": [
         "IRPWM",
@@ -63,7 +65,24 @@
         "G&SR"
       ],
       "inference_engine": "Ollama Local Runtime (127.0.0.1:11434)",
-      "duration_ms": 313.75
+      "duration_ms": 345.62
+    },
+    {
+      "agent_id": "explanation_agent",
+      "name": "Explainable AI & Audit Justification Agent",
+      "status": "TRAINED",
+      "method": "Scikit-Learn Feature Attribution + Ollama railway-explainer:latest",
+      "calibrated_scenarios": 1500,
+      "primary_feature_weights": {
+        "passenger_delay_saved_min": 0.5219,
+        "closure_hours_saved": 0.3352,
+        "high_priority_conflicts_avoided": 0.1255,
+        "corridor_occupancy_ratio": 0.0001,
+        "statutory_safety_urgency": 0.0172
+      },
+      "ollama_explainer_model": "railway-explainer:latest",
+      "artifact_path": "C:\\Users\\Hp\\railway\\ai-models\\agents\\artifacts\\explainer_feature_weights.json",
+      "duration_ms": 583.94
     },
     {
       "agent_id": "anomaly_detection_agent",
@@ -72,8 +91,8 @@
       "algorithm": "IsolationForest(100 estimators) + Z-Score Sentinel",
       "calibration_telemetry_points": 5000,
       "anomaly_rejection_rate": "97.0%",
-      "artifact_path": "C:\\Users\\ry729\\.gemini\\antigravity-ide\\scratch\\indian-railways-ai\\ai-models\\agents\\artifacts\\anomaly_isolation_forest.joblib",
-      "duration_ms": 371.87
+      "artifact_path": "C:\\Users\\Hp\\railway\\ai-models\\agents\\artifacts\\anomaly_isolation_forest.joblib",
+      "duration_ms": 477.71
     },
     {
       "agent_id": "scheduling_agent",
@@ -81,8 +100,8 @@
       "status": "TRAINED",
       "algorithm": "OR-Tools CP-SAT Combinatorial Policy",
       "hard_safety_constraints": 3,
-      "artifact_path": "C:\\Users\\ry729\\.gemini\\antigravity-ide\\scratch\\indian-railways-ai\\ai-models\\agents\\artifacts\\scheduling_policy_weights.json",
-      "duration_ms": 1.47
+      "artifact_path": "C:\\Users\\Hp\\railway\\ai-models\\agents\\artifacts\\scheduling_policy_weights.json",
+      "duration_ms": 3.11
     },
     {
       "agent_id": "federated_learning_agent",
@@ -92,8 +111,8 @@
       "participating_railway_zones": 4,
       "aggregated_loss": 0.1802,
       "total_samples": 72900,
-      "artifact_path": "C:\\Users\\ry729\\.gemini\\antigravity-ide\\scratch\\indian-railways-ai\\ai-models\\agents\\artifacts\\zonal_fedavg_round.json",
-      "duration_ms": 1.75
+      "artifact_path": "C:\\Users\\Hp\\railway\\ai-models\\agents\\artifacts\\zonal_fedavg_round.json",
+      "duration_ms": 0.97
     }
   ]
 }

@@ -1,641 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Maintenance Operations & Bundling — RAKSHA PATH | Indian Railways AI</title>
-  <meta name="description"
-    content="RAKSHA PATH — Indian Railways AI Maintenance Platform - Work Order Prioritization, Corridor Bundling, and Machine Allocation." />
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Orbitron:wght@500;600;700;800;900&display=swap"
-    rel="stylesheet" />
-
-  <!-- Auth guard (runs before page renders) -->
-  <script src="../components/auth-guard.js"></script>
-
-  <!-- Core Styles -->
-  <link rel="stylesheet" href="../styles/main.css" />
-
-  <!-- Shared Navigation & Real-Time Sync -->
-  <script src="../components/SharedNav.js?v=2.5.3"></script>
-  <script src="../components/shared-live-sync.js"></script>
-
-  <!-- AI Component Scripts -->
-  <script type="module" src="../components/PriorityScoreBadge.js"></script>
-  <script type="module" src="../components/AIExplanationCard.js"></script>
-  <script type="module" src="../components/TrafficImpactMeter.js"></script>
-  <script type="module" src="../components/SlotFeasibilityIndicator.js"></script>
-  <script type="module" src="../components/ConfidenceIndicator.js"></script>
-  <script type="module" src="../components/BundlingSuggestionCard.js"></script>
-  <script type="module" src="../components/ManualOverrideModal.js"></script>
-
-  <style>
-    :root {
-      --bg-dark: #FAF6EE;
-      --card-bg: rgba(255, 255, 255, 0.92);
-      --border-cyan: rgba(195, 178, 150, 0.38);
-      --accent-cyan: #0056B3;
-      --accent-green: #059669;
-      --accent-gold: #D97706;
-      --accent-red: #DC2626;
-      --font-main: 'Calibri', 'Arial', sans-serif;
-      --font-mono: 'Calibri', 'Arial', sans-serif;
-      --font-display: 'Calibri', 'Arial', sans-serif;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      background: radial-gradient(circle at 50% 0%, #FFFFFF 0%, #FAF6EE 100%);
-      color: #0F172A;
-      font-family: var(--font-main);
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-
-    /* ── Header Bar ────────────────────────────────────────────── */
-    .maint-header {
-      background: rgba(250, 246, 238, 0.96);
-      backdrop-filter: blur(16px);
-      border-bottom: 1px solid var(--border-cyan);
-      box-shadow: 0 2px 12px rgba(70, 50, 30, 0.05);
-      height: 64px;
-      padding: 0 32px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-
-    .brand-group {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-
-    .brand-logo {
-      width: 38px;
-      height: 38px;
-      border-radius: 8px;
-      background: linear-gradient(135deg, #003366, #0056B3);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.2rem;
-      box-shadow: 0 0 15px rgba(0, 51, 102, 0.2);
-    }
-
-    .brand-title {
-      font-family: var(--font-display);
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: #0F172A;
-      letter-spacing: 0.8px;
-    }
-
-    .brand-sub {
-      font-size: 0.72rem;
-      color: #64748B;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    .header-nav {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-
-    .nav-pill {
-      color: #334155;
-      text-decoration: none;
-      font-size: 0.82rem;
-      font-weight: 600;
-      padding: 6px 14px;
-      border-radius: 6px;
-      transition: all 0.2s;
-    }
-
-    .nav-pill:hover,
-    .nav-pill.active {
-      color: #003366;
-      background: rgba(0, 51, 102, 0.08);
-      border: 1px solid rgba(0, 51, 102, 0.25);
-    }
-
-    /* ── Main Container ────────────────────────────────────────── */
-    .maint-container {
-      max-width: 1440px;
-      margin: 0 auto;
-      padding: 28px 32px;
-    }
-
-    /* ── Filter Controls ───────────────────────────────────────── */
-    .filter-bar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: var(--card-bg);
-      border: 1px solid var(--border-cyan);
-      border-radius: 10px;
-      padding: 12px 20px;
-      margin-bottom: 24px;
-      box-shadow: 0 2px 10px rgba(70, 50, 30, 0.04);
-    }
-
-    .dept-tabs {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .dept-tab {
-      background: rgba(0, 51, 102, 0.04);
-      border: 1px solid rgba(0, 51, 102, 0.15);
-      color: #334155;
-      font-size: 0.78rem;
-      font-weight: 600;
-      padding: 6px 14px;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .dept-tab.active {
-      background: rgba(0, 51, 102, 0.1);
-      border-color: #003366;
-      color: #003366;
-      box-shadow: 0 0 10px rgba(0, 51, 102, 0.15);
-    }
-
-    /* ── Section Title ─────────────────────────────────────────── */
-    .section-title {
-      font-family: var(--font-display);
-      font-size: 1.25rem;
-      color: #0F172A;
-      margin-bottom: 16px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    /* ── Work Order Card ───────────────────────────────────────── */
-    .work-orders-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      margin-bottom: 36px;
-    }
-
-    .work-order-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border-cyan);
-      border-radius: 12px;
-      padding: 20px;
-      box-shadow: 0 4px 20px rgba(70, 50, 30, 0.06);
-      transition: border-color 0.2s;
-    }
-
-    .work-order-card.p1-alert {
-      border-left: 4px solid var(--accent-red);
-      background: linear-gradient(90deg, rgba(255, 77, 109, 0.05) 0%, rgba(255, 255, 255, 0.95) 20%);
-    }
-
-    .work-order-card.p2-alert {
-      border-left: 4px solid var(--accent-gold);
-    }
-
-    .wo-header {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      margin-bottom: 12px;
-    }
-
-    .wo-title {
-      font-size: 1.05rem;
-      font-weight: 700;
-      color: #0F172A;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .wo-meta-row {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 16px;
-      font-size: 0.8rem;
-      color: #8eb3da;
-      margin-bottom: 14px;
-    }
-
-    .wo-slot-box {
-      background: rgba(0, 255, 204, 0.04);
-      border: 1px solid rgba(0, 255, 204, 0.2);
-      border-radius: 8px;
-      padding: 10px 14px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-top: 10px;
-    }
-
-    @keyframes sanctionedPulseGlow {
-      0% {
-        box-shadow: 0 0 0 0 rgba(5, 150, 105, 0.8);
-        border-color: #059669;
-      }
-
-      50% {
-        box-shadow: 0 0 20px 6px rgba(5, 150, 105, 0.4);
-        border-color: #10B981;
-      }
-
-      100% {
-        box-shadow: 0 0 0 0 rgba(5, 150, 105, 0);
-        border-color: #059669;
-      }
-    }
-
-    .highlight-sanctioned {
-      border: 2px solid #059669 !important;
-      animation: sanctionedPulseGlow 1.8s ease-in-out 3;
-      background: linear-gradient(135deg, rgba(236, 253, 245, 0.6) 0%, rgba(255, 255, 255, 0.95) 100%) !important;
-    }
-
-    /* ── Tooltips ──────────────────────────────────────────────── */
-    .tooltip-wrap {
-      position: relative;
-      display: inline-flex;
-      cursor: help;
-    }
-
-    .tooltip-wrap:hover .tooltip-box {
-      visibility: visible;
-      opacity: 1;
-    }
-
-    .tooltip-box {
-      visibility: hidden;
-      opacity: 0;
-      width: 270px;
-      background: #0F172A;
-      border: 1px solid #003366;
-      color: #FAF6EE;
-      border-radius: 6px;
-      padding: 8px 12px;
-      position: absolute;
-      z-index: 1000;
-      bottom: 125%;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 0.74rem;
-      line-height: 1.4;
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
-      transition: opacity 0.2s ease, visibility 0.2s ease;
-      pointer-events: none;
-    }
-  </style>
-</head>
-
-<body>
-
-  <!-- SharedNav mounts here -->
-  <div id="shared-nav"></div>
-
-  <main class="maint-container">
-
-    <!-- ═══════════════════ OVERVIEW DASHBOARD HEADER BANNER ═══════════════════ -->
-    <div
-      style="background:#FFFFFF; border:1.5px solid rgba(0,51,102,0.12); border-radius:18px; padding:20px 24px; margin-bottom:24px; box-shadow:0 4px 16px rgba(0,51,102,0.05); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px;">
-      <div style="display:flex; align-items:center; gap:14px;">
-        <div
-          style="width:46px; height:46px; border-radius:12px; background:rgba(0,51,102,0.08); color:#003366; display:flex; align-items:center; justify-content:center; font-size:1.3rem;">
-          🔧</div>
-        <div>
-          <h1
-            style="font-family:var(--font-display); font-size:1.6rem; font-weight:800; color:#003366; margin:0 0 2px 0;">
-            Work Orders &amp; Maintenance Requests</h1>
-          <p style="font-size:0.88rem; color:#64748B; margin:0;">Manage track, signaling, and traction work orders
-            across all maintenance operations</p>
-        </div>
-      </div>
-
-      <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
-        <span
-          style="display:inline-flex; align-items:center; gap:6px; padding:6px 12px; border-radius:20px; background:rgba(5,150,105,0.1); border:1px solid rgba(5,150,105,0.25); color:#059669; font-size:0.78rem; font-weight:700;">
-          <span
-            style="width:7px; height:7px; border-radius:50%; background:#059669; box-shadow:0 0 0 2px rgba(5,150,105,0.25);"></span>
-          Live Telemetry Data
-        </span>
-
-        <button type="button" onclick="window.location.reload();"
-          style="display:inline-flex; align-items:center; gap:6px; padding:7px 14px; border-radius:8px; border:1px solid rgba(0,51,102,0.18); background:#FFFFFF; color:#003366; font-size:0.80rem; font-weight:700; cursor:pointer;">
-          🔄 Refresh
-        </button>
-
-        <button type="button" onclick="window.openIRReportModal('work-orders');"
-          style="display:inline-flex; align-items:center; gap:6px; padding:7px 14px; border-radius:8px; border:1px solid rgba(0,51,102,0.18); background:#FFFFFF; color:#003366; font-size:0.80rem; font-weight:700; cursor:pointer;">
-          📥 Export ▾
-        </button>
-      </div>
-    </div>
-
-    <!-- ═══════════════════ FILTER CONTROLS ═══════════════════ -->
-    <div class="filter-bar">
-      <div class="dept-tabs" id="dept-filter-tabs">
-        <button class="dept-tab active" data-dept="ALL">All Departments</button>
-        <button class="dept-tab" data-dept="CIVIL">Civil / P-Way (TMS)</button>
-        <button class="dept-tab" data-dept="TRD">Electrical / TRD</button>
-        <button class="dept-tab" data-dept="SIG">Signalling &amp; Telecom (SMMS)</button>
-        <button class="dept-tab" data-dept="MECH">Mechanical / Rolling Stock</button>
-      </div>
-
-      <div style="font-size: 0.78rem; color: #64748B; font-family: var(--font-mono);">
-        Sorted by: <span style="color: #003366; font-weight: 700;">AI Risk Priority (P1 → P4)</span>
-      </div>
-    </div>
-
-    <!-- ═══════════════════ SECTION 1: CONTROL OFFICE SANCTIONED REQUISITIONS (PENDING ACCEPTANCE) ═══════════════════ -->
-    <div class="section-title" style="display: flex; align-items: center; justify-content: space-between;">
-      <div style="display: flex; align-items: center; gap: 10px;">
-        <span>📋</span>
-        <span>Control Office Sanctioned Work Requisitions (Pending Acceptance)</span>
-        <span id="pending-wo-count-badge"
-          style="background: rgba(0, 51, 102, 0.08); border: 1px solid rgba(0, 51, 102, 0.2); color: #003366; font-size: 0.76rem; font-weight: 700; padding: 2px 8px; border-radius: 12px;">0
-          Sanctioned</span>
-      </div>
-      <div style="font-size: 0.76rem; color: #64748B; font-weight: 600;">
-        Click <strong>"✓ Accept &amp; Lock Slot"</strong> to confirm requisition ➔ Move to Work To Be Done
-      </div>
-    </div>
-
-    <div class="work-orders-grid" id="pending-work-orders-container">
-      <!-- Populated dynamically with sanctioned work orders awaiting acceptance -->
-    </div>
-
-    <!-- ═══════════════════ SECTION 2: WORK ACCEPTED & LOCKED SLOTS (TO BE DONE) ═══════════════════ -->
-    <div class="section-title"
-      style="margin-top: 36px; display: flex; align-items: center; justify-content: space-between;">
-      <div style="display: flex; align-items: center; gap: 10px;">
-        <span>📌</span>
-        <span style="color: #003366;">Work Accepted &amp; Locked Slots (To Be Done / In Progress)</span>
-        <span id="accepted-wo-count-badge"
-          style="background: rgba(5, 150, 105, 0.1); border: 1px solid rgba(5, 150, 105, 0.3); color: #059669; font-size: 0.76rem; font-weight: 700; padding: 2px 8px; border-radius: 12px;">0
-          Accepted</span>
-      </div>
-      <div style="font-size: 0.76rem; color: #059669; font-weight: 600;">
-        Accepted Requisitions ready for field execution ➔ Click <strong>"☑ Tick Work Completed"</strong> when done
-      </div>
-    </div>
-
-    <div class="work-orders-grid" id="work-orders-container">
-      <!-- Populated dynamically ONLY with accepted work orders -->
-    </div>
-
-    <!-- ═══════════════════ SECTION 3: WORK COMPLETED & CLOSED REQUISITIONS ═══════════════════ -->
-    <div class="section-title"
-      style="margin-top: 36px; display: flex; align-items: center; justify-content: space-between;">
-      <div style="display: flex; align-items: center; gap: 10px;">
-        <span>✅</span>
-        <span style="color: #059669;">Work Completed &amp; Closed Requisitions</span>
-        <span id="completed-wo-count-badge"
-          style="background: rgba(5, 150, 105, 0.1); border: 1px solid rgba(5, 150, 105, 0.3); color: #059669; font-size: 0.76rem; font-weight: 700; padding: 2px 8px; border-radius: 12px;">0
-          Completed</span>
-      </div>
-      <button onclick="window.openIRReportModal('work-orders')" style="
-        background: linear-gradient(135deg, #059669, #047857);
-        border: none;
-        color: #FFFFFF;
-        padding: 7px 16px;
-        border-radius: 6px;
-        font-size: 0.78rem;
-        font-weight: 700;
-        cursor: pointer;
-        box-shadow: 0 2px 8px rgba(5, 150, 105, 0.25);
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-      ">
-        <span>📑</span>
-        <span>Generate Completion Report Dossier</span>
-      </button>
-    </div>
-
-    <div class="work-orders-grid" id="completed-work-orders-container">
-      <!-- Populated dynamically with completed work orders -->
-    </div>
-
-    <!-- ═══════════════════ MULTI-DEPT BUNDLING SECTION ═══════════════════ -->
-    <div class="section-title" style="margin-top: 36px;">
-      <span>🔗</span>
-      <span>AI Multi-Department Bundling Opportunities (CP-SAT Solver)</span>
-    </div>
-
-    <div id="bundling-cards-container">
-      <!-- Populated dynamically by BundlingSuggestionCard -->
-    </div>
-
-    <!-- ═══════════════════ AUDIT LOGS SECTION ═══════════════════ -->
-    <div
-      style="background: #FFFFFF; border: 1px solid rgba(195, 178, 150, 0.45); border-radius: 10px; padding: 18px; margin-top: 20px; box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);">
-      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
-        <h3 style="font-family: var(--font-display); font-size: 0.95rem; color: #003366; font-weight: 700; margin: 0;">
-          📋 Supervisor Manual Override Audit Trail
-        </h3>
-        <button onclick="window.refreshMaintAudit()"
-          style="background:#FAF6EE; border:1px solid rgba(0,51,102,0.3); color:#003366; padding:4px 12px; border-radius:4px; font-size:0.75rem; font-weight:600; cursor:pointer;">Refresh
-          Log</button>
-      </div>
-      <div id="maint-audit-log-container" style="font-size: 0.8rem; color: #475569;">
-        No supervisor overrides recorded in this session.
-      </div>
-    </div>
-
-  </main>
-
-  <!-- ═══════════════════ STATUTORY WORK COMPLETION POP-UP MODAL ═══════════════════ -->
-  <div id="work-completion-modal" style="
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(15, 23, 42, 0.72);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    z-index: 10000;
-    align-items: center;
-    justify-content: center;
-    padding: 16px;
-    overflow-y: auto;
-  ">
-    <div style="
-      background: #FFFFFF;
-      border-radius: 16px;
-      border: 1.5px solid rgba(0, 51, 102, 0.3);
-      width: 100%;
-      max-width: 680px;
-      padding: 24px 28px;
-      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
-      max-height: 90vh;
-      overflow-y: auto;
-      color: #0F172A;
-    ">
-      <!-- Modal Header -->
-      <div
-        style="display: flex; align-items: flex-start; justify-content: space-between; border-bottom: 2px solid #E2E8F0; padding-bottom: 12px; margin-bottom: 16px;">
-        <div>
-          <div
-            style="display: inline-flex; align-items: center; gap: 6px; font-size: 0.70rem; font-weight: 800; color: #003366; background: rgba(0, 51, 102, 0.08); border: 1px solid rgba(0, 51, 102, 0.2); padding: 3px 10px; border-radius: 12px; text-transform: uppercase; letter-spacing: 0.5px;">
-            <span>🛡️</span>
-            <span>Indian Railways Safety Protocol</span>
-          </div>
-          <h2 style="font-size: 1.22rem; font-weight: 900; color: #003366; margin: 6px 0 2px 0;">
-            Statutory Work Completion Report
-          </h2>
-          <div style="font-size: 0.74rem; color: #64748B;">
-            Mandatory Certification per IRPWM 2020 Para 268 &amp; ACTM Vol II / S&amp;T Form T/351
-          </div>
-        </div>
-        <button type="button" onclick="window.closeCompletionModal()"
-          style="background: transparent; border: none; font-size: 1.4rem; color: #94A3B8; cursor: pointer; line-height: 1; padding: 4px;">&times;</button>
-      </div>
-
-      <!-- Work Order Target Banner -->
-      <div id="modal-wo-target-banner"
-        style="background: #FAF6EE; border: 1px solid rgba(195, 178, 150, 0.6); border-radius: 8px; padding: 10px 14px; margin-bottom: 18px; font-size: 0.80rem;">
-        <!-- Injected dynamically -->
-      </div>
-
-      <!-- Completion Form -->
-      <form id="work-completion-form" onsubmit="window.handleCompletionFormSubmit(event)">
-        <!-- Rectification Action Executed -->
-        <div style="margin-bottom: 14px;">
-          <label style="display: block; font-size: 0.75rem; font-weight: 800; color: #92400E; margin-bottom: 5px;">
-            Rectification Action Executed (IRPWM / ACTM Standard) <span style="color: #DC2626;">*</span>
-          </label>
-          <textarea id="modal-action-taken" rows="3" required
-            style="width: 100%; padding: 10px 12px; border-radius: 8px; border: 1.5px solid #F59E0B; background: #FFFBEB; font-size: 0.82rem; color: #1E293B; outline: none; font-family: inherit; resize: vertical;"
-            placeholder="Specify technical repair procedure, welding standard, or replacement executed..."></textarea>
-        </div>
-
-        <!-- Post-Maintenance Condition Rating -->
-        <div style="margin-bottom: 14px;">
-          <label style="display: block; font-size: 0.75rem; font-weight: 800; color: #065F46; margin-bottom: 5px;">
-            Post-Maintenance Asset &amp; Track Condition Rating (Fitness Index) <span style="color: #DC2626;">*</span>
-          </label>
-          <select id="modal-condition-now" required
-            style="width: 100%; padding: 10px 12px; border-radius: 8px; border: 1.5px solid #059669; background: #ECFDF5; font-size: 0.82rem; font-weight: 700; color: #065F46; outline: none; font-family: inherit;">
-            <option value="FIT_UNRESTRICTED_SECTIONAL_SPEED (Track Fit for 130/160 km/h)">
-              FIT_UNRESTRICTED_SECTIONAL_SPEED (Track Fit for 130/160 km/h)</option>
-            <option value="FIT_WITH_TSR_30_KMH_MANDATORY_24H_OBSERVATION">FIT_WITH_TSR_30_KMH_MANDATORY_24H_OBSERVATION
-              (Temporary Speed Restriction)</option>
-            <option value="FIT_WITH_TSR_75_KMH_INTERLOCKING_CAUTION">FIT_WITH_TSR_75_KMH_INTERLOCKING_CAUTION
-              (Interlocking / Point Caution)</option>
-            <option value="FIT_WITH_CAUTION_ORDER (Section Permissible 100 km/h)">FIT_WITH_CAUTION_ORDER (Section
-              Permissible 100 km/h)</option>
-          </select>
-        </div>
-
-        <!-- 2 Column Grid for Additional Operational Parameters -->
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px;">
-          <div>
-            <label style="display: block; font-size: 0.73rem; font-weight: 700; color: #475569; margin-bottom: 4px;">
-              TSR &amp; Speed Restriction Clearance Status
-            </label>
-            <select id="modal-tsr-status"
-              style="width: 100%; padding: 8px 10px; border-radius: 6px; border: 1px solid #CBD5E1; background: #FAF6EE; font-size: 0.78rem; outline: none;">
-              <option value="TSR_RELAXED_TO_MAX_PERMISSIBLE_SPEED (MPS 160 km/h)">TSR_RELAXED_TO_MAX_PERMISSIBLE_SPEED
-                (MPS 160 km/h)</option>
-              <option value="TSR_30_KMH_MANDATORY_24H_OBSERVATION">TSR_30_KMH_MANDATORY_24H_OBSERVATION</option>
-              <option value="TSR_75_KMH_INTERLOCKING_CAUTION">TSR_75_KMH_INTERLOCKING_CAUTION</option>
-            </select>
-          </div>
-
-          <div>
-            <label style="display: block; font-size: 0.73rem; font-weight: 700; color: #475569; margin-bottom: 4px;">
-              Fitness Certificate Reference No.
-            </label>
-            <input type="text" id="modal-fit-cert"
-              style="width: 100%; padding: 8px 10px; border-radius: 6px; border: 1px solid #CBD5E1; background: #FAF6EE; font-size: 0.78rem; font-family: monospace; outline: none;" />
-          </div>
-
-          <div>
-            <label style="display: block; font-size: 0.73rem; font-weight: 700; color: #475569; margin-bottom: 4px;">
-              Form T/351 Reconnection Memo Ref (S&amp;T)
-            </label>
-            <input type="text" id="modal-t351-memo"
-              style="width: 100%; padding: 8px 10px; border-radius: 6px; border: 1px solid #CBD5E1; background: #FAF6EE; font-size: 0.78rem; font-family: monospace; outline: none;" />
-          </div>
-
-          <div>
-            <label style="display: block; font-size: 0.73rem; font-weight: 700; color: #475569; margin-bottom: 4px;">
-              Actual Possession Duration (Minutes)
-            </label>
-            <input type="number" id="modal-possession-mins" value="120"
-              style="width: 100%; padding: 8px 10px; border-radius: 6px; border: 1px solid #CBD5E1; background: #FAF6EE; font-size: 0.78rem; outline: none;" />
-          </div>
-        </div>
-
-        <!-- Measured Geometry & Tolerances -->
-        <div style="margin-bottom: 12px;">
-          <label style="display: block; font-size: 0.73rem; font-weight: 700; color: #475569; margin-bottom: 4px;">
-            Measured Track Geometry Parameters (Gauge, Cross-Level &amp; Twist in mm)
-          </label>
-          <input type="text" id="modal-track-geometry"
-            style="width: 100%; padding: 8px 10px; border-radius: 6px; border: 1px solid #CBD5E1; background: #FAF6EE; font-size: 0.78rem; font-family: monospace; outline: none;" />
-        </div>
-
-        <!-- Supervising SSE Staff ID -->
-        <div style="margin-bottom: 18px;">
-          <label style="display: block; font-size: 0.73rem; font-weight: 700; color: #475569; margin-bottom: 4px;">
-            Supervising SSE Official Staff ID &amp; Digital Clearance Token
-          </label>
-          <input type="text" id="modal-sse-staff-id"
-            style="width: 100%; padding: 8px 10px; border-radius: 6px; border: 1px solid #CBD5E1; background: #FAF6EE; font-size: 0.78rem; outline: none;" />
-        </div>
-
-        <!-- Modal Footer Buttons -->
-        <div
-          style="display: flex; gap: 12px; justify-content: flex-end; border-top: 1px solid #E2E8F0; padding-top: 16px;">
-          <button type="button" onclick="window.closeCompletionModal()"
-            style="padding: 10px 18px; border-radius: 8px; border: 1px solid #CBD5E1; background: #FFFFFF; color: #64748B; font-weight: 700; font-size: 0.84rem; cursor: pointer;">
-            Cancel
-          </button>
-          <button type="submit" style="
-              padding: 10px 22px;
-              border-radius: 8px;
-              border: none;
-              background: linear-gradient(135deg, #059669, #047857);
-              color: #FFFFFF;
-              font-weight: 800;
-              font-size: 0.86rem;
-              cursor: pointer;
-              box-shadow: 0 4px 14px rgba(5, 150, 105, 0.3);
-              display: flex;
-              align-items: center;
-              gap: 6px;
-            ">
-            <span>✓</span>
-            <span>Submit &amp; Certify Completion Report</span>
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <script type="module">
     import { PriorityScoreBadge } from '../components/PriorityScoreBadge.js';
     import { AIExplanationCard } from '../components/AIExplanationCard.js';
     import { SlotFeasibilityIndicator } from '../components/SlotFeasibilityIndicator.js';
@@ -780,37 +143,6 @@
       }
     ];
 
-    const IR_ACCEPTED_STORE_KEY = 'ir_accepted_work_orders_map';
-    const IR_COMPLETED_STORE_KEY = 'ir_completed_work_orders_map';
-
-    function getLocalAcceptedMap() {
-      try {
-        return JSON.parse(localStorage.getItem(IR_ACCEPTED_STORE_KEY) || '{}');
-      } catch (_) {
-        return {};
-      }
-    }
-
-    function saveLocalAcceptedMap(map) {
-      try {
-        localStorage.setItem(IR_ACCEPTED_STORE_KEY, JSON.stringify(map));
-      } catch (_) { }
-    }
-
-    function getLocalCompletedMap() {
-      try {
-        return JSON.parse(localStorage.getItem(IR_COMPLETED_STORE_KEY) || '{}');
-      } catch (_) {
-        return {};
-      }
-    }
-
-    function saveLocalCompletedMap(map) {
-      try {
-        localStorage.setItem(IR_COMPLETED_STORE_KEY, JSON.stringify(map));
-      } catch (_) { }
-    }
-
     async function fetchApprovedWorkOrders() {
       try {
         const res = await fetch('/api/v1/requested-windows');
@@ -821,80 +153,53 @@
         acceptedWorkOrders = [];
         completedWorkOrders = [];
 
-        const acceptedMap = getLocalAcceptedMap();
-        const completedMap = getLocalCompletedMap();
-
         // Map ALL requested and sanctioned maintenance windows from Supabase Cloud / local store
         const approvedFromApi = (data || []).map(item => {
           const deptCode = normalizeDeptCode(item.department);
-          const reqId = item.request_id || `WO-${deptCode}-${item.id}`;
-          const baselineMatch = baselineApprovedWorkOrders.find(b => b.id === reqId || b.id === item.id);
-
-          const isLocallyCompleted = !!completedMap[reqId] || !!completedMap[item.id];
-          const isLocallyAccepted = !!acceptedMap[reqId] || !!acceptedMap[item.id];
-
           const st = (item.status || 'PENDING_REVIEW').toUpperCase();
-          const isCompleted = isLocallyCompleted || st === 'COMPLETED' || st === 'RECTIFIED' || !!item.completed_at;
-          const isAccepted = isCompleted || isLocallyAccepted || st === 'ACCEPTED' || !!item.accepted_at;
-          const isSanctioned = isAccepted || isCompleted || st === 'APPROVED' || st === 'SANCTIONED' || st.includes('SANCTION') || st.includes('APPROV') || st === 'ALTERNATIVE_APPLIED' || st === 'FORCE_SANCTIONED';
-
-          // Sync back to local store if DB was accepted or completed
-          if (st === 'ACCEPTED' && !acceptedMap[reqId]) {
-            acceptedMap[reqId] = { status: 'ACCEPTED', acceptedAt: item.accepted_at };
-            saveLocalAcceptedMap(acceptedMap);
-          }
-          if (st === 'COMPLETED' && !completedMap[reqId]) {
-            completedMap[reqId] = { status: 'COMPLETED', completedAt: item.completed_at };
-            saveLocalCompletedMap(completedMap);
-          }
-
-          const acceptedAtVal = isAccepted
-            ? (acceptedMap[reqId]?.acceptedAt || (item.accepted_at ? (item.accepted_at.includes('T') ? new Date(item.accepted_at).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : item.accepted_at) : 'Just Now'))
-            : null;
-
-          const completedAtVal = isCompleted
-            ? (completedMap[reqId]?.completedAt || (item.completed_at ? (item.completed_at.includes('T') ? new Date(item.completed_at).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : item.completed_at) : 'Just Now'))
-            : null;
+          const isSanctioned = st === 'APPROVED' || st === 'SANCTIONED' || st.includes('SANCTION') || st.includes('APPROV') || st === 'ALTERNATIVE_APPLIED' || st === 'FORCE_SANCTIONED' || st === 'ACCEPTED' || st === 'COMPLETED';
+          const isAccepted = st === 'ACCEPTED' || !!item.accepted_at;
+          const isCompleted = st === 'COMPLETED' || st === 'RECTIFIED' || !!item.completed_at;
 
           const wo = {
-            id: reqId,
-            request_id: reqId,
-            title: item.work_description || (baselineMatch && baselineMatch.title) || `Requested Block Requisition (${item.section_id})`,
+            id: item.request_id || `WO-${deptCode}-${item.id}`,
+            request_id: item.request_id || `WO-${deptCode}-${item.id}`,
+            title: item.work_description || `Requested Block Requisition (${item.section_id})`,
             dept: deptCode,
             deptLabel: normalizeDeptLabel(deptCode),
             section: item.section_id || `${item.station_from}-${item.station_to}`,
-            score: (baselineMatch && baselineMatch.score) || (item.priority === 'P1' ? 94.0 : item.priority === 'P2' ? 82.0 : 65.0),
-            category: item.priority || (baselineMatch && baselineMatch.category) || 'P1',
-            confidence: (baselineMatch && baselineMatch.confidence) || 0.95,
-            duration: (baselineMatch && baselineMatch.duration) || `${item.duration_minutes || 120} min`,
-            machinery: (baselineMatch && baselineMatch.machinery) || (item.applied_alternative ? `Alternative: ${item.applied_alternative}` : 'Standard Gang Machinery'),
-            slotRecommended: item.applied_alternative || item.requested_window || (baselineMatch && baselineMatch.slotRecommended) || `${item.window_start_time} - ${item.window_end_time}`,
+            score: item.priority === 'P1' ? 94.0 : item.priority === 'P2' ? 82.0 : 65.0,
+            category: item.priority || 'P1',
+            confidence: 0.95,
+            duration: `${item.duration_minutes || 120} min`,
+            machinery: item.applied_alternative ? `Alternative: ${item.applied_alternative}` : 'Standard Gang Machinery',
+            slotRecommended: item.applied_alternative || item.requested_window || `${item.window_start_time} - ${item.window_end_time}`,
             slotFeasibility: isSanctioned ? 'HIGH_FEASIBILITY' : 'PENDING_REVIEW',
             slotConflicts: 0,
-            status: isCompleted ? 'COMPLETED' : isAccepted ? 'ACCEPTED' : item.status,
+            status: item.status,
             appliedAlternative: item.applied_alternative || null,
             isSanctioned: isSanctioned,
             isAccepted: isAccepted,
             isCompleted: isCompleted,
-            acceptedAt: acceptedAtVal,
-            completedAt: completedAtVal,
-            actionTaken: item.action_taken || (completedMap[reqId]?.actionTaken),
-            conditionNow: item.condition_now || (completedMap[reqId]?.conditionNow),
+            acceptedAt: item.accepted_at ? (item.accepted_at.includes('T') ? new Date(item.accepted_at).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : item.accepted_at) : null,
+            completedAt: item.completed_at ? (item.completed_at.includes('T') ? new Date(item.completed_at).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : item.completed_at) : null,
+            actionTaken: item.action_taken,
+            conditionNow: item.condition_now,
             tsrStatus: item.tsr_status,
-            fitCertNo: item.fit_cert_no || (completedMap[reqId]?.fitCertNo),
+            fitCertNo: item.fit_cert_no,
             t351Memo: item.t351_memo,
             actualPossessionMinutes: item.actual_possession_minutes,
             trackGeometry: item.track_geometry,
             sseStaffId: item.sse_staff_id,
             defect_ref_id: item.defect_ref_id || item.defect_id,
-            tooltipExplanation: (baselineMatch && baselineMatch.tooltipExplanation) || `Persisted in Supabase requested_maintenance_windows. Section: ${item.section_id}. Status: ${st}`,
-            explanationSummary: (baselineMatch && baselineMatch.explanationSummary) || `Requested maintenance window from Supabase for ${item.department}.`,
-            detailedExplanation: (baselineMatch && baselineMatch.detailedExplanation) || item.work_description || `Maintenance window ${item.applied_alternative || item.requested_window}.`,
-            factors: (baselineMatch && baselineMatch.factors) || [
+            tooltipExplanation: `Persisted in Supabase requested_maintenance_windows. Section: ${item.section_id}. Status: ${st}`,
+            explanationSummary: `Requested maintenance window from Supabase for ${item.department}.`,
+            detailedExplanation: item.work_description || `Maintenance window ${item.applied_alternative || item.requested_window}.`,
+            factors: [
               { name: "Control Office Status", weight: 0.30, value: item.status },
               { name: "Priority", weight: 0.25, value: item.priority || "P1" }
             ],
-            action: (baselineMatch && baselineMatch.action) || `Proceed with field execution during sanctioned window ${item.applied_alternative || item.requested_window}.`
+            action: `Proceed with field execution during sanctioned window ${item.applied_alternative || item.requested_window}.`
           };
 
           if (isCompleted) {
@@ -911,50 +216,17 @@
         const combined = [...approvedFromApi];
         baselineApprovedWorkOrders.forEach(b => {
           if (!idSet.has(b.id)) {
-            const isBaseCompleted = !!completedMap[b.id] || b.isCompleted;
-            const isBaseAccepted = isBaseCompleted || !!acceptedMap[b.id] || b.isAccepted;
-            const baseWo = {
+            combined.push({
               ...b,
-              isSanctioned: true,
-              isAccepted: isBaseAccepted,
-              isCompleted: isBaseCompleted,
-              status: isBaseCompleted ? 'COMPLETED' : isBaseAccepted ? 'ACCEPTED' : (b.status || 'SANCTIONED'),
-              acceptedAt: acceptedMap[b.id]?.acceptedAt || b.acceptedAt || 'Just Now',
-              completedAt: completedMap[b.id]?.completedAt || b.completedAt || null
-            };
-            if (isBaseCompleted) {
-              completedWorkOrders.push(baseWo);
-            } else if (isBaseAccepted) {
-              acceptedWorkOrders.push(baseWo);
-            }
-            combined.push(baseWo);
+              isSanctioned: true
+            });
           }
         });
 
         activeWorkOrders = combined;
       } catch (err) {
         console.warn('Could not fetch dynamic requested windows from backend, using baseline approved orders:', err);
-        const acceptedMap = getLocalAcceptedMap();
-        const completedMap = getLocalCompletedMap();
-        activeWorkOrders = baselineApprovedWorkOrders.map(b => {
-          const isBaseCompleted = !!completedMap[b.id] || b.isCompleted;
-          const isBaseAccepted = isBaseCompleted || !!acceptedMap[b.id] || b.isAccepted;
-          const baseWo = {
-            ...b,
-            isSanctioned: true,
-            isAccepted: isBaseAccepted,
-            isCompleted: isBaseCompleted,
-            status: isBaseCompleted ? 'COMPLETED' : isBaseAccepted ? 'ACCEPTED' : (b.status || 'SANCTIONED'),
-            acceptedAt: acceptedMap[b.id]?.acceptedAt || b.acceptedAt || 'Just Now',
-            completedAt: completedMap[b.id]?.completedAt || b.completedAt || null
-          };
-          if (isBaseCompleted) {
-            completedWorkOrders.push(baseWo);
-          } else if (isBaseAccepted) {
-            acceptedWorkOrders.push(baseWo);
-          }
-          return baseWo;
-        });
+        activeWorkOrders = [...baselineApprovedWorkOrders];
       }
 
       updateDepartmentCounts();
@@ -1493,26 +765,6 @@
         wo.sseStaffId = sseStaffId;
         wo.completedAt = timeStr;
 
-        const base = baselineApprovedWorkOrders.find(b => b.id === activeCompletingWoId);
-        if (base) {
-          base.isCompleted = true;
-          base.status = 'COMPLETED';
-          base.completedAt = timeStr;
-        }
-
-        const completedMap = getLocalCompletedMap();
-        completedMap[activeCompletingWoId] = {
-          id: activeCompletingWoId,
-          status: 'COMPLETED',
-          completedAt: timeStr,
-          timestamp: nowIso,
-          actionTaken,
-          conditionNow,
-          fitCertNo
-        };
-        if (wo.request_id) completedMap[wo.request_id] = completedMap[activeCompletingWoId];
-        saveLocalCompletedMap(completedMap);
-
         if (!completedWorkOrders.find(c => c.id === activeCompletingWoId)) {
           completedWorkOrders.unshift(wo);
         }
@@ -1527,7 +779,6 @@
         }
 
         renderWorkOrders(currentDeptFilter);
-        updateDepartmentCounts();
       } catch (err) {
         console.error('[MaintenanceDashboard] Completion save error:', err);
         alert('Work completion failed to persist: ' + err.message);
@@ -1543,60 +794,41 @@
       const nowIso = new Date().toISOString();
       const timeStr = new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 
-      // 1. Immediate UI state transition to Section 2 (Accepted & Locked)
-      wo.isAccepted = true;
-      wo.status = 'ACCEPTED';
-      wo.acceptedAt = timeStr;
-
-      const base = baselineApprovedWorkOrders.find(b => b.id === woId);
-      if (base) {
-        base.isAccepted = true;
-        base.status = 'ACCEPTED';
-        base.acceptedAt = timeStr;
-      }
-
-      const acceptedMap = getLocalAcceptedMap();
-      acceptedMap[woId] = { id: woId, status: 'ACCEPTED', acceptedAt: timeStr, timestamp: nowIso };
-      if (wo.request_id) acceptedMap[wo.request_id] = acceptedMap[woId];
-      saveLocalAcceptedMap(acceptedMap);
-
-      if (!acceptedWorkOrders.find(c => c.id === woId)) {
-        acceptedWorkOrders.unshift(wo);
-      }
-
-      renderWorkOrders(currentDeptFilter);
-      updateDepartmentCounts();
-
       try {
-        // 2. Persist directly to Supabase requested_maintenance_windows
+        // 1. Persist directly to Supabase requested_maintenance_windows
         const patchRes = await fetch(`/api/v1/supabase/data/requested_windows?key=request_id&val=${encodeURIComponent(woId)}`, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             status: 'ACCEPTED',
-            accepted_at: nowIso,
-            request_id: wo.id,
-            section_id: wo.section,
-            department: wo.deptLabel || wo.dept,
-            work_description: wo.title,
-            priority: wo.category,
-            requested_window: wo.slotRecommended
+            accepted_at: nowIso
           })
         });
 
-        const patchJson = await patchRes.json().catch(() => ({}));
+        const patchJson = await patchRes.json();
         if (!patchRes.ok || !patchJson.success) {
-          console.warn('[MaintenanceDashboard] Supabase persistence response:', patchJson);
+          throw new Error(patchJson.error || 'Failed to persist work order acceptance in database');
         }
 
-        // 3. Log immutable audit trail
+        wo.isAccepted = true;
+        wo.status = 'ACCEPTED';
+        wo.acceptedAt = timeStr;
+
+        if (!acceptedWorkOrders.find(c => c.id === woId)) {
+          acceptedWorkOrders.unshift(wo);
+        }
+
+        // 2. Log immutable audit trail
         logToSupabase('ACCEPT_WORK_ORDER_SLOT_LOCK', 'SLOT_LOCK', wo, `Requisition ${woId} accepted and slot locked for execution.`);
 
         if (!suppressToast && window.showToast) {
           window.showToast(`🔒 Work order ${woId} accepted & slot locked! Persisted to Supabase.`, 'success');
         }
+
+        renderWorkOrders(currentDeptFilter);
       } catch (err) {
         console.error('[MaintenanceDashboard] Accept work order error:', err);
+        alert('Work order acceptance failed to persist: ' + err.message);
       }
     };
 
@@ -1765,7 +997,4 @@
         checkAndHighlightTargetWo();
       }
     });
-  </script>
-</body>
-
-</html>
+  

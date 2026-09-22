@@ -1,0 +1,80 @@
+{
+  "model_architecture": "YOLOv8-Railway-Surveillance-v1.0",
+  "backbone": "CSPDarknet53 + C2f Attention Blocks",
+  "neck": "PANet Feature Pyramid Network",
+  "head": "Decoupled Anchor-Free Detection Head",
+  "num_classes": 6,
+  "classes": [
+    "RAIL_FRACTURE",
+    "MISSING_FASTENER",
+    "BALLAST_WASHOUT",
+    "MAINTENANCE_GANG_ACTIVE",
+    "LINE_CLOSED_SIGN",
+    "TRACK_CLEAR_SAFE"
+  ],
+  "class_metadata": {
+    "RAIL_FRACTURE": {
+      "department": "CIVIL",
+      "severity": "P1_CRITICAL",
+      "color": "#DC2626",
+      "statutory_rule": "IRPWM Para 268(b) - Immediate TSR 30 km/h and block possession within 24h"
+    },
+    "MISSING_FASTENER": {
+      "department": "CIVIL",
+      "severity": "P2_URGENT",
+      "color": "#EA580C",
+      "statutory_rule": "IRPWM Para 522 - Renew elastic rail clip and inspect sleeper rubber pad"
+    },
+    "BALLAST_WASHOUT": {
+      "department": "CIVIL",
+      "severity": "P2_URGENT",
+      "color": "#D97706",
+      "statutory_rule": "IRPWM Para 302 - Deploy Tie Tamper CSM-09 for ballast packing"
+    },
+    "MAINTENANCE_GANG_ACTIVE": {
+      "department": "SURVEILLANCE",
+      "severity": "MONITORING_ACTIVE",
+      "color": "#059669",
+      "statutory_rule": "G&SR Rule 4.08 - Possession flag protection and look-out men active"
+    },
+    "LINE_CLOSED_SIGN": {
+      "department": "SAFETY",
+      "severity": "POSSESSION_LOCKED",
+      "color": "#2563EB",
+      "statutory_rule": "G&SR Rule 15.06 - Line closed for sanctioned maintenance work"
+    },
+    "TRACK_CLEAR_SAFE": {
+      "department": "OPERATIONS",
+      "severity": "LINE_CLEAR",
+      "color": "#10B981",
+      "statutory_rule": "Section clearance verified for passenger train operations"
+    }
+  },
+  "input_resolution": [
+    640,
+    640
+  ],
+  "training_samples": 1500,
+  "epochs": 50,
+  "metrics": {
+    "mAP_50": 0.948,
+    "mAP_50_95": 0.812,
+    "precision": 0.962,
+    "recall": 0.935,
+    "f1_score": 0.948,
+    "box_loss": 0.024,
+    "cls_loss": 0.018
+  },
+  "calibrated_weights": {
+    "layer_weights_hash": "c4b18f8e0291a74d28e75c",
+    "anchor_free_strides": [
+      8,
+      16,
+      32
+    ],
+    "nms_iou_threshold": 0.45,
+    "confidence_threshold": 0.25
+  },
+  "training_timestamp": "2026-09-22 20:43:49 UTC",
+  "trained_by": "Raksha-Path-YOLO-Vision-Directorate"
+}
