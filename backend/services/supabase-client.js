@@ -447,6 +447,66 @@ class SupabaseAuditService {
           status: 'PENDING_REVIEW',
           applied_alternative: null,
           created_at: new Date().toISOString()
+        },
+        {
+          id: 401,
+          request_id: 'WO-CIVIL-401',
+          section_id: 'NDLS-CNB-UP',
+          station_from: 'NDLS',
+          station_to: 'CNB',
+          start_km: 412.0,
+          end_km: 412.8,
+          km_pole: 'KM 412/18',
+          requested_window: '01:30 – 03:30 (Tomorrow Night)',
+          window_start_time: '01:30',
+          window_end_time: '03:30',
+          duration_minutes: 120,
+          department: 'Civil (P-Way)',
+          work_description: 'Immediate Rail Fracture Cut & Replacement (KM 412/18)',
+          priority: 'P1',
+          status: 'SANCTIONED',
+          applied_alternative: null,
+          created_at: new Date().toISOString()
+        },
+        {
+          id: 112,
+          request_id: 'WO-TRD-112',
+          section_id: 'GZB-ALJN',
+          station_from: 'GZB',
+          station_to: 'ALJN',
+          start_km: 68.0,
+          end_km: 68.5,
+          km_pole: 'KM 68/4',
+          requested_window: '01:30 – 04:00 (Bundled with BNDL-001)',
+          window_start_time: '01:30',
+          window_end_time: '04:00',
+          duration_minutes: 90,
+          department: 'Electrical (TRD)',
+          work_description: 'Overhead 25kV Insulator & Dropper Replacement (KM 68/4)',
+          priority: 'P2',
+          status: 'SANCTIONED',
+          applied_alternative: null,
+          created_at: new Date().toISOString()
+        },
+        {
+          id: 94,
+          request_id: 'WO-SIG-094',
+          section_id: 'NDLS-CNB-UP',
+          station_from: 'NDLS',
+          station_to: 'CNB',
+          start_km: 140.0,
+          end_km: 142.0,
+          km_pole: 'KM 141',
+          requested_window: '02:00 – 03:00 (Bundled in Shadow Window)',
+          window_start_time: '02:00',
+          window_end_time: '03:00',
+          duration_minutes: 60,
+          department: 'Signal (S&T)',
+          work_description: 'Track Circuit Overhaul & Glued Insulated Rail Joint Inspection',
+          priority: 'P3',
+          status: 'SANCTIONED',
+          applied_alternative: null,
+          created_at: new Date().toISOString()
         }
       ]
     };
@@ -718,6 +778,7 @@ class SupabaseAuditService {
     // Update Local Mirror
     const store = this.readLocalStore();
     if (store[table]) {
+      let matched = false;
       store[table] = store[table].map(item => {
         const match = (item[canonicalKey] !== undefined && String(item[canonicalKey]) === String(filterVal)) ||
                       (item.id !== undefined && String(item.id) === String(filterVal)) ||
@@ -725,10 +786,23 @@ class SupabaseAuditService {
                       (item.external_ref_id !== undefined && String(item.external_ref_id) === String(filterVal)) ||
                       (item.defect_id !== undefined && String(item.defect_id) === String(filterVal));
         if (match) {
+          matched = true;
           return { ...item, ...payloadWithTime };
         }
         return item;
       });
+
+      if (!matched && filterVal) {
+        const newRecord = {
+          [canonicalKey]: filterVal,
+          request_id: String(filterVal),
+          status: updatePayload.status || 'ACCEPTED',
+          ...payloadWithTime,
+          created_at: nowIso,
+          updated_at: nowIso
+        };
+        store[table].push(newRecord);
+      }
       this.writeLocalStore(store);
     }
 

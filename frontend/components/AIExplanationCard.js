@@ -70,6 +70,7 @@ export class AIExplanationCard {
           <div style="display: flex; align-items: center; gap: 6px; flex: 1; min-width: 0;">
             <span style="font-size: 0.85rem; flex-shrink: 0;">🧠</span>
             <span style="font-size: 0.74rem; font-weight: 700; color: #003366; letter-spacing: 0.3px; white-space: nowrap; flex-shrink: 0;">AI RATIONALE:</span>
+            <span style="font-family: var(--font-mono); font-size: 0.65rem; color: #6D28D9; background: #EDE9FE; border: 1px solid #DDD6FE; padding: 1px 5px; border-radius: 3px; font-weight: 700; flex-shrink: 0;">railway-explainer</span>
             <span style="font-size: 0.76rem; color: #334155; opacity: 0.95; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${summary || 'Multi-factor risk evaluation applied.'}</span>
           </div>
           <span class="ai-xai-chevron" style="
@@ -89,7 +90,7 @@ export class AIExplanationCard {
           background: #FCFBF7;
         ">
           ${detailedReason ? `
-            <p style="font-size: 0.78rem; color: #334155; line-height: 1.4; margin-bottom: 8px;">
+            <p style="font-size: 0.78rem; color: #334155; line-height: 1.45; margin-bottom: 8px;">
               ${detailedReason}
             </p>
           ` : ''}
@@ -97,11 +98,15 @@ export class AIExplanationCard {
           ${factors.length > 0 ? `
             <div style="margin-bottom: 8px;">
               <div style="font-size: 0.70rem; text-transform: uppercase; color: #64748B; font-weight: 700; margin-bottom: 4px; letter-spacing: 0.4px;">
-                Key Model Feature Contributions:
+                Key Feature Contributions (Scikit-Learn Calibrated Attribution):
               </div>
               ${factorBarsHtml}
             </div>
           ` : ''}
+
+          <div style="font-size: 0.70rem; color: #64748B; margin-bottom: 6px;">
+            ⚖️ <strong>Statutory Authority:</strong> Grounded in IRPWM Para 268/523 &amp; ACTM 25kV Traction Regulations
+          </div>
 
           ${recommendedAction ? `
             <div style="

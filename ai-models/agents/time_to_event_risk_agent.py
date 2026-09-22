@@ -104,3 +104,4 @@ class TimeToEventRiskAgent(BaseRailwayAgent):
                 f"to prevent in-service rail fracture."
             )
         }
+    print(json.dumps(res, indent=2))

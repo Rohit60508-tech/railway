@@ -1,0 +1,17 @@
+{
+  "calibrated_at": "2026-09-22T18:58:07.912072+00:00",
+  "model": "RandomForestRegressor-Attribution",
+  "target_decision_types": [
+    "ALTERNATIVE_WINDOW_APPROVAL",
+    "MULTI_DEPARTMENT_BUNDLING",
+    "DEFECT_PRIORITY_CLASSIFICATION"
+  ],
+  "feature_importances": {
+    "passenger_delay_saved_min": 0.5219,
+    "closure_hours_saved": 0.3352,
+    "high_priority_conflicts_avoided": 0.1255,
+    "corridor_occupancy_ratio": 0.0001,
+    "statutory_safety_urgency": 0.0172
+  },
+  "llm_explainer_tag": "railway-explainer:latest"
+}

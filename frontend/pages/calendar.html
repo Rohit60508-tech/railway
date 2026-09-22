@@ -1,0 +1,2264 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calendar Overview — RAKSHA PATH | Indian Railways AI</title>
+  <meta name="description"
+    content="Calendar Overview: Manage maintenance schedules, inspections, and work accepted & locked slots for Indian Railways high-speed corridors." />
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+    rel="stylesheet" />
+
+  <!-- Auth guard -->
+  <script src="../components/auth-guard.js"></script>
+
+  <!-- Core Styles -->
+  <link rel="stylesheet" href="../styles/main.css" />
+
+  <!-- Shared Navigation & Real-Time Sync -->
+  <script src="../components/SharedNav.js?v=2.6.0"></script>
+  <script src="../components/shared-live-sync.js"></script>
+
+  <style>
+    :root {
+      --bg-page: #FAF6EE;
+      --card-bg: #FFFFFF;
+      --border-color: #E2E8F0;
+      --border-subtle: rgba(195, 178, 150, 0.45);
+      --primary-navy: #003366;
+      --primary-blue: #2563EB;
+      --accent-green: #059669;
+      --accent-gold: #D97706;
+      --accent-red: #DC2626;
+      --accent-purple: #7C3AED;
+      --text-dark: #0F172A;
+      --text-muted: #64748B;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: #F8FAFC;
+      color: var(--text-dark);
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .calendar-container {
+      max-width: 1720px;
+      margin: 0 auto;
+      padding: 24px 32px 60px 32px;
+    }
+
+    /* ── Header Row ──────────────────────────────────────────────── */
+    .cal-header-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .cal-title-block h1 {
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: #0F172A;
+      letter-spacing: -0.3px;
+    }
+
+    .cal-title-block p {
+      font-size: 0.85rem;
+      color: #64748B;
+      margin-top: 4px;
+    }
+
+    .cal-top-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .cal-btn-icon {
+      position: relative;
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      color: #475569;
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .cal-btn-icon:hover {
+      background: #F1F5F9;
+      color: #0F172A;
+    }
+
+    .cal-badge-count {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      background: #DC2626;
+      color: #FFFFFF;
+      font-size: 0.65rem;
+      font-weight: 800;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #FFFFFF;
+    }
+
+    .cal-btn-sec {
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      color: #334155;
+      font-size: 0.82rem;
+      font-weight: 600;
+      padding: 8px 14px;
+      border-radius: 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+      position: relative;
+    }
+
+    .cal-btn-sec:hover {
+      background: #F8FAFC;
+      border-color: #CBD5E1;
+      color: #0F172A;
+    }
+
+    .cal-btn-sec.has-active-filter {
+      border-color: #2563EB;
+      background: #EFF6FF;
+      color: #1D4ED8;
+    }
+
+    /* ── Dropdowns & Popovers ────────────────────────────────────── */
+    .cal-dropdown-menu {
+      display: none;
+      position: absolute;
+      top: calc(100% + 6px);
+      right: 0;
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      border-radius: 10px;
+      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.12);
+      z-index: 1000;
+      padding: 6px 0;
+      animation: calFadeSlide 0.18s ease-out;
+    }
+
+    @keyframes calFadeSlide {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .cal-dropdown-item {
+      padding: 9px 16px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: #334155;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.15s;
+    }
+
+    .cal-dropdown-item:hover {
+      background: #F8FAFC;
+      color: #0F172A;
+    }
+
+    .cal-dropdown-item.active {
+      background: #EFF6FF;
+      color: #2563EB;
+      font-weight: 700;
+    }
+
+    /* Filters Popover */
+    .cal-filters-popover {
+      display: none;
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      background: #FFFFFF;
+      border: 1px solid #CBD5E1;
+      border-radius: 12px;
+      box-shadow: 0 16px 36px rgba(15, 23, 42, 0.15);
+      z-index: 1000;
+      width: 360px;
+      padding: 18px;
+      animation: calFadeSlide 0.18s ease-out;
+    }
+
+    .cal-filter-group-title {
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      color: #64748B;
+      margin-bottom: 8px;
+    }
+
+    .cal-filter-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+
+    .cal-filter-chip {
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-size: 0.74rem;
+      font-weight: 600;
+      background: #F1F5F9;
+      color: #475569;
+      border: 1px solid #E2E8F0;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.15s;
+    }
+
+    .cal-filter-chip:hover {
+      background: #E2E8F0;
+      color: #0F172A;
+    }
+
+    .cal-filter-chip.active {
+      background: #003366;
+      color: #FFFFFF;
+      border-color: #003366;
+    }
+
+    /* Notifications Dropdown */
+    .cal-notif-popover {
+      display: none;
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      border-radius: 12px;
+      box-shadow: 0 16px 36px rgba(15, 23, 42, 0.14);
+      z-index: 1000;
+      width: 360px;
+      max-height: 440px;
+      overflow-y: auto;
+      padding: 0;
+      animation: calFadeSlide 0.18s ease-out;
+    }
+
+    .cal-notif-header {
+      padding: 12px 16px;
+      border-bottom: 1px solid #E2E8F0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #F8FAFC;
+    }
+
+    .cal-notif-header h4 {
+      font-size: 0.82rem;
+      font-weight: 800;
+      color: #0F172A;
+    }
+
+    .cal-notif-item {
+      padding: 12px 16px;
+      border-bottom: 1px solid #F1F5F9;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .cal-notif-item:hover {
+      background: #F8FAFC;
+    }
+
+    .cal-notif-item.unread {
+      background: #F0FDF4;
+    }
+
+    /* ── Search & Filter Bar ─────────────────────────────────────── */
+    .cal-filter-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      background: #FFFFFF;
+      padding: 12px 18px;
+      border-radius: 12px;
+      border: 1px solid #E2E8F0;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+    }
+
+    .cal-search-box {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 8px;
+      padding: 6px 12px;
+      width: 280px;
+    }
+
+    .cal-search-box input {
+      border: none;
+      background: transparent;
+      outline: none;
+      font-size: 0.82rem;
+      width: 100%;
+      color: #0F172A;
+      font-family: inherit;
+    }
+
+    .cal-legend-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .cal-legend-title {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #94A3B8;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    .cal-legend-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.76rem;
+      color: #475569;
+      font-weight: 500;
+      cursor: pointer;
+      user-select: none;
+      padding: 4px 8px;
+      border-radius: 6px;
+      border: 1px solid transparent;
+      transition: all 0.15s;
+    }
+
+    .cal-legend-pill:hover {
+      background: #F1F5F9;
+      color: #0F172A;
+    }
+
+    .cal-legend-pill.active {
+      background: #EFF6FF;
+      border-color: #BFDBFE;
+      color: #1D4ED8;
+      font-weight: 700;
+    }
+
+    .cal-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .cal-dot.wo { background: #EA580C; }
+    .cal-dot.pm { background: #2563EB; }
+    .cal-dot.req { background: #7C3AED; }
+    .cal-dot.insp { background: #DC2626; }
+    .cal-dot.rem { background: #059669; }
+
+    /* ── Up Next Section ─────────────────────────────────────────── */
+    .cal-upnext-section {
+      margin-bottom: 24px;
+    }
+
+    .cal-section-subtitle {
+      font-size: 0.88rem;
+      font-weight: 800;
+      color: #0F172A;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    .cal-upnext-scroll {
+      display: flex;
+      align-items: stretch;
+      gap: 14px;
+      overflow-x: auto;
+      padding-bottom: 6px;
+    }
+
+    .cal-upnext-card {
+      background: #FFFFFF;
+      border: 1px solid #FECACA;
+      border-radius: 10px;
+      padding: 12px 16px;
+      min-width: 270px;
+      max-width: 330px;
+      box-shadow: 0 2px 8px rgba(220, 38, 38, 0.04);
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+      flex-shrink: 0;
+      position: relative;
+    }
+
+    .cal-upnext-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(220, 38, 38, 0.08);
+    }
+
+    .cal-card-status-badge {
+      font-size: 0.68rem;
+      font-weight: 800;
+      color: #DC2626;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .cal-card-title {
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: #0F172A;
+      margin-bottom: 4px;
+      line-height: 1.35;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .cal-card-meta {
+      font-size: 0.72rem;
+      color: #64748B;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* ── Calendar Controls Bar ───────────────────────────────────── */
+    .cal-controls-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .cal-nav-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .cal-nav-btn {
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      color: #475569;
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .cal-nav-btn:hover {
+      background: #F1F5F9;
+      color: #0F172A;
+    }
+
+    .cal-btn-today {
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      color: #334155;
+      font-size: 0.80rem;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s;
+    }
+
+    .cal-btn-today:hover {
+      background: #F8FAFC;
+    }
+
+    .cal-month-heading {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #0F172A;
+      margin-left: 8px;
+    }
+
+    .cal-view-switch {
+      display: flex;
+      align-items: center;
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      border-radius: 8px;
+      padding: 2px;
+    }
+
+    .cal-view-btn {
+      border: none;
+      background: transparent;
+      padding: 6px 14px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #64748B;
+      cursor: pointer;
+      border-radius: 6px;
+      transition: all 0.15s;
+    }
+
+    .cal-view-btn.active {
+      background: #003366;
+      color: #FFFFFF;
+    }
+
+    /* ── Main Month Grid ─────────────────────────────────────────── */
+    .cal-grid-wrapper {
+      background: #FFFFFF;
+      border-radius: 12px;
+      border: 1px solid #E2E8F0;
+      box-shadow: 0 2px 12px rgba(15, 23, 42, 0.03);
+      overflow: hidden;
+    }
+
+    .cal-days-header {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      background: #F8FAFC;
+      border-bottom: 1px solid #E2E8F0;
+    }
+
+    .cal-day-name {
+      text-align: center;
+      padding: 12px 6px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: #64748B;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    .cal-month-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      grid-auto-rows: minmax(130px, 1fr);
+      border-collapse: collapse;
+    }
+
+    .cal-cell {
+      border-right: 1px solid #F1F5F9;
+      border-bottom: 1px solid #F1F5F9;
+      padding: 8px;
+      min-height: 125px;
+      background: #FFFFFF;
+      position: relative;
+      transition: background 0.15s;
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+    }
+
+    .cal-cell:nth-child(7n) {
+      border-right: none;
+    }
+
+    .cal-cell.other-month {
+      background: #FAFAFA;
+      color: #94A3B8;
+    }
+
+    .cal-cell:hover {
+      background: #FBFDFE;
+    }
+
+    /* Target Current Selected Day (Exact blue highlight from screenshot) */
+    .cal-cell.current-day {
+      border: 2px solid #2563EB !important;
+      border-radius: 8px;
+      background: #FFFFFF;
+      box-shadow: 0 0 0 1px #2563EB, 0 4px 12px rgba(37, 99, 235, 0.08);
+      z-index: 2;
+    }
+
+    .cal-cell-date-num {
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: #475569;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .cal-cell.other-month .cal-cell-date-num {
+      color: #CBD5E1;
+      font-weight: 500;
+    }
+
+    .cal-cell.current-day .cal-cell-date-num {
+      color: #2563EB;
+      font-weight: 800;
+    }
+
+    .cal-events-container {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    /* Event Chip on Calendar (Matches Screenshot Style) */
+    .cal-event-pill {
+      background: #FFFFFF;
+      border: 1px solid #FED7AA;
+      border-left: 3px solid #EA580C;
+      border-radius: 4px;
+      padding: 3px 6px;
+      font-size: 0.70rem;
+      font-weight: 600;
+      color: #0F172A;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+      transition: all 0.15s;
+    }
+
+    .cal-event-pill:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+      border-color: #EA580C;
+    }
+
+    .cal-event-pill.trd {
+      border-color: #BFDBFE;
+      border-left-color: #2563EB;
+    }
+
+    .cal-event-pill.sig {
+      border-color: #DDD6FE;
+      border-left-color: #7C3AED;
+    }
+
+    .cal-event-pill.p1-critical {
+      border-color: #FECACA;
+      border-left-color: #DC2626;
+      background: #FFFBFB;
+    }
+
+    .cal-event-time {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: #64748B;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .cal-event-title-text {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    /* ── Week View Styles ─────────────────────────────────────────── */
+    .cal-week-wrapper {
+      background: #FFFFFF;
+      border-radius: 12px;
+      border: 1px solid #E2E8F0;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(15, 23, 42, 0.03);
+    }
+
+    .cal-week-header-row {
+      display: grid;
+      grid-template-columns: 80px repeat(7, 1fr);
+      background: #F8FAFC;
+      border-bottom: 1px solid #E2E8F0;
+    }
+
+    .cal-week-day-col-hdr {
+      padding: 12px 8px;
+      text-align: center;
+      border-left: 1px solid #E2E8F0;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .cal-week-day-col-hdr:hover {
+      background: #F1F5F9;
+    }
+
+    .cal-week-day-col-hdr.today {
+      background: #EFF6FF;
+      border-top: 3px solid #2563EB;
+    }
+
+    .cal-week-day-name {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #64748B;
+      text-transform: uppercase;
+    }
+
+    .cal-week-day-num {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #0F172A;
+      margin-top: 2px;
+    }
+
+    .cal-week-day-col-hdr.today .cal-week-day-num {
+      color: #2563EB;
+    }
+
+    .cal-week-body-grid {
+      display: grid;
+      grid-template-columns: 80px repeat(7, 1fr);
+      max-height: 650px;
+      overflow-y: auto;
+    }
+
+    .cal-week-time-label-cell {
+      padding: 14px 8px;
+      font-family: var(--font-mono);
+      font-size: 0.70rem;
+      font-weight: 600;
+      color: #94A3B8;
+      text-align: right;
+      border-bottom: 1px solid #F1F5F9;
+      background: #FAFAFA;
+    }
+
+    .cal-week-slot-cell {
+      padding: 8px;
+      border-left: 1px solid #F1F5F9;
+      border-bottom: 1px solid #F1F5F9;
+      min-height: 90px;
+      position: relative;
+      background: #FFFFFF;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .cal-week-slot-cell.today {
+      background: #FBFDFE;
+    }
+
+    .cal-week-event-card {
+      background: #FFFFFF;
+      border-radius: 6px;
+      padding: 6px 8px;
+      border: 1px solid #E2E8F0;
+      border-left: 3px solid #2563EB;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .cal-week-event-card:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    }
+
+    /* ── Day View Styles ─────────────────────────────────────────── */
+    .cal-day-wrapper {
+      background: #FFFFFF;
+      border-radius: 12px;
+      border: 1px solid #E2E8F0;
+      box-shadow: 0 2px 12px rgba(15, 23, 42, 0.03);
+      padding: 24px;
+    }
+
+    .cal-day-banner {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 14px;
+      margin-bottom: 24px;
+      padding: 16px;
+      background: #F8FAFC;
+      border-radius: 10px;
+      border: 1px solid #E2E8F0;
+    }
+
+    .cal-day-metric-box {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .cal-day-metric-label {
+      font-size: 0.70rem;
+      font-weight: 700;
+      color: #64748B;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .cal-day-metric-val {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #0F172A;
+    }
+
+    .cal-day-hourly-timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .cal-day-hour-row {
+      display: grid;
+      grid-template-columns: 90px 1fr;
+      gap: 16px;
+      align-items: flex-start;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #F1F5F9;
+    }
+
+    .cal-day-hour-label {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #64748B;
+      padding-top: 4px;
+    }
+
+    .cal-day-card {
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      border-left: 4px solid #2563EB;
+      border-radius: 8px;
+      padding: 14px 16px;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .cal-day-card:hover {
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+      transform: translateY(-1px);
+    }
+
+    /* ── Work Order Detail Modal ─────────────────────────────────── */
+    .cal-modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(8px);
+      z-index: 9999999;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .cal-modal-backdrop.open {
+      display: flex;
+    }
+
+    .cal-modal-box {
+      background: #FFFFFF;
+      border-radius: 14px;
+      border: 1px solid #E2E8F0;
+      width: 100%;
+      max-width: 600px;
+      padding: 24px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+      position: relative;
+    }
+
+    /* ── Toast Feedback ──────────────────────────────────────────── */
+    .cal-toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #0F172A;
+      color: #FFFFFF;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-size: 0.80rem;
+      font-weight: 600;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      z-index: 999999;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: none;
+    }
+
+    .cal-toast.show {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    /* Rotating animation for refresh */
+    .spinning {
+      animation: spin 0.75s linear infinite;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .calendar-container {
+        padding: 16px;
+      }
+      .cal-search-box {
+        width: 100%;
+      }
+      .cal-month-grid {
+        grid-auto-rows: minmax(90px, 1fr);
+      }
+      .cal-week-body-grid {
+        grid-template-columns: 60px repeat(7, 140px);
+      }
+      .cal-week-header-row {
+        grid-template-columns: 60px repeat(7, 140px);
+      }
+      .cal-week-wrapper {
+        overflow-x: auto;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="calendar-container">
+    <!-- Header Row -->
+    <div class="cal-header-row">
+      <div class="cal-title-block">
+        <h1>Calendar Overview</h1>
+        <p>Manage maintenance schedules, inspections, and work orders</p>
+      </div>
+
+      <div class="cal-top-actions">
+        <!-- Notifications Bell -->
+        <div style="position: relative;">
+          <button class="cal-btn-icon" id="btn-notifications" title="Notifications" onclick="window.toggleNotificationsDropdown(event)">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+              <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+            </svg>
+            <span class="cal-badge-count" id="notif-count-badge">3</span>
+          </button>
+          
+          <div id="notifications-dropdown-menu" class="cal-notif-popover">
+            <div class="cal-notif-header">
+              <h4>Corridor Possession Alerts</h4>
+              <button onclick="window.markAllNotificationsRead()" style="background: transparent; border: none; font-size: 0.72rem; color: #2563EB; font-weight: 700; cursor: pointer;">
+                Mark All Read
+              </button>
+            </div>
+            <div id="notif-items-list">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Refresh Button -->
+        <button class="cal-btn-sec" id="btn-refresh" onclick="window.refreshCalendarData()">
+          <svg id="refresh-icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M23 4v6h-6" />
+            <path d="M1 20v-6h6" />
+            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
+          </svg>
+          Refresh
+        </button>
+
+        <!-- Location Selector -->
+        <div style="position: relative;">
+          <button class="cal-btn-sec" id="btn-location-selector" onclick="window.toggleLocationDropdown(event)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+              <circle cx="12" cy="10" r="3" />
+            </svg>
+            <span id="selected-loc-label">All Corridor Sections</span>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="m6 9 6 6 6-6" />
+            </svg>
+          </button>
+          <div id="location-dropdown-menu" class="cal-dropdown-menu" style="width: 230px;">
+            <div class="cal-dropdown-item active" onclick="window.selectLocationFilter('ALL', 'All Corridor Sections')">✓ All Corridor Sections</div>
+            <div class="cal-dropdown-item" onclick="window.selectLocationFilter('NDLS-CNB', 'NDLS-CNB UP Main')">NDLS-CNB UP Main</div>
+            <div class="cal-dropdown-item" onclick="window.selectLocationFilter('GZB-ALJN', 'GZB-ALJN Trunk Line')">GZB-ALJN Trunk Line</div>
+            <div class="cal-dropdown-item" onclick="window.selectLocationFilter('CNB-PRYJ', 'CNB-PRYJ Section')">CNB-PRYJ Section</div>
+          </div>
+        </div>
+
+        <!-- Export Dropdown -->
+        <div style="position: relative;">
+          <button class="cal-btn-sec" id="btn-export" onclick="window.toggleExportDropdown(event)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="7 10 12 15 17 10" />
+              <line x1="12" y1="15" x2="12" y2="3" />
+            </svg>
+            Export
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="m6 9 6 6 6-6" />
+            </svg>
+          </button>
+          <div id="export-dropdown-menu" class="cal-dropdown-menu" style="width: 210px;">
+            <div class="cal-dropdown-item" onclick="window.exportCSV()">📊 Export CSV (Excel)</div>
+            <div class="cal-dropdown-item" onclick="window.exportICS()">📅 Export iCal (.ics)</div>
+            <div class="cal-dropdown-item" onclick="window.exportJSON()">📋 Export JSON Dossier</div>
+            <div class="cal-dropdown-item" onclick="window.printCalendarSchedule()">🖨️ Print / Save PDF</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filter & Search Bar -->
+    <div class="cal-filter-bar">
+      <div class="cal-search-box">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2">
+          <circle cx="11" cy="11" r="8" />
+          <line x1="21" y1="21" x2="16.65" y2="16.65" />
+        </svg>
+        <input type="text" id="cal-search-input" placeholder="Search events by title..." oninput="window.handleSearchFilter(this.value)" />
+        <button id="cal-search-clear" onclick="window.clearSearch()" style="display: none; background: transparent; border: none; font-size: 1rem; color: #94A3B8; cursor: pointer; padding: 0 4px;">&times;</button>
+      </div>
+
+      <div class="cal-legend-group">
+        <span class="cal-legend-title">Legend:</span>
+        <div class="cal-legend-pill" id="legend-pill-civil" onclick="window.filterByDept('CIVIL')">
+          <span class="cal-dot wo"></span>
+          <span>Work Orders (Civil P-Way)</span>
+        </div>
+        <div class="cal-legend-pill" id="legend-pill-trd" onclick="window.filterByDept('TRD')">
+          <span class="cal-dot pm"></span>
+          <span>PM Schedules (TRD OHE)</span>
+        </div>
+        <div class="cal-legend-pill" id="legend-pill-sig" onclick="window.filterByDept('SIG')">
+          <span class="cal-dot req"></span>
+          <span>Signalling &amp; Telecom</span>
+        </div>
+        <div class="cal-legend-pill" id="legend-pill-p1" onclick="window.filterByDept('P1')">
+          <span class="cal-dot insp"></span>
+          <span>Critical P1 Inspections</span>
+        </div>
+        <div class="cal-legend-pill active" id="legend-pill-all" onclick="window.filterByDept('ALL')">
+          <span class="cal-dot rem"></span>
+          <span>All Accepted Slots</span>
+        </div>
+      </div>
+
+      <!-- Filters Popover Trigger Button -->
+      <div style="position: relative;">
+        <button class="cal-btn-sec" id="btn-filters-toggle" onclick="window.toggleFiltersPopover(event)">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
+          </svg>
+          <span id="filters-btn-label">Filters</span>
+          <span id="filters-active-badge" style="display: none; background: #2563EB; color: #fff; font-size: 0.65rem; font-weight: 800; border-radius: 10px; padding: 1px 6px; margin-left: 2px;">0</span>
+        </button>
+
+        <!-- Popover Panel -->
+        <div id="filters-dropdown-popover" class="cal-filters-popover">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #E2E8F0;">
+            <h4 style="font-size: 0.88rem; font-weight: 800; color: #0F172A;">Calendar Filters</h4>
+            <button onclick="window.resetFilters()" style="background: transparent; border: none; font-size: 0.74rem; color: #2563EB; font-weight: 700; cursor: pointer;">
+              Reset All
+            </button>
+          </div>
+
+          <!-- Department Chips -->
+          <div class="cal-filter-group-title">Department</div>
+          <div class="cal-filter-chips" id="filter-dept-chips">
+            <div class="cal-filter-chip active" data-dept="ALL" onclick="window.setFilterDept('ALL')">All Departments</div>
+            <div class="cal-filter-chip" data-dept="CIVIL" onclick="window.setFilterDept('CIVIL')">Civil / P-Way</div>
+            <div class="cal-filter-chip" data-dept="TRD" onclick="window.setFilterDept('TRD')">Electrical / TRD</div>
+            <div class="cal-filter-chip" data-dept="SIG" onclick="window.setFilterDept('SIG')">Signalling &amp; Telecom</div>
+          </div>
+
+          <!-- Priority Chips -->
+          <div class="cal-filter-group-title">Priority Level</div>
+          <div class="cal-filter-chips" id="filter-priority-chips">
+            <div class="cal-filter-chip active" data-pri="ALL" onclick="window.setFilterPriority('ALL')">All Priorities</div>
+            <div class="cal-filter-chip" data-pri="P1" onclick="window.setFilterPriority('P1')">P1 (Critical / Emergency)</div>
+            <div class="cal-filter-chip" data-pri="P2" onclick="window.setFilterPriority('P2')">P2 (Urgent Maintenance)</div>
+            <div class="cal-filter-chip" data-pri="P3" onclick="window.setFilterPriority('P3')">P3 (Routine Inspection)</div>
+          </div>
+
+          <!-- Shift Window -->
+          <div class="cal-filter-group-title">Possession Window / Shift</div>
+          <div class="cal-filter-chips" id="filter-shift-chips">
+            <div class="cal-filter-chip active" data-shift="ALL" onclick="window.setFilterShift('ALL')">Any Shift</div>
+            <div class="cal-filter-chip" data-shift="NIGHT" onclick="window.setFilterShift('NIGHT')">Night Shadow (00:00–05:00)</div>
+            <div class="cal-filter-chip" data-shift="AFTERNOON" onclick="window.setFilterShift('AFTERNOON')">Afternoon Lull (12:00–16:00)</div>
+          </div>
+
+          <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 14px; border-top: 1px solid #E2E8F0; padding-top: 12px;">
+            <button onclick="window.closeFiltersPopover()" style="background: #F1F5F9; border: 1px solid #CBD5E1; color: #475569; padding: 6px 12px; border-radius: 6px; font-size: 0.76rem; font-weight: 600; cursor: pointer;">
+              Cancel
+            </button>
+            <button onclick="window.applyFiltersPopover()" style="background: #003366; border: none; color: #FFFFFF; padding: 6px 16px; border-radius: 6px; font-size: 0.76rem; font-weight: 700; cursor: pointer;">
+              Apply Filters
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Up Next Section -->
+    <div class="cal-upnext-section">
+      <div class="cal-section-subtitle">
+        <span>🕒 Up Next</span>
+        <span style="font-size: 0.76rem; color: #64748B; font-weight: 600;" id="upnext-count-label">(2)</span>
+      </div>
+      <div class="cal-upnext-scroll" id="upnext-cards-container">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+
+    <!-- Calendar Controls Bar -->
+    <div class="cal-controls-bar">
+      <div class="cal-nav-group">
+        <button class="cal-nav-btn" onclick="window.navigateCurrentView(-1)" title="Previous">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="15 18 9 12 15 6" />
+          </svg>
+        </button>
+        <button class="cal-nav-btn" onclick="window.navigateCurrentView(1)" title="Next">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="9 18 15 12 9 6" />
+          </svg>
+        </button>
+        <button class="cal-btn-today" onclick="window.jumpToToday()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+            <line x1="16" y1="2" x2="16" y2="6" />
+            <line x1="8" y1="2" x2="8" y2="6" />
+            <line x1="3" y1="10" x2="21" y2="10" />
+          </svg>
+          Today
+        </button>
+        <span class="cal-month-heading" id="cal-month-display">September 2026</span>
+      </div>
+
+      <!-- View Switcher (Month / Week / Day) -->
+      <div class="cal-view-switch">
+        <button class="cal-view-btn active" id="view-btn-month" onclick="window.setCalendarView('month')">Month</button>
+        <button class="cal-view-btn" id="view-btn-week" onclick="window.setCalendarView('week')">Week</button>
+        <button class="cal-view-btn" id="view-btn-day" onclick="window.setCalendarView('day')">Day</button>
+      </div>
+    </div>
+
+    <!-- 1. MONTH VIEW -->
+    <div id="cal-month-view-section">
+      <div class="cal-grid-wrapper">
+        <div class="cal-days-header">
+          <div class="cal-day-name">Mon</div>
+          <div class="cal-day-name">Tue</div>
+          <div class="cal-day-name">Wed</div>
+          <div class="cal-day-name">Thu</div>
+          <div class="cal-day-name">Fri</div>
+          <div class="cal-day-name">Sat</div>
+          <div class="cal-day-name">Sun</div>
+        </div>
+
+        <div class="cal-month-grid" id="calendar-grid-cells">
+          <!-- Rendered dynamically via JavaScript -->
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. WEEK VIEW -->
+    <div id="cal-week-view-section" style="display: none;">
+      <div class="cal-week-wrapper">
+        <div class="cal-week-header-row" id="cal-week-header-row">
+          <!-- Generated via JS -->
+        </div>
+        <div class="cal-week-body-grid" id="cal-week-body-grid">
+          <!-- Generated via JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. DAY VIEW -->
+    <div id="cal-day-view-section" style="display: none;">
+      <div class="cal-day-wrapper">
+        <div class="cal-day-banner" id="cal-day-banner">
+          <!-- Generated via JS -->
+        </div>
+        <div class="cal-day-hourly-timeline" id="cal-day-timeline">
+          <!-- Generated via JS -->
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Work Order Detail Popover Modal -->
+  <div class="cal-modal-backdrop" id="wo-detail-modal" onclick="window.closeWoModal(event)">
+    <div class="cal-modal-box" onclick="event.stopPropagation()">
+      <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 14px; border-bottom: 1px solid #E2E8F0; padding-bottom: 10px;">
+        <div>
+          <span style="font-size: 0.70rem; font-weight: 800; color: #059669; background: #ECFDF5; border: 1px solid #A7F3D0; padding: 2px 8px; border-radius: 4px; text-transform: uppercase;">
+            ✓ Work Accepted &amp; Locked Slot (In Progress)
+          </span>
+          <h3 id="modal-wo-title" style="font-size: 1.05rem; font-weight: 800; color: #0F172A; margin-top: 6px; line-height: 1.35;">
+            Work Order Title
+          </h3>
+          <div style="font-family: var(--font-mono); font-size: 0.74rem; color: #64748B; margin-top: 2px;" id="modal-wo-id">
+            ID: WO-CIVIL-401 | Section: NDLS-CNB-UP
+          </div>
+        </div>
+        <button onclick="window.closeWoModal()" style="background: transparent; border: none; font-size: 1.4rem; color: #94A3B8; cursor: pointer; line-height: 1;">&times;</button>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px;">
+        <div style="background: #F8FAFC; padding: 8px 12px; border-radius: 6px; border: 1px solid #E2E8F0;">
+          <div style="font-size: 0.68rem; color: #64748B; font-weight: 700; text-transform: uppercase;">Locked Slot Window</div>
+          <div style="font-family: var(--font-mono); font-size: 0.82rem; font-weight: 800; color: #003366; margin-top: 2px;" id="modal-wo-slot">
+            01:30 – 03:30 (Tomorrow Night)
+          </div>
+        </div>
+        <div style="background: #F8FAFC; padding: 8px 12px; border-radius: 6px; border: 1px solid #E2E8F0;">
+          <div style="font-size: 0.68rem; color: #64748B; font-weight: 700; text-transform: uppercase;">Department &amp; Machine</div>
+          <div style="font-size: 0.82rem; font-weight: 700; color: #059669; margin-top: 2px;" id="modal-wo-machinery">
+            Flash-Butt Welder
+          </div>
+        </div>
+      </div>
+
+      <div style="background: #FAF5FF; border: 1px solid #DDD6FE; border-left: 3px solid #7C3AED; border-radius: 6px; padding: 10px 12px; margin-bottom: 14px;">
+        <div style="font-size: 0.70rem; font-weight: 800; color: #6D28D9; text-transform: uppercase; margin-bottom: 4px;">
+          🧠 AI Decision Rationale (railway-explainer)
+        </div>
+        <div style="font-size: 0.76rem; color: #334155; line-height: 1.4;" id="modal-wo-rationale">
+          Slot sanctioned during night shadow block to avoid conflict with high-speed passenger services.
+        </div>
+      </div>
+
+      <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; border-top: 1px solid #E2E8F0; padding-top: 14px; flex-wrap: wrap;">
+        <button id="btn-modal-complete" onclick="window.markCurrentOrderCompleted()" style="background: #ECFDF5; border: 1px solid #A7F3D0; color: #059669; padding: 8px 14px; border-radius: 6px; font-size: 0.76rem; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
+          <span>✓</span> Mark Completed
+        </button>
+
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <button onclick="window.closeWoModal()" style="background: #FAF6EE; border: 1px solid #C3B296; color: #475569; padding: 8px 14px; border-radius: 6px; font-size: 0.78rem; font-weight: 600; cursor: pointer;">
+            Close
+          </button>
+          <a id="modal-wo-link" href="maintenance-dashboard.html" style="background: #003366; color: #FFFFFF; text-decoration: none; padding: 8px 16px; border-radius: 6px; font-size: 0.78rem; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 8px rgba(0,51,102,0.25);">
+            <span>📋</span> Open in Work Orders Board
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Subtle Toast Component -->
+  <div id="cal-toast" class="cal-toast">
+    <span id="cal-toast-icon">✓</span>
+    <span id="cal-toast-text">Operation completed</span>
+  </div>
+
+  <script>
+    // ════════════════════════════════════════════════════════════════════════
+    // CALENDAR LOGIC & DATA SYNCHRONIZATION
+    // Displays ONLY Work Accepted & Locked Slots (To Be Done / In Progress)
+    // ════════════════════════════════════════════════════════════════════════
+
+    let currentYear = 2026;
+    let currentMonth = 8; // September is 8 in 0-indexed JS Month (Sep = 8)
+    let selectedDate = new Date(2026, 8, 22); // Baseline Tuesday, Sep 22, 2026
+    let activeCalendarView = 'month'; // 'month' | 'week' | 'day'
+
+    let currentDeptFilter = 'ALL';
+    let currentPriorityFilter = 'ALL';
+    let currentShiftFilter = 'ALL';
+    let currentLocationFilter = 'ALL';
+    let currentSearchTerm = '';
+    let currentModalWoId = null;
+
+    const MONTH_NAMES = [
+      'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+
+    const DAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+    // Seed/Baseline Accepted Work Orders (Matches screenshot dates: Sep 20, Sep 22, Sep 23)
+    const SEED_ACCEPTED_WORK_ORDERS = [
+      {
+        id: "WO-CIVIL-401",
+        title: "Immediate Rail Fracture Cut & Replacement (KM 412/18)",
+        dept: "CIVIL",
+        deptLabel: "Civil / P-Way",
+        section: "NDLS-CNB-UP",
+        date: "2026-09-20",
+        time: "02:11 PM",
+        slotRecommended: "02:11 PM – 04:11 PM",
+        machinery: "Flash-Butt Welding Plant + Rail Saw",
+        category: "P1",
+        status: "ACCEPTED",
+        isAccepted: true,
+        isCompleted: false,
+        shortTag: "tmc",
+        rationale: "Ultrasonic testing confirmed transverse crack. 120-minute shadow window allocated to avoid conflict with Vande Bharat 22436."
+      },
+      {
+        id: "WO-REQ-4814",
+        title: "Work Order from Maintenance Request (FR-NDLS-4814)",
+        dept: "CIVIL",
+        deptLabel: "Civil / P-Way",
+        section: "NDLS-GZB-UP",
+        date: "2026-09-20",
+        time: "02:11 PM",
+        slotRecommended: "02:11 PM – 04:30 PM",
+        machinery: "Tie Tamper CSM-09",
+        category: "P1",
+        status: "ACCEPTED",
+        isAccepted: true,
+        isCompleted: false,
+        shortTag: "Work Order from Maintenance Request (FR-NDLS-4814)",
+        rationale: "Emergency ballast packing and track leveling. Night possession locked under IRPWM Para 268."
+      },
+      {
+        id: "WO-TRD-112",
+        title: "25kV OHE Catenary Dropper & Insulator Replacement",
+        dept: "TRD",
+        deptLabel: "Electrical / TRD",
+        section: "GZB-ALJN",
+        date: "2026-09-22",
+        time: "01:30 AM",
+        slotRecommended: "01:30 AM – 04:00 AM",
+        machinery: "Self-Propelled 8-Wheeler Tower Wagon",
+        category: "P2",
+        status: "ACCEPTED",
+        isAccepted: true,
+        isCompleted: false,
+        shortTag: "25kV OHE Dropper Replacement",
+        rationale: "Consolidated with Civil P-Way mega-block, saving 2.5 hours corridor possession under a single 25kV traction shut-off."
+      },
+      {
+        id: "WO-SIG-094",
+        title: "Track Circuit Overhaul & Glued Insulated Rail Joint Inspection",
+        dept: "SIG",
+        deptLabel: "Signalling & Telecom",
+        section: "NDLS-CNB-UP",
+        date: "2026-09-23",
+        time: "02:00 AM",
+        slotRecommended: "02:00 AM – 03:00 AM",
+        machinery: "Handheld Megger & Digital Multimeter Kit",
+        category: "P3",
+        status: "ACCEPTED",
+        isAccepted: true,
+        isCompleted: false,
+        shortTag: "Track Circuit Overhaul",
+        rationale: "Pre-monsoon insulation resistance restoration. High feasibility shadow slot sanctioned by Control Office."
+      }
+    ];
+
+    let liveAcceptedWorkOrders = [];
+
+    // Toast feedback helper
+    function showToast(text, icon = '✓') {
+      const toast = document.getElementById('cal-toast');
+      const toastText = document.getElementById('cal-toast-text');
+      const toastIcon = document.getElementById('cal-toast-icon');
+      if (!toast) return;
+      toastText.innerText = text;
+      toastIcon.innerText = icon;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+
+    async function loadAcceptedWorkOrders() {
+      try {
+        const res = await fetch('/api/v1/requested-windows');
+        if (res.ok) {
+          const apiData = await res.json();
+          const localAccepted = JSON.parse(localStorage.getItem('ir_accepted_work_orders_map') || '{}');
+          const localCompleted = JSON.parse(localStorage.getItem('ir_completed_work_orders_map') || '{}');
+
+          const apiAccepted = apiData
+            .filter(item => {
+              const st = (item.status || '').toUpperCase();
+              const isComp = !!localCompleted[item.request_id || item.id] || st === 'COMPLETED';
+              const isAcc = !isComp && (st === 'ACCEPTED' || !!localAccepted[item.request_id || item.id] || !!item.accepted_at);
+              return isAcc;
+            })
+            .map(item => ({
+              id: item.request_id || `WO-${item.id}`,
+              title: item.work_description || `Locked Maintenance Block (${item.section_id})`,
+              dept: (item.department || 'CIVIL').toUpperCase().includes('TRD') ? 'TRD' : (item.department || '').toUpperCase().includes('SIG') ? 'SIG' : 'CIVIL',
+              deptLabel: item.department || 'Civil / P-Way',
+              section: item.section_id || 'NDLS-CNB-UP',
+              date: item.accepted_at ? item.accepted_at.slice(0, 10) : '2026-09-22',
+              time: item.window_start_time || '01:30 AM',
+              slotRecommended: item.applied_alternative || item.requested_window || '01:30 – 04:30',
+              machinery: item.machinery || 'Standard Gang Equipment',
+              category: item.priority || 'P1',
+              status: 'ACCEPTED',
+              isAccepted: true,
+              isCompleted: false,
+              shortTag: (item.work_description || 'Work Order').slice(0, 24),
+              rationale: item.rationale || 'Sanctioned slot locked for execution. Certified by Control Office.'
+            }));
+
+          const localCompMap = JSON.parse(localStorage.getItem('ir_completed_work_orders_map') || '{}');
+          const existingIds = new Set(apiAccepted.map(a => a.id));
+          liveAcceptedWorkOrders = [...apiAccepted];
+          SEED_ACCEPTED_WORK_ORDERS.forEach(seed => {
+            if (!existingIds.has(seed.id) && !localCompMap[seed.id]) {
+              liveAcceptedWorkOrders.push(seed);
+            }
+          });
+        } else {
+          liveAcceptedWorkOrders = [...SEED_ACCEPTED_WORK_ORDERS];
+        }
+      } catch (err) {
+        console.warn('Using seeded accepted work orders:', err);
+        liveAcceptedWorkOrders = [...SEED_ACCEPTED_WORK_ORDERS];
+      }
+
+      renderAllViews();
+      updateNotificationsList();
+    }
+
+    function getFilteredWorkOrders() {
+      return liveAcceptedWorkOrders.filter(w => {
+        // Department filter
+        if (currentDeptFilter !== 'ALL' && w.dept !== currentDeptFilter && !(currentDeptFilter === 'P1' && w.category === 'P1')) {
+          return false;
+        }
+        // Priority filter
+        if (currentPriorityFilter !== 'ALL' && w.category !== currentPriorityFilter) {
+          return false;
+        }
+        // Shift window filter
+        if (currentShiftFilter === 'NIGHT') {
+          const isNight = w.time.includes('AM') && (w.time.startsWith('00') || w.time.startsWith('01') || w.time.startsWith('02') || w.time.startsWith('03') || w.time.startsWith('04'));
+          if (!isNight) return false;
+        } else if (currentShiftFilter === 'AFTERNOON') {
+          const isAfternoon = w.time.includes('PM') && (w.time.startsWith('12') || w.time.startsWith('01') || w.time.startsWith('02') || w.time.startsWith('03'));
+          if (!isAfternoon) return false;
+        }
+        // Search term
+        if (currentSearchTerm && !w.title.toLowerCase().includes(currentSearchTerm.toLowerCase()) && !w.id.toLowerCase().includes(currentSearchTerm.toLowerCase())) {
+          return false;
+        }
+        // Location filter
+        if (currentLocationFilter !== 'ALL' && !w.section.includes(currentLocationFilter)) {
+          return false;
+        }
+        return true;
+      });
+    }
+
+    function renderAllViews() {
+      renderUpNextCards();
+      if (activeCalendarView === 'month') {
+        renderCalendarGrid();
+      } else if (activeCalendarView === 'week') {
+        renderWeekView();
+      } else if (activeCalendarView === 'day') {
+        renderDayView();
+      }
+      updateHeaderDateDisplay();
+    }
+
+    // ── Up Next Horizontal Cards ─────────────────────────────────────
+    function renderUpNextCards() {
+      const container = document.getElementById('upnext-cards-container');
+      const countLabel = document.getElementById('upnext-count-label');
+      if (!container) return;
+
+      const filtered = getFilteredWorkOrders();
+      if (countLabel) countLabel.innerText = `(${filtered.length})`;
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div style="background: #FFFFFF; border: 1px dashed #CBD5E1; border-radius: 8px; padding: 12px 18px; font-size: 0.78rem; color: #64748B;">
+            No accepted &amp; locked work orders scheduled for current filters.
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filtered.map(wo => {
+        const isPast = new Date(wo.date) < new Date('2026-09-22');
+        const badgeColor = isPast ? '#DC2626' : '#2563EB';
+        const badgeBorder = isPast ? '#FECACA' : '#BFDBFE';
+        const badgeText = isPast ? `OVERDUE ${formatDateLabel(wo.date)}` : `LOCKED SLOT ${formatDateLabel(wo.date)}`;
+
+        return `
+          <div class="cal-upnext-card" onclick="window.openWoModal('${wo.id}')" style="border-color: ${badgeBorder};">
+            <div class="cal-card-status-badge" style="color: ${badgeColor};">
+              <span>●</span> ${badgeText}
+            </div>
+            <div class="cal-card-title" title="${wo.title}">${wo.title}</div>
+            <div class="cal-card-meta">
+              <span>⏱️ ${wo.time}</span>
+              <span>&bull;</span>
+              <span>${wo.deptLabel}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function formatDateLabel(isoDateStr) {
+      if (!isoDateStr) return 'Sep 22, 2026';
+      const parts = isoDateStr.split('-');
+      if (parts.length === 3) {
+        const m = MONTH_NAMES[parseInt(parts[1], 10) - 1]?.slice(0, 3) || 'Sep';
+        return `${m} ${parseInt(parts[2], 10)}, ${parts[0]}`;
+      }
+      return isoDateStr;
+    }
+
+    // ── Month View Grid ──────────────────────────────────────────────
+    function renderCalendarGrid() {
+      const grid = document.getElementById('calendar-grid-cells');
+      if (!grid) return;
+
+      grid.innerHTML = '';
+
+      const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
+      const startDayOffset = (firstDayOfMonth + 6) % 7; // Monday-first
+      const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+      const daysInPrevMonth = new Date(currentYear, currentMonth, 0).getDate();
+      const totalCells = Math.ceil((startDayOffset + daysInMonth) / 7) * 7;
+
+      const filteredOrders = getFilteredWorkOrders();
+      const selIso = `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, '0')}-${String(selectedDate.getDate()).padStart(2, '0')}`;
+
+      for (let i = 0; i < totalCells; i++) {
+        const cell = document.createElement('div');
+        cell.className = 'cal-cell';
+
+        let cellDay = 0;
+        let cellDateIso = '';
+
+        if (i < startDayOffset) {
+          cellDay = daysInPrevMonth - startDayOffset + i + 1;
+          cell.classList.add('other-month');
+          const prevMonthIdx = currentMonth === 0 ? 11 : currentMonth - 1;
+          const prevYearVal = currentMonth === 0 ? currentYear - 1 : currentYear;
+          cellDateIso = `${prevYearVal}-${String(prevMonthIdx + 1).padStart(2, '0')}-${String(cellDay).padStart(2, '0')}`;
+        } else if (i < startDayOffset + daysInMonth) {
+          cellDay = i - startDayOffset + 1;
+          cellDateIso = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(cellDay).padStart(2, '0')}`;
+          if (cellDateIso === selIso) {
+            cell.classList.add('current-day');
+          }
+        } else {
+          cellDay = i - (startDayOffset + daysInMonth) + 1;
+          cell.classList.add('other-month');
+          const nextMonthIdx = currentMonth === 11 ? 0 : currentMonth + 1;
+          const nextYearVal = currentMonth === 11 ? currentYear + 1 : currentYear;
+          cellDateIso = `${nextYearVal}-${String(nextMonthIdx + 1).padStart(2, '0')}-${String(cellDay).padStart(2, '0')}`;
+        }
+
+        const dateNum = document.createElement('div');
+        dateNum.className = 'cal-cell-date-num';
+        dateNum.innerHTML = `<span>${cellDay}</span>`;
+        cell.appendChild(dateNum);
+
+        // Click cell to select date
+        const capturedDateIso = cellDateIso;
+        cell.onclick = (e) => {
+          const parts = capturedDateIso.split('-');
+          selectedDate = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+          currentYear = selectedDate.getFullYear();
+          currentMonth = selectedDate.getMonth();
+          renderCalendarGrid();
+        };
+
+        // Double click jumps into Day view
+        cell.ondblclick = (e) => {
+          window.setCalendarView('day');
+        };
+
+        const eventsContainer = document.createElement('div');
+        eventsContainer.className = 'cal-events-container';
+
+        const matchingOrders = filteredOrders.filter(wo => wo.date === cellDateIso);
+
+        matchingOrders.forEach(wo => {
+          const pill = document.createElement('div');
+          pill.className = `cal-event-pill ${wo.dept.toLowerCase()} ${wo.category === 'P1' ? 'p1-critical' : ''}`;
+          pill.title = `${wo.time} ${wo.title} (${wo.section})`;
+          pill.onclick = (e) => {
+            e.stopPropagation();
+            window.openWoModal(wo.id);
+          };
+
+          pill.innerHTML = `
+            <span class="cal-event-time">${wo.time}</span>
+            <span class="cal-event-title-text">${wo.shortTag || wo.title}</span>
+          `;
+          eventsContainer.appendChild(pill);
+        });
+
+        cell.appendChild(eventsContainer);
+        grid.appendChild(cell);
+      }
+    }
+
+    // ── Week View Implementation ─────────────────────────────────────
+    function renderWeekView() {
+      const headerRow = document.getElementById('cal-week-header-row');
+      const bodyGrid = document.getElementById('cal-week-body-grid');
+      if (!headerRow || !bodyGrid) return;
+
+      // Find Monday of the selected date's week
+      const curr = new Date(selectedDate);
+      const day = curr.getDay();
+      const diff = curr.getDate() - day + (day === 0 ? -6 : 1); // Monday
+      const monday = new Date(curr.setDate(diff));
+
+      // Build 7 days array
+      const weekDays = [];
+      for (let i = 0; i < 7; i++) {
+        const d = new Date(monday);
+        d.setDate(monday.getDate() + i);
+        weekDays.push(d);
+      }
+
+      // Render Header Row
+      let headerHtml = `<div style="padding: 12px 6px; text-align: center; font-size: 0.70rem; font-weight: 700; color: #94A3B8;">TIME</div>`;
+      weekDays.forEach(d => {
+        const isToday = d.toDateString() === new Date(2026, 8, 22).toDateString();
+        const isSelected = d.toDateString() === selectedDate.toDateString();
+        const dIso = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+
+        headerHtml += `
+          <div class="cal-week-day-col-hdr ${isToday ? 'today' : ''}" onclick="window.selectDayAndGoToDayView('${dIso}')">
+            <div class="cal-week-day-name">${DAY_NAMES[d.getDay()].slice(0, 3)}</div>
+            <div class="cal-week-day-num">${d.getDate()}</div>
+            ${isToday ? '<span style="font-size: 0.60rem; font-weight: 800; color: #2563EB; text-transform: uppercase;">Today</span>' : ''}
+          </div>
+        `;
+      });
+      headerRow.innerHTML = headerHtml;
+
+      // Time bands for week timeline
+      const timeBands = [
+        { label: '01:00 AM', slotKey: 'NIGHT_1', desc: 'Night Shadow Possession (00:00–04:00)' },
+        { label: '04:00 AM', slotKey: 'NIGHT_2', desc: 'Early Dawn Track Clearance (04:00–08:00)' },
+        { label: '08:00 AM', slotKey: 'MORN_1',  desc: 'Morning Peak Traffic Window' },
+        { label: '12:00 PM', slotKey: 'NOON_1',  desc: 'Afternoon Corridor Lull (12:00–16:00)' },
+        { label: '04:00 PM', slotKey: 'EVE_1',   desc: 'Evening Operations (16:00–20:00)' },
+        { label: '08:00 PM', slotKey: 'NIGHT_3', desc: 'Late Evening Freight Window (20:00–24:00)' }
+      ];
+
+      const filteredOrders = getFilteredWorkOrders();
+      let bodyHtml = '';
+
+      timeBands.forEach((band, bandIdx) => {
+        bodyHtml += `<div class="cal-week-time-label-cell">${band.label}</div>`;
+
+        weekDays.forEach(d => {
+          const dIso = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+          const isToday = d.toDateString() === new Date(2026, 8, 22).toDateString();
+
+          // Find work orders matching this day & approx time band
+          const ordersInSlot = filteredOrders.filter(wo => {
+            if (wo.date !== dIso) return false;
+            if (bandIdx === 0 && (wo.time.includes('01:') || wo.time.includes('02:') || wo.time.includes('03:'))) return true;
+            if (bandIdx === 3 && (wo.time.includes('02:11 PM') || wo.time.includes('01:') || wo.time.includes('02:') || wo.time.includes('03:')) && wo.time.includes('PM')) return true;
+            if (bandIdx === 1 && wo.time.includes('04:') || wo.time.includes('05:')) return true;
+            return false;
+          });
+
+          let slotContent = '';
+          ordersInSlot.forEach(wo => {
+            slotContent += `
+              <div class="cal-week-event-card" onclick="window.openWoModal('${wo.id}')" style="border-left-color: ${wo.dept === 'TRD' ? '#2563EB' : wo.dept === 'SIG' ? '#7C3AED' : '#EA580C'};">
+                <div style="font-family: var(--font-mono); font-size: 0.65rem; font-weight: 700; color: #2563EB;">${wo.time}</div>
+                <div style="font-size: 0.72rem; font-weight: 700; color: #0F172A; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${wo.title}</div>
+                <div style="font-size: 0.65rem; color: #64748B; margin-top: 2px;">${wo.machinery.split('+')[0]}</div>
+              </div>
+            `;
+          });
+
+          bodyHtml += `
+            <div class="cal-week-slot-cell ${isToday ? 'today' : ''}">
+              ${slotContent}
+            </div>
+          `;
+        });
+      });
+
+      bodyGrid.innerHTML = bodyHtml;
+    }
+
+    window.selectDayAndGoToDayView = function(dIso) {
+      const parts = dIso.split('-');
+      selectedDate = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+      window.setCalendarView('day');
+    };
+
+    // ── Day View Implementation ──────────────────────────────────────
+    function renderDayView() {
+      const banner = document.getElementById('cal-day-banner');
+      const timeline = document.getElementById('cal-day-timeline');
+      if (!banner || !timeline) return;
+
+      const dIso = `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, '0')}-${String(selectedDate.getDate()).padStart(2, '0')}`;
+      const dayName = DAY_NAMES[selectedDate.getDay()];
+      const monthName = MONTH_NAMES[selectedDate.getMonth()];
+      const dayNum = selectedDate.getDate();
+
+      const dayOrders = getFilteredWorkOrders().filter(w => w.date === dIso);
+
+      // Render Day Summary Banner
+      banner.innerHTML = `
+        <div class="cal-day-metric-box">
+          <div class="cal-day-metric-label">Schedule Date</div>
+          <div class="cal-day-metric-val" style="color: #003366;">${dayName}, ${monthName} ${dayNum}</div>
+        </div>
+        <div class="cal-day-metric-box">
+          <div class="cal-day-metric-label">Accepted &amp; Locked Slots</div>
+          <div class="cal-day-metric-val" style="color: #059669;">${dayOrders.length} Possession Block${dayOrders.length === 1 ? '' : 's'}</div>
+        </div>
+        <div class="cal-day-metric-box">
+          <div class="cal-day-metric-label">Corridor Section</div>
+          <div class="cal-day-metric-val" style="font-size: 0.95rem; color: #334155;">${currentLocationFilter === 'ALL' ? 'Delhi-Kanpur Trunk Corridor' : currentLocationFilter}</div>
+        </div>
+        <div class="cal-day-metric-box">
+          <div class="cal-day-metric-label">Track Machine Mobilization</div>
+          <div class="cal-day-metric-val" style="font-size: 0.95rem; color: #D97706;">${dayOrders.length > 0 ? dayOrders[0].machinery.split('+')[0] : 'Normal Passenger Operations'}</div>
+        </div>
+      `;
+
+      // Hourly timeline (00:00 to 23:00)
+      const hours = [
+        "00:00 AM", "01:00 AM", "02:00 AM", "03:00 AM", "04:00 AM", "05:00 AM",
+        "06:00 AM", "07:00 AM", "08:00 AM", "09:00 AM", "10:00 AM", "11:00 AM",
+        "12:00 PM", "01:00 PM", "02:00 PM", "03:00 PM", "04:00 PM", "05:00 PM",
+        "06:00 PM", "07:00 PM", "08:00 PM", "09:00 PM", "10:00 PM", "11:00 PM"
+      ];
+
+      let timelineHtml = '';
+
+      hours.forEach((hrStr, idx) => {
+        // Check if an order matches this hour
+        const matched = dayOrders.filter(wo => {
+          if (idx === 1 && wo.time.includes('01:30 AM')) return true;
+          if (idx === 2 && wo.time.includes('02:00 AM')) return true;
+          if (idx === 14 && wo.time.includes('02:11 PM')) return true;
+          return false;
+        });
+
+        timelineHtml += `
+          <div class="cal-day-hour-row">
+            <div class="cal-day-hour-label">${hrStr}</div>
+            <div>
+        `;
+
+        if (matched.length > 0) {
+          matched.forEach(wo => {
+            timelineHtml += `
+              <div class="cal-day-card" onclick="window.openWoModal('${wo.id}')" style="border-left-color: ${wo.category === 'P1' ? '#DC2626' : '#2563EB'};">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+                  <span style="font-size: 0.70rem; font-weight: 800; color: #2563EB; background: #EFF6FF; padding: 2px 8px; border-radius: 4px; font-family: var(--font-mono);">
+                    ⏱️ LOCKED SLOT: ${wo.slotRecommended}
+                  </span>
+                  <span style="font-size: 0.68rem; font-weight: 800; color: #059669; background: #ECFDF5; padding: 2px 8px; border-radius: 4px;">
+                    ${wo.deptLabel} &bull; ${wo.category} Priority
+                  </span>
+                </div>
+                <h4 style="font-size: 0.92rem; font-weight: 800; color: #0F172A; margin-bottom: 4px;">
+                  ${wo.title}
+                </h4>
+                <div style="font-size: 0.76rem; color: #64748B; margin-bottom: 8px;">
+                  Section: <strong>${wo.section}</strong> | Machinery: <strong>${wo.machinery}</strong>
+                </div>
+                <div style="background: #FAF5FF; border-left: 3px solid #7C3AED; padding: 6px 10px; border-radius: 4px; font-size: 0.72rem; color: #4C1D95; line-height: 1.35;">
+                  🧠 <strong>AI Decision:</strong> ${wo.rationale}
+                </div>
+              </div>
+            `;
+          });
+        } else {
+          timelineHtml += `
+            <div style="padding: 10px 14px; background: #FAFAFA; border: 1px dashed #E2E8F0; border-radius: 6px; font-size: 0.74rem; color: #94A3B8;">
+              Operational Line Clear — Full Speed Traffic (No Blocks Sanctioned)
+            </div>
+          `;
+        }
+
+        timelineHtml += `
+            </div>
+          </div>
+        `;
+      });
+
+      timeline.innerHTML = timelineHtml;
+    }
+
+    // ── Header Date Display ──────────────────────────────────────────
+    function updateHeaderDateDisplay() {
+      const display = document.getElementById('cal-month-display');
+      if (!display) return;
+
+      if (activeCalendarView === 'month') {
+        display.innerText = `${MONTH_NAMES[currentMonth]} ${currentYear}`;
+      } else if (activeCalendarView === 'week') {
+        const curr = new Date(selectedDate);
+        const day = curr.getDay();
+        const diff = curr.getDate() - day + (day === 0 ? -6 : 1);
+        const mon = new Date(curr.setDate(diff));
+        const sun = new Date(mon);
+        sun.setDate(mon.getDate() + 6);
+        display.innerText = `Week of ${MONTH_NAMES[mon.getMonth()].slice(0, 3)} ${mon.getDate()} – ${MONTH_NAMES[sun.getMonth()].slice(0, 3)} ${sun.getDate()}, ${sun.getFullYear()}`;
+      } else if (activeCalendarView === 'day') {
+        display.innerText = `${DAY_NAMES[selectedDate.getDay()]}, ${MONTH_NAMES[selectedDate.getMonth()]} ${selectedDate.getDate()}, ${selectedDate.getFullYear()}`;
+      }
+    }
+
+    // ── Navigation Buttons (<, >, Today) ─────────────────────────────
+    window.navigateCurrentView = function(delta) {
+      if (activeCalendarView === 'month') {
+        currentMonth += delta;
+        if (currentMonth < 0) {
+          currentMonth = 11;
+          currentYear -= 1;
+        } else if (currentMonth > 11) {
+          currentMonth = 0;
+          currentYear += 1;
+        }
+      } else if (activeCalendarView === 'week') {
+        selectedDate.setDate(selectedDate.getDate() + (delta * 7));
+        currentYear = selectedDate.getFullYear();
+        currentMonth = selectedDate.getMonth();
+      } else if (activeCalendarView === 'day') {
+        selectedDate.setDate(selectedDate.getDate() + delta);
+        currentYear = selectedDate.getFullYear();
+        currentMonth = selectedDate.getMonth();
+      }
+      renderAllViews();
+    };
+
+    window.jumpToToday = function() {
+      selectedDate = new Date(2026, 8, 22);
+      currentYear = 2026;
+      currentMonth = 8;
+      renderAllViews();
+      showToast('Jumped to Today: Sep 22, 2026');
+    };
+
+    // ── View Switcher Buttons (Month, Week, Day) ─────────────────────
+    window.setCalendarView = function(view) {
+      activeCalendarView = view;
+      document.querySelectorAll('.cal-view-btn').forEach(b => b.classList.remove('active'));
+      const activeBtn = document.getElementById(`view-btn-${view}`);
+      if (activeBtn) activeBtn.classList.add('active');
+
+      document.getElementById('cal-month-view-section').style.display = view === 'month' ? 'block' : 'none';
+      document.getElementById('cal-week-view-section').style.display = view === 'week' ? 'block' : 'none';
+      document.getElementById('cal-day-view-section').style.display = view === 'day' ? 'block' : 'none';
+
+      renderAllViews();
+      showToast(`Switched to ${view.toUpperCase()} View`);
+    };
+
+    // ── Notifications System ─────────────────────────────────────────
+    window.toggleNotificationsDropdown = function(e) {
+      if (e) e.stopPropagation();
+      const popover = document.getElementById('notifications-dropdown-menu');
+      if (!popover) return;
+      closeOtherDropdowns('notifications-dropdown-menu');
+      popover.style.display = popover.style.display === 'block' ? 'none' : 'block';
+    };
+
+    function updateNotificationsList() {
+      const list = document.getElementById('notif-items-list');
+      const badge = document.getElementById('notif-count-badge');
+      if (!list) return;
+
+      const unreadCount = liveAcceptedWorkOrders.length;
+      if (badge) {
+        badge.innerText = unreadCount;
+        badge.style.display = unreadCount > 0 ? 'flex' : 'none';
+      }
+
+      list.innerHTML = liveAcceptedWorkOrders.map(wo => `
+        <div class="cal-notif-item unread" onclick="window.openWoModal('${wo.id}'); window.toggleNotificationsDropdown();">
+          <div style="font-size: 0.70rem; font-weight: 800; color: #2563EB; margin-bottom: 2px;">
+            🔒 ACCEPTED SLOT: ${wo.date} (${wo.time})
+          </div>
+          <div style="font-size: 0.78rem; font-weight: 700; color: #0F172A; line-height: 1.3;">
+            ${wo.title}
+          </div>
+          <div style="font-size: 0.68rem; color: #64748B; margin-top: 4px;">
+            ${wo.deptLabel} &bull; ${wo.section}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    window.markAllNotificationsRead = function() {
+      const badge = document.getElementById('notif-count-badge');
+      if (badge) badge.style.display = 'none';
+      document.querySelectorAll('.cal-notif-item').forEach(item => item.classList.remove('unread'));
+      showToast('All notifications marked as read');
+    };
+
+    // ── Refresh Button ───────────────────────────────────────────────
+    window.refreshCalendarData = function() {
+      const svg = document.getElementById('refresh-icon-svg');
+      if (svg) svg.classList.add('spinning');
+      loadAcceptedWorkOrders().then(() => {
+        setTimeout(() => {
+          if (svg) svg.classList.remove('spinning');
+          showToast('Synchronized with Control Office real-time slots');
+        }, 600);
+      });
+    };
+
+    // ── Location Selector Dropdown ───────────────────────────────────
+    window.toggleLocationDropdown = function(e) {
+      if (e) e.stopPropagation();
+      const menu = document.getElementById('location-dropdown-menu');
+      if (!menu) return;
+      closeOtherDropdowns('location-dropdown-menu');
+      menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+    };
+
+    window.selectLocationFilter = function(locKey, locLabel) {
+      currentLocationFilter = locKey;
+      document.getElementById('selected-loc-label').innerText = locLabel;
+      document.querySelectorAll('#location-dropdown-menu .cal-dropdown-item').forEach(el => {
+        el.classList.toggle('active', el.innerText.includes(locLabel));
+      });
+      document.getElementById('location-dropdown-menu').style.display = 'none';
+      renderAllViews();
+      showToast(`Filter: ${locLabel}`);
+    };
+
+    // ── Export Dropdown & Exporters ──────────────────────────────────
+    window.toggleExportDropdown = function(e) {
+      if (e) e.stopPropagation();
+      const menu = document.getElementById('export-dropdown-menu');
+      if (!menu) return;
+      closeOtherDropdowns('export-dropdown-menu');
+      menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+    };
+
+    window.exportCSV = function() {
+      const rows = [
+        ["Requisition ID", "Title", "Department", "Section", "Scheduled Date", "Slot Time", "Machinery", "Priority", "Status"],
+        ...getFilteredWorkOrders().map(w => [w.id, `"${w.title}"`, w.deptLabel, w.section, w.date, `"${w.slotRecommended}"`, `"${w.machinery}"`, w.category, "ACCEPTED & LOCKED"])
+      ];
+      const csvContent = "data:text/csv;charset=utf-8," + rows.map(e => e.join(",")).join("\n");
+      const encodedUri = encodeURI(csvContent);
+      downloadFile(encodedUri, `IR_Calendar_Accepted_Slots_${new Date().toISOString().slice(0, 10)}.csv`);
+      document.getElementById('export-dropdown-menu').style.display = 'none';
+      showToast('Exported CSV dossier');
+    };
+
+    window.exportICS = function() {
+      const filtered = getFilteredWorkOrders();
+      let ics = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Indian Railways//Raksha Path Maintenance//EN\nCALSCALE:GREGORIAN\n";
+      filtered.forEach(ev => {
+        const dt = (ev.date || '2026-09-22').replace(/-/g, '');
+        ics += "BEGIN:VEVENT\n";
+        ics += `SUMMARY:[LOCKED] ${ev.title}\n`;
+        ics += `DESCRIPTION:Department: ${ev.deptLabel}\\nSection: ${ev.section}\\nMachine: ${ev.machinery}\\nRationale: ${ev.rationale}\n`;
+        ics += `DTSTART:${dt}T020000Z\n`;
+        ics += `DTEND:${dt}T043000Z\n`;
+        ics += `LOCATION:${ev.section}\n`;
+        ics += `STATUS:CONFIRMED\n`;
+        ics += "END:VEVENT\n";
+      });
+      ics += "END:VCALENDAR";
+
+      const encodedUri = "data:text/calendar;charset=utf-8," + encodeURIComponent(ics);
+      downloadFile(encodedUri, `IR_Possessions_Schedule_${new Date().toISOString().slice(0, 10)}.ics`);
+      document.getElementById('export-dropdown-menu').style.display = 'none';
+      showToast('Exported iCal (.ics) Calendar');
+    };
+
+    window.exportJSON = function() {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(getFilteredWorkOrders(), null, 2));
+      downloadFile(dataStr, `IR_Corridor_Accepted_Dossier_${new Date().toISOString().slice(0, 10)}.json`);
+      document.getElementById('export-dropdown-menu').style.display = 'none';
+      showToast('Exported JSON Dossier');
+    };
+
+    window.printCalendarSchedule = function() {
+      document.getElementById('export-dropdown-menu').style.display = 'none';
+      window.print();
+    };
+
+    function downloadFile(uri, filename) {
+      const link = document.createElement("a");
+      link.setAttribute("href", uri);
+      link.setAttribute("download", filename);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    // ── Filters Popover Implementation ───────────────────────────────
+    window.toggleFiltersPopover = function(e) {
+      if (e) e.stopPropagation();
+      const popover = document.getElementById('filters-dropdown-popover');
+      if (!popover) return;
+      closeOtherDropdowns('filters-dropdown-popover');
+      popover.style.display = popover.style.display === 'block' ? 'none' : 'block';
+    };
+
+    window.closeFiltersPopover = function() {
+      const popover = document.getElementById('filters-dropdown-popover');
+      if (popover) popover.style.display = 'none';
+    };
+
+    window.setFilterDept = function(dept) {
+      currentDeptFilter = dept;
+      document.querySelectorAll('#filter-dept-chips .cal-filter-chip').forEach(c => {
+        c.classList.toggle('active', c.dataset.dept === dept);
+      });
+    };
+
+    window.setFilterPriority = function(pri) {
+      currentPriorityFilter = pri;
+      document.querySelectorAll('#filter-priority-chips .cal-filter-chip').forEach(c => {
+        c.classList.toggle('active', c.dataset.pri === pri);
+      });
+    };
+
+    window.setFilterShift = function(shift) {
+      currentShiftFilter = shift;
+      document.querySelectorAll('#filter-shift-chips .cal-filter-chip').forEach(c => {
+        c.classList.toggle('active', c.dataset.shift === shift);
+      });
+    };
+
+    window.applyFiltersPopover = function() {
+      window.closeFiltersPopover();
+      updateFilterButtonState();
+      renderAllViews();
+      showToast('Filters applied');
+    };
+
+    function updateFilterButtonState() {
+      let activeCount = 0;
+      if (currentDeptFilter !== 'ALL') activeCount++;
+      if (currentPriorityFilter !== 'ALL') activeCount++;
+      if (currentShiftFilter !== 'ALL') activeCount++;
+      if (currentLocationFilter !== 'ALL') activeCount++;
+
+      const btn = document.getElementById('btn-filters-toggle');
+      const badge = document.getElementById('filters-active-badge');
+      if (activeCount > 0) {
+        btn.classList.add('has-active-filter');
+        badge.innerText = activeCount;
+        badge.style.display = 'inline-block';
+      } else {
+        btn.classList.remove('has-active-filter');
+        badge.style.display = 'none';
+      }
+    }
+
+    window.resetFilters = function() {
+      currentDeptFilter = 'ALL';
+      currentPriorityFilter = 'ALL';
+      currentShiftFilter = 'ALL';
+      currentLocationFilter = 'ALL';
+      currentSearchTerm = '';
+
+      const searchBox = document.getElementById('cal-search-input');
+      if (searchBox) searchBox.value = '';
+      const clearBtn = document.getElementById('cal-search-clear');
+      if (clearBtn) clearBtn.style.display = 'none';
+
+      document.getElementById('selected-loc-label').innerText = 'All Corridor Sections';
+      window.setFilterDept('ALL');
+      window.setFilterPriority('ALL');
+      window.setFilterShift('ALL');
+
+      document.querySelectorAll('.cal-legend-pill').forEach(p => p.classList.remove('active'));
+      const pillAll = document.getElementById('legend-pill-all');
+      if (pillAll) pillAll.classList.add('active');
+
+      updateFilterButtonState();
+      window.closeFiltersPopover();
+      renderAllViews();
+      showToast('All filters reset');
+    };
+
+    // ── Search & Legend Handlers ─────────────────────────────────────
+    window.handleSearchFilter = function(val) {
+      currentSearchTerm = (val || '').trim();
+      const clearBtn = document.getElementById('cal-search-clear');
+      if (clearBtn) clearBtn.style.display = currentSearchTerm ? 'inline-block' : 'none';
+      renderAllViews();
+    };
+
+    window.clearSearch = function() {
+      const searchBox = document.getElementById('cal-search-input');
+      if (searchBox) searchBox.value = '';
+      window.handleSearchFilter('');
+    };
+
+    window.filterByDept = function(dept) {
+      if (currentDeptFilter === dept && dept !== 'ALL') {
+        currentDeptFilter = 'ALL';
+      } else {
+        currentDeptFilter = dept;
+      }
+
+      document.querySelectorAll('.cal-legend-pill').forEach(p => p.classList.remove('active'));
+      const pillMap = { 'CIVIL': 'civil', 'TRD': 'trd', 'SIG': 'sig', 'P1': 'p1', 'ALL': 'all' };
+      const targetPill = document.getElementById(`legend-pill-${pillMap[currentDeptFilter]}`);
+      if (targetPill) targetPill.classList.add('active');
+
+      window.setFilterDept(currentDeptFilter);
+      updateFilterButtonState();
+      renderAllViews();
+    };
+
+    // ── Modal Interaction ────────────────────────────────────────────
+    window.openWoModal = function(woId) {
+      const wo = liveAcceptedWorkOrders.find(w => w.id === woId);
+      if (!wo) return;
+
+      currentModalWoId = wo.id;
+      document.getElementById('modal-wo-title').innerText = wo.title;
+      document.getElementById('modal-wo-id').innerText = `ID: ${wo.id} | Section: ${wo.section} | Dept: ${wo.deptLabel}`;
+      document.getElementById('modal-wo-slot').innerText = wo.slotRecommended;
+      document.getElementById('modal-wo-machinery').innerText = `${wo.deptLabel} &bull; ${wo.machinery}`;
+      document.getElementById('modal-wo-rationale').innerText = wo.rationale || 'Sanctioned slot locked for execution without conflict.';
+      document.getElementById('modal-wo-link').href = `maintenance-dashboard.html#wo-${wo.id}`;
+
+      document.getElementById('wo-detail-modal').classList.add('open');
+    };
+
+    window.closeWoModal = function(e) {
+      if (e && e.target && e.target.id !== 'wo-detail-modal') return;
+      document.getElementById('wo-detail-modal').classList.remove('open');
+    };
+
+    window.markCurrentOrderCompleted = function() {
+      if (!currentModalWoId) return;
+      const localCompleted = JSON.parse(localStorage.getItem('ir_completed_work_orders_map') || '{}');
+      localCompleted[currentModalWoId] = {
+        completed_at: new Date().toISOString(),
+        officer: 'Station Director / PWI In-Charge'
+      };
+      localStorage.setItem('ir_completed_work_orders_map', JSON.stringify(localCompleted));
+      localStorage.setItem('ir_conflicts_updated', Date.now().toString());
+
+      if (window.IR_LIVE_SYNC) {
+        window.IR_LIVE_SYNC.emit('conflicts_updated', { woId: currentModalWoId, status: 'COMPLETED' });
+      }
+
+      window.closeWoModal();
+      showToast(`Work Order ${currentModalWoId} marked as COMPLETED`);
+      loadAcceptedWorkOrders();
+    };
+
+    function closeOtherDropdowns(keepId) {
+      const dropdowns = [
+        'location-dropdown-menu',
+        'export-dropdown-menu',
+        'filters-dropdown-popover',
+        'notifications-dropdown-menu'
+      ];
+      dropdowns.forEach(id => {
+        if (id !== keepId) {
+          const el = document.getElementById(id);
+          if (el) el.style.display = 'none';
+        }
+      });
+    }
+
+    // Close all open dropdowns on background click
+    document.addEventListener('click', (e) => {
+      const isInside = e.target.closest('#btn-location-selector') ||
+                       e.target.closest('#location-dropdown-menu') ||
+                       e.target.closest('#btn-export') ||
+                       e.target.closest('#export-dropdown-menu') ||
+                       e.target.closest('#btn-filters-toggle') ||
+                       e.target.closest('#filters-dropdown-popover') ||
+                       e.target.closest('#btn-notifications') ||
+                       e.target.closest('#notifications-dropdown-menu');
+      if (!isInside) {
+        closeOtherDropdowns(null);
+      }
+    });
+
+    // Cross-tab real-time sync with Control Office & Maintenance Dashboard
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'ir_task_sanctioned' || e.key === 'ir_accepted_work_orders_map' || e.key === 'ir_completed_work_orders_map' || e.key === 'ir_conflicts_updated') {
+        loadAcceptedWorkOrders();
+      }
+    });
+
+    if (window.IR_LIVE_SYNC) {
+      window.IR_LIVE_SYNC.on('conflicts_updated', () => loadAcceptedWorkOrders());
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      loadAcceptedWorkOrders();
+    });
+  </script>
+</body>
+
+</html>
