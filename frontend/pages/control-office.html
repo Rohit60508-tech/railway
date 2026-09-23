@@ -21,7 +21,8 @@
   <link rel="stylesheet" href="../styles/main.css" />
 
   <!-- Shared Navigation & Real-Time Sync -->
-  <script src="../components/SharedNav.js?v=2.5.4"></script>
+  <script src="../components/ir-i18n.js?v=2.7.0"></script>
+  <script src="../components/SharedNav.js?v=2.7.0"></script>
   <script src="../components/shared-live-sync.js"></script>
 
   <!-- Mapbox GL JS & Resilient Leaflet GIS Integration -->
@@ -438,6 +439,35 @@
 
     <!-- TAB 1: REAL-TIME OPS & CORE DECISION SUITE -->
     <div id="tab-realtime" class="standout-tab-view">
+
+      <!-- ═══════════════════ EMERGENCY SAFETY INCIDENTS & PRIORITY BLOCK REQUESTS QUEUE ═══════════════════ -->
+      <div class="panel-card" style="margin-bottom: 20px; border-left: 5px solid #DC2626; background: #FFFFFF;"
+        id="emergency-incident-command-panel">
+        <div class="panel-title"
+          style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 12px;">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span style="font-size: 1.15rem; color: #DC2626;">🚨</span>
+            <span style="font-weight: 800; font-size: 0.96rem; color: #0F172A;">Incoming Safety Incidents &amp; Priority
+              Line Block Requests</span>
+            <span id="emergency-incidents-badge"
+              style="background: #FEF2F2; color: #DC2626; border: 1px solid #FECACA; padding: 2px 8px; border-radius: 12px; font-weight: 800; font-size: 0.72rem;">0
+              Pending</span>
+
+          </div>
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <span style="font-size: 0.72rem; color: #64748B; font-weight: 600;">📡 Live Surveillance Stream</span>
+            <button type="button" onclick="window.renderEmergencyIncidentBlocks()"
+              style="background: #FAF6EE; color: #003366; border: 1px solid #C3B296; padding: 4px 10px; border-radius: 5px; font-size: 0.72rem; font-weight: 700; cursor: pointer;">↻
+              Refresh</button>
+          </div>
+        </div>
+
+        <div id="emergency-incident-blocks-container"
+          style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 12px;">
+          <!-- Populated dynamically via JavaScript -->
+        </div>
+      </div>
+
       <div class="ctrl-grid">
 
         <!-- ═══════════════════ LEFT COLUMN: RECOMMENDED SLOTS & INTELLIGENCE ═══════════════════ -->
@@ -716,15 +746,20 @@
 
           <!-- ═══ APPROVED & SANCTIONED WINDOWS ═══ -->
           <div id="approved-windows-section" style="display:none; margin-top:22px;">
-            <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px; padding:12px 14px; background:#ECFDF5; border:1.5px solid rgba(5,150,105,0.25); border-radius:10px;">
+            <div
+              style="display:flex; align-items:center; gap:10px; margin-bottom:12px; padding:12px 14px; background:#ECFDF5; border:1.5px solid rgba(5,150,105,0.25); border-radius:10px;">
               <span style="font-size:1.1rem;">✅</span>
               <div>
                 <div style="font-size:0.85rem; font-weight:800; color:#065F46;">Approved &amp; Sanctioned Windows</div>
-                <div style="font-size:0.68rem; color:#047857;">Control Office sanctioned → Moved to Work Orders — Pending field team acceptance</div>
+                <div style="font-size:0.68rem; color:#047857;">Control Office sanctioned → Moved to Work Orders —
+                  Pending field team acceptance</div>
               </div>
-              <span id="approved-windows-count-badge" style="background:rgba(5,150,105,0.15); border:1px solid rgba(5,150,105,0.3); color:#059669; font-size:0.72rem; font-weight:800; padding:2px 10px; border-radius:12px; margin-left:auto;">0 Sanctioned</span>
+              <span id="approved-windows-count-badge"
+                style="background:rgba(5,150,105,0.15); border:1px solid rgba(5,150,105,0.3); color:#059669; font-size:0.72rem; font-weight:800; padding:2px 10px; border-radius:12px; margin-left:auto;">0
+                Sanctioned</span>
             </div>
-            <div id="approved-windows-list" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(300px, 1fr)); gap:10px;">
+            <div id="approved-windows-list"
+              style="display:grid; grid-template-columns:repeat(auto-fill, minmax(300px, 1fr)); gap:10px;">
               <!-- Populated dynamically -->
             </div>
           </div>
@@ -1887,7 +1922,7 @@
           if (approvedCountBadge) approvedCountBadge.textContent = `${approvedItems.length} Sanctioned`;
 
           const activeUser = (() => {
-            try { const r = localStorage.getItem('ir_ai_session'); if (r) { const p = JSON.parse(r); if (p?.user) return p.user; } } catch(_) {}
+            try { const r = localStorage.getItem('ir_ai_session'); if (r) { const p = JSON.parse(r); if (p?.user) return p.user; } } catch (_) { }
             return { name: 'Sr. Section Controller', staffId: 'IR-CO-CTRL' };
           })();
 
@@ -3246,15 +3281,135 @@
       }
     };
 
+    window.renderEmergencyIncidentBlocks = function () {
+      const container = document.getElementById('emergency-incident-blocks-container');
+      const badge = document.getElementById('emergency-incidents-badge');
+      if (!container) return;
+
+      const allBlocks = (window.IR_LIVE_SYNC && typeof window.IR_LIVE_SYNC.getEmergencyBlockRequests === 'function')
+        ? window.IR_LIVE_SYNC.getEmergencyBlockRequests()
+        : [];
+
+      // Only show requests that are pending Section Controller sanction
+      const pendingBlocks = allBlocks.filter(b => {
+        const s = (b.status || '').toUpperCase();
+        return s === 'PENDING_CONTROL_SANCTION' || (s !== 'SANCTIONED_BY_CONTROL' && s !== 'BLOCK SANCTIONED' && !s.includes('SANCTIONED'));
+      });
+
+      const pendingCount = pendingBlocks.length;
+      if (badge) {
+        badge.innerText = `${pendingCount} Pending Sanction`;
+        badge.style.background = pendingCount > 0 ? '#FEF2F2' : '#ECFDF5';
+        badge.style.color = pendingCount > 0 ? '#DC2626' : '#059669';
+        badge.style.borderColor = pendingCount > 0 ? '#FECACA' : '#A7F3D0';
+      }
+
+      if (pendingBlocks.length === 0) {
+        container.innerHTML = `
+          <div style="grid-column: 1 / -1; background: #FAF6EE; border: 1px dashed #C3B296; border-radius: 8px; padding: 22px; text-align: center; color: #64748B;">
+            <div style="font-size: 1.6rem; color: #059669; margin-bottom: 6px;">✓</div>
+            <div style="font-weight: 800; color: #059669; font-size: 0.92rem;">All Emergency Block Requests Sanctioned</div>
+            <div style="font-size: 0.76rem; color: #475569; margin-top: 4px;">No pending safety incident block requests in queue. All authorized corridors have been cleared and dispatched to Field Maintenance Gangs.</div>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = pendingBlocks.map(b => {
+        const isP1 = (b.priority || '').includes('P1') || (b.severity || '').toUpperCase() === 'CRITICAL';
+        const isP2 = (b.priority || '').includes('P2') || (b.severity || '').toUpperCase() === 'HIGH';
+
+        const sevBg = isP1 ? '#FEF2F2' : (isP2 ? '#FFF7ED' : '#EFF6FF');
+        const sevColor = isP1 ? '#DC2626' : (isP2 ? '#D9531E' : '#0056B3');
+        const cardBorder = isP1 ? '1.5px solid #DC2626' : '1px solid #CBD5E1';
+
+        return `
+          <div style="background: #FFFFFF; border: ${cardBorder}; border-radius: 8px; padding: 14px 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); position: relative;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+              <div>
+                <span style="font-family: var(--font-mono); font-weight: 800; color: #003366; font-size: 0.86rem;">${b.incidentId || b.id}</span>
+                <span style="background: ${sevBg}; color: ${sevColor}; font-size: 0.68rem; font-weight: 800; padding: 2px 7px; border-radius: 4px; margin-left: 6px;">
+                  ${b.priority || 'P1 Emergency'}
+                </span>
+              </div>
+              <span style="font-size: 0.70rem; font-weight: 700; padding: 2px 8px; border-radius: 4px; background: #FFFBEB; color: #D97706; border: 1px solid #FDE68A;">
+                ⏳ Pending Sanction
+              </span>
+            </div>
+
+            <div style="font-weight: 700; color: #0F172A; font-size: 0.88rem; margin-bottom: 4px;">${b.title}</div>
+            <div style="font-size: 0.74rem; color: #475569; margin-bottom: 8px;">📍 <strong>${b.asset}</strong> &bull; ${b.location}</div>
+
+            <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 6px; padding: 8px 10px; margin-bottom: 10px; font-size: 0.72rem;">
+              <div style="display: flex; justify-content: space-between; margin-bottom: 3px;">
+                <span style="color: #64748B;">Required Block:</span>
+                <strong style="color: #003366; font-family: var(--font-mono);">${b.durationDisplay || b.durationMinutes + ' mins'}</strong>
+              </div>
+              <div style="display: flex; justify-content: space-between; margin-bottom: 3px;">
+                <span style="color: #64748B;">AI Optimal Slot:</span>
+                <strong style="color: #059669;">${b.suggestedSlot}</strong>
+              </div>
+              <div style="display: flex; justify-content: space-between;">
+                <span style="color: #64748B;">Disruption Risk:</span>
+                <span style="color: #059669; font-weight: 600;">✓ ${b.disruptionRisk || 'Low Disruption'}</span>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 8px; align-items: center;">
+              <button type="button" onclick="window.sanctionEmergencyIncidentBlock('${b.id || b.incidentId}')" style="flex: 1; background: #DC2626; color: #FFF; border: none; font-weight: 800; font-size: 0.76rem; padding: 8px 12px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 2px 6px rgba(220,38,38,0.25); transition: all 0.15s;">
+                <span>⚡</span> <span>1-Click Sanction Emergency Block</span>
+              </button>
+              <button type="button" onclick="window.openFeasibilityFromIncident('${b.location}', ${b.durationMinutes || 120})" style="background: #FFFFFF; border: 1px solid #CBD5E1; color: #003366; font-size: 0.74rem; font-weight: 700; padding: 7px 10px; border-radius: 6px; cursor: pointer;">
+                Simulate
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    };
+
+    window.sanctionEmergencyIncidentBlock = function (id) {
+      if (!window.IR_LIVE_SYNC) return;
+      const res = window.IR_LIVE_SYNC.sanctionEmergencyBlock(id, 'Section Controller (NDLS Control)');
+      if (res) {
+        window.renderEmergencyIncidentBlocks();
+        alert(`✓ EMERGENCY BLOCK SANCTIONED!\n\nCorridor Block for "${res.title}" is officially authorized by Control Office.\nStatus updated and dispatched to Field Maintenance Gang (PM Schedules).`);
+      }
+    };
+
+    window.openFeasibilityFromIncident = function (loc, duration) {
+      const durEl = document.getElementById('sim-duration-mins');
+      if (durEl) {
+        if (duration <= 60) durEl.value = "60";
+        else if (duration <= 90) durEl.value = "90";
+        else if (duration <= 120) durEl.value = "120";
+        else if (duration <= 180) durEl.value = "180";
+        else durEl.value = "240";
+      }
+      window.simulateWhatIfWindow();
+      const simBox = document.getElementById('sim-result-box');
+      if (simBox) simBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    };
+
     document.addEventListener('DOMContentLoaded', () => {
       // Auto-load conflicts & recommended slots on page load directly from Supabase & local DB
       if (typeof window.fetchLiveConflicts === 'function') window.fetchLiveConflicts();
       if (typeof window.fetchLiveRecommendedSlots === 'function') window.fetchLiveRecommendedSlots();
+      if (typeof window.renderEmergencyIncidentBlocks === 'function') window.renderEmergencyIncidentBlocks();
 
       if (window.IR_LIVE_SYNC) {
         window.IR_LIVE_SYNC.on('conflicts_updated', () => {
           if (typeof window.fetchLiveConflicts === 'function') window.fetchLiveConflicts();
           if (typeof window.fetchLiveRecommendedSlots === 'function') window.fetchLiveRecommendedSlots();
+        });
+
+        window.IR_LIVE_SYNC.on('emergency_blocks_updated', () => {
+          if (typeof window.renderEmergencyIncidentBlocks === 'function') window.renderEmergencyIncidentBlocks();
+        });
+
+        window.IR_LIVE_SYNC.on('incident_reported', (inc) => {
+          if (typeof window.renderEmergencyIncidentBlocks === 'function') window.renderEmergencyIncidentBlocks();
+          if (window.showToast) window.showToast(`🚨 Emergency Incident Received: ${inc.id} (${inc.type})`);
         });
       }
     });

@@ -65,7 +65,18 @@ export default function MasterCommandLayout({ children, currentTab, setCurrentTa
       group: 'FIELD & SURVEILLANCE',
       items: [
         { key: 'maintenance', label: 'Maintenance Cell', icon: Wrench, roleAllowed: ['admin', 'field-engineer'], desc: 'Work order execution & field crew dispatch' },
-        { key: 'surveillance', label: 'Surveillance & USFD', icon: Radio, roleAllowed: ['admin', 'surveillance'], desc: 'Track defect telemetry & ultrasonic inspection' },
+        {
+          key: 'surveillance',
+          label: 'Surveillance Hub',
+          icon: Radio,
+          roleAllowed: ['admin', 'surveillance'],
+          desc: 'Track defect telemetry, inspections & incidents',
+          subItems: [
+            { key: 'telemetry', label: 'Live Telemetry & GIS', iconEmoji: '📡' },
+            { key: 'inspections', label: 'Inspection Reports', iconEmoji: '📋', badge: '4', badgeColor: '#003366' },
+            { key: 'incidents', label: 'Incident Reports', iconEmoji: '🚨', badge: '3', badgeColor: '#DC2626' }
+          ]
+        },
       ]
     },
     {
@@ -249,36 +260,86 @@ export default function MasterCommandLayout({ children, currentTab, setCurrentTa
                     )}
                     {allowedItems.map(item => {
                       const Icon = item.icon;
-                      const isActive = currentTab === item.key;
+                      const isMainActive = currentTab === item.key || (item.subItems && item.subItems.some(s => currentTab === s.key));
+
                       return (
-                        <button
-                          key={item.key}
-                          onClick={() => setCurrentTab(item.key)}
-                          title={collapsed ? `${item.label} — ${item.desc}` : item.desc}
-                          style={{
-                            width: '100%',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '12px',
-                            padding: collapsed ? '10px 0' : '10px 14px',
-                            justifyContent: collapsed ? 'center' : 'flex-start',
-                            borderRadius: '11px',
-                            border: isActive ? '1px solid rgba(255,255,255,0.3)' : '1px solid transparent',
-                            marginBottom: '4px',
-                            background: isActive
-                              ? 'linear-gradient(135deg, #003366 0%, #0056B3 100%)'
-                              : 'transparent',
-                            color: isActive ? '#FFFFFF' : (darkMode ? '#CBD5E1' : '#475569'),
-                            fontWeight: isActive ? '800' : '600',
-                            fontSize: '0.84rem',
-                            cursor: 'pointer',
-                            transition: 'all 0.22s cubic-bezier(0.16, 1, 0.3, 1)',
-                            boxShadow: isActive ? '0 6px 20px rgba(0, 51, 102, 0.32)' : 'none'
-                          }}
-                        >
-                          <Icon size={18} color={isActive ? '#FFFFFF' : (darkMode ? '#94A3B8' : '#003366')} />
-                          {!collapsed && <span>{item.label}</span>}
-                        </button>
+                        <div key={item.key} style={{ marginBottom: '4px' }}>
+                          <button
+                            onClick={() => setCurrentTab(item.key)}
+                            title={collapsed ? `${item.label} — ${item.desc}` : item.desc}
+                            style={{
+                              width: '100%',
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '12px',
+                              padding: collapsed ? '10px 0' : '10px 14px',
+                              justifyContent: collapsed ? 'center' : 'flex-start',
+                              borderRadius: '11px',
+                              border: isMainActive ? '1px solid rgba(255,255,255,0.3)' : '1px solid transparent',
+                              marginBottom: item.subItems && !collapsed ? '4px' : '0',
+                              background: isMainActive
+                                ? 'linear-gradient(135deg, #003366 0%, #0056B3 100%)'
+                                : 'transparent',
+                              color: isMainActive ? '#FFFFFF' : (darkMode ? '#CBD5E1' : '#475569'),
+                              fontWeight: isMainActive ? '800' : '600',
+                              fontSize: '0.84rem',
+                              cursor: 'pointer',
+                              transition: 'all 0.22s cubic-bezier(0.16, 1, 0.3, 1)',
+                              boxShadow: isMainActive ? '0 6px 20px rgba(0, 51, 102, 0.32)' : 'none'
+                            }}
+                          >
+                            <Icon size={18} color={isMainActive ? '#FFFFFF' : (darkMode ? '#94A3B8' : '#003366')} />
+                            {!collapsed && <span>{item.label}</span>}
+                          </button>
+
+                          {item.subItems && !collapsed && (
+                            <div style={{ marginLeft: '22px', paddingLeft: '12px', borderLeft: '2px solid rgba(0, 51, 102, 0.15)', display: 'flex', flexDirection: 'column', gap: '3px', marginTop: '4px', marginBottom: '6px' }}>
+                              {item.subItems.map(sub => {
+                                const isSubActive = currentTab === sub.key || (sub.key === 'telemetry' && currentTab === 'surveillance');
+                                return (
+                                  <button
+                                    key={sub.key}
+                                    onClick={() => {
+                                      setCurrentTab('surveillance');
+                                      window.location.hash = `#${sub.key}`;
+                                    }}
+                                    style={{
+                                      display: 'flex',
+                                      alignItems: 'center',
+                                      justifyContent: 'space-between',
+                                      padding: '6px 10px',
+                                      borderRadius: '7px',
+                                      border: 'none',
+                                      background: isSubActive ? '#EEF2FF' : 'transparent',
+                                      color: isSubActive ? '#003366' : '#64748B',
+                                      fontWeight: isSubActive ? '700' : '500',
+                                      fontSize: '0.78rem',
+                                      cursor: 'pointer',
+                                      textAlign: 'left'
+                                    }}
+                                  >
+                                    <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                      <span>{sub.iconEmoji}</span>
+                                      <span>{sub.label}</span>
+                                    </span>
+                                    {sub.badge && (
+                                      <span style={{
+                                        background: sub.badgeColor === '#DC2626' ? 'rgba(220,38,38,0.15)' : 'rgba(0,51,102,0.1)',
+                                        color: sub.badgeColor || '#003366',
+                                        fontSize: '0.68rem',
+                                        fontWeight: '800',
+                                        padding: '1px 6px',
+                                        borderRadius: '10px'
+                                      }}>
+                                        {sub.badge}
+                                      </span>
+                                    )}
+                                  </button>
+                                );
+                              })}
+                            </div>
+                          )}
+                        </div>
                       );
                     })}
                   </div>
@@ -308,103 +369,145 @@ export default function MasterCommandLayout({ children, currentTab, setCurrentTa
                         </div>
                       </div>
                     </div>
-                  </div>
 
-                  <div style={{ display: 'flex', gap: '6px', marginTop: '10px' }}>
-                    <button
-                      onClick={() => setShowRoleDrawer(!showRoleDrawer)}
-                      style={{
-                        flex: 1, padding: '7px 10px', borderRadius: '8px', border: '1px solid rgba(0, 51, 102, 0.22)',
-                        background: 'rgba(0, 51, 102, 0.08)', color: '#003366', fontWeight: '700', fontSize: '0.74rem',
-                        cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px',
-                        transition: 'all 0.2s ease'
-                      }}
-                    >
-                      <UserCheck size={13} />
-                      <span>Switch Role</span>
-                    </button>
                     <button
                       onClick={logout}
-                      style={{
-                        padding: '7px 10px', borderRadius: '8px', border: '1px solid rgba(220, 38, 38, 0.3)',
-                        background: 'rgba(220, 38, 38, 0.08)', color: '#DC2626', fontWeight: '700', fontSize: '0.74rem',
-                        cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center'
-                      }}
-                      title="Sign Out"
+                      style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#EF4444', padding: '4px' }}
+                      title="Sign Out Session"
                     >
-                      <LogOut size={14} />
+                      <LogOut size={16} />
                     </button>
                   </div>
+
+                  <button
+                    onClick={() => setShowRoleDrawer(!showRoleDrawer)}
+                    style={{
+                      width: '100%',
+                      padding: '6px 10px',
+                      borderRadius: '6px',
+                      background: 'rgba(0, 51, 102, 0.06)',
+                      border: '1px dashed rgba(0, 51, 102, 0.25)',
+                      color: '#003366',
+                      fontSize: '0.72rem',
+                      fontWeight: '700',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '6px'
+                    }}
+                  >
+                    <UserCheck size={13} />
+                    <span>Switch Active Officer Role</span>
+                  </button>
                 </div>
               ) : (
-                <button
-                  onClick={logout}
-                  title="Sign Out"
-                  style={{
-                    width: '100%', padding: '9px 0', borderRadius: '8px', border: 'none',
-                    background: 'rgba(220, 38, 38, 0.1)', color: '#DC2626', cursor: 'pointer',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center'
-                  }}
-                >
-                  <LogOut size={16} />
-                </button>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+                  <span style={{ fontSize: '1.2rem' }}>{roleMeta?.icon || '🛡️'}</span>
+                  <button onClick={logout} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#EF4444' }}>
+                    <LogOut size={16} />
+                  </button>
+                </div>
               )}
             </div>
           )}
         </aside>
 
-        {/* ── Main View Content Area ── */}
-        <main style={{ flex: 1, padding: '28px 36px', overflowY: 'auto' }}>
-
-          {/* Quick Role Switcher Drawer Modal */}
-          {showRoleDrawer && (
-            <div style={{
-              marginBottom: '24px', padding: '18px 24px', borderRadius: '16px',
-              background: 'linear-gradient(135deg, rgba(0, 51, 102, 0.08), rgba(0, 86, 179, 0.14))',
-              border: '1.5px solid rgba(0, 51, 102, 0.25)', boxShadow: '0 8px 30px rgba(0, 51, 102, 0.1)',
-              display: 'flex', alignItems: 'center', justifyContent: 'space-between'
-            }}>
-              <div>
-                <div style={{ fontWeight: '800', fontSize: '0.95rem', color: '#002244', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <span>⚡ Quick Officer Role Switcher</span>
-                </div>
-                <div style={{ fontSize: '0.78rem', color: '#475569', marginTop: '2px' }}>
-                  Select an operational role to instantly test permissions across the Master Command Hub:
-                </div>
-              </div>
-
-              <div style={{ display: 'flex', gap: '10px' }}>
-                <button
-                  onClick={() => handleQuickRoleSwitch('admin', 'Admin@123', 'admin')}
-                  style={{ padding: '8px 14px', borderRadius: '9px', border: 'none', background: '#003366', color: '#FFF', fontWeight: '800', fontSize: '0.78rem', cursor: 'pointer', boxShadow: '0 4px 12px rgba(0, 51, 102, 0.3)' }}
-                >
-                  🛡️ Admin Executive
-                </button>
-                <button
-                  onClick={() => handleQuickRoleSwitch('controller1', 'Ctrl@789', 'control-office')}
-                  style={{ padding: '8px 14px', borderRadius: '9px', border: 'none', background: '#0056B3', color: '#FFF', fontWeight: '800', fontSize: '0.78rem', cursor: 'pointer', boxShadow: '0 4px 12px rgba(0, 86, 179, 0.3)' }}
-                >
-                  🎛️ Control Office
-                </button>
-                <button
-                  onClick={() => handleQuickRoleSwitch('engineer1', 'Eng@456', 'field-engineer')}
-                  style={{ padding: '8px 14px', borderRadius: '9px', border: 'none', background: '#D97706', color: '#FFF', fontWeight: '800', fontSize: '0.78rem', cursor: 'pointer', boxShadow: '0 4px 12px rgba(217, 119, 6, 0.3)' }}
-                >
-                  🔧 Field Engineer
-                </button>
-                <button
-                  onClick={() => handleQuickRoleSwitch('inspector1', 'Insp@321', 'surveillance')}
-                  style={{ padding: '8px 14px', borderRadius: '9px', border: 'none', background: '#059669', color: '#FFF', fontWeight: '800', fontSize: '0.78rem', cursor: 'pointer', boxShadow: '0 4px 12px rgba(5, 150, 105, 0.3)' }}
-                >
-                  📡 Surveillance
-                </button>
-              </div>
-            </div>
-          )}
-
+        {/* ── Center Content Workspace ── */}
+        <main style={{ flex: 1, minWidth: 0, padding: '0', overflowY: 'auto' }}>
           {children}
         </main>
       </div>
+
+      {/* ── Quick Role Switcher Drawer Modal ── */}
+      {showRoleDrawer && (
+        <div style={{
+          position: 'fixed',
+          inset: 0,
+          background: 'rgba(15, 23, 42, 0.65)',
+          backdropFilter: 'blur(8px)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 9999
+        }}>
+          <div style={{
+            background: '#FFFFFF',
+            borderRadius: '16px',
+            border: '1px solid rgba(195,178,150,0.45)',
+            width: '100%',
+            maxWidth: '520px',
+            padding: '24px',
+            boxShadow: '0 25px 60px rgba(0,0,0,0.25)'
+          }}>
+            <h3 style={{ fontSize: '1.15rem', fontWeight: '800', color: '#003366', marginBottom: '4px' }}>
+              Select Railway Operational Role
+            </h3>
+            <p style={{ fontSize: '0.78rem', color: '#64748B', marginBottom: '16px' }}>
+              Switch identity to inspect dashboard capabilities from different officer viewpoints:
+            </p>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+              <button
+                onClick={() => handleQuickRoleSwitch('admin', 'admin123', 'admin')}
+                style={{
+                  padding: '12px', borderRadius: '10px', border: '1px solid #CBD5E1',
+                  background: session?.role === 'admin' ? '#EFF6FF' : '#FFFFFF',
+                  cursor: 'pointer', textAlign: 'left'
+                }}
+              >
+                <div style={{ fontWeight: '800', fontSize: '0.85rem', color: '#003366' }}>🛡️ Executive Admin</div>
+                <div style={{ fontSize: '0.70rem', color: '#64748B' }}>Full Authority & Policy Sanction</div>
+              </button>
+
+              <button
+                onClick={() => handleQuickRoleSwitch('engineer', 'eng123', 'field-engineer')}
+                style={{
+                  padding: '12px', borderRadius: '10px', border: '1px solid #CBD5E1',
+                  background: session?.role === 'field-engineer' ? '#EFF6FF' : '#FFFFFF',
+                  cursor: 'pointer', textAlign: 'left'
+                }}
+              >
+                <div style={{ fontWeight: '800', fontSize: '0.85rem', color: '#003366' }}>🔧 Field Engineer</div>
+                <div style={{ fontSize: '0.70rem', color: '#64748B' }}>TMS Track & Maintenance Work Orders</div>
+              </button>
+
+              <button
+                onClick={() => handleQuickRoleSwitch('control', 'ctrl123', 'control-office')}
+                style={{
+                  padding: '12px', borderRadius: '10px', border: '1px solid #CBD5E1',
+                  background: session?.role === 'control-office' ? '#EFF6FF' : '#FFFFFF',
+                  cursor: 'pointer', textAlign: 'left'
+                }}
+              >
+                <div style={{ fontWeight: '800', fontSize: '0.85rem', color: '#003366' }}>🎛️ Control Office</div>
+                <div style={{ fontSize: '0.70rem', color: '#64748B' }}>Block Approval & Train Scheduling</div>
+              </button>
+
+              <button
+                onClick={() => handleQuickRoleSwitch('surveillance', 'surv123', 'surveillance')}
+                style={{
+                  padding: '12px', borderRadius: '10px', border: '1px solid #CBD5E1',
+                  background: session?.role === 'surveillance' ? '#EFF6FF' : '#FFFFFF',
+                  cursor: 'pointer', textAlign: 'left'
+                }}
+              >
+                <div style={{ fontWeight: '800', fontSize: '0.85rem', color: '#003366' }}>📡 Surveillance Team</div>
+                <div style={{ fontSize: '0.70rem', color: '#64748B' }}>USFD Flaws & Drone Vision Telemetry</div>
+              </button>
+            </div>
+
+            <div style={{ marginTop: '18px', textAlign: 'right' }}>
+              <button
+                onClick={() => setShowRoleDrawer(false)}
+                style={{ padding: '8px 16px', borderRadius: '8px', border: '1px solid #CBD5E1', background: '#F1F5F9', color: '#475569', fontWeight: '700', fontSize: '0.80rem', cursor: 'pointer' }}
+              >
+                Close Switcher
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

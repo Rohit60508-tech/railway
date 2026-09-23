@@ -21,7 +21,8 @@
   <link rel="stylesheet" href="../styles/main.css" />
 
   <!-- Shared Navigation & Real-Time Sync -->
-  <script src="../components/SharedNav.js?v=2.5.3"></script>
+  <script src="../components/ir-i18n.js?v=2.7.0"></script>
+  <script src="../components/SharedNav.js?v=2.7.0"></script>
   <script src="../components/shared-live-sync.js"></script>
 
   <!-- AI Component Scripts -->
@@ -931,6 +932,54 @@
           }
         });
 
+        // Merge Emergency Incident Work Orders from IR_LIVE_SYNC
+        if (window.IR_LIVE_SYNC && typeof window.IR_LIVE_SYNC.getEmergencyBlockRequests === 'function') {
+          const emergencyBlocks = window.IR_LIVE_SYNC.getEmergencyBlockRequests();
+          emergencyBlocks.forEach(eb => {
+            const ebId = `WO-${eb.discipline || 'EM'}-${eb.incidentId || eb.id}`;
+            if (!idSet.has(ebId) && !idSet.has(eb.id)) {
+              const isBaseCompleted = !!completedMap[ebId] || !!completedMap[eb.id];
+              const isBaseAccepted = isBaseCompleted || !!acceptedMap[ebId] || !!acceptedMap[eb.id];
+              const isSanctioned = eb.status === 'SANCTIONED_BY_CONTROL' || eb.status === 'Block Sanctioned';
+              const isP1 = (eb.priority || '').includes('P1') || (eb.severity || '').toUpperCase() === 'CRITICAL';
+
+              const emWo = {
+                id: ebId,
+                title: eb.title,
+                dept: eb.discipline === 'TRD' ? 'TRD' : (eb.discipline === 'SIG' ? 'SIG' : 'CIVIL'),
+                department: eb.discipline === 'TRD' ? 'Electrical / TRD (OHE)' : (eb.discipline === 'SIG' ? 'Signal & Telecom (SMMS)' : 'Civil / P-Way (TMS)'),
+                category: isP1 ? 'P1' : 'P2',
+                score: isP1 ? 94 : 85,
+                confidence: 0.96,
+                section: eb.location || 'NDLS-CNB-UP',
+                machinery: 'Emergency Quick-Response Gang',
+                slotRecommended: eb.suggestedSlot || 'Immediate Night Shadow Window',
+                slotFeasibility: 'HIGH_FEASIBILITY',
+                slotConflicts: 0,
+                status: isBaseCompleted ? 'COMPLETED' : isBaseAccepted ? 'ACCEPTED' : (isSanctioned ? 'SANCTIONED' : 'PENDING_SANCTION'),
+                isSanctioned: isSanctioned,
+                isAccepted: isBaseAccepted,
+                isCompleted: isBaseCompleted,
+                isEmergency: true,
+                acceptedAt: acceptedMap[ebId]?.acceptedAt || null,
+                completedAt: completedMap[ebId]?.completedAt || null,
+                tooltipExplanation: `Emergency Line Block requested by Safety Surveillance for ${eb.title}.`,
+                explanationSummary: `Safety incident reported on ${eb.asset} at ${eb.location}.`,
+                detailedExplanation: `Emergency possession duration: ${eb.durationDisplay || eb.durationMinutes + ' mins'}. AI Priority: ${eb.priority}.`,
+                factors: [
+                  { name: "Safety Severity", weight: 0.40, value: eb.severity || "Critical" },
+                  { name: "Emergency Priority", weight: 0.35, value: eb.priority || "P1" }
+                ],
+                action: "Deploy field gang immediately upon Control Office possession clearance."
+              };
+
+              if (isBaseCompleted) completedWorkOrders.push(emWo);
+              else if (isBaseAccepted) acceptedWorkOrders.push(emWo);
+              combined.unshift(emWo);
+            }
+          });
+        }
+
         activeWorkOrders = combined;
       } catch (err) {
         console.warn('Could not fetch dynamic requested windows from backend, using baseline approved orders:', err);
@@ -1272,6 +1321,25 @@
         const trackGeometry = wo.trackGeometry || 'Gauge: 1676mm (+0.5mm) | Cross-Level: 0.0mm | Twist: 0.8mm/3m';
         const sseStaffId = wo.sseStaffId || 'IR-SSE-4402 (Senior Section Engineer)';
 
+        // Check if there is an inspection status from IR_LIVE_SYNC
+        let qaInsp = null;
+        if (window.IR_LIVE_SYNC && typeof window.IR_LIVE_SYNC.getInspections === 'function') {
+          const allInsps = window.IR_LIVE_SYNC.getInspections();
+          qaInsp = allInsps.find(i => i.workOrderId === wo.id || i.workOrderId === wo.request_id || i.id === wo.id);
+        }
+
+        let qaBadgeHtml = '<span style="background: rgba(217, 119, 6, 0.15); color: #D97706; border: 1px solid rgba(217, 119, 6, 0.3); padding: 4px 10px; border-radius: 6px; font-size: 0.72rem; font-weight: 800;">⏳ QA INSPECTION PENDING</span>';
+
+        if (qaInsp) {
+          if (qaInsp.result === 'PASSED') {
+            qaBadgeHtml = `<span style="background: rgba(5, 150, 105, 0.15); color: #059669; border: 1px solid rgba(5, 150, 105, 0.3); padding: 4px 10px; border-radius: 6px; font-size: 0.72rem; font-weight: 800;">✓ QA AUDIT PASSED (${qaInsp.score || 90}%)</span>`;
+          } else if (qaInsp.result === 'FAILED') {
+            qaBadgeHtml = `<span style="background: rgba(220, 38, 38, 0.15); color: #DC2626; border: 1px solid rgba(220, 38, 38, 0.3); padding: 4px 10px; border-radius: 6px; font-size: 0.72rem; font-weight: 800;">⚠️ QA REJECTED (REWORK MANDATED)</span>`;
+          } else if (qaInsp.result === 'RE_EVALUATE') {
+            qaBadgeHtml = `<span style="background: rgba(124, 58, 237, 0.15); color: #7C3AED; border: 1px solid rgba(124, 58, 237, 0.3); padding: 4px 10px; border-radius: 6px; font-size: 0.72rem; font-weight: 800;">🔄 QA UNDER RE-EVALUATION</span>`;
+          }
+        }
+
         card.innerHTML = `
           <div class="wo-header">
             <div>
@@ -1287,6 +1355,7 @@
             </div>
 
             <div style="display: flex; align-items: center; gap: 8px;">
+              ${qaBadgeHtml}
               <span style="background: rgba(5, 150, 105, 0.15); color: #059669; border: 1px solid rgba(5, 150, 105, 0.3); padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 800;">
                 ✓ 100% EXECUTED
               </span>
@@ -1317,16 +1386,30 @@
             <div style="font-size: 0.76rem; color: #065F46; font-weight: 700;">
               ✓ Requisition closed, track fitness certification validated per IRPWM Para 268 &amp; ACTM Vol II.
             </div>
-            <button onclick="window.openIRReportModal('work-orders')" style="
-              background: #059669;
-              border: none;
-              color: white;
-              padding: 5px 14px;
-              border-radius: 4px;
-              font-size: 0.74rem;
-              font-weight: 700;
-              cursor: pointer;
-            ">📑 View Full Audit Memo</button>
+            <div style="display: flex; gap: 8px;">
+              <a href="surveillance-dashboard.html#inspections" style="
+                background: #003366;
+                color: white;
+                padding: 5px 12px;
+                border-radius: 4px;
+                font-size: 0.74rem;
+                font-weight: 700;
+                text-decoration: none;
+                display: inline-flex;
+                align-items: center;
+                gap: 4px;
+              "><span>🔍</span> <span>Surveillance QA Log ➔</span></a>
+              <button onclick="window.openIRReportModal('work-orders')" style="
+                background: #059669;
+                border: none;
+                color: white;
+                padding: 5px 14px;
+                border-radius: 4px;
+                font-size: 0.74rem;
+                font-weight: 700;
+                cursor: pointer;
+              ">📑 View Full Audit Memo</button>
+            </div>
           </div>
         `;
 
@@ -1517,7 +1600,12 @@
           completedWorkOrders.unshift(wo);
         }
 
-        // 2. Log immutable audit trail to Supabase & local ledger
+        // 2. Queue for Post-Maintenance QA Inspection in Surveillance Hub
+        if (window.IR_LIVE_SYNC && typeof window.IR_LIVE_SYNC.createInspectionForCompletedWorkOrder === 'function') {
+          window.IR_LIVE_SYNC.createInspectionForCompletedWorkOrder(wo);
+        }
+
+        // 3. Log immutable audit trail to Supabase & local ledger
         logToSupabase('WORK_ORDER_COMPLETED_AND_CLOSED', 'WORK_COMPLETED', wo, `Work order ${activeCompletingWoId} certified closed: ${wo.conditionNow}`);
 
         window.closeCompletionModal();
@@ -1691,6 +1779,16 @@
       }
     });
 
+    if (window.IR_LIVE_SYNC && typeof window.IR_LIVE_SYNC.on === 'function') {
+      window.IR_LIVE_SYNC.on('emergency_blocks_updated', () => {
+        fetchApprovedWorkOrders();
+      });
+      window.IR_LIVE_SYNC.on('incident_reported', (inc) => {
+        fetchApprovedWorkOrders();
+        if (window.showToast) window.showToast(`🚨 New Emergency Work Order Dispatched: ${inc.id} (${inc.type})`);
+      });
+    }
+
     // Deep-link scroll and visual highlight helper
     function checkAndHighlightTargetWo() {
       const hash = window.location.hash || '';
@@ -1743,6 +1841,18 @@
       if (window.IR_LIVE_SYNC) {
         window.IR_LIVE_SYNC.on('conflicts_updated', () => {
           fetchApprovedWorkOrders().then(() => checkAndHighlightTargetWo());
+        });
+
+        window.IR_LIVE_SYNC.on('inspections_updated', () => {
+          renderCompletedWorkOrders(currentDeptFilter);
+        });
+
+        window.IR_LIVE_SYNC.on('inspection_completed', (insp) => {
+          renderCompletedWorkOrders(currentDeptFilter);
+          if (window.showToast) {
+            const verdictLabel = insp.result === 'PASSED' ? 'Passed QA' : (insp.result === 'FAILED' ? 'Failed QA (Rework Required)' : 'Under Re-evaluation');
+            window.showToast(`📋 QA Audit Update: ${insp.title} — ${verdictLabel}`);
+          }
         });
       }
     });

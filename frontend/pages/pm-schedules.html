@@ -16,7 +16,9 @@
 
   <!-- Core Styles & Shared Navigation -->
   <link rel="stylesheet" href="../styles/main.css" />
-  <script src="../components/SharedNav.js?v=2.5.4"></script>
+  <script src="../components/ir-i18n.js?v=2.7.0"></script>
+  <script src="../components/SharedNav.js?v=2.7.0"></script>
+  <script src="../components/shared-live-sync.js"></script>
 
   <style>
     :root {
@@ -981,8 +983,10 @@
   </div>
 
   <script>
-    // In-memory PM schedules database
-    let pmSchedules = [];
+    // In-memory PM schedules database synced with Global IR Live Store
+    let pmSchedules = (window.IR_LIVE_SYNC && typeof window.IR_LIVE_SYNC.getSchedules === 'function')
+      ? window.IR_LIVE_SYNC.getSchedules()
+      : [];
     let currentTab = 'active';
 
     // Set default date in form to tomorrow
@@ -1087,12 +1091,25 @@
       };
 
       pmSchedules.push(newSched);
+      if (window.IR_LIVE_SYNC && typeof window.IR_LIVE_SYNC.saveSchedules === 'function') {
+        window.IR_LIVE_SYNC.saveSchedules(pmSchedules);
+      }
       window.closeCreateScheduleModal();
       document.getElementById('pm-create-form').reset();
       updateKPIs();
       renderList();
       alert(`Schedule "${title}" successfully created and added to active cyclic roster!`);
     };
+
+    if (window.IR_LIVE_SYNC && typeof window.IR_LIVE_SYNC.on === 'function') {
+      window.IR_LIVE_SYNC.on('schedules_updated', function (updatedSchedules) {
+        if (Array.isArray(updatedSchedules)) {
+          pmSchedules = updatedSchedules;
+          updateKPIs();
+          renderList();
+        }
+      });
+    }
 
     // Update KPI Counts and Badges
     function updateKPIs() {
