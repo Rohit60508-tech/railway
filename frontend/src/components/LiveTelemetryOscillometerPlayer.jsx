@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Radio, Eye, Activity, Camera, Play, Pause, RefreshCw, Zap } from 'lucide-react';
+import { Radio, Eye, Activity, Camera, Play, Pause, RefreshCw, Zap, Monitor } from 'lucide-react';
 
 export default function LiveTelemetryOscillometerPlayer() {
   const [isStreaming, setIsStreaming] = useState(true);
   const [refreshRateHz, setRefreshRateHz] = useState(144);
+  const [detectedNativeHz, setDetectedNativeHz] = useState(144);
+  const [isAutoSynced, setIsAutoSynced] = useState(true);
   const [oscData, setOscData] = useState([
     0.12, 0.15, 0.18, 0.22, 0.38, 0.24, 0.16, 0.11, 0.14, 0.19,
     0.21, 0.28, 0.33, 0.29, 0.17, 0.13, 0.15, 0.20, 0.31, 0.25
@@ -11,11 +13,49 @@ export default function LiveTelemetryOscillometerPlayer() {
   const [peakG, setPeakG] = useState(0.38);
   const [visionBox, setVisionBox] = useState({ label: 'ERC Clip Missing', conf: '98.9%', bbox: 'KM 142.4 UP' });
 
+  // Automatically detect laptop display hardware refresh rate on mount
+  useEffect(() => {
+    let frameCount = 0;
+    let lastTime = performance.now();
+    const deltas = [];
+    let animId;
+
+    function measureFrame(time) {
+      const delta = time - lastTime;
+      lastTime = time;
+      if (frameCount > 5) {
+        deltas.push(delta);
+      }
+      frameCount++;
+
+      if (deltas.length < 35) {
+        animId = requestAnimationFrame(measureFrame);
+      } else {
+        const avgDelta = deltas.reduce((a, b) => a + b, 0) / deltas.length;
+        const calcHz = Math.round(1000 / avgDelta);
+        const standardRates = [60, 75, 90, 120, 144, 165, 240, 360];
+        let matched = calcHz;
+        for (const r of standardRates) {
+          if (Math.abs(calcHz - r) <= 5) {
+            matched = r;
+            break;
+          }
+        }
+        setDetectedNativeHz(matched);
+        setRefreshRateHz(matched);
+        setIsAutoSynced(true);
+      }
+    }
+
+    animId = requestAnimationFrame(measureFrame);
+    return () => cancelAnimationFrame(animId);
+  }, []);
+
   // High-frequency telemetry sampling at chosen Hz
   useEffect(() => {
     if (!isStreaming) return;
 
-    const intervalMs = Math.max(7, Math.round(1000 / refreshRateHz)); // ~6.94ms at 144Hz
+    const intervalMs = Math.max(4, Math.round(1000 / refreshRateHz));
     let step = 0;
 
     const interval = setInterval(() => {
@@ -43,19 +83,42 @@ export default function LiveTelemetryOscillometerPlayer() {
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <Radio size={20} color="#0056B3" />
           <h3 style={{ fontSize: '1.1rem', fontWeight: '800', color: '#003366', margin: 0 }}>
-            Live Telemetry Oscillometer & Drone RGB Vision Stream Player (PRD §6.2)
+            Live Telemetry Oscillometer &amp; Drone RGB Vision Stream Player (PRD §6.2)
           </h3>
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+          {/* Native Display Sync Indicator */}
+          <button
+            onClick={() => {
+              setRefreshRateHz(detectedNativeHz);
+              setIsAutoSynced(true);
+            }}
+            title="Click to re-lock to laptop native screen refresh rate"
+            style={{
+              display: 'flex', alignItems: 'center', gap: '6px',
+              padding: '4px 10px', borderRadius: '8px',
+              border: isAutoSynced ? '1.5px solid #0056B3' : '1px solid #CBD5E1',
+              background: isAutoSynced ? '#EFF6FF' : '#F8FAFC',
+              color: isAutoSynced ? '#003366' : '#64748B',
+              fontSize: '0.74rem', fontWeight: '800', cursor: 'pointer'
+            }}
+          >
+            <Monitor size={14} color={isAutoSynced ? '#0056B3' : '#64748B'} />
+            <span>LAPTOP DISPLAY: {detectedNativeHz} Hz {isAutoSynced ? '✓ SYNCED' : ''}</span>
+          </button>
+
           {/* Refresh Rate Selector */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '4px', background: '#F1F5F9', padding: '3px 6px', borderRadius: '8px', border: '1px solid #CBD5E1' }}>
             <Zap size={14} color="#0056B3" />
             <span style={{ fontSize: '0.72rem', fontWeight: '800', color: '#475569', marginRight: '4px' }}>RATE:</span>
-            {[60, 100, 144, 240].map((rate) => (
+            {[60, 90, 120, 144, 240].map((rate) => (
               <button
                 key={rate}
-                onClick={() => setRefreshRateHz(rate)}
+                onClick={() => {
+                  setRefreshRateHz(rate);
+                  setIsAutoSynced(rate === detectedNativeHz);
+                }}
                 style={{
                   padding: '2px 8px',
                   borderRadius: '4px',

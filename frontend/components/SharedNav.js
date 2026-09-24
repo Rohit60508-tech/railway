@@ -53,6 +53,13 @@
     document.head.appendChild(sI18n);
   }
 
+  // Ensure Laptop Hardware Refresh Rate Synchronization Engine is loaded
+  if (!window.IR_RefreshSync) {
+    const sHz = document.createElement('script');
+    sHz.src = '../components/ir-refresh-rate.js';
+    document.head.appendChild(sHz);
+  }
+
   // Ensure Leaflet is loaded for full-screen GIS satellite map
   if (!window.L) {
     const lCss = document.createElement('link');
@@ -3244,10 +3251,10 @@
 
           <div class="snav-sidebar-divider"></div>
 
-          <button type="button" class="snav-item snav-settings-link" id="snav-btn-sidebar-settings" onclick="window.openSettingsModal()" style="flex-shrink:0; background:none; border:none; width:100%; text-align:left; cursor:pointer;" title="Settings, Credentials, Diagnostics & Appearance">
+          <button type="button" class="snav-item snav-settings-link" id="snav-btn-sidebar-settings" onclick="window.openTabWorkspace('settings')" style="flex-shrink:0; background:none; border:none; width:100%; text-align:left; cursor:pointer;" title="Settings, Credentials, Diagnostics & Appearance in Full Tab">
             <span class="snav-item-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span>
             <span class="snav-item-text">Settings &amp; Governance</span>
-            <span class="snav-item-badge" style="background:rgba(0,43,91,0.09);color:#002B5B;">⚙️</span>
+            <span class="snav-item-badge" style="background:rgba(0,43,91,0.09);color:#002B5B;">Full</span>
             <span class="snav-item-chevron">›</span>
           </button>
         </nav>
@@ -3395,20 +3402,6 @@
               </div>
             </div>
 
-            <!-- Dark / Light Mode Switcher -->
-            <button type="button" class="snav-icon-btn snav-theme-btn" id="snav-btn-theme" title="Switch between Dark & Light Mode" onclick="window.toggleSiteTheme()">
-              <span id="snav-theme-icon" style="font-size:1.05rem; line-height:1; display:flex; align-items:center; justify-content:center;">🌙</span>
-            </button>
-
-            <!-- Settings & System Governance Button in Topbar -->
-            <button type="button" class="snav-icon-btn" id="snav-btn-top-settings" title="System Settings, Appearance & Credentials" onclick="window.openSettingsModal()">
-              ⚙️
-            </button>
-
-            <!-- Camera & Scanner Studio Button -->
-            <button type="button" class="snav-icon-btn" id="snav-btn-camera" title="Scanner, Snapshots & Visual Inspection" onclick="window.openCameraToolModal()">
-              📷
-            </button>
 
             <!-- Fullscreen Button -->
             <button type="button" class="snav-icon-btn" id="snav-btn-fullscreen" onclick="window.toggleFullscreen()" title="Toggle Fullscreen">
@@ -3432,6 +3425,12 @@
               </div>
             </div>
 
+          </div>
+
+          <!-- Hardware Display Refresh Rate Sync Pill -->
+          <div class="snav-status-pill" id="snav-refresh-sync-pill" style="cursor:pointer; background:rgba(0,86,179,0.08); border:1px solid rgba(0,86,179,0.25); color:#0056B3; font-weight:800; gap:5px;" onclick="window.showRefreshRateModal && window.showRefreshRateModal()" title="Hardware Display Refresh Rate Sync (Click for diagnostics)">
+            <span style="font-size:0.80rem;">⚡</span>
+            <span id="snav-refresh-rate-label">Syncing Hz...</span>
           </div>
 
           <div class="snav-status-pill" title="Gateway connection active">
@@ -3613,6 +3612,7 @@
             <button class="ir-fs-tab-btn" data-tab="conflicts" onclick="window.openTabWorkspace('conflicts')">🛡️ Conflict Sim</button>
             <button class="ir-fs-tab-btn" data-tab="supabase-audit" onclick="window.openTabWorkspace('supabase-audit')">🔒 Supabase Audit</button>
             <button class="ir-fs-tab-btn" data-tab="reports" onclick="window.openTabWorkspace('reports')">📑 Reports</button>
+            <button class="ir-fs-tab-btn" data-tab="settings" onclick="window.openTabWorkspace('settings')">⚙️ Settings &amp; Governance</button>
           </div>
 
           <div style="display:flex;align-items:center;gap:10px;">
@@ -6510,6 +6510,12 @@
       if (sub) sub.textContent = 'Cross-departmental work order, movement authority & AI telemetry reports';
       if (badge) { badge.textContent = 'Full Tab'; badge.style.background = 'rgba(217, 83, 30, 0.12)'; badge.style.color = '#D9531E'; }
       renderFullScreenReports('work-orders', '24h');
+    } else if (viewId === 'settings') {
+      if (icon) icon.textContent = '⚙️';
+      if (title) title.textContent = 'System Settings & Governance Console';
+      if (sub) sub.textContent = 'Unified Platform Administration, Personnel Access Control (RBAC), Theme, Regional Zones & Diagnostics';
+      if (badge) { badge.textContent = 'Full Tab'; badge.style.background = 'rgba(0, 43, 91, 0.12)'; badge.style.color = '#002B5B'; }
+      renderFullScreenSettings('credentials');
     }
   };
 
@@ -6539,28 +6545,16 @@
     if (modal) modal.classList.remove('open');
   };
 
-  // ── Unified Settings & Governance Modal Handlers ──────────────────
+  // ── Unified Settings & Governance Handlers (Opens Full Tab) ────────
   window.openSettingsModal = function (tabName = 'credentials') {
-    let modal = document.getElementById('ir-settings-modal');
-    if (!modal) {
-      const mount = document.createElement('div');
-      mount.innerHTML = buildSettingsModalHTML();
-      document.body.appendChild(mount.firstElementChild);
-      modal = document.getElementById('ir-settings-modal');
+    window.openTabWorkspace('settings');
+    if (typeof window.switchSettingsTab === 'function') {
+      window.switchSettingsTab(tabName);
     }
-    if (!modal) return;
-    modal.classList.add('open');
-    modal.style.display = 'flex';
-    window.switchSettingsTab(tabName);
-    window.updateSettingsThemeUi();
   };
 
   window.closeSettingsModal = function () {
-    const modal = document.getElementById('ir-settings-modal');
-    if (modal) {
-      modal.classList.remove('open');
-      modal.style.display = 'none';
-    }
+    window.closeFullScreenWorkspace();
   };
 
   window.switchSettingsTab = function (tabName) {
@@ -6913,7 +6907,393 @@
     `;
   }
 
-  // ── Unified Settings & Personnel Governance Modal Builder ───────────
+  // ── Unified Settings & Personnel Governance Panels HTML ─────────────
+  function buildSettingsPanelsHTML() {
+    return `
+      <!-- ══════════ TAB 1: PERSONNEL & RBAC CREDENTIALS ══════════ -->
+      <div class="ir-settings-tab-panel active" id="ir-settings-panel-credentials">
+        <div style="background:#FFFFFF; border-radius:12px; border:1px solid rgba(0,51,102,0.14); padding:16px 20px; margin-bottom:16px; box-shadow:0 2px 8px rgba(0,0,0,0.03); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
+          <div style="display:flex; align-items:center; gap:10px; flex:1 1 340px;">
+            <div style="position:relative; width:100%; max-width:320px;">
+              <input type="text" id="ir-cred-search" placeholder="Search officer, username, division..." style="width:100%; padding:8px 12px 8px 34px; border-radius:8px; border:1px solid rgba(0,51,102,0.2); font-size:0.80rem; background:#FAF6EE; box-sizing:border-box;" />
+              <span style="position:absolute; left:10px; top:50%; transform:translateY(-50%); font-size:0.85rem; color:#64748B;">🔍</span>
+            </div>
+            <div style="display:flex; gap:6px; flex-wrap:wrap;" id="ir-cred-filter-tabs">
+              <button type="button" class="ir-filter-btn" data-role="all" style="padding:6px 14px; border-radius:6px; border:1px solid #002B5B; background:#002B5B; color:#FFF; font-size:0.74rem; font-weight:700; cursor:pointer;">All Personnel</button>
+              <button type="button" class="ir-filter-btn" data-role="tms" style="padding:6px 14px; border-radius:6px; border:1px solid rgba(0,51,102,0.2); background:#FFF; color:#0F172A; font-size:0.74rem; font-weight:700; cursor:pointer;">TMS Track</button>
+              <button type="button" class="ir-filter-btn" data-role="smms" style="padding:6px 14px; border-radius:6px; border:1px solid rgba(0,51,102,0.2); background:#FFF; color:#0F172A; font-size:0.74rem; font-weight:700; cursor:pointer;">SMMS Signal</button>
+              <button type="button" class="ir-filter-btn" data-role="trd" style="padding:6px 14px; border-radius:6px; border:1px solid rgba(0,51,102,0.2); background:#FFF; color:#0F172A; font-size:0.74rem; font-weight:700; cursor:pointer;">TRD Traction</button>
+              <button type="button" class="ir-filter-btn" data-role="control" style="padding:6px 14px; border-radius:6px; border:1px solid rgba(0,51,102,0.2); background:#FFF; color:#0F172A; font-size:0.74rem; font-weight:700; cursor:pointer;">Control Office</button>
+            </div>
+          </div>
+
+          <button type="button" id="ir-btn-add-cred-user" onclick="if(typeof window.openSnavUserModal==='function') window.openSnavUserModal(null)" style="padding:9px 18px; border-radius:8px; border:none; background:linear-gradient(135deg, #002B5B 0%, #0056B3 100%); color:#FFFFFF; font-weight:800; font-size:0.80rem; cursor:pointer; display:flex; align-items:center; gap:6px; box-shadow:0 3px 10px rgba(0,43,91,0.25);">
+            <span>➕</span>
+            <span>Add Officer Account</span>
+          </button>
+        </div>
+
+        <div style="background:#FFFFFF; border-radius:12px; border:1px solid rgba(0,51,102,0.14); overflow:hidden; box-shadow:0 3px 12px rgba(0,0,0,0.04);">
+          <div style="max-height:56vh; overflow-y:auto;">
+            <table style="width:100%; border-collapse:collapse; text-align:left; font-size:0.80rem;">
+              <thead>
+                <tr style="background:#FAF7F0; border-bottom:1.5px solid rgba(0,51,102,0.14); color:#002B5B; font-weight:800; position:sticky; top:0; z-index:2;">
+                  <th style="padding:12px 16px;">Officer / Engineer</th>
+                  <th style="padding:12px 16px;">Username</th>
+                  <th style="padding:12px 16px;">Assigned Role &amp; Discipline</th>
+                  <th style="padding:12px 16px;">Division / Zone</th>
+                  <th style="padding:12px 16px;">Status</th>
+                  <th style="padding:12px 16px; text-align:right;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="ir-cred-tbody">
+                <!-- Injected by renderCredentialsTable -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════ TAB 2: UI APPEARANCE & THEME ══════════ -->
+      <div class="ir-settings-tab-panel" id="ir-settings-panel-appearance">
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:18px; margin-bottom:18px;">
+          <!-- Light Mode Card -->
+          <div onclick="document.documentElement.removeAttribute('data-theme'); localStorage.setItem('ir_theme', 'light'); window.updateSettingsThemeUi();" style="cursor:pointer; background:#FAF7F0; border:2px solid #002B5B; border-radius:12px; padding:18px; box-shadow:0 4px 15px rgba(0,0,0,0.05); transition:all 0.2s;" id="ir-theme-card-light">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+              <span style="font-size:1.6rem;">☀️</span>
+              <span style="font-size:0.72rem; font-weight:800; background:#002B5B; color:#FFF; padding:3px 10px; border-radius:12px;" id="ir-badge-theme-light">ACTIVE</span>
+            </div>
+            <div style="font-weight:800; color:#002B5B; font-size:0.95rem; margin-bottom:4px;">Warm Royal Alabaster (Light Theme)</div>
+            <div style="font-size:0.76rem; color:#64748B;">Official Indian Railways daylight operations tone with deep navy contrast and high readability.</div>
+          </div>
+
+          <!-- Dark Mode Card -->
+          <div onclick="document.documentElement.setAttribute('data-theme', 'dark'); localStorage.setItem('ir_theme', 'dark'); window.updateSettingsThemeUi();" style="cursor:pointer; background:#0F172A; border:1.5px solid rgba(255,255,255,0.15); border-radius:12px; padding:18px; box-shadow:0 4px 15px rgba(0,0,0,0.2); transition:all 0.2s;" id="ir-theme-card-dark">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+              <span style="font-size:1.6rem;">🌙</span>
+              <span style="font-size:0.72rem; font-weight:800; background:rgba(255,255,255,0.15); color:#94A3B8; padding:3px 10px; border-radius:12px;" id="ir-badge-theme-dark">ACTIVATE</span>
+            </div>
+            <div style="font-weight:800; color:#F8FAFC; font-size:0.95rem; margin-bottom:4px;">Deep Space Obsidian (Night Theme)</div>
+            <div style="font-size:0.76rem; color:#94A3B8;">High-contrast night command center mode tailored for 24/7 Control Office surveillance &amp; low eye fatigue.</div>
+          </div>
+        </div>
+
+        <!-- Accessibility & UI Density Settings -->
+        <div style="background:#FFFFFF; border-radius:12px; border:1px solid rgba(0,51,102,0.14); padding:20px; box-shadow:0 2px 8px rgba(0,0,0,0.03);">
+          <div style="font-weight:800; font-size:0.92rem; color:#002B5B; margin-bottom:14px;">Ergonomics &amp; Layout Density</div>
+          
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 14px; background:#FAF7F0; border-radius:8px; border:1px solid rgba(0,51,102,0.12);">
+              <div>
+                <div style="font-weight:700; font-size:0.82rem; color:#0F172A;">WCAG AAA High-Contrast Text</div>
+                <div style="font-size:0.72rem; color:#64748B;">Enhances table border sharpness and text contrast</div>
+              </div>
+              <input type="checkbox" id="ir-setting-high-contrast" checked style="width:18px; height:18px; cursor:pointer;" />
+            </div>
+
+            <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 14px; background:#FAF7F0; border-radius:8px; border:1px solid rgba(0,51,102,0.12);">
+              <div>
+                <div style="font-weight:700; font-size:0.82rem; color:#0F172A;">Smooth Hardware Micro-Animations</div>
+                <div style="font-size:0.72rem; color:#64748B;">GPU accelerated transitions &amp; train movement pulses</div>
+              </div>
+              <input type="checkbox" id="ir-setting-smooth-anim" checked style="width:18px; height:18px; cursor:pointer;" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Laptop Display Hardware Refresh Rate & V-Sync Diagnostic Panel -->
+        <div style="background:#FFFFFF; border-radius:12px; border:1px solid rgba(0,51,102,0.14); padding:20px; box-shadow:0 2px 8px rgba(0,0,0,0.03); margin-top:16px;">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; flex-wrap:wrap; gap:10px;">
+            <div>
+              <div style="font-weight:800; font-size:0.92rem; color:#002B5B; display:flex; align-items:center; gap:8px;">
+                <span>⚡</span>
+                <span>Laptop Hardware Display Refresh Rate &amp; V-Sync Synchronization</span>
+              </div>
+              <div style="font-size:0.72rem; color:#64748B;">Auto-locks site animation frame-rate, canvas charts, and train movements to your laptop display</div>
+            </div>
+            <button type="button" onclick="window.showRefreshRateModal && window.showRefreshRateModal()" style="padding:6px 14px; border-radius:6px; border:1px solid #002B5B; background:#002B5B; color:#FFF; font-size:0.75rem; font-weight:800; cursor:pointer;">
+              Run V-Sync Diagnostics
+            </button>
+          </div>
+
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px;">
+            <div style="background:#FAF7F0; border-radius:8px; border:1px solid rgba(0,51,102,0.12); padding:12px;">
+              <div style="font-size:0.70rem; color:#64748B; font-weight:700; text-transform:uppercase;">Detected Display Rate</div>
+              <div style="font-size:1.25rem; font-weight:900; color:#002B5B; margin-top:3px;" id="ir-display-hz-val">Detecting...</div>
+              <div style="font-size:0.68rem; color:#059669; font-weight:700; margin-top:2px;">● Hardware V-Sync Lock</div>
+            </div>
+
+            <div style="background:#FAF7F0; border-radius:8px; border:1px solid rgba(0,51,102,0.12); padding:12px;">
+              <div style="font-size:0.70rem; color:#64748B; font-weight:700; text-transform:uppercase;">Frame Interval Latency</div>
+              <div style="font-size:1.25rem; font-weight:900; color:#0056B3; margin-top:3px;" id="ir-display-latency-val">...</div>
+              <div style="font-size:0.68rem; color:#64748B; margin-top:2px;">Ultra-low micro-stutter delay</div>
+            </div>
+
+            <div style="background:#FAF7F0; border-radius:8px; border:1px solid rgba(0,51,102,0.12); padding:12px;">
+              <div style="font-size:0.70rem; color:#64748B; font-weight:700; text-transform:uppercase;">GPU Layer Compositing</div>
+              <div style="font-size:1.25rem; font-weight:900; color:#059669; margin-top:3px;">Hardware Accel</div>
+              <div style="font-size:0.68rem; color:#059669; font-weight:700; margin-top:2px;">Zero tearing / 60-360Hz ready</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════ TAB 3: ZONE & REGIONAL LANGUAGE ══════════ -->
+      <div class="ir-settings-tab-panel" id="ir-settings-panel-regional">
+        <div style="background:#FFFFFF; border-radius:12px; border:1px solid rgba(0,51,102,0.14); padding:20px; box-shadow:0 2px 8px rgba(0,0,0,0.03); margin-bottom:16px;">
+          <div style="font-weight:800; font-size:0.92rem; color:#002B5B; margin-bottom:14px;">Multilingual Rail Command Interface</div>
+          
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:12px; margin-bottom:16px;">
+            <button type="button" onclick="window.selectLanguage('EN', 'English')" class="ir-lang-card-btn" data-lang="EN" style="padding:14px; border-radius:8px; border:1.5px solid #002B5B; background:#FAF7F0; text-align:left; cursor:pointer;">
+              <div style="font-size:1.2rem; margin-bottom:4px;">🇬🇧</div>
+              <div style="font-weight:800; font-size:0.84rem; color:#002B5B;">English (EN)</div>
+              <div style="font-size:0.70rem; color:#64748B;">Default RailNet Standard</div>
+            </button>
+            <button type="button" onclick="window.selectLanguage('HI', 'हिन्दी')" class="ir-lang-card-btn" data-lang="HI" style="padding:14px; border-radius:8px; border:1px solid rgba(0,51,102,0.2); background:#FFF; text-align:left; cursor:pointer;">
+              <div style="font-size:1.2rem; margin-bottom:4px;">🇮🇳</div>
+              <div style="font-weight:800; font-size:0.84rem; color:#002B5B;">हिन्दी (HI)</div>
+              <div style="font-size:0.70rem; color:#64748B;">राजभाषा मानक</div>
+            </button>
+            <button type="button" onclick="window.selectLanguage('BN', 'বাংলা')" class="ir-lang-card-btn" data-lang="BN" style="padding:14px; border-radius:8px; border:1px solid rgba(0,51,102,0.2); background:#FFF; text-align:left; cursor:pointer;">
+              <div style="font-size:1.2rem; margin-bottom:4px;">🇮🇳</div>
+              <div style="font-weight:800; font-size:0.84rem; color:#002B5B;">বাংলা (BN)</div>
+              <div style="font-size:0.70rem; color:#64748B;">পূর্ব রেলওয়ে</div>
+            </button>
+            <button type="button" onclick="window.selectLanguage('MR', 'मराठी')" class="ir-lang-card-btn" data-lang="MR" style="padding:14px; border-radius:8px; border:1px solid rgba(0,51,102,0.2); background:#FFF; text-align:left; cursor:pointer;">
+              <div style="font-size:1.2rem; margin-bottom:4px;">🇮🇳</div>
+              <div style="font-weight:800; font-size:0.84rem; color:#002B5B;">मराठी (MR)</div>
+              <div style="font-size:0.70rem; color:#64748B;">मध्य व पश्चिम रेल्वे</div>
+            </button>
+            <button type="button" onclick="window.selectLanguage('TA', 'தமிழ்')" class="ir-lang-card-btn" data-lang="TA" style="padding:14px; border-radius:8px; border:1px solid rgba(0,51,102,0.2); background:#FFF; text-align:left; cursor:pointer;">
+              <div style="font-size:1.2rem; margin-bottom:4px;">🇮🇳</div>
+              <div style="font-weight:800; font-size:0.84rem; color:#002B5B;">தமிழ் (TA)</div>
+              <div style="font-size:0.70rem; color:#64748B;">தெற்கு ரயில்வே</div>
+            </button>
+            <button type="button" onclick="window.selectLanguage('TE', 'తెలుగు')" class="ir-lang-card-btn" data-lang="TE" style="padding:14px; border-radius:8px; border:1px solid rgba(0,51,102,0.2); background:#FFF; text-align:left; cursor:pointer;">
+              <div style="font-size:1.2rem; margin-bottom:4px;">🇮🇳</div>
+              <div style="font-weight:800; font-size:0.84rem; color:#002B5B;">తెలుగు (TE)</div>
+              <div style="font-size:0.70rem; color:#64748B;">దక్షిణ మధ్య రైల్వే</div>
+            </button>
+          </div>
+        </div>
+
+        <!-- Zonal Jurisdiction Config -->
+        <div style="background:#FFFFFF; border-radius:12px; border:1px solid rgba(0,51,102,0.14); padding:20px; box-shadow:0 2px 8px rgba(0,0,0,0.03);">
+          <div style="font-weight:800; font-size:0.92rem; color:#002B5B; margin-bottom:14px;">Zonal Headquarters &amp; Operating Division</div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+            <div>
+              <label style="font-weight:700; color:#334155; font-size:0.78rem; display:block; margin-bottom:4px;">Operating Railway Zone:</label>
+              <select id="ir-setting-zone" style="width:100%; padding:9px 12px; border-radius:8px; border:1px solid rgba(0,51,102,0.2); background:#FAF7F0; font-size:0.82rem; font-weight:600;">
+                <option value="NR" selected>Northern Railway (NR) — HQ Baroda House, New Delhi</option>
+                <option value="NCR">North Central Railway (NCR) — HQ Prayagraj</option>
+                <option value="ER">Eastern Railway (ER) — HQ Fairlie Place, Kolkata</option>
+                <option value="WR">Western Railway (WR) — HQ Churchgate, Mumbai</option>
+                <option value="CR">Central Railway (CR) — HQ CSMT, Mumbai</option>
+                <option value="SR">Southern Railway (SR) — HQ Chennai Central</option>
+                <option value="ECoR">East Coast Railway (ECoR) — HQ Bhubaneswar</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-weight:700; color:#334155; font-size:0.78rem; display:block; margin-bottom:4px;">Divisional Control Office:</label>
+              <select id="ir-setting-division" style="width:100%; padding:9px 12px; border-radius:8px; border:1px solid rgba(0,51,102,0.2); background:#FAF7F0; font-size:0.82rem; font-weight:600;">
+                <option value="DLI" selected>Delhi Division (DLI) — DRM Office State Entry Road</option>
+                <option value="LKO">Lucknow Division (LKO)</option>
+                <option value="PRYJ">Prayagraj Division (PRYJ)</option>
+                <option value="MB">Moradabad Division (MB)</option>
+                <option value="FZR">Firozpur Division (FZR)</option>
+                <option value="UMB">Ambala Division (UMB)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════ TAB 4: BACKEND & DB CONNECTIVITY DIAGNOSTICS ══════════ -->
+      <div class="ir-settings-tab-panel" id="ir-settings-panel-backend">
+        <div style="background:#FFFFFF; border-radius:12px; border:1px solid rgba(0,51,102,0.14); padding:20px; box-shadow:0 2px 8px rgba(0,0,0,0.03); margin-bottom:16px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:10px;">
+            <div>
+              <div style="font-weight:800; font-size:0.95rem; color:#002B5B;">Live Service Telemetry &amp; Microservice Mesh</div>
+              <div style="font-size:0.74rem; color:#64748B;">Real-time health status, ports, database connections &amp; AI daemon responsiveness</div>
+            </div>
+            <button type="button" id="ir-btn-ping-backend" onclick="window.testBackendConnectivity()" style="padding:8px 18px; border-radius:8px; border:none; background:#059669; color:#FFF; font-weight:800; font-size:0.78rem; cursor:pointer; display:flex; align-items:center; gap:6px; box-shadow:0 2px 8px rgba(5,150,105,0.25);">
+              <span id="ir-ping-icon">⚡</span>
+              <span>Test Live Backend Connection</span>
+            </button>
+          </div>
+
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:12px; margin-bottom:16px;">
+            <!-- Node Gateway -->
+            <div style="padding:14px; background:#FAF7F0; border-radius:8px; border:1px solid rgba(0,51,102,0.12);">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                <span style="font-weight:800; font-size:0.80rem; color:#002B5B;">Node.js Web Gateway</span>
+                <span id="ir-status-node" style="padding:2px 8px; border-radius:12px; background:#ECFDF5; color:#059669; font-weight:800; font-size:0.68rem;">● ONLINE</span>
+              </div>
+              <div style="font-size:0.72rem; color:#64748B;">Port: <code style="color:#002B5B; font-weight:700;">5000</code> &bull; HTTP/REST</div>
+              <div style="font-size:0.70rem; color:#059669; margin-top:4px;" id="ir-latency-node">Latency: ~2ms</div>
+            </div>
+
+            <!-- Python FastAPI Daemon -->
+            <div style="padding:14px; background:#FAF7F0; border-radius:8px; border:1px solid rgba(0,51,102,0.12);">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                <span style="font-weight:800; font-size:0.80rem; color:#002B5B;">Python AI Inference</span>
+                <span id="ir-status-python" style="padding:2px 8px; border-radius:12px; background:#ECFDF5; color:#059669; font-weight:800; font-size:0.68rem;">● ONLINE</span>
+              </div>
+              <div style="font-size:0.72rem; color:#64748B;">Port: <code style="color:#002B5B; font-weight:700;">5001</code> &bull; FastAPI + Uvicorn</div>
+              <div style="font-size:0.70rem; color:#059669; margin-top:4px;" id="ir-latency-python">Latency: ~12ms</div>
+            </div>
+
+            <!-- Supabase / Local SQLite -->
+            <div style="padding:14px; background:#FAF7F0; border-radius:8px; border:1px solid rgba(0,51,102,0.12);">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                <span style="font-weight:800; font-size:0.80rem; color:#002B5B;">Database &amp; Audit Store</span>
+                <span id="ir-status-db" style="padding:2px 8px; border-radius:12px; background:#ECFDF5; color:#059669; font-weight:800; font-size:0.68rem;">● SYNCED</span>
+              </div>
+              <div style="font-size:0.72rem; color:#64748B;">Supabase REST + SQLite WAL</div>
+              <div style="font-size:0.70rem; color:#059669; margin-top:4px;" id="ir-latency-db">SHA-256 Verified</div>
+            </div>
+
+            <!-- RapidAPI Live Feed -->
+            <div style="padding:14px; background:#FAF7F0; border-radius:8px; border:1px solid rgba(0,51,102,0.12);">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                <span style="font-weight:800; font-size:0.80rem; color:#002B5B;">Live IRCTC Telemetry</span>
+                <span id="ir-status-rapidapi" style="padding:2px 8px; border-radius:12px; background:#ECFDF5; color:#059669; font-weight:800; font-size:0.68rem;">● ACTIVE</span>
+              </div>
+              <div style="font-size:0.72rem; color:#64748B;">RapidAPI / RailRadar Live</div>
+              <div style="font-size:0.70rem; color:#059669; margin-top:4px;" id="ir-latency-rapidapi">Active Corridor Stream</div>
+            </div>
+          </div>
+
+          <!-- Live Log Terminal Box -->
+          <div style="background:#090D1A; border-radius:8px; padding:14px; color:#A7F3D0; font-family:monospace; font-size:0.72rem; line-height:1.6; max-height:140px; overflow-y:auto;" id="ir-backend-diagnostic-log">
+            [SYSTEM STARTUP] Node.js Gateway bound to http://localhost:5000<br/>
+            [AI DAEMON] Python Uvicorn Fast Inference running on http://127.0.0.1:5001<br/>
+            [CORRIDOR TELEMETRY] RapidAPI IRCTC stream synchronized on NDLS-CNB trunk<br/>
+            [PERSISTENCE] Cryptographic SHA-256 tamper-evident storage active. Ready.
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════ TAB 5: SAFETY ALERTS & NOTIFICATION RULES ══════════ -->
+      <div class="ir-settings-tab-panel" id="ir-settings-panel-alerts">
+        <div style="background:#FFFFFF; border-radius:12px; border:1px solid rgba(0,51,102,0.14); padding:20px; box-shadow:0 2px 8px rgba(0,0,0,0.03);">
+          <div style="font-weight:800; font-size:0.92rem; color:#002B5B; margin-bottom:14px;">Operational Safety Thresholds &amp; Directives</div>
+          
+          <div style="display:flex; flex-direction:column; gap:16px;">
+            <!-- Rail Temp Threshold -->
+            <div style="padding:14px; background:#FAF7F0; border-radius:8px; border:1px solid rgba(0,51,102,0.12);">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                <div>
+                  <div style="font-weight:800; font-size:0.82rem; color:#002B5B;">Rail Temperature Buckling Alert (IRPWM Para 602)</div>
+                  <div style="font-size:0.72rem; color:#64748B;">Triggers automated hot weather patrolling advisory when rail temp exceeds limit</div>
+                </div>
+                <span id="ir-temp-val-display" style="font-weight:800; font-size:0.90rem; color:#D9531E;">52.0°C</span>
+              </div>
+              <input type="range" min="45" max="65" step="0.5" value="52" id="ir-slider-temp" oninput="document.getElementById('ir-temp-val-display').textContent = this.value + '°C'" style="width:100%; cursor:pointer;" />
+            </div>
+
+            <!-- USFD Flaw Severity Rule -->
+            <div style="display:flex; align-items:center; justify-content:space-between; padding:14px; background:#FAF7F0; border-radius:8px; border:1px solid rgba(0,51,102,0.12);">
+              <div>
+                <div style="font-weight:800; font-size:0.82rem; color:#002B5B;">Automated 30 km/h TSR Clamping on P1 Transverse Fracture</div>
+                <div style="font-size:0.72rem; color:#64748B;">Automatically recommends temporary speed restriction during ultrasonic defect detection</div>
+              </div>
+              <input type="checkbox" id="ir-setting-auto-tsr" checked style="width:18px; height:18px; cursor:pointer;" />
+            </div>
+
+            <!-- Audio Sound Alerts -->
+            <div style="display:flex; align-items:center; justify-content:space-between; padding:14px; background:#FAF7F0; border-radius:8px; border:1px solid rgba(0,51,102,0.12);">
+              <div>
+                <div style="font-weight:800; font-size:0.82rem; color:#002B5B;">Tactical Audio Chime for Critical Emergencies</div>
+                <div style="font-size:0.72rem; color:#64748B;">Play audible alarm when P1 corridor blockage or track buckling event is ingested</div>
+              </div>
+              <input type="checkbox" id="ir-setting-sound-alerts" checked style="width:18px; height:18px; cursor:pointer;" />
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  // ── Render Full-Screen Settings & Governance Workspace ─────────────
+  function renderFullScreenSettings(defaultTab = 'credentials') {
+    const body = document.getElementById('ir-fs-body');
+    if (!body) return;
+
+    body.innerHTML = `
+      <div style="max-width:1280px; margin:0 auto; display:flex; flex-direction:column; gap:16px; width:100%; box-sizing:border-box; padding:4px 0 32px 0;">
+        <!-- Settings Sub-Navigation Tab Bar -->
+        <div style="background:#FFFFFF; border:1px solid rgba(0,51,102,0.14); border-radius:12px; padding:6px 14px; box-shadow:0 2px 10px rgba(0,0,0,0.03); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
+          <div class="ir-settings-nav-tabs" id="ir-settings-tabs-bar" style="background:transparent; border:none; padding:0; gap:6px;">
+            <button type="button" class="ir-settings-nav-btn active" data-settings-tab="credentials" onclick="window.switchSettingsTab('credentials')">
+              <span>🔐</span>
+              <span>Personnel &amp; RBAC Credentials</span>
+            </button>
+            <button type="button" class="ir-settings-nav-btn" data-settings-tab="appearance" onclick="window.switchSettingsTab('appearance')">
+              <span>🎨</span>
+              <span>Appearance &amp; Theme</span>
+            </button>
+            <button type="button" class="ir-settings-nav-btn" data-settings-tab="regional" onclick="window.switchSettingsTab('regional')">
+              <span>🌐</span>
+              <span>Zone &amp; Regional Language</span>
+            </button>
+            <button type="button" class="ir-settings-nav-btn" data-settings-tab="backend" onclick="window.switchSettingsTab('backend')">
+              <span>🔗</span>
+              <span>Backend &amp; DB Connectivity</span>
+            </button>
+            <button type="button" class="ir-settings-nav-btn" data-settings-tab="alerts" onclick="window.switchSettingsTab('alerts')">
+              <span>🔔</span>
+              <span>Safety Alert Rules</span>
+            </button>
+          </div>
+
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span style="font-size:0.72rem; color:#64748B; font-weight:600;">System Mode:</span>
+            <span style="font-size:0.70rem; background:#ECFDF5; color:#059669; border:1px solid #10B98140; padding:2px 8px; border-radius:4px; font-weight:800;">
+              ● ALWAYS-ON DEDICATED
+            </span>
+          </div>
+        </div>
+
+        <!-- Settings Panels Content -->
+        <div class="ir-settings-body" style="padding:0; overflow:visible; background:transparent;">
+          ${buildSettingsPanelsHTML()}
+        </div>
+      </div>
+    `;
+
+    // Dynamic search & filters inside Full Tab
+    const credSearch = document.getElementById('ir-cred-search');
+    let activeCredFilter = 'all';
+    if (credSearch) {
+      credSearch.addEventListener('input', () => {
+        renderCredentialsTable(credSearch.value.trim(), activeCredFilter);
+      });
+    }
+
+    const credFilterTabs = document.getElementById('ir-cred-filter-tabs');
+    if (credFilterTabs) {
+      credFilterTabs.addEventListener('click', (e) => {
+        const btn = e.target.closest('.ir-filter-btn');
+        if (!btn) return;
+        credFilterTabs.querySelectorAll('.ir-filter-btn').forEach(b => {
+          b.style.background = '#FFF';
+          b.style.color = '#0F172A';
+          b.style.borderColor = 'rgba(0,51,102,0.2)';
+        });
+        btn.style.background = '#002B5B';
+        btn.style.color = '#FFF';
+        btn.style.borderColor = '#002B5B';
+        activeCredFilter = btn.dataset.role || 'all';
+        renderCredentialsTable(credSearch ? credSearch.value.trim() : '', activeCredFilter);
+      });
+    }
+
+    window.switchSettingsTab(defaultTab || 'credentials');
+    window.updateSettingsThemeUi();
+  }
+
+  // ── Unified Settings & Personnel Governance Modal Builder (Legacy Fallback) ──
   function buildSettingsModalHTML() {
     return `
       <div class="ir-modal-backdrop" id="ir-settings-modal" style="display:none;" role="dialog" aria-modal="true">
@@ -6956,343 +7336,7 @@
 
           <!-- Settings Body Area -->
           <div class="ir-settings-body">
-
-            <!-- ══════════ TAB 1: PERSONNEL & RBAC CREDENTIALS ══════════ -->
-            <div class="ir-settings-tab-panel active" id="ir-settings-panel-credentials">
-              <div style="background:#FFFFFF; border-radius:12px; border:1px solid rgba(0,51,102,0.14); padding:16px 20px; margin-bottom:16px; box-shadow:0 2px 8px rgba(0,0,0,0.03); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
-                <div style="display:flex; align-items:center; gap:10px; flex:1 1 340px;">
-                  <div style="position:relative; width:100%; max-width:320px;">
-                    <input type="text" id="ir-cred-search" placeholder="Search officer, username, division..." style="width:100%; padding:8px 12px 8px 34px; border-radius:8px; border:1px solid rgba(0,51,102,0.2); font-size:0.80rem; background:#FAF6EE; box-sizing:border-box;" />
-                    <span style="position:absolute; left:10px; top:50%; transform:translateY(-50%); font-size:0.85rem; color:#64748B;">🔍</span>
-                  </div>
-                  <div style="display:flex; gap:6px; flex-wrap:wrap;" id="ir-cred-filter-tabs">
-                    <button type="button" class="ir-filter-btn" data-role="all" style="padding:6px 14px; border-radius:6px; border:1px solid #002B5B; background:#002B5B; color:#FFF; font-size:0.74rem; font-weight:700; cursor:pointer;">All Personnel</button>
-                    <button type="button" class="ir-filter-btn" data-role="tms" style="padding:6px 14px; border-radius:6px; border:1px solid rgba(0,51,102,0.2); background:#FFF; color:#0F172A; font-size:0.74rem; font-weight:700; cursor:pointer;">TMS Track</button>
-                    <button type="button" class="ir-filter-btn" data-role="smms" style="padding:6px 14px; border-radius:6px; border:1px solid rgba(0,51,102,0.2); background:#FFF; color:#0F172A; font-size:0.74rem; font-weight:700; cursor:pointer;">SMMS Signal</button>
-                    <button type="button" class="ir-filter-btn" data-role="trd" style="padding:6px 14px; border-radius:6px; border:1px solid rgba(0,51,102,0.2); background:#FFF; color:#0F172A; font-size:0.74rem; font-weight:700; cursor:pointer;">TRD Traction</button>
-                    <button type="button" class="ir-filter-btn" data-role="control" style="padding:6px 14px; border-radius:6px; border:1px solid rgba(0,51,102,0.2); background:#FFF; color:#0F172A; font-size:0.74rem; font-weight:700; cursor:pointer;">Control Office</button>
-                  </div>
-                </div>
-
-                <button type="button" id="ir-btn-add-cred-user" onclick="if(typeof window.openSnavUserModal==='function') window.openSnavUserModal(null)" style="padding:9px 18px; border-radius:8px; border:none; background:linear-gradient(135deg, #002B5B 0%, #0056B3 100%); color:#FFFFFF; font-weight:800; font-size:0.80rem; cursor:pointer; display:flex; align-items:center; gap:6px; box-shadow:0 3px 10px rgba(0,43,91,0.25);">
-                  <span>➕</span>
-                  <span>Add Officer Account</span>
-                </button>
-              </div>
-
-              <div style="background:#FFFFFF; border-radius:12px; border:1px solid rgba(0,51,102,0.14); overflow:hidden; box-shadow:0 3px 12px rgba(0,0,0,0.04);">
-                <div style="max-height:48vh; overflow-y:auto;">
-                  <table style="width:100%; border-collapse:collapse; text-align:left; font-size:0.80rem;">
-                    <thead>
-                      <tr style="background:#FAF7F0; border-bottom:1.5px solid rgba(0,51,102,0.14); color:#002B5B; font-weight:800; position:sticky; top:0; z-index:2;">
-                        <th style="padding:12px 16px;">Officer / Engineer</th>
-                        <th style="padding:12px 16px;">Username</th>
-                        <th style="padding:12px 16px;">Assigned Role &amp; Discipline</th>
-                        <th style="padding:12px 16px;">Division / Zone</th>
-                        <th style="padding:12px 16px;">Status</th>
-                        <th style="padding:12px 16px; text-align:right;">Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody id="ir-cred-tbody">
-                      <!-- Injected by renderCredentialsTable -->
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-
-            <!-- ══════════ TAB 2: UI APPEARANCE & THEME ══════════ -->
-            <div class="ir-settings-tab-panel" id="ir-settings-panel-appearance">
-              <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:18px; margin-bottom:18px;">
-                <!-- Light Mode Card -->
-                <div onclick="document.documentElement.removeAttribute('data-theme'); localStorage.setItem('ir_theme', 'light'); window.updateSettingsThemeUi();" style="cursor:pointer; background:#FAF7F0; border:2px solid #002B5B; border-radius:12px; padding:18px; box-shadow:0 4px 15px rgba(0,0,0,0.05); transition:all 0.2s;" id="ir-theme-card-light">
-                  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                    <span style="font-size:1.6rem;">☀️</span>
-                    <span style="font-size:0.72rem; font-weight:800; background:#002B5B; color:#FFF; padding:3px 10px; border-radius:12px;" id="ir-badge-theme-light">ACTIVE</span>
-                  </div>
-                  <div style="font-weight:800; color:#002B5B; font-size:0.95rem; margin-bottom:4px;">Warm Royal Alabaster (Light Theme)</div>
-                  <div style="font-size:0.76rem; color:#64748B;">Official Indian Railways daylight operations tone with deep navy contrast and high readability.</div>
-                </div>
-
-                <!-- Dark Mode Card -->
-                <div onclick="document.documentElement.setAttribute('data-theme', 'dark'); localStorage.setItem('ir_theme', 'dark'); window.updateSettingsThemeUi();" style="cursor:pointer; background:#0F172A; border:1.5px solid rgba(255,255,255,0.15); border-radius:12px; padding:18px; box-shadow:0 4px 15px rgba(0,0,0,0.2); transition:all 0.2s;" id="ir-theme-card-dark">
-                  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                    <span style="font-size:1.6rem;">🌙</span>
-                    <span style="font-size:0.72rem; font-weight:800; background:rgba(255,255,255,0.15); color:#94A3B8; padding:3px 10px; border-radius:12px;" id="ir-badge-theme-dark">ACTIVATE</span>
-                  </div>
-                  <div style="font-weight:800; color:#F8FAFC; font-size:0.95rem; margin-bottom:4px;">Deep Space Obsidian (Night Theme)</div>
-                  <div style="font-size:0.76rem; color:#94A3B8;">High-contrast night command center mode tailored for 24/7 Control Office surveillance &amp; low eye fatigue.</div>
-                </div>
-              </div>
-
-              <!-- Accessibility & UI Density Settings -->
-              <div style="background:#FFFFFF; border-radius:12px; border:1px solid rgba(0,51,102,0.14); padding:20px; box-shadow:0 2px 8px rgba(0,0,0,0.03);">
-                <div style="font-weight:800; font-size:0.92rem; color:#002B5B; margin-bottom:14px;">Ergonomics &amp; Layout Density</div>
-                
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
-                  <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 14px; background:#FAF7F0; border-radius:8px; border:1px solid rgba(0,51,102,0.12);">
-                    <div>
-                      <div style="font-weight:700; font-size:0.82rem; color:#0F172A;">WCAG AAA High-Contrast Text</div>
-                      <div style="font-size:0.72rem; color:#64748B;">Enhances table border sharpness and text contrast</div>
-                    </div>
-                    <input type="checkbox" id="ir-setting-high-contrast" checked style="width:18px; height:18px; cursor:pointer;" />
-                  </div>
-
-                  <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 14px; background:#FAF7F0; border-radius:8px; border:1px solid rgba(0,51,102,0.12);">
-                    <div>
-                      <div style="font-weight:700; font-size:0.82rem; color:#0F172A;">Smooth Hardware Micro-Animations</div>
-                      <div style="font-size:0.72rem; color:#64748B;">GPU accelerated transitions &amp; train movement pulses</div>
-                    </div>
-                    <input type="checkbox" id="ir-setting-smooth-anim" checked style="width:18px; height:18px; cursor:pointer;" />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- ══════════ TAB 3: ZONE & REGIONAL LANGUAGE ══════════ -->
-            <div class="ir-settings-tab-panel" id="ir-settings-panel-regional">
-              <div style="background:#FFFFFF; border-radius:12px; border:1px solid rgba(0,51,102,0.14); padding:20px; box-shadow:0 2px 8px rgba(0,0,0,0.03); margin-bottom:16px;">
-                <div style="font-weight:800; font-size:0.92rem; color:#002B5B; margin-bottom:14px;">Multilingual Rail Command Interface</div>
-                
-                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:12px; margin-bottom:16px;">
-                  <button type="button" onclick="window.selectLanguage('EN', 'English')" class="ir-lang-card-btn" data-lang="EN" style="padding:14px; border-radius:8px; border:1.5px solid #002B5B; background:#FAF7F0; text-align:left; cursor:pointer;">
-                    <div style="font-size:1.2rem; margin-bottom:4px;">🇬🇧</div>
-                    <div style="font-weight:800; font-size:0.84rem; color:#002B5B;">English (EN)</div>
-                    <div style="font-size:0.70rem; color:#64748B;">Default RailNet Standard</div>
-                  </button>
-                  <button type="button" onclick="window.selectLanguage('HI', 'हिन्दी')" class="ir-lang-card-btn" data-lang="HI" style="padding:14px; border-radius:8px; border:1px solid rgba(0,51,102,0.2); background:#FFF; text-align:left; cursor:pointer;">
-                    <div style="font-size:1.2rem; margin-bottom:4px;">🇮🇳</div>
-                    <div style="font-weight:800; font-size:0.84rem; color:#002B5B;">हिन्दी (HI)</div>
-                    <div style="font-size:0.70rem; color:#64748B;">राजभाषा मानक</div>
-                  </button>
-                  <button type="button" onclick="window.selectLanguage('BN', 'বাংলা')" class="ir-lang-card-btn" data-lang="BN" style="padding:14px; border-radius:8px; border:1px solid rgba(0,51,102,0.2); background:#FFF; text-align:left; cursor:pointer;">
-                    <div style="font-size:1.2rem; margin-bottom:4px;">🇮🇳</div>
-                    <div style="font-weight:800; font-size:0.84rem; color:#002B5B;">বাংলা (BN)</div>
-                    <div style="font-size:0.70rem; color:#64748B;">পূর্ব রেলওয়ে</div>
-                  </button>
-                  <button type="button" onclick="window.selectLanguage('MR', 'मराठी')" class="ir-lang-card-btn" data-lang="MR" style="padding:14px; border-radius:8px; border:1px solid rgba(0,51,102,0.2); background:#FFF; text-align:left; cursor:pointer;">
-                    <div style="font-size:1.2rem; margin-bottom:4px;">🇮🇳</div>
-                    <div style="font-weight:800; font-size:0.84rem; color:#002B5B;">मराठी (MR)</div>
-                    <div style="font-size:0.70rem; color:#64748B;">मध्य व पश्चिम रेल्वे</div>
-                  </button>
-                  <button type="button" onclick="window.selectLanguage('TA', 'தமிழ்')" class="ir-lang-card-btn" data-lang="TA" style="padding:14px; border-radius:8px; border:1px solid rgba(0,51,102,0.2); background:#FFF; text-align:left; cursor:pointer;">
-                    <div style="font-size:1.2rem; margin-bottom:4px;">🇮🇳</div>
-                    <div style="font-weight:800; font-size:0.84rem; color:#002B5B;">தமிழ் (TA)</div>
-                    <div style="font-size:0.70rem; color:#64748B;">தெற்கு ரயில்வே</div>
-                  </button>
-                  <button type="button" onclick="window.selectLanguage('TE', 'తెలుగు')" class="ir-lang-card-btn" data-lang="TE" style="padding:14px; border-radius:8px; border:1px solid rgba(0,51,102,0.2); background:#FFF; text-align:left; cursor:pointer;">
-                    <div style="font-size:1.2rem; margin-bottom:4px;">🇮🇳</div>
-                    <div style="font-weight:800; font-size:0.84rem; color:#002B5B;">తెలుగు (TE)</div>
-                    <div style="font-size:0.70rem; color:#64748B;">దక్షిణ మధ్య రైల్వే</div>
-                  </button>
-                </div>
-              </div>
-
-              <!-- Zonal Jurisdiction Config -->
-              <div style="background:#FFFFFF; border-radius:12px; border:1px solid rgba(0,51,102,0.14); padding:20px; box-shadow:0 2px 8px rgba(0,0,0,0.03);">
-                <div style="font-weight:800; font-size:0.92rem; color:#002B5B; margin-bottom:14px;">Zonal Headquarters &amp; Operating Division</div>
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
-                  <div>
-                    <label style="font-weight:700; color:#334155; font-size:0.78rem; display:block; margin-bottom:4px;">Operating Railway Zone:</label>
-                    <select id="ir-setting-zone" style="width:100%; padding:9px 12px; border-radius:8px; border:1px solid rgba(0,51,102,0.2); background:#FAF7F0; font-size:0.82rem; font-weight:600;">
-                      <option value="NR" selected>Northern Railway (NR) — HQ Baroda House, New Delhi</option>
-                      <option value="NCR">North Central Railway (NCR) — HQ Prayagraj</option>
-                      <option value="ER">Eastern Railway (ER) — HQ Fairlie Place, Kolkata</option>
-                      <option value="WR">Western Railway (WR) — HQ Churchgate, Mumbai</option>
-                      <option value="CR">Central Railway (CR) — HQ CSMT, Mumbai</option>
-                      <option value="SR">Southern Railway (SR) — HQ Chennai Central</option>
-                      <option value="ECoR">East Coast Railway (ECoR) — HQ Bhubaneswar</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label style="font-weight:700; color:#334155; font-size:0.78rem; display:block; margin-bottom:4px;">Divisional Control Office:</label>
-                    <select id="ir-setting-division" style="width:100%; padding:9px 12px; border-radius:8px; border:1px solid rgba(0,51,102,0.2); background:#FAF7F0; font-size:0.82rem; font-weight:600;">
-                      <option value="DLI" selected>Delhi Division (DLI) — DRM Office State Entry Road</option>
-                      <option value="LKO">Lucknow Division (LKO)</option>
-                      <option value="PRYJ">Prayagraj Division (PRYJ)</option>
-                      <option value="MB">Moradabad Division (MB)</option>
-                      <option value="FZR">Firozpur Division (FZR)</option>
-                      <option value="UMB">Ambala Division (UMB)</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- ══════════ TAB 4: BACKEND & DB CONNECTIVITY DIAGNOSTICS ══════════ -->
-            <div class="ir-settings-tab-panel" id="ir-settings-panel-backend">
-              <div style="background:#FFFFFF; border-radius:12px; border:1px solid rgba(0,51,102,0.14); padding:20px; box-shadow:0 2px 8px rgba(0,0,0,0.03); margin-bottom:16px;">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:10px;">
-                  <div>
-                    <div style="font-weight:800; font-size:0.95rem; color:#002B5B;">Live Service Telemetry &amp; Microservice Mesh</div>
-                    <div style="font-size:0.74rem; color:#64748B;">Real-time health status, ports, database connections &amp; AI daemon responsiveness</div>
-                  </div>
-                  <button type="button" id="ir-btn-ping-backend" onclick="window.testBackendConnectivity()" style="padding:8px 18px; border-radius:8px; border:none; background:#059669; color:#FFF; font-weight:800; font-size:0.78rem; cursor:pointer; display:flex; align-items:center; gap:6px; box-shadow:0 2px 8px rgba(5,150,105,0.25);">
-                    <span id="ir-ping-icon">⚡</span>
-                    <span>Test Live Backend Connection</span>
-                  </button>
-                </div>
-
-                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:12px; margin-bottom:16px;">
-                  <!-- Node Gateway -->
-                  <div style="padding:14px; background:#FAF7F0; border-radius:8px; border:1px solid rgba(0,51,102,0.12);">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-                      <span style="font-weight:800; font-size:0.80rem; color:#002B5B;">Node.js Web Gateway</span>
-                      <span id="ir-status-node" style="padding:2px 8px; border-radius:12px; background:#ECFDF5; color:#059669; font-weight:800; font-size:0.68rem;">● ONLINE</span>
-                    </div>
-                    <div style="font-size:0.72rem; color:#64748B;">Port: <code style="color:#002B5B; font-weight:700;">5000</code> &bull; HTTP/REST</div>
-                    <div style="font-size:0.70rem; color:#059669; margin-top:4px;" id="ir-latency-node">Latency: ~2ms</div>
-                  </div>
-
-                  <!-- Python FastAPI Daemon -->
-                  <div style="padding:14px; background:#FAF7F0; border-radius:8px; border:1px solid rgba(0,51,102,0.12);">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-                      <span style="font-weight:800; font-size:0.80rem; color:#002B5B;">Python AI Inference</span>
-                      <span id="ir-status-python" style="padding:2px 8px; border-radius:12px; background:#ECFDF5; color:#059669; font-weight:800; font-size:0.68rem;">● ONLINE</span>
-                    </div>
-                    <div style="font-size:0.72rem; color:#64748B;">Port: <code style="color:#002B5B; font-weight:700;">5001</code> &bull; FastAPI + Uvicorn</div>
-                    <div style="font-size:0.70rem; color:#059669; margin-top:4px;" id="ir-latency-python">Latency: ~12ms</div>
-                  </div>
-
-                  <!-- Supabase / Local SQLite -->
-                  <div style="padding:14px; background:#FAF7F0; border-radius:8px; border:1px solid rgba(0,51,102,0.12);">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-                      <span style="font-weight:800; font-size:0.80rem; color:#002B5B;">Database &amp; Audit Store</span>
-                      <span id="ir-status-db" style="padding:2px 8px; border-radius:12px; background:#ECFDF5; color:#059669; font-weight:800; font-size:0.68rem;">● SYNCED</span>
-                    </div>
-                    <div style="font-size:0.72rem; color:#64748B;">Supabase REST + SQLite WAL</div>
-                    <div style="font-size:0.70rem; color:#059669; margin-top:4px;" id="ir-latency-db">SHA-256 Verified</div>
-                  </div>
-
-                  <!-- RapidAPI Live Feed -->
-                  <div style="padding:14px; background:#FAF7F0; border-radius:8px; border:1px solid rgba(0,51,102,0.12);">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-                      <span style="font-weight:800; font-size:0.80rem; color:#002B5B;">Live IRCTC Telemetry</span>
-                      <span id="ir-status-rapidapi" style="padding:2px 8px; border-radius:12px; background:#ECFDF5; color:#059669; font-weight:800; font-size:0.68rem;">● ACTIVE</span>
-                    </div>
-                    <div style="font-size:0.72rem; color:#64748B;">RapidAPI / RailRadar Live</div>
-                    <div style="font-size:0.70rem; color:#059669; margin-top:4px;" id="ir-latency-rapidapi">Active Corridor Stream</div>
-                  </div>
-                </div>
-
-                <!-- Live Log Terminal Box -->
-                <div style="background:#090D1A; border-radius:8px; padding:14px; color:#A7F3D0; font-family:monospace; font-size:0.72rem; line-height:1.6; max-height:140px; overflow-y:auto;" id="ir-backend-diagnostic-log">
-                  [SYSTEM STARTUP] Node.js Gateway bound to http://localhost:5000<br/>
-                  [AI DAEMON] Python Uvicorn Fast Inference running on http://127.0.0.1:5001<br/>
-                  [CORRIDOR TELEMETRY] RapidAPI IRCTC stream synchronized on NDLS-CNB trunk<br/>
-                  [PERSISTENCE] Cryptographic SHA-256 tamper-evident storage active. Ready.
-                </div>
-              </div>
-            </div>
-
-            <!-- ══════════ TAB 5: SAFETY ALERTS & NOTIFICATION RULES ══════════ -->
-            <div class="ir-settings-tab-panel" id="ir-settings-panel-alerts">
-              <div style="background:#FFFFFF; border-radius:12px; border:1px solid rgba(0,51,102,0.14); padding:20px; box-shadow:0 2px 8px rgba(0,0,0,0.03);">
-                <div style="font-weight:800; font-size:0.92rem; color:#002B5B; margin-bottom:14px;">Operational Safety Thresholds &amp; Directives</div>
-                
-                <div style="display:flex; flex-direction:column; gap:16px;">
-                  <!-- Rail Temp Threshold -->
-                  <div style="padding:14px; background:#FAF7F0; border-radius:8px; border:1px solid rgba(0,51,102,0.12);">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-                      <div>
-                        <div style="font-weight:800; font-size:0.82rem; color:#002B5B;">Rail Temperature Buckling Alert (IRPWM Para 602)</div>
-                        <div style="font-size:0.72rem; color:#64748B;">Triggers automated hot weather patrolling advisory when rail temp exceeds limit</div>
-                      </div>
-                      <span id="ir-temp-val-display" style="font-weight:800; font-size:0.90rem; color:#D9531E;">52.0°C</span>
-                    </div>
-                    <input type="range" min="45" max="65" step="0.5" value="52" id="ir-slider-temp" oninput="document.getElementById('ir-temp-val-display').textContent = this.value + '°C'" style="width:100%; cursor:pointer;" />
-                  </div>
-
-                  <!-- USFD Flaw Severity Rule -->
-                  <div style="display:flex; align-items:center; justify-content:space-between; padding:14px; background:#FAF7F0; border-radius:8px; border:1px solid rgba(0,51,102,0.12);">
-                    <div>
-                      <div style="font-weight:800; font-size:0.82rem; color:#002B5B;">Automated 30 km/h TSR Clamping on P1 Transverse Fracture</div>
-                      <div style="font-size:0.72rem; color:#64748B;">Automatically recommends temporary speed restriction during ultrasonic defect detection</div>
-                    </div>
-                    <input type="checkbox" id="ir-setting-auto-tsr" checked style="width:18px; height:18px; cursor:pointer;" />
-                  </div>
-
-                  <!-- Audio Sound Alerts -->
-                  <div style="display:flex; align-items:center; justify-content:space-between; padding:14px; background:#FAF7F0; border-radius:8px; border:1px solid rgba(0,51,102,0.12);">
-                    <div>
-                      <div style="font-weight:800; font-size:0.82rem; color:#002B5B;">Tactical Audio Chime for Critical Emergencies</div>
-                      <div style="font-size:0.72rem; color:#64748B;">Play audible alarm when P1 corridor blockage or track buckling event is ingested</div>
-                    </div>
-                    <input type="checkbox" id="ir-setting-sound-alerts" checked style="width:18px; height:18px; cursor:pointer;" />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-        <!-- Add/Edit Officer User Sub-Modal -->
-        <div id="snav-cred-user-modal" style="display:none; position:fixed; inset:0; z-index:1000020; background:rgba(0,0,0,0.65); backdrop-filter:blur(5px); align-items:center; justify-content:center; padding:20px;">
-          <div style="background:#FFFFFF; border-radius:14px; max-width:480px; width:100%; box-shadow:0 25px 50px rgba(0,0,0,0.35); overflow:hidden; border:1.5px solid rgba(0,51,102,0.25);">
-            <div style="padding:14px 20px; background:linear-gradient(135deg, #001F3F 0%, #002B5B 100%); color:#FFFFFF; display:flex; justify-content:space-between; align-items:center;">
-              <h4 id="snav-cum-title" style="margin:0; font-size:0.95rem; font-weight:800;">Add New Personnel Account</h4>
-              <button type="button" id="snav-cum-close" onclick="document.getElementById('snav-cred-user-modal').style.display='none'" style="background:none; border:none; color:#FFF; font-size:1.2rem; cursor:pointer;">✕</button>
-            </div>
-            <div style="padding:20px; display:flex; flex-direction:column; gap:12px; font-size:0.80rem;">
-              <input type="hidden" id="snav-cum-id" />
-              <div id="snav-cum-err" style="display:none; padding:8px 12px; border-radius:6px; background:#FEF2F2; color:#DC2626; border:1px solid #FECACA; font-weight:700;"></div>
-
-              <div>
-                <label style="font-weight:700; color:#334155; display:block; margin-bottom:4px;">Full Name &amp; Designation:</label>
-                <input type="text" id="snav-cum-name" placeholder="e.g. Rajesh Sharma (SSE/Track)" style="width:100%; padding:8px 12px; border-radius:6px; border:1px solid rgba(0,51,102,0.2); box-sizing:border-box;" />
-              </div>
-
-              <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-                <div>
-                  <label style="font-weight:700; color:#334155; display:block; margin-bottom:4px;">Username:</label>
-                  <input type="text" id="snav-cum-username" placeholder="e.g. sse_track_aligarh" style="width:100%; padding:8px 12px; border-radius:6px; border:1px solid rgba(0,51,102,0.2); box-sizing:border-box;" />
-                </div>
-                <div>
-                  <label style="font-weight:700; color:#334155; display:block; margin-bottom:4px;">Password (Auth PIN):</label>
-                  <input type="password" id="snav-cum-password" placeholder="••••••••" style="width:100%; padding:8px 12px; border-radius:6px; border:1px solid rgba(0,51,102,0.2); box-sizing:border-box;" />
-                </div>
-              </div>
-
-              <div>
-                <label style="font-weight:700; color:#334155; display:block; margin-bottom:4px;">Department / Authorized Role:</label>
-                <select id="snav-cum-role" style="width:100%; padding:8px 12px; border-radius:6px; border:1px solid rgba(0,51,102,0.2); background:#FFF; box-sizing:border-box;">
-                  <option value="admin">🏢 Executive Admin / Zonal HQ (Super Admin)</option>
-                  <option value="control-officer">🎛️ Section Controller (Control Office)</option>
-                  <option value="field-tms">🔨 SSE / Track (Permanent Way TMS)</option>
-                  <option value="field-smms">⚡ SSE / Signal (SMMS Interlocking)</option>
-                  <option value="field-trd">🔌 SSE / Traction (TRD 25kV OHE)</option>
-                  <option value="surveillance-officer">📡 Surveillance / Drone &amp; USFD Inspector</option>
-                  <option value="field-engineer">👷 Field Maintenance Engineer</option>
-                </select>
-              </div>
-
-              <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-                <div>
-                  <label style="font-weight:700; color:#334155; display:block; margin-bottom:4px;">Official Email (RailNet):</label>
-                  <input type="email" id="snav-cum-email" placeholder="officer@nr.railnet.gov.in" style="width:100%; padding:8px 12px; border-radius:6px; border:1px solid rgba(0,51,102,0.2); box-sizing:border-box;" />
-                </div>
-                <div>
-                  <label style="font-weight:700; color:#334155; display:block; margin-bottom:4px;">CUG Mobile Number:</label>
-                  <input type="tel" id="snav-cum-phone" placeholder="+91-98765-43210" style="width:100%; padding:8px 12px; border-radius:6px; border:1px solid rgba(0,51,102,0.2); box-sizing:border-box;" />
-                </div>
-              </div>
-
-              <div>
-                <label style="font-weight:700; color:#334155; display:block; margin-bottom:4px;">Division &amp; Jurisdiction:</label>
-                <input type="text" id="snav-cum-division" value="Northern Railway — Delhi Division" style="width:100%; padding:8px 12px; border-radius:6px; border:1px solid rgba(0,51,102,0.2); box-sizing:border-box;" />
-              </div>
-
-              <div style="display:flex; align-items:center; gap:8px; margin-top:4px;">
-                <input type="checkbox" id="snav-cum-active" checked style="width:16px; height:16px;" />
-                <label for="snav-cum-active" style="font-weight:700; color:#059669;">Account Active &amp; Authorized for System Login</label>
-              </div>
-            </div>
-
-            <div style="padding:12px 20px; background:#FAF7F0; border-top:1px solid rgba(0,51,102,0.12); display:flex; justify-content:flex-end; gap:10px;">
-              <button type="button" id="snav-cum-cancel" onclick="document.getElementById('snav-cred-user-modal').style.display='none'" style="padding:8px 16px; border-radius:6px; border:1px solid rgba(0,51,102,0.2); background:#FFF; color:#475569; font-weight:700; cursor:pointer;">Cancel</button>
-              <button type="button" id="snav-cum-save" style="padding:8px 20px; border-radius:6px; border:none; background:#002B5B; color:#FFF; font-weight:800; cursor:pointer; box-shadow:0 2px 8px rgba(0,43,91,0.25);">Save Officer</button>
-            </div>
+            ${buildSettingsPanelsHTML()}
           </div>
         </div>
       </div>
@@ -7311,7 +7355,8 @@
         (u.name && u.name.toLowerCase().includes(q)) ||
         (u.username && u.username.toLowerCase().includes(q)) ||
         (u.division && u.division.toLowerCase().includes(q)) ||
-        (u.role && u.role.toLowerCase().includes(q))
+        (u.role && u.role.toLowerCase().includes(q)) ||
+        (u.email && u.email.toLowerCase().includes(q))
       );
     }
 
@@ -7322,6 +7367,7 @@
         if (filterRole === 'smms') return r.includes('smms') || r.includes('signal');
         if (filterRole === 'trd') return r.includes('trd') || r.includes('traction');
         if (filterRole === 'control') return r.includes('control');
+        if (filterRole === 'admin') return r.includes('admin');
         return true;
       });
     }
@@ -7338,43 +7384,52 @@
     }
 
     const ROLE_LABELS = {
-      'admin': { label: '🏢 Executive Admin', bg: '#EFF6FF', col: '#0056B3' },
-      'control-officer': { label: '🎛️ Section Controller', bg: '#F5F3FF', col: '#7C3AED' },
-      'field-tms': { label: '🔨 SSE / Track (TMS)', bg: '#ECFDF5', col: '#059669' },
-      'field-smms': { label: '⚡ SSE / Signal (SMMS)', bg: '#FFFBEB', col: '#D97706' },
-      'field-trd': { label: '🔌 SSE / Traction (TRD)', bg: '#FEF2F2', col: '#DC2626' },
-      'surveillance-officer': { label: '📡 Surveillance / Drone', bg: '#F0FDF4', col: '#16A34A' },
-      'field-engineer': { label: '👷 Field Maintenance', bg: '#F8FAFC', col: '#475569' }
+      'admin': { label: '🏢 Executive Admin', bg: '#EFF6FF', col: '#0056B3', border: 'rgba(0,86,179,0.2)' },
+      'control-office': { label: '🎛️ Section Controller', bg: '#F0F9FF', col: '#0284C7', border: 'rgba(2,132,199,0.2)' },
+      'control-officer': { label: '🎛️ Section Controller', bg: '#F0F9FF', col: '#0284C7', border: 'rgba(2,132,199,0.2)' },
+      'field-tms': { label: '🔨 SSE / Track (TMS)', bg: '#ECFDF5', col: '#059669', border: 'rgba(5,150,105,0.2)' },
+      'field-smms': { label: '⚡ SSE / Signal (SMMS)', bg: '#FFFBEB', col: '#D97706', border: 'rgba(217,119,6,0.2)' },
+      'field-trd': { label: '🔌 SSE / Traction (TRD)', bg: '#FEF2F2', col: '#DC2626', border: 'rgba(220,38,38,0.2)' },
+      'field-engineer': { label: '👤 Field Maintenance', bg: '#FFF7ED', col: '#C2410C', border: 'rgba(194,65,12,0.2)' },
+      'surveillance': { label: '📡 Surveillance Inspector', bg: '#F0FDF4', col: '#16A34A', border: 'rgba(22,163,74,0.2)' },
+      'surveillance-officer': { label: '📡 Surveillance Inspector', bg: '#F0FDF4', col: '#16A34A', border: 'rgba(22,163,74,0.2)' }
     };
 
     tbody.innerHTML = users.map(u => {
-      const roleMeta = ROLE_LABELS[u.role] || { label: u.role || 'Personnel', bg: '#F1F5F9', col: '#334155' };
+      const roleMeta = ROLE_LABELS[u.role] || { label: u.role || 'Personnel', bg: '#F1F5F9', col: '#334155', border: 'rgba(51,65,85,0.15)' };
       return `
-        <tr style="border-bottom: 1px solid rgba(0,51,102,0.08);">
-          <td style="padding:12px 16px;">
-            <div style="font-weight:700; color:#002244;">${escapeHtml(u.name || u.username)}</div>
-            <div style="font-size:0.72rem; color:#64748B;">${escapeHtml(u.email || 'officer@nr.railnet.gov.in')}</div>
+        <tr style="border-bottom: 1px solid rgba(0,51,102,0.08); transition: background 0.15s;" onmouseover="this.style.background='rgba(0,51,102,0.02)'" onmouseout="this.style.background='transparent'">
+          <td style="padding:14px 16px;">
+            <div style="font-weight:700; color:#002244; font-size:0.86rem;">${escapeHtml(u.name || u.username)}</div>
+            <div style="font-size:0.72rem; color:#64748B; margin-top:2px;">${escapeHtml(u.email || 'officer@nr.railnet.gov.in')}</div>
           </td>
-          <td style="padding:12px 16px;">
-            <code style="background:#FAF6EE; border:1px solid rgba(0,51,102,0.15); padding:2px 6px; border-radius:4px; font-weight:700; color:#003366;">@${escapeHtml(u.username)}</code>
+          <td style="padding:14px 16px;">
+            <code style="background:#FAF6EE; border:1px solid rgba(0,51,102,0.18); padding:3px 8px; border-radius:6px; font-weight:700; color:#003366; font-size:0.80rem;">@${escapeHtml(u.username)}</code>
           </td>
-          <td style="padding:12px 16px;">
-            <span style="display:inline-flex; align-items:center; gap:4px; padding:3px 8px; border-radius:6px; background:${roleMeta.bg}; color:${roleMeta.col}; font-weight:700; font-size:0.74rem;">
+          <td style="padding:14px 16px;">
+            <span style="display:inline-flex; align-items:center; gap:5px; padding:4px 10px; border-radius:6px; background:${roleMeta.bg}; color:${roleMeta.col}; border:1px solid ${roleMeta.border}; font-weight:700; font-size:0.75rem;">
               ${roleMeta.label}
             </span>
           </td>
-          <td style="padding:12px 16px; color:#475569;">${escapeHtml(u.division || 'Northern Railway')}</td>
-          <td style="padding:12px 16px;">
-            <span style="display:inline-flex; align-items:center; gap:5px; font-weight:700; font-size:0.74rem; color:${u.active ? '#059669' : '#DC2626'};">
-              <span>${u.active ? '●' : '○'}</span>
+          <td style="padding:14px 16px; color:#475569; font-size:0.80rem;">${escapeHtml(u.division || 'Northern Railway')}</td>
+          <td style="padding:14px 16px;">
+            <span style="display:inline-flex; align-items:center; gap:6px; font-weight:700; font-size:0.76rem; color:${u.active ? '#059669' : '#DC2626'}; background:${u.active ? 'rgba(5,150,105,0.08)' : 'rgba(220,38,38,0.08)'}; padding:3px 8px; border-radius:12px; border:1px solid ${u.active ? 'rgba(5,150,105,0.25)' : 'rgba(220,38,38,0.25)'};">
+              <span style="font-size:0.65rem;">${u.active ? '●' : '○'}</span>
               <span>${u.active ? 'Active' : 'Suspended'}</span>
             </span>
           </td>
-          <td style="padding:12px 16px; text-align:right;">
-            <div style="display:inline-flex; gap:6px;">
-              <button type="button" onclick="window.editUserCred('${u.id}')" style="padding:4px 8px; border-radius:4px; border:1px solid rgba(0,51,102,0.2); background:#FFF; color:#003366; font-size:0.72rem; font-weight:700; cursor:pointer;" title="Edit Account">✏️ Edit</button>
-              <button type="button" onclick="window.toggleUserCred('${u.id}')" style="padding:4px 8px; border-radius:4px; border:1px solid rgba(0,51,102,0.2); background:#FAF6EE; color:#334155; font-size:0.72rem; font-weight:700; cursor:pointer;" title="Toggle Access">${u.active ? '⏸' : '▶'}</button>
-              <button type="button" onclick="window.deleteUserCred('${u.id}')" style="padding:4px 8px; border-radius:4px; border:1px solid #FECACA; background:#FEF2F2; color:#DC2626; font-size:0.72rem; font-weight:700; cursor:pointer;" title="Delete Account">🗑️</button>
+          <td style="padding:14px 16px; text-align:right;">
+            <div style="display:inline-flex; gap:6px; align-items:center; justify-content:flex-end;">
+              <button type="button" onclick="window.editUserCred('${u.id}')" style="padding:6px 12px; border-radius:6px; border:1px solid rgba(0,51,102,0.25); background:#FFFFFF; color:#003366; font-size:0.75rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:5px; box-shadow:0 1px 3px rgba(0,0,0,0.04); transition:all 0.15s;" title="Edit Account">
+                <span style="color:#D9531E;">✏️</span>
+                <span>Edit</span>
+              </button>
+              <button type="button" onclick="window.toggleUserCred('${u.id}')" style="padding:6px 10px; border-radius:6px; border:1px solid ${u.active ? 'rgba(0,51,102,0.25)' : 'rgba(5,150,105,0.35)'}; background:${u.active ? '#FAF6EE' : '#ECFDF5'}; color:${u.active ? '#334155' : '#059669'}; font-size:0.75rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; min-width:32px; transition:all 0.15s;" title="${u.active ? 'Pause / Deactivate Account' : 'Activate Account'}">
+                <span style="font-size:0.80rem;">${u.active ? '⏸' : '▶'}</span>
+              </button>
+              <button type="button" onclick="window.deleteUserCred('${u.id}')" style="padding:6px 10px; border-radius:6px; border:1px solid #FECACA; background:#FEF2F2; color:#DC2626; font-size:0.75rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; min-width:32px; transition:all 0.15s;" title="Delete Account">
+                <span style="font-size:0.80rem;">🗑️</span>
+              </button>
             </div>
           </td>
         </tr>
@@ -7382,62 +7437,331 @@
     }).join('');
   }
 
-  // Global Actions for credentials modal
+  // ── Global Toast Notification Helper ─────────────────────────────────
+  window.showToast = function (message, type = 'info') {
+    let toast = document.getElementById('ir-shared-toast');
+    if (!toast) {
+      toast = document.createElement('div');
+      toast.id = 'ir-shared-toast';
+      toast.style.cssText = `
+        position: fixed;
+        bottom: 28px;
+        right: 28px;
+        z-index: 2000099;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 20px;
+        border-radius: 10px;
+        background: #002244;
+        color: #FFFFFF;
+        font-family: 'Calibri', 'Arial', sans-serif;
+        font-size: 0.86rem;
+        font-weight: 700;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        border: 1px solid rgba(255,255,255,0.18);
+        border-left: 5px solid #0056B3;
+        transform: translateY(20px);
+        opacity: 0;
+        transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
+        pointer-events: none;
+      `;
+      document.body.appendChild(toast);
+    }
+
+    const icons = {
+      success: '✅',
+      danger: '🚨',
+      warning: '⚠️',
+      info: 'ℹ️'
+    };
+
+    const colors = {
+      success: '#059669',
+      danger: '#DC2626',
+      warning: '#D97706',
+      info: '#0056B3'
+    };
+
+    const icon = icons[type] || '⚡';
+    const borderColor = colors[type] || '#0056B3';
+
+    toast.style.borderLeftColor = borderColor;
+    toast.innerHTML = `<span style="font-size:1.15rem;">${icon}</span><span>${escapeHtml(message)}</span>`;
+    toast.style.transform = 'translateY(0)';
+    toast.style.opacity = '1';
+    toast.style.pointerEvents = 'auto';
+
+    clearTimeout(toast._timeout);
+    toast._timeout = setTimeout(() => {
+      toast.style.transform = 'translateY(20px)';
+      toast.style.opacity = '0';
+      toast.style.pointerEvents = 'none';
+    }, 3800);
+  };
+
+  // ── Global Actions for Credentials Table ─────────────────────────────
   window.editUserCred = function (userId) {
-    if (typeof window.umEdit === 'function') {
-      window.umEdit(userId);
+    if (!window.IR_UserStore) return;
+    const u = window.IR_UserStore.getAll().find(x => x.id === userId);
+    if (u) {
+      window.openSnavUserModal(u);
     } else {
-      const u = window.IR_UserStore.getAll().find(x => x.id === userId);
-      if (u && typeof window.openSnavUserModal === 'function') {
-        window.openSnavUserModal(u);
-      }
+      window.showToast?.(`User ID ${userId} not found.`, 'danger');
     }
   };
 
   window.toggleUserCred = function (userId) {
-    window.IR_UserStore.toggleActive(userId);
+    if (!window.IR_UserStore) return;
+    const res = window.IR_UserStore.toggleActive(userId);
+    const u = window.IR_UserStore.getAll().find(x => x.id === userId);
     renderCredentialsTable();
-  };
-
-  window.copyToClipboard = function (text, btnElement) {
-    if (!text) return;
-    navigator.clipboard.writeText(text).then(() => {
-      let toast = document.getElementById('ir-copy-toast');
-      if (!toast) {
-        toast = document.createElement('div');
-        toast.id = 'ir-copy-toast';
-        document.body.appendChild(toast);
-      }
-      toast.innerHTML = `<span>✅</span> Copied <strong>"${text}"</strong> to clipboard!`;
-      toast.classList.add('show');
-
-      if (btnElement) {
-        const origText = btnElement.innerHTML;
-        btnElement.classList.add('copied');
-        btnElement.innerHTML = '✓ Copied';
-        setTimeout(() => {
-          btnElement.classList.remove('copied');
-          btnElement.innerHTML = origText;
-        }, 2000);
-      }
-
-      setTimeout(() => {
-        toast.classList.remove('show');
-      }, 2500);
-    }).catch(err => {
-      window.showIRModalTile({ title: 'Clipboard Data', message: 'Copied: ' + text });
-    });
+    const statusMsg = res.active ? 'Active (Access Granted)' : 'Suspended (Access Paused)';
+    window.showToast?.(`Officer @${u?.username || userId} is now ${statusMsg}`, res.active ? 'success' : 'warning');
   };
 
   window.deleteUserCred = function (userId) {
+    if (!window.IR_UserStore) return;
     const u = window.IR_UserStore.getAll().find(x => x.id === userId);
     if (!u) return;
-    window.showIRConfirm(`Delete authorized personnel account for "${u.name || u.username}"? This action removes their access credentials.`, 'Confirm Account Deletion', () => {
-      window.IR_UserStore.delete(userId);
-      renderCredentialsTable();
-      window.showIRModalTile({ title: 'Account Removed', message: `Officer account for @${u.username} has been revoked.`, type: 'success' });
-    });
+
+    if (window.showIRConfirm) {
+      window.showIRConfirm(
+        `Are you sure you want to delete personnel account for ${u.name || u.username} (@${u.username})?\n\nDivision: ${u.division || 'Northern Railway'}\nRole: ${u.role || 'Personnel'}\n\nThis will revoke all system credentials and access authorizations.`,
+        '⚠️ Delete Personnel Account',
+        () => {
+          const res = window.IR_UserStore.delete(userId);
+          if (res.ok) {
+            renderCredentialsTable();
+            window.showToast?.(`✓ Account @${u.username} has been deleted.`, 'success');
+          } else {
+            window.alert(res.error || 'Could not delete user account.');
+          }
+        }
+      );
+    } else {
+      if (confirm(`Delete user "${u.name || u.username}"?`)) {
+        const res = window.IR_UserStore.delete(userId);
+        if (res.ok) {
+          renderCredentialsTable();
+          window.showToast?.(`✓ Account @${u.username} deleted.`, 'success');
+        } else {
+          alert(res.error);
+        }
+      }
+    }
   };
+
+  // ── Standalone Add/Edit Officer Modal Manager ───────────────────────
+  window.openSnavUserModal = function (user = null) {
+    let overlay = document.getElementById('snav-cred-user-modal');
+    if (!overlay) {
+      overlay = document.createElement('div');
+      overlay.id = 'snav-cred-user-modal';
+      overlay.style.cssText = 'display:none; position:fixed; inset:0; z-index:2000050; background:rgba(0,15,35,0.72); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); align-items:center; justify-content:center; padding:20px; box-sizing:border-box;';
+      overlay.onclick = function (e) {
+        if (e.target === overlay) window.closeSnavUserModal();
+      };
+      overlay.innerHTML = `
+        <div style="background:#FFFFFF; border-radius:14px; max-width:520px; width:100%; box-shadow:0 25px 60px rgba(0,0,0,0.45); overflow:hidden; border:1.5px solid rgba(0,51,102,0.25); font-family:var(--font-body, 'Inter', sans-serif); animation: modalIn 0.22s cubic-bezier(0.34, 1.56, 0.64, 1); box-sizing:border-box;">
+          <div style="padding:16px 22px; background:linear-gradient(135deg, #001F3F 0%, #002B5B 100%); color:#FFFFFF; display:flex; justify-content:space-between; align-items:center; border-bottom:3px solid #D9531E;">
+            <div style="display:flex; align-items:center; gap:10px;">
+              <span style="font-size:1.3rem;">👤</span>
+              <div>
+                <h4 id="snav-cum-title" style="margin:0; font-size:1.0rem; font-weight:800; letter-spacing:-0.2px;">Personnel Account</h4>
+                <div style="font-size:0.70rem; color:#BFDBFE;">Role-Based Access Control (RBAC) Governance</div>
+              </div>
+            </div>
+            <button type="button" id="snav-cum-close" onclick="window.closeSnavUserModal()" style="background:rgba(255,255,255,0.15); border:none; color:#FFF; font-size:1.1rem; border-radius:6px; width:30px; height:30px; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:background 0.15s;" title="Close">✕</button>
+          </div>
+          <div style="padding:22px; display:flex; flex-direction:column; gap:14px; font-size:0.82rem; max-height:72vh; overflow-y:auto;">
+            <input type="hidden" id="snav-cum-id" />
+            <div id="snav-cum-err" style="display:none; padding:10px 14px; border-radius:8px; background:#FEF2F2; color:#DC2626; border:1px solid #FECACA; font-weight:700; font-size:0.78rem;"></div>
+
+            <div>
+              <label style="font-weight:700; color:#334155; display:block; margin-bottom:5px;">Full Name &amp; Designation: <span style="color:#DC2626;">*</span></label>
+              <input type="text" id="snav-cum-name" placeholder="e.g. Rajesh Kumar (SSE/Track)" style="width:100%; padding:10px 12px; border-radius:8px; border:1px solid rgba(0,51,102,0.22); box-sizing:border-box; font-size:0.84rem; background:#FAF6EE; color:#0F172A; outline:none;" />
+            </div>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+              <div>
+                <label style="font-weight:700; color:#334155; display:block; margin-bottom:5px;">Username (Login ID): <span style="color:#DC2626;">*</span></label>
+                <input type="text" id="snav-cum-username" placeholder="e.g. admin" style="width:100%; padding:10px 12px; border-radius:8px; border:1px solid rgba(0,51,102,0.22); box-sizing:border-box; font-size:0.84rem; background:#FAF6EE; color:#0F172A; outline:none;" />
+              </div>
+              <div>
+                <label style="font-weight:700; color:#334155; display:block; margin-bottom:5px;" id="snav-cum-pwd-label">Password PIN:</label>
+                <input type="password" id="snav-cum-password" placeholder="••••••••" style="width:100%; padding:10px 12px; border-radius:8px; border:1px solid rgba(0,51,102,0.22); box-sizing:border-box; font-size:0.84rem; background:#FAF6EE; color:#0F172A; outline:none;" />
+              </div>
+            </div>
+
+            <div>
+              <label style="font-weight:700; color:#334155; display:block; margin-bottom:5px;">Department / Authorized Role: <span style="color:#DC2626;">*</span></label>
+              <select id="snav-cum-role" style="width:100%; padding:10px 12px; border-radius:8px; border:1px solid rgba(0,51,102,0.22); background:#FAF6EE; color:#0F172A; box-sizing:border-box; font-size:0.84rem; font-weight:600; outline:none; cursor:pointer;">
+                <option value="admin">🏢 Executive Admin / Zonal HQ (Super Admin)</option>
+                <option value="control-office">🎛️ Section Controller (Control Office)</option>
+                <option value="field-tms">🔨 SSE / Track (Permanent Way TMS)</option>
+                <option value="field-smms">⚡ SSE / Signal (SMMS Interlocking)</option>
+                <option value="field-trd">🔌 SSE / Traction (TRD 25kV OHE)</option>
+                <option value="field-engineer">👷 Field Maintenance Engineer (General / SSE)</option>
+                <option value="surveillance">📡 Surveillance / Drone &amp; USFD Inspector</option>
+              </select>
+            </div>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+              <div>
+                <label style="font-weight:700; color:#334155; display:block; margin-bottom:5px;">Official Email (RailNet):</label>
+                <input type="email" id="snav-cum-email" placeholder="officer@indianrailways.gov.in" style="width:100%; padding:10px 12px; border-radius:8px; border:1px solid rgba(0,51,102,0.22); box-sizing:border-box; font-size:0.84rem; background:#FAF6EE; color:#0F172A; outline:none;" />
+              </div>
+              <div>
+                <label style="font-weight:700; color:#334155; display:block; margin-bottom:5px;">CUG Mobile Number:</label>
+                <input type="tel" id="snav-cum-phone" placeholder="+91-98765-43210" style="width:100%; padding:10px 12px; border-radius:8px; border:1px solid rgba(0,51,102,0.22); box-sizing:border-box; font-size:0.84rem; background:#FAF6EE; color:#0F172A; outline:none;" />
+              </div>
+            </div>
+
+            <div>
+              <label style="font-weight:700; color:#334155; display:block; margin-bottom:5px;">Division &amp; Jurisdiction:</label>
+              <input type="text" id="snav-cum-division" placeholder="HQ — Northern Railway" style="width:100%; padding:10px 12px; border-radius:8px; border:1px solid rgba(0,51,102,0.22); box-sizing:border-box; font-size:0.84rem; background:#FAF6EE; color:#0F172A; outline:none;" />
+            </div>
+
+            <div style="display:flex; align-items:center; gap:10px; margin-top:4px; padding:10px 12px; background:#FAF6EE; border-radius:8px; border:1px solid rgba(0,51,102,0.12);">
+              <input type="checkbox" id="snav-cum-active" checked style="width:18px; height:18px; cursor:pointer;" />
+              <label for="snav-cum-active" style="font-weight:700; color:#059669; font-size:0.82rem; cursor:pointer;">Account Active &amp; Authorized for System Login</label>
+            </div>
+          </div>
+
+          <div style="padding:16px 22px; background:#FAF7F0; border-top:1px solid rgba(0,51,102,0.12); display:flex; justify-content:flex-end; gap:12px;">
+            <button type="button" onclick="window.closeSnavUserModal()" style="padding:9px 18px; border-radius:8px; border:1px solid rgba(0,51,102,0.2); background:#FFF; color:#475569; font-weight:700; font-size:0.82rem; cursor:pointer;">Cancel</button>
+            <button type="button" onclick="window.saveSnavOfficerForm()" style="padding:9px 24px; border-radius:8px; border:none; background:linear-gradient(135deg, #002B5B 0%, #0056B3 100%); color:#FFF; font-weight:800; font-size:0.82rem; cursor:pointer; box-shadow:0 3px 10px rgba(0,43,91,0.25);">Save Account</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(overlay);
+
+      // Handle Enter key inside modal inputs to trigger save
+      overlay.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          window.saveSnavOfficerForm();
+        } else if (e.key === 'Escape') {
+          window.closeSnavUserModal();
+        }
+      });
+    }
+
+    const titleEl = document.getElementById('snav-cum-title');
+    const pwdLabelEl = document.getElementById('snav-cum-pwd-label');
+    const fId = document.getElementById('snav-cum-id');
+    const fName = document.getElementById('snav-cum-name');
+    const fUsername = document.getElementById('snav-cum-username');
+    const fPassword = document.getElementById('snav-cum-password');
+    const fRole = document.getElementById('snav-cum-role');
+    const fEmail = document.getElementById('snav-cum-email');
+    const fPhone = document.getElementById('snav-cum-phone');
+    const fDivision = document.getElementById('snav-cum-division');
+    const fActive = document.getElementById('snav-cum-active');
+    const errEl = document.getElementById('snav-cum-err');
+
+    if (errEl) { errEl.style.display = 'none'; errEl.textContent = ''; }
+
+    if (user) {
+      if (titleEl) titleEl.textContent = `Edit Personnel: ${user.name || user.username}`;
+      if (pwdLabelEl) pwdLabelEl.innerHTML = 'Password PIN: <span style="font-size:0.70rem; color:#64748B; font-weight:500;">(leave blank to keep current)</span>';
+      if (fId) fId.value = user.id || '';
+      if (fName) fName.value = user.name || '';
+      if (fUsername) fUsername.value = user.username || '';
+      if (fPassword) { fPassword.value = ''; fPassword.placeholder = '•••••••• (unchanged)'; }
+      if (fRole) fRole.value = user.role || 'field-tms';
+      if (fEmail) fEmail.value = user.email || '';
+      if (fPhone) fPhone.value = user.phone || '';
+      if (fDivision) fDivision.value = user.division || 'Northern Railway — Delhi Division';
+      if (fActive) fActive.checked = user.active !== false;
+    } else {
+      if (titleEl) titleEl.textContent = 'Add New Personnel Account';
+      if (pwdLabelEl) pwdLabelEl.innerHTML = 'Password PIN: <span style="color:#DC2626;">*</span>';
+      if (fId) fId.value = '';
+      if (fName) fName.value = '';
+      if (fUsername) fUsername.value = '';
+      if (fPassword) { fPassword.value = ''; fPassword.placeholder = 'Enter initial PIN / Password'; }
+      if (fRole) fRole.value = 'field-tms';
+      if (fEmail) fEmail.value = '';
+      if (fPhone) fPhone.value = '';
+      if (fDivision) fDivision.value = 'Northern Railway — Delhi Division';
+      if (fActive) fActive.checked = true;
+    }
+
+    overlay.style.display = 'flex';
+    setTimeout(() => { fName?.focus(); }, 50);
+  };
+
+  window.closeSnavUserModal = function () {
+    const overlay = document.getElementById('snav-cred-user-modal');
+    if (overlay) overlay.style.display = 'none';
+  };
+
+  window.saveSnavOfficerForm = function () {
+    if (!window.IR_UserStore) return;
+
+    const fId = document.getElementById('snav-cum-id');
+    const fName = document.getElementById('snav-cum-name');
+    const fUsername = document.getElementById('snav-cum-username');
+    const fPassword = document.getElementById('snav-cum-password');
+    const fRole = document.getElementById('snav-cum-role');
+    const fEmail = document.getElementById('snav-cum-email');
+    const fPhone = document.getElementById('snav-cum-phone');
+    const fDivision = document.getElementById('snav-cum-division');
+    const fActive = document.getElementById('snav-cum-active');
+    const errEl = document.getElementById('snav-cum-err');
+
+    const id = fId?.value;
+    const name = fName?.value?.trim();
+    const username = fUsername?.value?.trim();
+    const password = fPassword?.value?.trim();
+    const role = fRole?.value;
+    const email = fEmail?.value?.trim();
+    const phone = fPhone?.value?.trim();
+    const division = fDivision?.value?.trim();
+    const active = fActive ? fActive.checked : true;
+
+    if (!name || !username) {
+      if (errEl) {
+        errEl.textContent = 'Please enter both Officer Name and Login Username.';
+        errEl.style.display = 'block';
+      }
+      return;
+    }
+
+    let res;
+    if (id) {
+      const payload = { name, username, role, email, phone, division, active };
+      if (password) payload.password = password;
+      res = window.IR_UserStore.update(id, payload);
+    } else {
+      if (!password) {
+        if (errEl) {
+          errEl.textContent = 'Please provide an initial password PIN for new accounts.';
+          errEl.style.display = 'block';
+        }
+        return;
+      }
+      res = window.IR_UserStore.add({ name, username, password, role, email, phone, division, active });
+    }
+
+    if (!res.ok) {
+      if (errEl) {
+        errEl.textContent = res.error || 'Save failed.';
+        errEl.style.display = 'block';
+      }
+      return;
+    }
+
+    window.closeSnavUserModal();
+    if (typeof renderCredentialsTable === 'function') renderCredentialsTable();
+    if (typeof window.renderTable === 'function') window.renderTable();
+    window.showToast?.(`✓ Personnel record for @${username} saved successfully!`, 'success');
+  };
+
+  // Expose renderCredentialsTable globally
+  window.renderCredentialsTable = renderCredentialsTable;
 
   function buildCameraModalHTML() {
     return `
@@ -7725,101 +8049,6 @@
       });
     }
 
-    // Wiring user edit/add form modal inside credentials modal
-    const snavCredModalOverlay = document.getElementById('snav-cred-user-modal');
-    const snavCumTitle = document.getElementById('snav-cum-title');
-    const snavCumClose = document.getElementById('snav-cum-close');
-    const snavCumCancel = document.getElementById('snav-cum-cancel');
-    const snavCumSave = document.getElementById('snav-cum-save');
-    const snavCumErr = document.getElementById('snav-cum-err');
-
-    const snavFId = document.getElementById('snav-cum-id');
-    const snavFName = document.getElementById('snav-cum-name');
-    const snavFUsername = document.getElementById('snav-cum-username');
-    const snavFPassword = document.getElementById('snav-cum-password');
-    const snavFRole = document.getElementById('snav-cum-role');
-    const snavFEmail = document.getElementById('snav-cum-email');
-    const snavFPhone = document.getElementById('snav-cum-phone');
-    const snavFDivision = document.getElementById('snav-cum-division');
-    const snavFActive = document.getElementById('snav-cum-active');
-
-    function openSnavUserModal(user) {
-      if (!snavCredModalOverlay) return;
-      snavCumTitle.textContent = user ? `Edit Personnel: ${user.name || user.username}` : 'Add New Officer / Personnel';
-      snavFId.value = user ? user.id : '';
-      snavFName.value = user ? (user.name || '') : '';
-      snavFUsername.value = user ? user.username : '';
-      snavFPassword.value = '';
-      snavFRole.value = user ? user.role : 'field-tms';
-      snavFEmail.value = user ? (user.email || '') : '';
-      snavFPhone.value = user ? (user.phone || '') : '';
-      snavFDivision.value = user ? (user.division || '') : 'Northern Railway — Delhi Division';
-      snavFActive.checked = user ? user.active : true;
-      if (snavCumErr) { snavCumErr.style.display = 'none'; snavCumErr.textContent = ''; }
-      snavCredModalOverlay.classList.add('open');
-      snavCredModalOverlay.style.display = 'flex';
-      snavFName.focus();
-    }
-
-    function closeSnavUserModal() {
-      if (snavCredModalOverlay) {
-        snavCredModalOverlay.classList.remove('open');
-        snavCredModalOverlay.style.display = 'none';
-      }
-    }
-
-    if (snavCumClose) snavCumClose.addEventListener('click', closeSnavUserModal);
-    if (snavCumCancel) snavCumCancel.addEventListener('click', closeSnavUserModal);
-
-    if (snavCumSave) {
-      snavCumSave.addEventListener('click', () => {
-        if (!window.IR_UserStore) return;
-        if (snavCumErr) { snavCumErr.style.display = 'none'; snavCumErr.textContent = ''; }
-
-        const id = snavFId.value;
-        const name = snavFName.value.trim();
-        const username = snavFUsername.value.trim();
-        const password = snavFPassword.value.trim();
-        const role = snavFRole.value;
-        const email = snavFEmail.value.trim();
-        const phone = snavFPhone.value.trim();
-        const division = snavFDivision.value.trim();
-        const active = snavFActive.checked;
-
-        if (!name || !username) {
-          if (snavCumErr) { snavCumErr.textContent = 'Name and Login ID (Username) are required.'; snavCumErr.style.display = 'block'; }
-          return;
-        }
-
-        let res;
-        if (id) {
-          // Update
-          const fields = { name, username, role, email, phone, division, active };
-          if (password) fields.password = password;
-          res = window.IR_UserStore.update(id, fields);
-        } else {
-          // Add
-          if (!password) {
-            if (snavCumErr) { snavCumErr.textContent = 'Initial password is required for new accounts.'; snavCumErr.style.display = 'block'; }
-            return;
-          }
-          res = window.IR_UserStore.add({ name, username, password, role, email, phone, division, active });
-        }
-
-        if (!res.ok) {
-          if (snavCumErr) { snavCumErr.textContent = res.error || 'Operation failed.'; snavCumErr.style.display = 'block'; }
-          return;
-        }
-
-        closeSnavUserModal();
-        renderCredentialsTable(credSearch ? credSearch.value.trim() : '', activeCredFilter);
-        if (typeof window.renderTable === 'function') window.renderTable();
-      });
-    }
-
-    // Expose openSnavUserModal globally for modal calls
-    window.openSnavUserModal = openSnavUserModal;
-
     // Global Action Wrappers
     window.umEdit = function (id) {
       if (!window.IR_UserStore) return;
@@ -7830,29 +8059,26 @@
       const user = window.IR_UserStore.getAll().find(u => u.id === id);
       if (user) {
         window.openSnavUserModal(user);
+      } else {
+        window.openSnavUserModal(null);
       }
     };
 
     window.umDelete = function (id) {
       if (!window.IR_UserStore) return;
-      const user = window.IR_UserStore.getAll().find(u => u.id === id);
-      if (!user) return;
-      if (confirm(`Are you sure you want to delete personnel "${user.name || user.username}"?`)) {
-        const res = window.IR_UserStore.delete(id);
-        if (res.ok) {
-          renderCredentialsTable(credSearch ? credSearch.value.trim() : '', activeCredFilter);
-          if (typeof window.renderTable === 'function') window.renderTable();
-        } else {
-          alert(res.error || 'Could not delete user account');
-        }
-      }
+      window.deleteUserCred(id);
+    };
+
+    window.umToggle = function (id) {
+      if (!window.IR_UserStore) return;
+      window.toggleUserCred(id);
     };
 
     // Add user button in credentials modal
-    const addCredUserBtn = document.getElementById('ir-cred-add-btn');
+    const addCredUserBtn = document.getElementById('ir-cred-add-btn') || document.getElementById('ir-btn-add-cred-user');
     if (addCredUserBtn) {
       addCredUserBtn.addEventListener('click', () => {
-        openSnavUserModal(null);
+        window.openSnavUserModal(null);
       });
     }
 
