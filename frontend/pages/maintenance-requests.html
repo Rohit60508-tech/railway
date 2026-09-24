@@ -155,37 +155,6 @@
       border-color: var(--primary-hover);
     }
 
-    /* Sub-nav quick switcher */
-    .subnav-tabs-bar {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 20px;
-      border-bottom: 1px solid var(--border-color);
-      padding-bottom: 12px;
-    }
-
-    .subnav-tab-link {
-      padding: 6px 14px;
-      border-radius: 6px;
-      font-size: 0.82rem;
-      font-weight: 600;
-      text-decoration: none;
-      color: var(--text-muted);
-      transition: all 0.15s ease;
-    }
-
-    .subnav-tab-link:hover {
-      background: #E2E8F0;
-      color: var(--text-main);
-    }
-
-    .subnav-tab-link.active {
-      background: #EFF6FF;
-      color: var(--accent-blue);
-      border: 1px solid #BFDBFE;
-    }
-
     /* Overview Accordion */
     .overview-accordion-header {
       display: flex;
@@ -906,14 +875,6 @@
   <div id="shared-nav"></div>
 
   <main class="maint-container">
-
-    <!-- Sub-nav Tabs Bar to easily switch back to Work Orders if needed -->
-    <div class="subnav-tabs-bar">
-      <a href="maintenance-dashboard.html" class="subnav-tab-link">← Work Orders</a>
-      <a href="maintenance-requests.html" class="subnav-tab-link active">Request Maintenance</a>
-      <a href="pm-schedules.html" class="subnav-tab-link">PM Schedules</a>
-      <a href="maintenance-dashboard.html#labor" class="subnav-tab-link">Labor</a>
-    </div>
 
     <!-- ═══════════════════ TOP HEADER ═══════════════════ -->
     <div class="page-header-row">

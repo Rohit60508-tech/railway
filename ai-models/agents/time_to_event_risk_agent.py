@@ -8,6 +8,7 @@ Why Practical: Handles right-censored data and asset degradation curves
 ─────────────────────────────────────────────────────────────────────────────
 """
 
+import json
 import math
 import sys
 from pathlib import Path
@@ -104,4 +105,3 @@ class TimeToEventRiskAgent(BaseRailwayAgent):
                 f"to prevent in-service rail fracture."
             )
         }
-    print(json.dumps(res, indent=2))

@@ -170,7 +170,7 @@ const server = http.createServer(async (req, res) => {
   }
 
   // 1b. API Gateway Route Dispatcher
-  if (pathname.startsWith('/api/v1/ai')) {
+  if (pathname.startsWith('/api/v1/ai') || pathname === '/api/check-routes') {
     try {
       const handled = await handleAiRequest(req, res);
       if (handled) return;

@@ -108,7 +108,7 @@
         { label: 'Work Orders', href: 'maintenance-dashboard.html', activePattern: 'maintenance-dashboard' },
         { label: 'Request Maintenance', href: 'maintenance-requests.html', activePattern: 'maintenance-requests' },
         { label: 'PM Schedules', href: 'pm-schedules.html', activePattern: 'pm-schedules' },
-        { label: 'Labor', href: 'maintenance-dashboard.html#labor', activePattern: '#labor' }
+        { label: 'Labor & Gangs', href: 'labor.html', activePattern: 'labor' }
       ]
     },
     {
@@ -144,7 +144,7 @@
 
   function isActive(link) {
     if (link.key === 'work-orders') {
-      return window.location.pathname.includes('maintenance-dashboard') || window.location.pathname.includes('pm-schedules') || window.location.pathname.includes('maintenance-requests');
+      return window.location.pathname.includes('maintenance-dashboard') || window.location.pathname.includes('pm-schedules') || window.location.pathname.includes('maintenance-requests') || window.location.pathname.includes('labor');
     }
     if (link.key === 'surveillance') {
       return window.location.pathname.includes('surveillance-dashboard');
@@ -2509,10 +2509,10 @@
           let isSubActive = false;
           if (sub.activePattern === 'maintenance-requests' || sub.activePattern === '#request') {
             isSubActive = currentPath.includes('maintenance-requests') || currentHash === '#request';
-          } else if (sub.activePattern === '#labor') {
-            isSubActive = currentHash === '#labor';
+          } else if (sub.activePattern === 'labor' || sub.activePattern === '#labor') {
+            isSubActive = currentPath.includes('labor') || currentHash === '#labor';
           } else if (sub.activePattern === 'maintenance-dashboard') {
-            isSubActive = (currentPath.includes('maintenance-dashboard') || currentPath.endsWith('/')) && (!currentHash || currentHash === '#');
+            isSubActive = (currentPath.includes('maintenance-dashboard') || currentPath.endsWith('/')) && (!currentHash || currentHash === '#' || currentHash === '#work-orders' || currentHash.startsWith('#wo-'));
           } else if (sub.activePattern === 'pm-schedules') {
             isSubActive = currentPath.includes('pm-schedules');
           } else if (sub.activePattern === '#telemetry') {
@@ -6505,15 +6505,12 @@
 
     window.handleSubItemClick = function (el, evt) {
       const href = el.getAttribute('href') || '';
-      if (href.includes('#') && window.location.pathname.includes('maintenance-dashboard')) {
-        const hash = href.split('#')[1];
-        if (hash) {
-          window.location.hash = '#' + hash;
-          const allSubs = document.querySelectorAll('.snav-sub-item');
-          allSubs.forEach(s => s.classList.remove('active'));
-          el.classList.add('active');
-          evt.preventDefault();
-        }
+      if (href.startsWith('#')) {
+        window.location.hash = href;
+        const allSubs = document.querySelectorAll('.snav-sub-item');
+        allSubs.forEach(s => s.classList.remove('active'));
+        el.classList.add('active');
+        if (evt) evt.preventDefault();
       }
     };
 

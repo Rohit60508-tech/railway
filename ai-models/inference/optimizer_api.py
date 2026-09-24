@@ -30,6 +30,11 @@ except ImportError:
 from shared.logger import get_logger
 from block_optimizer.bundling_engine import BundlingEngine
 from block_optimizer.schedule_generator import ScheduleGenerator
+try:
+    from block_optimizer.shadow_block_merger import ShadowBlockMerger, inspect_with_gemini, vlm_result_to_task
+    SHADOW_MERGER_AVAILABLE = True
+except ImportError:
+    SHADOW_MERGER_AVAILABLE = False
 
 logger = get_logger("optimizer_api")
 router = APIRouter(tags=["Multi-Department Block Optimizer"])
@@ -56,6 +61,15 @@ class ValidateScheduleRequest(BaseModel):
     schedule: List[Dict[str, Any]] = Field(..., description="List of scheduled block records to validate")
 
 
+class VLMShadowScheduleRequest(BaseModel):
+    requests: List[Dict[str, Any]] = Field(..., description="Raw maintenance requests (may overlap in zone/time)")
+    slots: List[Dict[str, Any]] = Field(..., description="Candidate corridor time slots")
+    teams: Optional[List[Dict[str, Any]]] = Field(None, description="Available maintenance gangs")
+    vlm_prompt: Optional[str] = Field(None, description="Track inspection text prompt for Gemini VLM")
+    vlm_image_base64: Optional[str] = Field(None, description="Base64-encoded track image for Gemini VLM")
+    route_context: Optional[Dict[str, Any]] = Field(None, description="Route metadata: section_id, km_start, km_end")
+
+
 # ─────────────────────────────────────────────────────────────────────────────
 # API Endpoints
 # ─────────────────────────────────────────────────────────────────────────────
@@ -80,6 +94,81 @@ async def optimize_schedule(payload: OptimizeScheduleRequest) -> Dict[str, Any]:
         }
     except Exception as e:
         logger.error(f"Schedule optimization failed: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/api/v1/optimize/vlm-shadow-schedule",
+             summary="VLM-Aware Shadow Block Merge + CP-SAT Schedule")
+async def vlm_shadow_schedule(payload: VLMShadowScheduleRequest) -> Dict[str, Any]:
+    """
+    Combined pipeline:
+      1. Gemini Flash VLM inspects track image or prompt -> auto-generates defect task
+      2. ShadowBlockMerger detects overlapping zone/time requests and merges them
+      3. CP-SAT solver assigns merged shadow blocks to corridor slots
+    """
+    if not SHADOW_MERGER_AVAILABLE:
+        raise HTTPException(status_code=503, detail="ShadowBlockMerger not available. Check block_optimizer path.")
+
+    try:
+        # Stage 1: VLM inspection -> auto-inject task
+        requests = list(payload.requests)
+        vlm_inspection = None
+
+        if payload.vlm_prompt or payload.vlm_image_base64 or payload.route_context:
+            vlm_output = inspect_with_gemini(
+                image_base64=payload.vlm_image_base64,
+                prompt=payload.vlm_prompt,
+                route_context=payload.route_context,
+            )
+            vlm_inspection = vlm_output
+            auto_task = vlm_output.get("auto_generated_task")
+            if auto_task:
+                requests.append(auto_task)
+                logger.info(f"VLM injected task: {auto_task.get('task_id')} severity={auto_task.get('severity')}")
+
+        # Stage 2: Shadow Block Merge pre-processor
+        merger = ShadowBlockMerger()
+        merged_blocks, _ = merger.merge(requests)
+
+        total_time_saved = sum(
+            b.get("time_saved_minutes", 0) for b in merged_blocks if b.get("bundled")
+        )
+        bundled_count = sum(1 for b in merged_blocks if b.get("bundled"))
+
+        # Stage 3: CP-SAT solve on merged blocks
+        schedule_result = generator.generate_optimized_schedule(
+            tasks=merged_blocks,
+            available_slots=payload.slots,
+            teams=payload.teams,
+            auto_bundle=False,  # Already merged
+        )
+
+        return {
+            "status": "SUCCESS",
+            "pipeline_stages": {
+                "vlm_inspection": "COMPLETED" if vlm_inspection else "SKIPPED",
+                "shadow_merger": {
+                    "input_requests": len(payload.requests),
+                    "merged_blocks": len(merged_blocks),
+                    "bundled_blocks": bundled_count,
+                    "time_saved_minutes": total_time_saved,
+                    "possession_reduction_pct": round(
+                        (total_time_saved /
+                         max(1, sum(b.get("sequential_duration_minutes", b.get("duration_minutes", 60))
+                                    for b in merged_blocks))) * 100, 1
+                    ),
+                },
+                "cpsat": schedule_result.get("status", "UNKNOWN"),
+            },
+            "vlm_inspection": vlm_inspection,
+            "shadow_blocks": merged_blocks,
+            "optimization_result": schedule_result,
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"VLM shadow schedule pipeline failed: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 

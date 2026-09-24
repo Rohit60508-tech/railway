@@ -495,69 +495,70 @@ class LiveTrainService:
             {"train_number": "22229", "train_name": "Goa Vande Bharat Express", "type": "Vande Bharat", "start_min": 435, "end_min": 750, "section": "ROHA-MAO"},
         ]
 
-        def get_overlapping_trains(s_from: str, s_to: str, start_m: int, end_m: int) -> List[Dict[str, Any]]:
+        # Fetch all station trains for bounding stations ONCE upfront
+        all_section_trains = []
+        seen_train_nums = set()
+        for stn_code in [stn1, stn2]:
+            try:
+                stn_res = self.get_live_trains_at_station(stn_code, hours=12)
+                stn_trains = stn_res.get("trains", []) if isinstance(stn_res, dict) else []
+                for t in stn_trains:
+                    t_no = str(t.get("train_number") or t.get("train", {}).get("number") or "").strip()
+                    if not t_no or t_no in seen_train_nums:
+                        continue
+
+                    arr_str = t.get("actual_arrival") or t.get("scheduled_arrival") or t.get("stop", {}).get("arrival") or t.get("stop", {}).get("departure") or ""
+                    exp_str = t.get("live", {}).get("expectedArrivalTime") or ""
+                    if exp_str and "T" in exp_str:
+                        arr_str = exp_str.split("T")[1][:5]
+
+                    if not arr_str or ":" not in arr_str:
+                        continue
+
+                    try:
+                        p = arr_str.split(":")
+                        t_m = (int(p[0]) * 60 + int(p[1])) % 1440
+                    except Exception:
+                        continue
+
+                    seen_train_nums.add(t_no)
+                    t_start = (t_m - 20 + 1440) % 1440
+                    t_end = (t_m + 25 + 1440) % 1440
+                    t_name = t.get("train_name") or t.get("train", {}).get("name") or f"Service #{t_no}"
+                    t_type = t.get("type") or t.get("train", {}).get("type") or "Superfast"
+                    platform = t.get("platform") or t.get("stop", {}).get("platform") or "1"
+                    delay = t.get("delay_minutes") or t.get("live", {}).get("delayMinutes") or 0
+                    source_stn = t.get("source") or t.get("train", {}).get("source") or stn1
+                    dest_stn = t.get("destination") or t.get("train", {}).get("destination") or stn2
+
+                    all_section_trains.append({
+                        "train_number": t_no,
+                        "train_name": t_name,
+                        "type": t_type,
+                        "start_min": t_start,
+                        "end_min": t_end,
+                        "scheduled_time_str": arr_str,
+                        "platform": platform,
+                        "delay_minutes": delay,
+                        "source": source_stn,
+                        "destination": dest_stn,
+                        "section": f"{stn1}-{stn2}",
+                        "is_live": True
+                    })
+            except Exception:
+                pass
+
+        def get_overlapping_trains(start_m: int, end_m: int) -> List[Dict[str, Any]]:
             matches = []
-            seen_train_nums = set()
-
-            # 1. Primary: Fetch live IRCTC / RailRadar departures & arrivals for both bounding stations
-            for stn_code in [s_from, s_to]:
-                try:
-                    stn_res = self.get_live_trains_at_station(stn_code, hours=8)
-                    stn_trains = stn_res.get("trains", []) if isinstance(stn_res, dict) else []
-                    for t in stn_trains:
-                        t_no = str(t.get("train_number") or t.get("train", {}).get("number") or "").strip()
-                        if not t_no or t_no in seen_train_nums:
-                            continue
-
-                        # Extract scheduled and expected live arrival/departure times
-                        arr_str = t.get("actual_arrival") or t.get("scheduled_arrival") or t.get("stop", {}).get("arrival") or t.get("stop", {}).get("departure") or ""
-                        exp_str = t.get("live", {}).get("expectedArrivalTime") or ""
-                        if exp_str and "T" in exp_str:
-                            arr_str = exp_str.split("T")[1][:5]
-
-                        if not arr_str or ":" not in arr_str:
-                            continue
-
-                        try:
-                            p = arr_str.split(":")
-                            t_m = (int(p[0]) * 60 + int(p[1])) % 1440
-                        except Exception:
-                            continue
-
-                        t_start = (t_m - 20 + 1440) % 1440
-                        t_end = (t_m + 25 + 1440) % 1440
-
-                        # Check time-window overlap: [start_m, end_m] with [t_start, t_end]
-                        if max(start_m, t_start) < min(end_m, t_end):
-                            seen_train_nums.add(t_no)
-                            t_name = t.get("train_name") or t.get("train", {}).get("name") or f"Service #{t_no}"
-                            t_type = t.get("type") or t.get("train", {}).get("type") or "Superfast"
-                            platform = t.get("platform") or t.get("stop", {}).get("platform") or "1"
-                            delay = t.get("delay_minutes") or t.get("live", {}).get("delayMinutes") or 0
-                            source_stn = t.get("source") or t.get("train", {}).get("source") or s_from
-                            dest_stn = t.get("destination") or t.get("train", {}).get("destination") or s_to
-
-                            matches.append({
-                                "train_number": t_no,
-                                "train_name": t_name,
-                                "type": t_type,
-                                "start_min": t_start,
-                                "end_min": t_end,
-                                "scheduled_time_str": arr_str,
-                                "platform": platform,
-                                "delay_minutes": delay,
-                                "source": source_stn,
-                                "destination": dest_stn,
-                                "section": f"{s_from}-{s_to}",
-                                "is_live": True
-                            })
-                except Exception as e:
-                    pass
-
+            for t in all_section_trains:
+                t_start = t["start_min"]
+                t_end = t["end_min"]
+                if max(start_m, t_start) < min(end_m, t_end):
+                    matches.append(t)
             return matches
 
         # 4. Compute conflicts for user-selected window
-        window_trains = get_overlapping_trains(stn1, stn2, req_start_min, req_end_min)
+        window_trains = get_overlapping_trains(req_start_min, req_end_min)
         conflicts = []
         passenger_weight = 0
         freight_held = 0
@@ -657,7 +658,7 @@ class LiveTrainService:
 
         for cand_start in range(0, 1440, 30):
             cand_end = cand_start + duration_minutes
-            c_trains = get_overlapping_trains(stn1, stn2, cand_start, cand_end)
+            c_trains = get_overlapping_trains(cand_start, cand_end)
             c_passengers = len([x for x in c_trains if x.get("type") in ("Vande Bharat", "Rajdhani", "Shatabdi", "Superfast", "Express")])
             c_score = max(0.0, 100.0 - (len(c_trains) * 15.0) - (c_passengers * 10.0))
 

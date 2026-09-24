@@ -1,0 +1,1402 @@
+[
+  {
+    "id": "trk_vlm_001",
+    "image": "track_scans/km_112_clear_highspeed.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_001. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": true,\n  \"defect_type\": \"None. Ballast shoulder intact, fastenings secure, alignment within tolerance\",\n  \"severity\": \"SAFE_CLEAR\",\n  \"speed_restriction_kmh\": 130,\n  \"recommendation\": \"Track section is certified clear for full 130 km/h MPS (Maximum Permissible Speed).\",\n  \"reroute_to\": null,\n  \"bounding_box\": null\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_002",
+    "image": "track_scans/km_18_pandrol_clip_missing.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_002. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Missing ERC (Elastic Rail Clip) Fasteners (3 consecutive sleepers)\",\n  \"severity\": \"HIGH\",\n  \"speed_restriction_kmh\": 30,\n  \"recommendation\": \"Dispatch Keyman Gang 04 immediately for clip insertion. Cap corridor speed to 30 km/h.\",\n  \"reroute_to\": \"RT-MAIN-01 (Single Line Working)\",\n  \"bounding_box\": [\n    210,\n    400,\n    350,\n    520\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_003",
+    "image": "bulletins/circular_nr_speed_restriction_oct26.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_003. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Document OCR: Northern Railway Caution Order No. 441/26\",\n  \"severity\": \"OPERATIONAL_CAUTION\",\n  \"speed_restriction_kmh\": 20,\n  \"recommendation\": \"TSR 20 km/h active between Km 74/2 to 78/6 from 02:00 to 07:00 hrs for sleeper replacement.\",\n  \"reroute_to\": \"RT-MAIN-DOWN\",\n  \"bounding_box\": [\n    50,\n    50,\n    750,\n    900\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_004",
+    "image": "bulletins/circular_nr_speed_restriction_oct26.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_004. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Document OCR: Northern Railway Caution Order No. 441/26\",\n  \"severity\": \"OPERATIONAL_CAUTION\",\n  \"speed_restriction_kmh\": 20,\n  \"recommendation\": \"TSR 20 km/h active between Km 74/2 to 78/6 from 02:00 to 07:00 hrs for sleeper replacement.\",\n  \"reroute_to\": \"RT-MAIN-DOWN\",\n  \"bounding_box\": [\n    50,\n    50,\n    750,\n    900\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_005",
+    "image": "bulletins/circular_nr_speed_restriction_oct26.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_005. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Document OCR: Northern Railway Caution Order No. 441/26\",\n  \"severity\": \"OPERATIONAL_CAUTION\",\n  \"speed_restriction_kmh\": 20,\n  \"recommendation\": \"TSR 20 km/h active between Km 74/2 to 78/6 from 02:00 to 07:00 hrs for sleeper replacement.\",\n  \"reroute_to\": \"RT-MAIN-DOWN\",\n  \"bounding_box\": [\n    50,\n    50,\n    750,\n    900\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_006",
+    "image": "track_scans/km_112_clear_highspeed.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_006. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": true,\n  \"defect_type\": \"None. Ballast shoulder intact, fastenings secure, alignment within tolerance\",\n  \"severity\": \"SAFE_CLEAR\",\n  \"speed_restriction_kmh\": 130,\n  \"recommendation\": \"Track section is certified clear for full 130 km/h MPS (Maximum Permissible Speed).\",\n  \"reroute_to\": null,\n  \"bounding_box\": null\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_007",
+    "image": "track_scans/km_42_ballast_washout.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_007. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Severe ballast displacement & scouring\",\n  \"severity\": \"CRITICAL\",\n  \"speed_restriction_kmh\": 15,\n  \"recommendation\": \"Emergency ballast tamping required. Impose 15 km/h TSR or divert freight to Loop RT-B.\",\n  \"reroute_to\": \"RT-LOOP-02 (Chord Bypass)\",\n  \"bounding_box\": [\n    320,\n    180,\n    580,\n    440\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_008",
+    "image": "track_scans/km_112_clear_highspeed.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_008. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": true,\n  \"defect_type\": \"None. Ballast shoulder intact, fastenings secure, alignment within tolerance\",\n  \"severity\": \"SAFE_CLEAR\",\n  \"speed_restriction_kmh\": 130,\n  \"recommendation\": \"Track section is certified clear for full 130 km/h MPS (Maximum Permissible Speed).\",\n  \"reroute_to\": null,\n  \"bounding_box\": null\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_009",
+    "image": "track_scans/km_88_transverse_weld_crack.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_009. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Transverse Thermite Weld Fracture (4.5mm separation)\",\n  \"severity\": \"CRITICAL_IMMEDIATE_HALT\",\n  \"speed_restriction_kmh\": 0,\n  \"recommendation\": \"DANGER: Complete line blockage mandated. Apply emergency clamp and joggled fishplate before passing any traffic.\",\n  \"reroute_to\": \"RT-LOOP-03 (Aligarh Chord)\",\n  \"bounding_box\": [\n    450,\n    290,\n    610,\n    480\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_010",
+    "image": "track_scans/km_112_clear_highspeed.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_010. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": true,\n  \"defect_type\": \"None. Ballast shoulder intact, fastenings secure, alignment within tolerance\",\n  \"severity\": \"SAFE_CLEAR\",\n  \"speed_restriction_kmh\": 130,\n  \"recommendation\": \"Track section is certified clear for full 130 km/h MPS (Maximum Permissible Speed).\",\n  \"reroute_to\": null,\n  \"bounding_box\": null\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_011",
+    "image": "track_scans/km_18_pandrol_clip_missing.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_011. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Missing ERC (Elastic Rail Clip) Fasteners (3 consecutive sleepers)\",\n  \"severity\": \"HIGH\",\n  \"speed_restriction_kmh\": 30,\n  \"recommendation\": \"Dispatch Keyman Gang 04 immediately for clip insertion. Cap corridor speed to 30 km/h.\",\n  \"reroute_to\": \"RT-MAIN-01 (Single Line Working)\",\n  \"bounding_box\": [\n    210,\n    400,\n    350,\n    520\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_012",
+    "image": "bulletins/circular_nr_speed_restriction_oct26.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_012. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Document OCR: Northern Railway Caution Order No. 441/26\",\n  \"severity\": \"OPERATIONAL_CAUTION\",\n  \"speed_restriction_kmh\": 20,\n  \"recommendation\": \"TSR 20 km/h active between Km 74/2 to 78/6 from 02:00 to 07:00 hrs for sleeper replacement.\",\n  \"reroute_to\": \"RT-MAIN-DOWN\",\n  \"bounding_box\": [\n    50,\n    50,\n    750,\n    900\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_013",
+    "image": "track_scans/km_112_clear_highspeed.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_013. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": true,\n  \"defect_type\": \"None. Ballast shoulder intact, fastenings secure, alignment within tolerance\",\n  \"severity\": \"SAFE_CLEAR\",\n  \"speed_restriction_kmh\": 130,\n  \"recommendation\": \"Track section is certified clear for full 130 km/h MPS (Maximum Permissible Speed).\",\n  \"reroute_to\": null,\n  \"bounding_box\": null\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_014",
+    "image": "track_scans/km_42_ballast_washout.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_014. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Severe ballast displacement & scouring\",\n  \"severity\": \"CRITICAL\",\n  \"speed_restriction_kmh\": 15,\n  \"recommendation\": \"Emergency ballast tamping required. Impose 15 km/h TSR or divert freight to Loop RT-B.\",\n  \"reroute_to\": \"RT-LOOP-02 (Chord Bypass)\",\n  \"bounding_box\": [\n    320,\n    180,\n    580,\n    440\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_015",
+    "image": "track_scans/km_112_clear_highspeed.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_015. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": true,\n  \"defect_type\": \"None. Ballast shoulder intact, fastenings secure, alignment within tolerance\",\n  \"severity\": \"SAFE_CLEAR\",\n  \"speed_restriction_kmh\": 130,\n  \"recommendation\": \"Track section is certified clear for full 130 km/h MPS (Maximum Permissible Speed).\",\n  \"reroute_to\": null,\n  \"bounding_box\": null\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_016",
+    "image": "track_scans/km_88_transverse_weld_crack.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_016. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Transverse Thermite Weld Fracture (4.5mm separation)\",\n  \"severity\": \"CRITICAL_IMMEDIATE_HALT\",\n  \"speed_restriction_kmh\": 0,\n  \"recommendation\": \"DANGER: Complete line blockage mandated. Apply emergency clamp and joggled fishplate before passing any traffic.\",\n  \"reroute_to\": \"RT-LOOP-03 (Aligarh Chord)\",\n  \"bounding_box\": [\n    450,\n    290,\n    610,\n    480\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_017",
+    "image": "track_scans/km_42_ballast_washout.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_017. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Severe ballast displacement & scouring\",\n  \"severity\": \"CRITICAL\",\n  \"speed_restriction_kmh\": 15,\n  \"recommendation\": \"Emergency ballast tamping required. Impose 15 km/h TSR or divert freight to Loop RT-B.\",\n  \"reroute_to\": \"RT-LOOP-02 (Chord Bypass)\",\n  \"bounding_box\": [\n    320,\n    180,\n    580,\n    440\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_018",
+    "image": "bulletins/circular_nr_speed_restriction_oct26.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_018. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Document OCR: Northern Railway Caution Order No. 441/26\",\n  \"severity\": \"OPERATIONAL_CAUTION\",\n  \"speed_restriction_kmh\": 20,\n  \"recommendation\": \"TSR 20 km/h active between Km 74/2 to 78/6 from 02:00 to 07:00 hrs for sleeper replacement.\",\n  \"reroute_to\": \"RT-MAIN-DOWN\",\n  \"bounding_box\": [\n    50,\n    50,\n    750,\n    900\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_019",
+    "image": "bulletins/circular_nr_speed_restriction_oct26.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_019. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Document OCR: Northern Railway Caution Order No. 441/26\",\n  \"severity\": \"OPERATIONAL_CAUTION\",\n  \"speed_restriction_kmh\": 20,\n  \"recommendation\": \"TSR 20 km/h active between Km 74/2 to 78/6 from 02:00 to 07:00 hrs for sleeper replacement.\",\n  \"reroute_to\": \"RT-MAIN-DOWN\",\n  \"bounding_box\": [\n    50,\n    50,\n    750,\n    900\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_020",
+    "image": "bulletins/circular_nr_speed_restriction_oct26.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_020. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Document OCR: Northern Railway Caution Order No. 441/26\",\n  \"severity\": \"OPERATIONAL_CAUTION\",\n  \"speed_restriction_kmh\": 20,\n  \"recommendation\": \"TSR 20 km/h active between Km 74/2 to 78/6 from 02:00 to 07:00 hrs for sleeper replacement.\",\n  \"reroute_to\": \"RT-MAIN-DOWN\",\n  \"bounding_box\": [\n    50,\n    50,\n    750,\n    900\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_021",
+    "image": "track_scans/km_112_clear_highspeed.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_021. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": true,\n  \"defect_type\": \"None. Ballast shoulder intact, fastenings secure, alignment within tolerance\",\n  \"severity\": \"SAFE_CLEAR\",\n  \"speed_restriction_kmh\": 130,\n  \"recommendation\": \"Track section is certified clear for full 130 km/h MPS (Maximum Permissible Speed).\",\n  \"reroute_to\": null,\n  \"bounding_box\": null\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_022",
+    "image": "track_scans/km_18_pandrol_clip_missing.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_022. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Missing ERC (Elastic Rail Clip) Fasteners (3 consecutive sleepers)\",\n  \"severity\": \"HIGH\",\n  \"speed_restriction_kmh\": 30,\n  \"recommendation\": \"Dispatch Keyman Gang 04 immediately for clip insertion. Cap corridor speed to 30 km/h.\",\n  \"reroute_to\": \"RT-MAIN-01 (Single Line Working)\",\n  \"bounding_box\": [\n    210,\n    400,\n    350,\n    520\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_023",
+    "image": "bulletins/circular_nr_speed_restriction_oct26.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_023. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Document OCR: Northern Railway Caution Order No. 441/26\",\n  \"severity\": \"OPERATIONAL_CAUTION\",\n  \"speed_restriction_kmh\": 20,\n  \"recommendation\": \"TSR 20 km/h active between Km 74/2 to 78/6 from 02:00 to 07:00 hrs for sleeper replacement.\",\n  \"reroute_to\": \"RT-MAIN-DOWN\",\n  \"bounding_box\": [\n    50,\n    50,\n    750,\n    900\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_024",
+    "image": "track_scans/km_88_transverse_weld_crack.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_024. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Transverse Thermite Weld Fracture (4.5mm separation)\",\n  \"severity\": \"CRITICAL_IMMEDIATE_HALT\",\n  \"speed_restriction_kmh\": 0,\n  \"recommendation\": \"DANGER: Complete line blockage mandated. Apply emergency clamp and joggled fishplate before passing any traffic.\",\n  \"reroute_to\": \"RT-LOOP-03 (Aligarh Chord)\",\n  \"bounding_box\": [\n    450,\n    290,\n    610,\n    480\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_025",
+    "image": "track_scans/km_18_pandrol_clip_missing.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_025. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Missing ERC (Elastic Rail Clip) Fasteners (3 consecutive sleepers)\",\n  \"severity\": \"HIGH\",\n  \"speed_restriction_kmh\": 30,\n  \"recommendation\": \"Dispatch Keyman Gang 04 immediately for clip insertion. Cap corridor speed to 30 km/h.\",\n  \"reroute_to\": \"RT-MAIN-01 (Single Line Working)\",\n  \"bounding_box\": [\n    210,\n    400,\n    350,\n    520\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_026",
+    "image": "bulletins/circular_nr_speed_restriction_oct26.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_026. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Document OCR: Northern Railway Caution Order No. 441/26\",\n  \"severity\": \"OPERATIONAL_CAUTION\",\n  \"speed_restriction_kmh\": 20,\n  \"recommendation\": \"TSR 20 km/h active between Km 74/2 to 78/6 from 02:00 to 07:00 hrs for sleeper replacement.\",\n  \"reroute_to\": \"RT-MAIN-DOWN\",\n  \"bounding_box\": [\n    50,\n    50,\n    750,\n    900\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_027",
+    "image": "track_scans/km_112_clear_highspeed.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_027. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": true,\n  \"defect_type\": \"None. Ballast shoulder intact, fastenings secure, alignment within tolerance\",\n  \"severity\": \"SAFE_CLEAR\",\n  \"speed_restriction_kmh\": 130,\n  \"recommendation\": \"Track section is certified clear for full 130 km/h MPS (Maximum Permissible Speed).\",\n  \"reroute_to\": null,\n  \"bounding_box\": null\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_028",
+    "image": "track_scans/km_88_transverse_weld_crack.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_028. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Transverse Thermite Weld Fracture (4.5mm separation)\",\n  \"severity\": \"CRITICAL_IMMEDIATE_HALT\",\n  \"speed_restriction_kmh\": 0,\n  \"recommendation\": \"DANGER: Complete line blockage mandated. Apply emergency clamp and joggled fishplate before passing any traffic.\",\n  \"reroute_to\": \"RT-LOOP-03 (Aligarh Chord)\",\n  \"bounding_box\": [\n    450,\n    290,\n    610,\n    480\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_029",
+    "image": "track_scans/km_112_clear_highspeed.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_029. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": true,\n  \"defect_type\": \"None. Ballast shoulder intact, fastenings secure, alignment within tolerance\",\n  \"severity\": \"SAFE_CLEAR\",\n  \"speed_restriction_kmh\": 130,\n  \"recommendation\": \"Track section is certified clear for full 130 km/h MPS (Maximum Permissible Speed).\",\n  \"reroute_to\": null,\n  \"bounding_box\": null\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_030",
+    "image": "track_scans/km_18_pandrol_clip_missing.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_030. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Missing ERC (Elastic Rail Clip) Fasteners (3 consecutive sleepers)\",\n  \"severity\": \"HIGH\",\n  \"speed_restriction_kmh\": 30,\n  \"recommendation\": \"Dispatch Keyman Gang 04 immediately for clip insertion. Cap corridor speed to 30 km/h.\",\n  \"reroute_to\": \"RT-MAIN-01 (Single Line Working)\",\n  \"bounding_box\": [\n    210,\n    400,\n    350,\n    520\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_031",
+    "image": "track_scans/km_18_pandrol_clip_missing.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_031. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Missing ERC (Elastic Rail Clip) Fasteners (3 consecutive sleepers)\",\n  \"severity\": \"HIGH\",\n  \"speed_restriction_kmh\": 30,\n  \"recommendation\": \"Dispatch Keyman Gang 04 immediately for clip insertion. Cap corridor speed to 30 km/h.\",\n  \"reroute_to\": \"RT-MAIN-01 (Single Line Working)\",\n  \"bounding_box\": [\n    210,\n    400,\n    350,\n    520\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_032",
+    "image": "track_scans/km_88_transverse_weld_crack.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_032. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Transverse Thermite Weld Fracture (4.5mm separation)\",\n  \"severity\": \"CRITICAL_IMMEDIATE_HALT\",\n  \"speed_restriction_kmh\": 0,\n  \"recommendation\": \"DANGER: Complete line blockage mandated. Apply emergency clamp and joggled fishplate before passing any traffic.\",\n  \"reroute_to\": \"RT-LOOP-03 (Aligarh Chord)\",\n  \"bounding_box\": [\n    450,\n    290,\n    610,\n    480\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_033",
+    "image": "track_scans/km_88_transverse_weld_crack.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_033. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Transverse Thermite Weld Fracture (4.5mm separation)\",\n  \"severity\": \"CRITICAL_IMMEDIATE_HALT\",\n  \"speed_restriction_kmh\": 0,\n  \"recommendation\": \"DANGER: Complete line blockage mandated. Apply emergency clamp and joggled fishplate before passing any traffic.\",\n  \"reroute_to\": \"RT-LOOP-03 (Aligarh Chord)\",\n  \"bounding_box\": [\n    450,\n    290,\n    610,\n    480\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_034",
+    "image": "track_scans/km_18_pandrol_clip_missing.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_034. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Missing ERC (Elastic Rail Clip) Fasteners (3 consecutive sleepers)\",\n  \"severity\": \"HIGH\",\n  \"speed_restriction_kmh\": 30,\n  \"recommendation\": \"Dispatch Keyman Gang 04 immediately for clip insertion. Cap corridor speed to 30 km/h.\",\n  \"reroute_to\": \"RT-MAIN-01 (Single Line Working)\",\n  \"bounding_box\": [\n    210,\n    400,\n    350,\n    520\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_035",
+    "image": "track_scans/km_42_ballast_washout.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_035. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Severe ballast displacement & scouring\",\n  \"severity\": \"CRITICAL\",\n  \"speed_restriction_kmh\": 15,\n  \"recommendation\": \"Emergency ballast tamping required. Impose 15 km/h TSR or divert freight to Loop RT-B.\",\n  \"reroute_to\": \"RT-LOOP-02 (Chord Bypass)\",\n  \"bounding_box\": [\n    320,\n    180,\n    580,\n    440\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_036",
+    "image": "track_scans/km_42_ballast_washout.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_036. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Severe ballast displacement & scouring\",\n  \"severity\": \"CRITICAL\",\n  \"speed_restriction_kmh\": 15,\n  \"recommendation\": \"Emergency ballast tamping required. Impose 15 km/h TSR or divert freight to Loop RT-B.\",\n  \"reroute_to\": \"RT-LOOP-02 (Chord Bypass)\",\n  \"bounding_box\": [\n    320,\n    180,\n    580,\n    440\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_037",
+    "image": "track_scans/km_88_transverse_weld_crack.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_037. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Transverse Thermite Weld Fracture (4.5mm separation)\",\n  \"severity\": \"CRITICAL_IMMEDIATE_HALT\",\n  \"speed_restriction_kmh\": 0,\n  \"recommendation\": \"DANGER: Complete line blockage mandated. Apply emergency clamp and joggled fishplate before passing any traffic.\",\n  \"reroute_to\": \"RT-LOOP-03 (Aligarh Chord)\",\n  \"bounding_box\": [\n    450,\n    290,\n    610,\n    480\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_038",
+    "image": "bulletins/circular_nr_speed_restriction_oct26.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_038. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Document OCR: Northern Railway Caution Order No. 441/26\",\n  \"severity\": \"OPERATIONAL_CAUTION\",\n  \"speed_restriction_kmh\": 20,\n  \"recommendation\": \"TSR 20 km/h active between Km 74/2 to 78/6 from 02:00 to 07:00 hrs for sleeper replacement.\",\n  \"reroute_to\": \"RT-MAIN-DOWN\",\n  \"bounding_box\": [\n    50,\n    50,\n    750,\n    900\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_039",
+    "image": "bulletins/circular_nr_speed_restriction_oct26.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_039. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Document OCR: Northern Railway Caution Order No. 441/26\",\n  \"severity\": \"OPERATIONAL_CAUTION\",\n  \"speed_restriction_kmh\": 20,\n  \"recommendation\": \"TSR 20 km/h active between Km 74/2 to 78/6 from 02:00 to 07:00 hrs for sleeper replacement.\",\n  \"reroute_to\": \"RT-MAIN-DOWN\",\n  \"bounding_box\": [\n    50,\n    50,\n    750,\n    900\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_040",
+    "image": "bulletins/circular_nr_speed_restriction_oct26.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_040. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Document OCR: Northern Railway Caution Order No. 441/26\",\n  \"severity\": \"OPERATIONAL_CAUTION\",\n  \"speed_restriction_kmh\": 20,\n  \"recommendation\": \"TSR 20 km/h active between Km 74/2 to 78/6 from 02:00 to 07:00 hrs for sleeper replacement.\",\n  \"reroute_to\": \"RT-MAIN-DOWN\",\n  \"bounding_box\": [\n    50,\n    50,\n    750,\n    900\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_041",
+    "image": "track_scans/km_18_pandrol_clip_missing.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_041. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Missing ERC (Elastic Rail Clip) Fasteners (3 consecutive sleepers)\",\n  \"severity\": \"HIGH\",\n  \"speed_restriction_kmh\": 30,\n  \"recommendation\": \"Dispatch Keyman Gang 04 immediately for clip insertion. Cap corridor speed to 30 km/h.\",\n  \"reroute_to\": \"RT-MAIN-01 (Single Line Working)\",\n  \"bounding_box\": [\n    210,\n    400,\n    350,\n    520\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_042",
+    "image": "track_scans/km_88_transverse_weld_crack.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_042. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Transverse Thermite Weld Fracture (4.5mm separation)\",\n  \"severity\": \"CRITICAL_IMMEDIATE_HALT\",\n  \"speed_restriction_kmh\": 0,\n  \"recommendation\": \"DANGER: Complete line blockage mandated. Apply emergency clamp and joggled fishplate before passing any traffic.\",\n  \"reroute_to\": \"RT-LOOP-03 (Aligarh Chord)\",\n  \"bounding_box\": [\n    450,\n    290,\n    610,\n    480\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_043",
+    "image": "track_scans/km_88_transverse_weld_crack.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_043. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Transverse Thermite Weld Fracture (4.5mm separation)\",\n  \"severity\": \"CRITICAL_IMMEDIATE_HALT\",\n  \"speed_restriction_kmh\": 0,\n  \"recommendation\": \"DANGER: Complete line blockage mandated. Apply emergency clamp and joggled fishplate before passing any traffic.\",\n  \"reroute_to\": \"RT-LOOP-03 (Aligarh Chord)\",\n  \"bounding_box\": [\n    450,\n    290,\n    610,\n    480\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_044",
+    "image": "track_scans/km_18_pandrol_clip_missing.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_044. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Missing ERC (Elastic Rail Clip) Fasteners (3 consecutive sleepers)\",\n  \"severity\": \"HIGH\",\n  \"speed_restriction_kmh\": 30,\n  \"recommendation\": \"Dispatch Keyman Gang 04 immediately for clip insertion. Cap corridor speed to 30 km/h.\",\n  \"reroute_to\": \"RT-MAIN-01 (Single Line Working)\",\n  \"bounding_box\": [\n    210,\n    400,\n    350,\n    520\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_045",
+    "image": "track_scans/km_18_pandrol_clip_missing.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_045. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Missing ERC (Elastic Rail Clip) Fasteners (3 consecutive sleepers)\",\n  \"severity\": \"HIGH\",\n  \"speed_restriction_kmh\": 30,\n  \"recommendation\": \"Dispatch Keyman Gang 04 immediately for clip insertion. Cap corridor speed to 30 km/h.\",\n  \"reroute_to\": \"RT-MAIN-01 (Single Line Working)\",\n  \"bounding_box\": [\n    210,\n    400,\n    350,\n    520\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_046",
+    "image": "track_scans/km_88_transverse_weld_crack.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_046. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Transverse Thermite Weld Fracture (4.5mm separation)\",\n  \"severity\": \"CRITICAL_IMMEDIATE_HALT\",\n  \"speed_restriction_kmh\": 0,\n  \"recommendation\": \"DANGER: Complete line blockage mandated. Apply emergency clamp and joggled fishplate before passing any traffic.\",\n  \"reroute_to\": \"RT-LOOP-03 (Aligarh Chord)\",\n  \"bounding_box\": [\n    450,\n    290,\n    610,\n    480\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_047",
+    "image": "track_scans/km_88_transverse_weld_crack.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_047. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Transverse Thermite Weld Fracture (4.5mm separation)\",\n  \"severity\": \"CRITICAL_IMMEDIATE_HALT\",\n  \"speed_restriction_kmh\": 0,\n  \"recommendation\": \"DANGER: Complete line blockage mandated. Apply emergency clamp and joggled fishplate before passing any traffic.\",\n  \"reroute_to\": \"RT-LOOP-03 (Aligarh Chord)\",\n  \"bounding_box\": [\n    450,\n    290,\n    610,\n    480\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_048",
+    "image": "bulletins/circular_nr_speed_restriction_oct26.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_048. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Document OCR: Northern Railway Caution Order No. 441/26\",\n  \"severity\": \"OPERATIONAL_CAUTION\",\n  \"speed_restriction_kmh\": 20,\n  \"recommendation\": \"TSR 20 km/h active between Km 74/2 to 78/6 from 02:00 to 07:00 hrs for sleeper replacement.\",\n  \"reroute_to\": \"RT-MAIN-DOWN\",\n  \"bounding_box\": [\n    50,\n    50,\n    750,\n    900\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_049",
+    "image": "track_scans/km_18_pandrol_clip_missing.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_049. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Missing ERC (Elastic Rail Clip) Fasteners (3 consecutive sleepers)\",\n  \"severity\": \"HIGH\",\n  \"speed_restriction_kmh\": 30,\n  \"recommendation\": \"Dispatch Keyman Gang 04 immediately for clip insertion. Cap corridor speed to 30 km/h.\",\n  \"reroute_to\": \"RT-MAIN-01 (Single Line Working)\",\n  \"bounding_box\": [\n    210,\n    400,\n    350,\n    520\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_050",
+    "image": "bulletins/circular_nr_speed_restriction_oct26.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_050. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Document OCR: Northern Railway Caution Order No. 441/26\",\n  \"severity\": \"OPERATIONAL_CAUTION\",\n  \"speed_restriction_kmh\": 20,\n  \"recommendation\": \"TSR 20 km/h active between Km 74/2 to 78/6 from 02:00 to 07:00 hrs for sleeper replacement.\",\n  \"reroute_to\": \"RT-MAIN-DOWN\",\n  \"bounding_box\": [\n    50,\n    50,\n    750,\n    900\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_051",
+    "image": "track_scans/km_88_transverse_weld_crack.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_051. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Transverse Thermite Weld Fracture (4.5mm separation)\",\n  \"severity\": \"CRITICAL_IMMEDIATE_HALT\",\n  \"speed_restriction_kmh\": 0,\n  \"recommendation\": \"DANGER: Complete line blockage mandated. Apply emergency clamp and joggled fishplate before passing any traffic.\",\n  \"reroute_to\": \"RT-LOOP-03 (Aligarh Chord)\",\n  \"bounding_box\": [\n    450,\n    290,\n    610,\n    480\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_052",
+    "image": "track_scans/km_88_transverse_weld_crack.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_052. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Transverse Thermite Weld Fracture (4.5mm separation)\",\n  \"severity\": \"CRITICAL_IMMEDIATE_HALT\",\n  \"speed_restriction_kmh\": 0,\n  \"recommendation\": \"DANGER: Complete line blockage mandated. Apply emergency clamp and joggled fishplate before passing any traffic.\",\n  \"reroute_to\": \"RT-LOOP-03 (Aligarh Chord)\",\n  \"bounding_box\": [\n    450,\n    290,\n    610,\n    480\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_053",
+    "image": "track_scans/km_88_transverse_weld_crack.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_053. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Transverse Thermite Weld Fracture (4.5mm separation)\",\n  \"severity\": \"CRITICAL_IMMEDIATE_HALT\",\n  \"speed_restriction_kmh\": 0,\n  \"recommendation\": \"DANGER: Complete line blockage mandated. Apply emergency clamp and joggled fishplate before passing any traffic.\",\n  \"reroute_to\": \"RT-LOOP-03 (Aligarh Chord)\",\n  \"bounding_box\": [\n    450,\n    290,\n    610,\n    480\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_054",
+    "image": "track_scans/km_88_transverse_weld_crack.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_054. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Transverse Thermite Weld Fracture (4.5mm separation)\",\n  \"severity\": \"CRITICAL_IMMEDIATE_HALT\",\n  \"speed_restriction_kmh\": 0,\n  \"recommendation\": \"DANGER: Complete line blockage mandated. Apply emergency clamp and joggled fishplate before passing any traffic.\",\n  \"reroute_to\": \"RT-LOOP-03 (Aligarh Chord)\",\n  \"bounding_box\": [\n    450,\n    290,\n    610,\n    480\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_055",
+    "image": "track_scans/km_18_pandrol_clip_missing.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_055. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Missing ERC (Elastic Rail Clip) Fasteners (3 consecutive sleepers)\",\n  \"severity\": \"HIGH\",\n  \"speed_restriction_kmh\": 30,\n  \"recommendation\": \"Dispatch Keyman Gang 04 immediately for clip insertion. Cap corridor speed to 30 km/h.\",\n  \"reroute_to\": \"RT-MAIN-01 (Single Line Working)\",\n  \"bounding_box\": [\n    210,\n    400,\n    350,\n    520\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_056",
+    "image": "track_scans/km_88_transverse_weld_crack.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_056. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Transverse Thermite Weld Fracture (4.5mm separation)\",\n  \"severity\": \"CRITICAL_IMMEDIATE_HALT\",\n  \"speed_restriction_kmh\": 0,\n  \"recommendation\": \"DANGER: Complete line blockage mandated. Apply emergency clamp and joggled fishplate before passing any traffic.\",\n  \"reroute_to\": \"RT-LOOP-03 (Aligarh Chord)\",\n  \"bounding_box\": [\n    450,\n    290,\n    610,\n    480\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_057",
+    "image": "track_scans/km_18_pandrol_clip_missing.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_057. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Missing ERC (Elastic Rail Clip) Fasteners (3 consecutive sleepers)\",\n  \"severity\": \"HIGH\",\n  \"speed_restriction_kmh\": 30,\n  \"recommendation\": \"Dispatch Keyman Gang 04 immediately for clip insertion. Cap corridor speed to 30 km/h.\",\n  \"reroute_to\": \"RT-MAIN-01 (Single Line Working)\",\n  \"bounding_box\": [\n    210,\n    400,\n    350,\n    520\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_058",
+    "image": "track_scans/km_18_pandrol_clip_missing.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_058. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Missing ERC (Elastic Rail Clip) Fasteners (3 consecutive sleepers)\",\n  \"severity\": \"HIGH\",\n  \"speed_restriction_kmh\": 30,\n  \"recommendation\": \"Dispatch Keyman Gang 04 immediately for clip insertion. Cap corridor speed to 30 km/h.\",\n  \"reroute_to\": \"RT-MAIN-01 (Single Line Working)\",\n  \"bounding_box\": [\n    210,\n    400,\n    350,\n    520\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_059",
+    "image": "track_scans/km_112_clear_highspeed.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_059. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": true,\n  \"defect_type\": \"None. Ballast shoulder intact, fastenings secure, alignment within tolerance\",\n  \"severity\": \"SAFE_CLEAR\",\n  \"speed_restriction_kmh\": 130,\n  \"recommendation\": \"Track section is certified clear for full 130 km/h MPS (Maximum Permissible Speed).\",\n  \"reroute_to\": null,\n  \"bounding_box\": null\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_060",
+    "image": "track_scans/km_42_ballast_washout.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_060. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Severe ballast displacement & scouring\",\n  \"severity\": \"CRITICAL\",\n  \"speed_restriction_kmh\": 15,\n  \"recommendation\": \"Emergency ballast tamping required. Impose 15 km/h TSR or divert freight to Loop RT-B.\",\n  \"reroute_to\": \"RT-LOOP-02 (Chord Bypass)\",\n  \"bounding_box\": [\n    320,\n    180,\n    580,\n    440\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_061",
+    "image": "track_scans/km_112_clear_highspeed.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_061. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": true,\n  \"defect_type\": \"None. Ballast shoulder intact, fastenings secure, alignment within tolerance\",\n  \"severity\": \"SAFE_CLEAR\",\n  \"speed_restriction_kmh\": 130,\n  \"recommendation\": \"Track section is certified clear for full 130 km/h MPS (Maximum Permissible Speed).\",\n  \"reroute_to\": null,\n  \"bounding_box\": null\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_062",
+    "image": "track_scans/km_42_ballast_washout.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_062. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Severe ballast displacement & scouring\",\n  \"severity\": \"CRITICAL\",\n  \"speed_restriction_kmh\": 15,\n  \"recommendation\": \"Emergency ballast tamping required. Impose 15 km/h TSR or divert freight to Loop RT-B.\",\n  \"reroute_to\": \"RT-LOOP-02 (Chord Bypass)\",\n  \"bounding_box\": [\n    320,\n    180,\n    580,\n    440\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_063",
+    "image": "track_scans/km_88_transverse_weld_crack.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_063. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Transverse Thermite Weld Fracture (4.5mm separation)\",\n  \"severity\": \"CRITICAL_IMMEDIATE_HALT\",\n  \"speed_restriction_kmh\": 0,\n  \"recommendation\": \"DANGER: Complete line blockage mandated. Apply emergency clamp and joggled fishplate before passing any traffic.\",\n  \"reroute_to\": \"RT-LOOP-03 (Aligarh Chord)\",\n  \"bounding_box\": [\n    450,\n    290,\n    610,\n    480\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_064",
+    "image": "track_scans/km_112_clear_highspeed.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_064. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": true,\n  \"defect_type\": \"None. Ballast shoulder intact, fastenings secure, alignment within tolerance\",\n  \"severity\": \"SAFE_CLEAR\",\n  \"speed_restriction_kmh\": 130,\n  \"recommendation\": \"Track section is certified clear for full 130 km/h MPS (Maximum Permissible Speed).\",\n  \"reroute_to\": null,\n  \"bounding_box\": null\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_065",
+    "image": "track_scans/km_18_pandrol_clip_missing.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_065. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Missing ERC (Elastic Rail Clip) Fasteners (3 consecutive sleepers)\",\n  \"severity\": \"HIGH\",\n  \"speed_restriction_kmh\": 30,\n  \"recommendation\": \"Dispatch Keyman Gang 04 immediately for clip insertion. Cap corridor speed to 30 km/h.\",\n  \"reroute_to\": \"RT-MAIN-01 (Single Line Working)\",\n  \"bounding_box\": [\n    210,\n    400,\n    350,\n    520\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_066",
+    "image": "track_scans/km_88_transverse_weld_crack.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_066. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Transverse Thermite Weld Fracture (4.5mm separation)\",\n  \"severity\": \"CRITICAL_IMMEDIATE_HALT\",\n  \"speed_restriction_kmh\": 0,\n  \"recommendation\": \"DANGER: Complete line blockage mandated. Apply emergency clamp and joggled fishplate before passing any traffic.\",\n  \"reroute_to\": \"RT-LOOP-03 (Aligarh Chord)\",\n  \"bounding_box\": [\n    450,\n    290,\n    610,\n    480\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_067",
+    "image": "track_scans/km_112_clear_highspeed.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_067. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": true,\n  \"defect_type\": \"None. Ballast shoulder intact, fastenings secure, alignment within tolerance\",\n  \"severity\": \"SAFE_CLEAR\",\n  \"speed_restriction_kmh\": 130,\n  \"recommendation\": \"Track section is certified clear for full 130 km/h MPS (Maximum Permissible Speed).\",\n  \"reroute_to\": null,\n  \"bounding_box\": null\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_068",
+    "image": "bulletins/circular_nr_speed_restriction_oct26.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_068. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Document OCR: Northern Railway Caution Order No. 441/26\",\n  \"severity\": \"OPERATIONAL_CAUTION\",\n  \"speed_restriction_kmh\": 20,\n  \"recommendation\": \"TSR 20 km/h active between Km 74/2 to 78/6 from 02:00 to 07:00 hrs for sleeper replacement.\",\n  \"reroute_to\": \"RT-MAIN-DOWN\",\n  \"bounding_box\": [\n    50,\n    50,\n    750,\n    900\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_069",
+    "image": "track_scans/km_18_pandrol_clip_missing.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_069. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Missing ERC (Elastic Rail Clip) Fasteners (3 consecutive sleepers)\",\n  \"severity\": \"HIGH\",\n  \"speed_restriction_kmh\": 30,\n  \"recommendation\": \"Dispatch Keyman Gang 04 immediately for clip insertion. Cap corridor speed to 30 km/h.\",\n  \"reroute_to\": \"RT-MAIN-01 (Single Line Working)\",\n  \"bounding_box\": [\n    210,\n    400,\n    350,\n    520\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_070",
+    "image": "track_scans/km_88_transverse_weld_crack.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_070. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Transverse Thermite Weld Fracture (4.5mm separation)\",\n  \"severity\": \"CRITICAL_IMMEDIATE_HALT\",\n  \"speed_restriction_kmh\": 0,\n  \"recommendation\": \"DANGER: Complete line blockage mandated. Apply emergency clamp and joggled fishplate before passing any traffic.\",\n  \"reroute_to\": \"RT-LOOP-03 (Aligarh Chord)\",\n  \"bounding_box\": [\n    450,\n    290,\n    610,\n    480\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_071",
+    "image": "track_scans/km_42_ballast_washout.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_071. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Severe ballast displacement & scouring\",\n  \"severity\": \"CRITICAL\",\n  \"speed_restriction_kmh\": 15,\n  \"recommendation\": \"Emergency ballast tamping required. Impose 15 km/h TSR or divert freight to Loop RT-B.\",\n  \"reroute_to\": \"RT-LOOP-02 (Chord Bypass)\",\n  \"bounding_box\": [\n    320,\n    180,\n    580,\n    440\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_072",
+    "image": "track_scans/km_18_pandrol_clip_missing.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_072. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Missing ERC (Elastic Rail Clip) Fasteners (3 consecutive sleepers)\",\n  \"severity\": \"HIGH\",\n  \"speed_restriction_kmh\": 30,\n  \"recommendation\": \"Dispatch Keyman Gang 04 immediately for clip insertion. Cap corridor speed to 30 km/h.\",\n  \"reroute_to\": \"RT-MAIN-01 (Single Line Working)\",\n  \"bounding_box\": [\n    210,\n    400,\n    350,\n    520\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_073",
+    "image": "bulletins/circular_nr_speed_restriction_oct26.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_073. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Document OCR: Northern Railway Caution Order No. 441/26\",\n  \"severity\": \"OPERATIONAL_CAUTION\",\n  \"speed_restriction_kmh\": 20,\n  \"recommendation\": \"TSR 20 km/h active between Km 74/2 to 78/6 from 02:00 to 07:00 hrs for sleeper replacement.\",\n  \"reroute_to\": \"RT-MAIN-DOWN\",\n  \"bounding_box\": [\n    50,\n    50,\n    750,\n    900\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_074",
+    "image": "track_scans/km_18_pandrol_clip_missing.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_074. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Missing ERC (Elastic Rail Clip) Fasteners (3 consecutive sleepers)\",\n  \"severity\": \"HIGH\",\n  \"speed_restriction_kmh\": 30,\n  \"recommendation\": \"Dispatch Keyman Gang 04 immediately for clip insertion. Cap corridor speed to 30 km/h.\",\n  \"reroute_to\": \"RT-MAIN-01 (Single Line Working)\",\n  \"bounding_box\": [\n    210,\n    400,\n    350,\n    520\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_075",
+    "image": "track_scans/km_88_transverse_weld_crack.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_075. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Transverse Thermite Weld Fracture (4.5mm separation)\",\n  \"severity\": \"CRITICAL_IMMEDIATE_HALT\",\n  \"speed_restriction_kmh\": 0,\n  \"recommendation\": \"DANGER: Complete line blockage mandated. Apply emergency clamp and joggled fishplate before passing any traffic.\",\n  \"reroute_to\": \"RT-LOOP-03 (Aligarh Chord)\",\n  \"bounding_box\": [\n    450,\n    290,\n    610,\n    480\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_076",
+    "image": "track_scans/km_112_clear_highspeed.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_076. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": true,\n  \"defect_type\": \"None. Ballast shoulder intact, fastenings secure, alignment within tolerance\",\n  \"severity\": \"SAFE_CLEAR\",\n  \"speed_restriction_kmh\": 130,\n  \"recommendation\": \"Track section is certified clear for full 130 km/h MPS (Maximum Permissible Speed).\",\n  \"reroute_to\": null,\n  \"bounding_box\": null\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_077",
+    "image": "bulletins/circular_nr_speed_restriction_oct26.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_077. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Document OCR: Northern Railway Caution Order No. 441/26\",\n  \"severity\": \"OPERATIONAL_CAUTION\",\n  \"speed_restriction_kmh\": 20,\n  \"recommendation\": \"TSR 20 km/h active between Km 74/2 to 78/6 from 02:00 to 07:00 hrs for sleeper replacement.\",\n  \"reroute_to\": \"RT-MAIN-DOWN\",\n  \"bounding_box\": [\n    50,\n    50,\n    750,\n    900\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_078",
+    "image": "track_scans/km_88_transverse_weld_crack.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_078. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Transverse Thermite Weld Fracture (4.5mm separation)\",\n  \"severity\": \"CRITICAL_IMMEDIATE_HALT\",\n  \"speed_restriction_kmh\": 0,\n  \"recommendation\": \"DANGER: Complete line blockage mandated. Apply emergency clamp and joggled fishplate before passing any traffic.\",\n  \"reroute_to\": \"RT-LOOP-03 (Aligarh Chord)\",\n  \"bounding_box\": [\n    450,\n    290,\n    610,\n    480\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_079",
+    "image": "track_scans/km_112_clear_highspeed.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_079. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": true,\n  \"defect_type\": \"None. Ballast shoulder intact, fastenings secure, alignment within tolerance\",\n  \"severity\": \"SAFE_CLEAR\",\n  \"speed_restriction_kmh\": 130,\n  \"recommendation\": \"Track section is certified clear for full 130 km/h MPS (Maximum Permissible Speed).\",\n  \"reroute_to\": null,\n  \"bounding_box\": null\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_080",
+    "image": "bulletins/circular_nr_speed_restriction_oct26.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_080. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Document OCR: Northern Railway Caution Order No. 441/26\",\n  \"severity\": \"OPERATIONAL_CAUTION\",\n  \"speed_restriction_kmh\": 20,\n  \"recommendation\": \"TSR 20 km/h active between Km 74/2 to 78/6 from 02:00 to 07:00 hrs for sleeper replacement.\",\n  \"reroute_to\": \"RT-MAIN-DOWN\",\n  \"bounding_box\": [\n    50,\n    50,\n    750,\n    900\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_081",
+    "image": "track_scans/km_88_transverse_weld_crack.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_081. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Transverse Thermite Weld Fracture (4.5mm separation)\",\n  \"severity\": \"CRITICAL_IMMEDIATE_HALT\",\n  \"speed_restriction_kmh\": 0,\n  \"recommendation\": \"DANGER: Complete line blockage mandated. Apply emergency clamp and joggled fishplate before passing any traffic.\",\n  \"reroute_to\": \"RT-LOOP-03 (Aligarh Chord)\",\n  \"bounding_box\": [\n    450,\n    290,\n    610,\n    480\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_082",
+    "image": "track_scans/km_112_clear_highspeed.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_082. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": true,\n  \"defect_type\": \"None. Ballast shoulder intact, fastenings secure, alignment within tolerance\",\n  \"severity\": \"SAFE_CLEAR\",\n  \"speed_restriction_kmh\": 130,\n  \"recommendation\": \"Track section is certified clear for full 130 km/h MPS (Maximum Permissible Speed).\",\n  \"reroute_to\": null,\n  \"bounding_box\": null\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_083",
+    "image": "track_scans/km_112_clear_highspeed.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_083. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": true,\n  \"defect_type\": \"None. Ballast shoulder intact, fastenings secure, alignment within tolerance\",\n  \"severity\": \"SAFE_CLEAR\",\n  \"speed_restriction_kmh\": 130,\n  \"recommendation\": \"Track section is certified clear for full 130 km/h MPS (Maximum Permissible Speed).\",\n  \"reroute_to\": null,\n  \"bounding_box\": null\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_084",
+    "image": "track_scans/km_42_ballast_washout.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_084. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Severe ballast displacement & scouring\",\n  \"severity\": \"CRITICAL\",\n  \"speed_restriction_kmh\": 15,\n  \"recommendation\": \"Emergency ballast tamping required. Impose 15 km/h TSR or divert freight to Loop RT-B.\",\n  \"reroute_to\": \"RT-LOOP-02 (Chord Bypass)\",\n  \"bounding_box\": [\n    320,\n    180,\n    580,\n    440\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_085",
+    "image": "track_scans/km_42_ballast_washout.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_085. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Severe ballast displacement & scouring\",\n  \"severity\": \"CRITICAL\",\n  \"speed_restriction_kmh\": 15,\n  \"recommendation\": \"Emergency ballast tamping required. Impose 15 km/h TSR or divert freight to Loop RT-B.\",\n  \"reroute_to\": \"RT-LOOP-02 (Chord Bypass)\",\n  \"bounding_box\": [\n    320,\n    180,\n    580,\n    440\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_086",
+    "image": "bulletins/circular_nr_speed_restriction_oct26.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_086. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Document OCR: Northern Railway Caution Order No. 441/26\",\n  \"severity\": \"OPERATIONAL_CAUTION\",\n  \"speed_restriction_kmh\": 20,\n  \"recommendation\": \"TSR 20 km/h active between Km 74/2 to 78/6 from 02:00 to 07:00 hrs for sleeper replacement.\",\n  \"reroute_to\": \"RT-MAIN-DOWN\",\n  \"bounding_box\": [\n    50,\n    50,\n    750,\n    900\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_087",
+    "image": "bulletins/circular_nr_speed_restriction_oct26.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_087. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Document OCR: Northern Railway Caution Order No. 441/26\",\n  \"severity\": \"OPERATIONAL_CAUTION\",\n  \"speed_restriction_kmh\": 20,\n  \"recommendation\": \"TSR 20 km/h active between Km 74/2 to 78/6 from 02:00 to 07:00 hrs for sleeper replacement.\",\n  \"reroute_to\": \"RT-MAIN-DOWN\",\n  \"bounding_box\": [\n    50,\n    50,\n    750,\n    900\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_088",
+    "image": "track_scans/km_88_transverse_weld_crack.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_088. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Transverse Thermite Weld Fracture (4.5mm separation)\",\n  \"severity\": \"CRITICAL_IMMEDIATE_HALT\",\n  \"speed_restriction_kmh\": 0,\n  \"recommendation\": \"DANGER: Complete line blockage mandated. Apply emergency clamp and joggled fishplate before passing any traffic.\",\n  \"reroute_to\": \"RT-LOOP-03 (Aligarh Chord)\",\n  \"bounding_box\": [\n    450,\n    290,\n    610,\n    480\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_089",
+    "image": "track_scans/km_42_ballast_washout.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_089. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Severe ballast displacement & scouring\",\n  \"severity\": \"CRITICAL\",\n  \"speed_restriction_kmh\": 15,\n  \"recommendation\": \"Emergency ballast tamping required. Impose 15 km/h TSR or divert freight to Loop RT-B.\",\n  \"reroute_to\": \"RT-LOOP-02 (Chord Bypass)\",\n  \"bounding_box\": [\n    320,\n    180,\n    580,\n    440\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_090",
+    "image": "track_scans/km_88_transverse_weld_crack.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_090. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Transverse Thermite Weld Fracture (4.5mm separation)\",\n  \"severity\": \"CRITICAL_IMMEDIATE_HALT\",\n  \"speed_restriction_kmh\": 0,\n  \"recommendation\": \"DANGER: Complete line blockage mandated. Apply emergency clamp and joggled fishplate before passing any traffic.\",\n  \"reroute_to\": \"RT-LOOP-03 (Aligarh Chord)\",\n  \"bounding_box\": [\n    450,\n    290,\n    610,\n    480\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_091",
+    "image": "bulletins/circular_nr_speed_restriction_oct26.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_091. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Document OCR: Northern Railway Caution Order No. 441/26\",\n  \"severity\": \"OPERATIONAL_CAUTION\",\n  \"speed_restriction_kmh\": 20,\n  \"recommendation\": \"TSR 20 km/h active between Km 74/2 to 78/6 from 02:00 to 07:00 hrs for sleeper replacement.\",\n  \"reroute_to\": \"RT-MAIN-DOWN\",\n  \"bounding_box\": [\n    50,\n    50,\n    750,\n    900\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_092",
+    "image": "track_scans/km_112_clear_highspeed.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_092. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": true,\n  \"defect_type\": \"None. Ballast shoulder intact, fastenings secure, alignment within tolerance\",\n  \"severity\": \"SAFE_CLEAR\",\n  \"speed_restriction_kmh\": 130,\n  \"recommendation\": \"Track section is certified clear for full 130 km/h MPS (Maximum Permissible Speed).\",\n  \"reroute_to\": null,\n  \"bounding_box\": null\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_093",
+    "image": "track_scans/km_112_clear_highspeed.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_093. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": true,\n  \"defect_type\": \"None. Ballast shoulder intact, fastenings secure, alignment within tolerance\",\n  \"severity\": \"SAFE_CLEAR\",\n  \"speed_restriction_kmh\": 130,\n  \"recommendation\": \"Track section is certified clear for full 130 km/h MPS (Maximum Permissible Speed).\",\n  \"reroute_to\": null,\n  \"bounding_box\": null\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_094",
+    "image": "track_scans/km_18_pandrol_clip_missing.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_094. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Missing ERC (Elastic Rail Clip) Fasteners (3 consecutive sleepers)\",\n  \"severity\": \"HIGH\",\n  \"speed_restriction_kmh\": 30,\n  \"recommendation\": \"Dispatch Keyman Gang 04 immediately for clip insertion. Cap corridor speed to 30 km/h.\",\n  \"reroute_to\": \"RT-MAIN-01 (Single Line Working)\",\n  \"bounding_box\": [\n    210,\n    400,\n    350,\n    520\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_095",
+    "image": "bulletins/circular_nr_speed_restriction_oct26.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_095. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Document OCR: Northern Railway Caution Order No. 441/26\",\n  \"severity\": \"OPERATIONAL_CAUTION\",\n  \"speed_restriction_kmh\": 20,\n  \"recommendation\": \"TSR 20 km/h active between Km 74/2 to 78/6 from 02:00 to 07:00 hrs for sleeper replacement.\",\n  \"reroute_to\": \"RT-MAIN-DOWN\",\n  \"bounding_box\": [\n    50,\n    50,\n    750,\n    900\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_096",
+    "image": "bulletins/circular_nr_speed_restriction_oct26.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_096. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Document OCR: Northern Railway Caution Order No. 441/26\",\n  \"severity\": \"OPERATIONAL_CAUTION\",\n  \"speed_restriction_kmh\": 20,\n  \"recommendation\": \"TSR 20 km/h active between Km 74/2 to 78/6 from 02:00 to 07:00 hrs for sleeper replacement.\",\n  \"reroute_to\": \"RT-MAIN-DOWN\",\n  \"bounding_box\": [\n    50,\n    50,\n    750,\n    900\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_097",
+    "image": "track_scans/km_18_pandrol_clip_missing.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_097. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Missing ERC (Elastic Rail Clip) Fasteners (3 consecutive sleepers)\",\n  \"severity\": \"HIGH\",\n  \"speed_restriction_kmh\": 30,\n  \"recommendation\": \"Dispatch Keyman Gang 04 immediately for clip insertion. Cap corridor speed to 30 km/h.\",\n  \"reroute_to\": \"RT-MAIN-01 (Single Line Working)\",\n  \"bounding_box\": [\n    210,\n    400,\n    350,\n    520\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_098",
+    "image": "track_scans/km_42_ballast_washout.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_098. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Severe ballast displacement & scouring\",\n  \"severity\": \"CRITICAL\",\n  \"speed_restriction_kmh\": 15,\n  \"recommendation\": \"Emergency ballast tamping required. Impose 15 km/h TSR or divert freight to Loop RT-B.\",\n  \"reroute_to\": \"RT-LOOP-02 (Chord Bypass)\",\n  \"bounding_box\": [\n    320,\n    180,\n    580,\n    440\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_099",
+    "image": "track_scans/km_42_ballast_washout.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_099. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Severe ballast displacement & scouring\",\n  \"severity\": \"CRITICAL\",\n  \"speed_restriction_kmh\": 15,\n  \"recommendation\": \"Emergency ballast tamping required. Impose 15 km/h TSR or divert freight to Loop RT-B.\",\n  \"reroute_to\": \"RT-LOOP-02 (Chord Bypass)\",\n  \"bounding_box\": [\n    320,\n    180,\n    580,\n    440\n  ]\n}"
+      }
+    ]
+  },
+  {
+    "id": "trk_vlm_100",
+    "image": "bulletins/circular_nr_speed_restriction_oct26.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nInspect this railway infrastructure scan for section TRK_VLM_100. Assess track clearance, detect structural defects, provide bounding boxes, and recommend safe speed restrictions or rerouting options."
+      },
+      {
+        "from": "gpt",
+        "value": "{\n  \"is_clear\": false,\n  \"defect_type\": \"Document OCR: Northern Railway Caution Order No. 441/26\",\n  \"severity\": \"OPERATIONAL_CAUTION\",\n  \"speed_restriction_kmh\": 20,\n  \"recommendation\": \"TSR 20 km/h active between Km 74/2 to 78/6 from 02:00 to 07:00 hrs for sleeper replacement.\",\n  \"reroute_to\": \"RT-MAIN-DOWN\",\n  \"bounding_box\": [\n    50,\n    50,\n    750,\n    900\n  ]\n}"
+      }
+    ]
+  }
+]
