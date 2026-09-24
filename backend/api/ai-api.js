@@ -647,6 +647,59 @@ const Controllers = {
       return sendError(res, 500, 'METRICS_FETCH_FAILED', err.message, null, rateHeaders);
     }
   },
+
+  /**
+   * 10. POST /api/v1/ai/routes/analyze & POST /api/check-routes
+   * AI Route & Disruption Clearance Reasoning Engine (Groq / Gemini / Pydantic)
+   */
+  async analyzeRoutes(req, res, body, rateHeaders) {
+    try {
+      const payload = body || {};
+      const result = await aiServiceConnector.analyzeRoutes(payload);
+      return sendSuccess(res, result, { service: 'ai-route-reasoner' }, rateHeaders);
+    } catch (err) {
+      return sendError(res, 500, 'ROUTE_ANALYSIS_FAILED', err.message, null, rateHeaders);
+    }
+  },
+
+  /**
+   * 11. POST /api/v1/ai/vision/vlm-inspect
+   * Multimodal Vision-Language Model Track Defect & Bulletin Inspection (Qwen-VL / Gemini)
+   */
+  async vlmInspect(req, res, body, rateHeaders) {
+    try {
+      const payload = body || {};
+      const result = await aiServiceConnector.inspectTrackWithVLM(payload);
+      return sendSuccess(res, result, { service: 'multimodal-vlm-inspector' }, rateHeaders);
+    } catch (err) {
+      return sendError(res, 500, 'VLM_INSPECTION_FAILED', err.message, null, rateHeaders);
+    }
+  },
+
+  /**
+   * 12. POST /api/v1/ai/optimize/vlm-shadow-schedule
+   * VLM-Aware Shadow Block Merge + CP-SAT pipeline (Gemini + ShadowBlockMerger + OR-Tools)
+   */
+  async vlmShadowSchedule(req, res, body, rateHeaders) {
+    try {
+      const payload = body || {};
+      // Proxy to Python FastAPI inference daemon
+      const pyRes = await fetch('http://127.0.0.1:5001/api/v1/optimize/vlm-shadow-schedule', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+        signal: AbortSignal.timeout(60000),
+      });
+      if (pyRes.ok) {
+        const data = await pyRes.json();
+        return sendSuccess(res, data, { service: 'vlm-shadow-cpsat-pipeline' }, rateHeaders);
+      }
+      const errText = await pyRes.text();
+      return sendError(res, pyRes.status, 'VLM_SHADOW_SCHEDULE_FAILED', errText, null, rateHeaders);
+    } catch (err) {
+      return sendError(res, 500, 'VLM_SHADOW_SCHEDULE_ERROR', err.message, null, rateHeaders);
+    }
+  },
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -837,6 +890,27 @@ async function handleAiRequest(req, res, next) {
     // ── Endpoint 9: GET /api/v1/ai/models/metrics
     if (method === 'GET' && pathname === `${API_PREFIX}/models/metrics`) {
       await Controllers.getModelsMetrics(req, res, query, rateHeaders);
+      return true;
+    }
+
+    // ── Endpoint 10: POST /api/v1/ai/routes/analyze & POST /api/check-routes
+    if (method === 'POST' && (pathname === `${API_PREFIX}/routes/analyze` || pathname === '/api/check-routes')) {
+      const body = await parseJsonBody(req);
+      await Controllers.analyzeRoutes(req, res, body, rateHeaders);
+      return true;
+    }
+
+    // ── Endpoint 11: POST /api/v1/ai/vision/vlm-inspect
+    if (method === 'POST' && pathname === `${API_PREFIX}/vision/vlm-inspect`) {
+      const body = await parseJsonBody(req);
+      await Controllers.vlmInspect(req, res, body, rateHeaders);
+      return true;
+    }
+
+    // ── Endpoint 12: POST /api/v1/ai/optimize/vlm-shadow-schedule
+    if (method === 'POST' && pathname === `${API_PREFIX}/optimize/vlm-shadow-schedule`) {
+      const body = await parseJsonBody(req);
+      await Controllers.vlmShadowSchedule(req, res, body, rateHeaders);
       return true;
     }
 

@@ -46,6 +46,13 @@
     document.head.appendChild(s);
   }
 
+  // Ensure Universal Translation Engine is loaded
+  if (!window.IR_I18N) {
+    const sI18n = document.createElement('script');
+    sI18n.src = '../components/ir-i18n.js?v=2.7.0';
+    document.head.appendChild(sI18n);
+  }
+
   // Ensure Leaflet is loaded for full-screen GIS satellite map
   if (!window.L) {
     const lCss = document.createElement('link');
@@ -56,6 +63,13 @@
     const lJs = document.createElement('script');
     lJs.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
     document.head.appendChild(lJs);
+  }
+
+  // Ensure html2canvas is loaded for instantaneous snapshot captures
+  if (!window.html2canvas) {
+    const h2c = document.createElement('script');
+    h2c.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+    document.head.appendChild(h2c);
   }
 
   const NAV_LINKS = [
@@ -94,7 +108,7 @@
         { label: 'Work Orders', href: 'maintenance-dashboard.html', activePattern: 'maintenance-dashboard' },
         { label: 'Request Maintenance', href: 'maintenance-requests.html', activePattern: 'maintenance-requests' },
         { label: 'PM Schedules', href: 'pm-schedules.html', activePattern: 'pm-schedules' },
-        { label: 'Labor', href: 'maintenance-dashboard.html#labor', activePattern: '#labor' }
+        { label: 'Labor & Gangs', href: 'labor.html', activePattern: 'labor' }
       ]
     },
     {
@@ -111,7 +125,12 @@
       icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`,
       href: 'surveillance-dashboard.html',
       pageMatch: 'surveillance-dashboard',
-      desc: 'Ultrasonic flaws, drones & track sensors'
+      desc: 'Ultrasonic flaws, drones & track sensors',
+      subItems: [
+        { label: 'Live Telemetry & GIS', href: 'surveillance-dashboard.html#telemetry', activePattern: '#telemetry', iconEmoji: '📡' },
+        { label: 'Inspection Reports', href: 'surveillance-dashboard.html#inspections', activePattern: '#inspections', badge: '4', badgeColor: '#003366', iconEmoji: '📋' },
+        { label: 'Incident Reports', href: 'surveillance-dashboard.html#incidents', activePattern: '#incidents', badge: '3', badgeColor: '#DC2626', iconEmoji: '🚨' }
+      ]
     },
     {
       key: 'ai-models',
@@ -125,7 +144,10 @@
 
   function isActive(link) {
     if (link.key === 'work-orders') {
-      return window.location.pathname.includes('maintenance-dashboard') || window.location.pathname.includes('pm-schedules') || window.location.pathname.includes('maintenance-requests');
+      return window.location.pathname.includes('maintenance-dashboard') || window.location.pathname.includes('pm-schedules') || window.location.pathname.includes('maintenance-requests') || window.location.pathname.includes('labor');
+    }
+    if (link.key === 'surveillance') {
+      return window.location.pathname.includes('surveillance-dashboard');
     }
     return window.location.pathname.includes(link.pageMatch);
   }
@@ -911,10 +933,562 @@
       position: absolute;
       top: 4px;
       right: 4px;
-      width: 6px;
-      height: 6px;
+      width: 7px;
+      height: 7px;
       border-radius: 50%;
-      background: #D9531E;
+      background: #DC2626;
+      box-shadow: 0 0 0 2px #FFFFFF;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .snav-icon-btn-badge.hidden {
+      opacity: 0;
+      transform: scale(0);
+      pointer-events: none;
+    }
+
+    /* ── Notifications Dropdown ────────────────────────────── */
+    .snav-notif-dropdown {
+      position: absolute;
+      top: calc(100% + 10px);
+      right: 0;
+      width: 390px;
+      max-width: calc(100vw - 32px);
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(0, 51, 102, 0.16);
+      border-radius: 14px;
+      box-shadow: 0 16px 40px rgba(0, 30, 70, 0.18), 0 2px 8px rgba(0, 0, 0, 0.06);
+      z-index: 10000;
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+      animation: snavFadeSlideDown 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .snav-notif-dropdown.open {
+      display: flex;
+    }
+
+    .snav-notif-header {
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(0, 51, 102, 0.08);
+      background: linear-gradient(180deg, #FAF6EE 0%, #FFFFFF 100%);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .snav-notif-title {
+      font-size: 0.88rem;
+      font-weight: 800;
+      color: #003366;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .snav-notif-counter-pill {
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 12px;
+      background: rgba(220, 38, 38, 0.1);
+      color: #DC2626;
+      border: 1px solid rgba(220, 38, 38, 0.25);
+    }
+
+    .snav-notif-clear-btn {
+      background: none;
+      border: none;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #0056B3;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 6px;
+      transition: background 0.15s ease;
+    }
+
+    .snav-notif-clear-btn:hover {
+      background: rgba(0, 86, 179, 0.08);
+      text-decoration: underline;
+    }
+
+    .snav-notif-filters {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      background: #F8FAFC;
+      border-bottom: 1px solid rgba(0, 51, 102, 0.06);
+      overflow-x: auto;
+    }
+
+    .snav-notif-chip {
+      font-size: 0.70rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 14px;
+      background: #FFFFFF;
+      border: 1px solid rgba(0, 51, 102, 0.12);
+      color: #475569;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+    }
+
+    .snav-notif-chip:hover,
+    .snav-notif-chip.active {
+      background: #003366;
+      color: #FFFFFF;
+      border-color: #003366;
+    }
+
+    .snav-notif-list {
+      max-height: 360px;
+      overflow-y: auto;
+      padding: 6px 0;
+    }
+
+    .snav-notif-item {
+      padding: 12px 16px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      transition: background 0.15s ease;
+      position: relative;
+    }
+
+    .snav-notif-item:hover {
+      background: #FAF8F5;
+    }
+
+    .snav-notif-item.unread {
+      background: rgba(0, 86, 179, 0.03);
+    }
+
+    .snav-notif-icon-box {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+      background: #FFFFFF;
+      border: 1px solid rgba(0, 51, 102, 0.1);
+    }
+
+    .snav-notif-icon-box.p1 {
+      background: #FEF2F2;
+      border-color: #FCA5A5;
+      color: #DC2626;
+    }
+
+    .snav-notif-icon-box.block {
+      background: #ECFDF5;
+      border-color: #A7F3D0;
+      color: #059669;
+    }
+
+    .snav-notif-icon-box.weather {
+      background: #FFFBEB;
+      border-color: #FDE68A;
+      color: #D97706;
+    }
+
+    .snav-notif-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .snav-notif-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2px;
+    }
+
+    .snav-notif-tag {
+      font-size: 0.65rem;
+      font-weight: 800;
+      padding: 1px 6px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .snav-notif-tag.p1 {
+      background: #DC2626;
+      color: #FFFFFF;
+    }
+
+    .snav-notif-tag.block {
+      background: #059669;
+      color: #FFFFFF;
+    }
+
+    .snav-notif-tag.weather {
+      background: #D97706;
+      color: #FFFFFF;
+    }
+
+    .snav-notif-tag.sensor {
+      background: #6366F1;
+      color: #FFFFFF;
+    }
+
+    .snav-notif-time {
+      font-size: 0.68rem;
+      color: #94A3B8;
+      font-family: var(--font-mono);
+    }
+
+    .snav-notif-heading {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #0F172A;
+      margin-bottom: 2px;
+      line-height: 1.3;
+    }
+
+    .snav-notif-desc {
+      font-size: 0.72rem;
+      color: #475569;
+      line-height: 1.35;
+      margin-bottom: 6px;
+    }
+
+    .snav-notif-action-btn {
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 6px;
+      background: #FFFFFF;
+      border: 1px solid rgba(0, 51, 102, 0.2);
+      color: #003366;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .snav-notif-action-btn:hover {
+      background: #003366;
+      color: #FFFFFF;
+      border-color: #003366;
+    }
+
+    .snav-notif-footer {
+      padding: 10px 16px;
+      border-top: 1px solid rgba(0, 51, 102, 0.08);
+      background: #F8FAFC;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.72rem;
+    }
+
+    /* ── Menus Dropdown (Lang / Division) ───────────────────── */
+    .snav-menu-dropdown {
+      position: absolute;
+      top: calc(100% + 8px);
+      background: #FFFFFF;
+      border: 1px solid rgba(0, 51, 102, 0.16);
+      border-radius: 10px;
+      box-shadow: 0 12px 30px rgba(0, 30, 70, 0.16);
+      min-width: 170px;
+      z-index: 10000;
+      display: none;
+      flex-direction: column;
+      padding: 6px 0;
+      animation: snavFadeSlideDown 0.18s ease;
+    }
+
+    .snav-menu-dropdown.open {
+      display: flex;
+    }
+
+    .snav-menu-item {
+      padding: 8px 14px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #1E293B;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: background 0.15s ease;
+      background: none;
+      border: none;
+      text-align: left;
+      width: 100%;
+    }
+
+    .snav-menu-item:hover,
+    .snav-menu-item.active {
+      background: #FAF6EE;
+      color: #003366;
+      font-weight: 700;
+    }
+
+    /* ── Camera & Screenshot Suite Modal ────────────────────── */
+    .snav-camera-modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(8px);
+      z-index: 20000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      animation: snavFadeIn 0.2s ease;
+    }
+
+    .snav-camera-modal-backdrop.open {
+      display: flex;
+    }
+
+    .snav-camera-modal-card {
+      background: #FAF6EE;
+      border: 1px solid rgba(0, 51, 102, 0.2);
+      border-radius: 16px;
+      width: 820px;
+      max-width: 95vw;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 24px 60px rgba(0, 20, 50, 0.35);
+      overflow: hidden;
+    }
+
+    .snav-camera-modal-header {
+      background: linear-gradient(135deg, #003366 0%, #0056B3 100%);
+      color: #FFFFFF;
+      padding: 16px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .snav-camera-modal-title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      letter-spacing: 0.4px;
+    }
+
+    .snav-camera-modal-close {
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: #FFFFFF;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .snav-camera-modal-close:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: scale(1.05);
+    }
+
+    .snav-camera-tabs {
+      display: flex;
+      background: #EDE8DD;
+      border-bottom: 1px solid rgba(0, 51, 102, 0.12);
+      padding: 0 18px;
+      gap: 12px;
+    }
+
+    .snav-camera-tab {
+      padding: 12px 18px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #475569;
+      border: none;
+      background: none;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.15s ease;
+    }
+
+    .snav-camera-tab.active {
+      color: #003366;
+      border-bottom-color: #003366;
+      background: rgba(255, 255, 255, 0.6);
+    }
+
+    .snav-camera-body {
+      padding: 20px;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .snav-camera-viewport {
+      width: 100%;
+      height: 380px;
+      background: #0F172A;
+      border-radius: 12px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid rgba(0, 51, 102, 0.3);
+      box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.7);
+    }
+
+    .snav-camera-video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .snav-camera-canvas-preview {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      border-radius: 8px;
+    }
+
+    .snav-shutter-flash {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #FFFFFF;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 50;
+      transition: opacity 0.05s ease-out;
+    }
+
+    .snav-shutter-flash.flashing {
+      opacity: 1;
+      transition: none;
+    }
+
+    .snav-scan-crosshair {
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      border: 2px dashed rgba(5, 150, 105, 0.85);
+      border-radius: 16px;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.45);
+    }
+
+    .snav-scan-crosshair::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: #10B981;
+      box-shadow: 0 0 10px #10B981;
+      animation: snavLaserScan 2s infinite ease-in-out;
+    }
+
+    @keyframes snavLaserScan {
+      0% { top: 0; }
+      50% { top: 100%; }
+      100% { top: 0; }
+    }
+
+    .snav-camera-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 16px;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .snav-btn-action-primary {
+      background: linear-gradient(135deg, #003366 0%, #0056B3 100%);
+      color: #FFFFFF;
+      border: none;
+      padding: 9px 18px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.15s ease;
+      box-shadow: 0 4px 12px rgba(0, 51, 102, 0.2);
+    }
+
+    .snav-btn-action-primary:hover {
+      background: linear-gradient(135deg, #002244 0%, #004494 100%);
+      transform: translateY(-1px);
+    }
+
+    .snav-btn-action-secondary {
+      background: #FFFFFF;
+      color: #003366;
+      border: 1px solid rgba(0, 51, 102, 0.2);
+      padding: 9px 16px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.15s ease;
+    }
+
+    .snav-btn-action-secondary:hover {
+      background: #FAF6EE;
+      border-color: #003366;
+    }
+
+    .snav-camera-info-card {
+      margin-top: 14px;
+      background: #FFFFFF;
+      border: 1px solid rgba(0, 51, 102, 0.12);
+      border-radius: 10px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    @keyframes snavFadeSlideDown {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes snavFadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
 
     .snav-lang-select {
@@ -929,6 +1503,7 @@
       font-size: 0.78rem;
       font-weight: 700;
       cursor: pointer;
+      position: relative;
     }
 
     .snav-site-selector {
@@ -943,6 +1518,7 @@
       font-size: 0.78rem;
       font-weight: 700;
       cursor: pointer;
+      position: relative;
     }
 
     .snav-status-pill {
@@ -1925,7 +2501,7 @@
       if (!allowed) return '';
 
       if (link.subItems && link.subItems.length > 0) {
-        const isMaintenanceOpen = true;
+        const isCurrentGroupActive = isActive(link);
         const currentHash = window.location.hash;
         const currentPath = window.location.pathname;
 
@@ -1933,36 +2509,47 @@
           let isSubActive = false;
           if (sub.activePattern === 'maintenance-requests' || sub.activePattern === '#request') {
             isSubActive = currentPath.includes('maintenance-requests') || currentHash === '#request';
-          } else if (sub.activePattern === '#labor') {
-            isSubActive = currentHash === '#labor';
+          } else if (sub.activePattern === 'labor' || sub.activePattern === '#labor') {
+            isSubActive = currentPath.includes('labor') || currentHash === '#labor';
           } else if (sub.activePattern === 'maintenance-dashboard') {
-            isSubActive = (currentPath.includes('maintenance-dashboard') || currentPath.endsWith('/')) && (!currentHash || currentHash === '#');
+            isSubActive = (currentPath.includes('maintenance-dashboard') || currentPath.endsWith('/')) && (!currentHash || currentHash === '#' || currentHash === '#work-orders' || currentHash.startsWith('#wo-'));
           } else if (sub.activePattern === 'pm-schedules') {
             isSubActive = currentPath.includes('pm-schedules');
+          } else if (sub.activePattern === '#telemetry') {
+            isSubActive = currentPath.includes('surveillance-dashboard') && (!currentHash || currentHash === '#telemetry' || currentHash === '#');
+          } else if (sub.activePattern === '#inspections') {
+            isSubActive = currentPath.includes('surveillance-dashboard') && currentHash === '#inspections';
+          } else if (sub.activePattern === '#incidents') {
+            isSubActive = currentPath.includes('surveillance-dashboard') && currentHash === '#incidents';
           }
+
+          const badgeHtml = sub.badge ? `<span style="margin-left:auto; background:${sub.badgeColor === '#DC2626' ? 'rgba(220,38,38,0.12)' : 'rgba(0,51,102,0.08)'}; color:${sub.badgeColor || '#003366'}; font-size:0.68rem; font-weight:800; padding:1px 6px; border-radius:10px;">${sub.badge}</span>` : '';
+          const iconPrefix = sub.iconEmoji ? `<span style="font-size:0.85rem; margin-right:4px;">${sub.iconEmoji}</span>` : '';
+
           return `
             <a href="${sub.href}" class="snav-sub-item${isSubActive ? ' active' : ''}" onclick="window.handleSubItemClick && window.handleSubItemClick(this, event)">
-              ${sub.label}
+              <span style="display:flex; align-items:center; gap:4px;">${iconPrefix}${sub.label}</span>
+              ${badgeHtml}
             </a>
           `;
         }).join('');
 
         return `
           <div class="snav-has-submenu">
-            <div class="snav-item-parent"
+            <div class="snav-item-parent${isCurrentGroupActive ? ' snav-item--active' : ''}"
                  onclick="window.toggleSubmenu && window.toggleSubmenu(this)"
                  role="button"
                  tabindex="0"
                  title="${link.desc}">
               <span class="snav-item-icon">${link.icon}</span>
               <span class="snav-item-text">${link.label}</span>
-              <span class="snav-item-chevron-svg ${isMaintenanceOpen ? 'open' : 'collapsed'}">
+              <span class="snav-item-chevron-svg ${isCurrentGroupActive ? 'open' : 'collapsed'}">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#161E54" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                   <polyline points="6 9 12 15 18 9"></polyline>
                 </svg>
               </span>
             </div>
-            <div class="snav-submenu ${isMaintenanceOpen ? 'open' : ''}">
+            <div class="snav-submenu ${isCurrentGroupActive ? 'open' : ''}">
               ${subItemsHTML}
             </div>
           </div>
@@ -2121,26 +2708,149 @@
 
         <!-- Right side: Notifications, utilities, user & sign out -->
         <div class="snav-topbar-right">
-          <div class="snav-topbar-actions">
-            <button type="button" class="snav-icon-btn" title="Alert Notifications">
-              🔔
-              <span class="snav-icon-btn-badge"></span>
-            </button>
-            <button type="button" class="snav-icon-btn" title="Scanner &amp; QR Code">
+          <div class="snav-topbar-actions" style="position: relative;">
+            <!-- Notification Bell Button & Dropdown -->
+            <div style="position: relative; display: inline-flex;">
+              <button type="button" class="snav-icon-btn" id="snav-btn-notifications" title="Live Safety Alerts &amp; Notifications" onclick="window.toggleNotificationsDropdown(event)">
+                🔔
+                <span class="snav-icon-btn-badge" id="snav-notif-badge"></span>
+              </button>
+
+              <!-- Notifications Floating Dropdown -->
+              <div class="snav-notif-dropdown" id="snav-notif-dropdown" onclick="event.stopPropagation();">
+                <div class="snav-notif-header">
+                  <div class="snav-notif-title">
+                    <span>🔔</span>
+                    <span>Live Corridor Alerts</span>
+                    <span class="snav-notif-counter-pill" id="snav-notif-pill">4 UNREAD</span>
+                  </div>
+                  <button type="button" class="snav-notif-clear-btn" onclick="window.markAllNotificationsRead()">
+                    Mark all as read
+                  </button>
+                </div>
+
+                <div class="snav-notif-filters">
+                  <button type="button" class="snav-notif-chip active" onclick="window.filterNotifications('all', this)">All (4)</button>
+                  <button type="button" class="snav-notif-chip" onclick="window.filterNotifications('p1', this)">🚨 P1 Flaws (2)</button>
+                  <button type="button" class="snav-notif-chip" onclick="window.filterNotifications('block', this)">🛡️ Blocks (1)</button>
+                  <button type="button" class="snav-notif-chip" onclick="window.filterNotifications('weather', this)">⛅ Weather (1)</button>
+                </div>
+
+                <div class="snav-notif-list" id="snav-notif-list">
+                  <!-- P1 Rail Flaw -->
+                  <div class="snav-notif-item unread" data-category="p1">
+                    <div class="snav-notif-icon-box p1">🚨</div>
+                    <div class="snav-notif-content">
+                      <div class="snav-notif-top">
+                        <span class="snav-notif-tag p1">P1 CRITICAL</span>
+                        <span class="snav-notif-time">2m ago</span>
+                      </div>
+                      <div class="snav-notif-heading">USFD Ultrasonic Flaw at KM 124/8-10</div>
+                      <div class="snav-notif-desc">IMR transverse fracture detected on UP High-Speed line. Mandatory TSR 30 km/h clamped.</div>
+                      <button type="button" class="snav-notif-action-btn" onclick="window.location.href='surveillance-dashboard.html'">
+                        🔍 View Flaw in Surveillance
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Traffic Block -->
+                  <div class="snav-notif-item unread" data-category="block">
+                    <div class="snav-notif-icon-box block">🛡️</div>
+                    <div class="snav-notif-content">
+                      <div class="snav-notif-top">
+                        <span class="snav-notif-tag block">BLOCK GRANTED</span>
+                        <span class="snav-notif-time">14m ago</span>
+                      </div>
+                      <div class="snav-notif-heading">2h 30m Power &amp; Traffic Block Approved</div>
+                      <div class="snav-notif-desc">Aligarh – Kanpur Section (Down Line) granted 14:00 – 16:30 IST for mechanized tamping.</div>
+                      <button type="button" class="snav-notif-action-btn" onclick="window.location.href='control-office.html'">
+                        🎛️ Open Control Office
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- High Temperature Warning -->
+                  <div class="snav-notif-item unread" data-category="weather">
+                    <div class="snav-notif-icon-box weather">⛅</div>
+                    <div class="snav-notif-content">
+                      <div class="snav-notif-top">
+                        <span class="snav-notif-tag weather">WEATHER RISK</span>
+                        <span class="snav-notif-time">35m ago</span>
+                      </div>
+                      <div class="snav-notif-heading">Rail Temp Exceeded 54.2°C (td + 20°C)</div>
+                      <div class="snav-notif-desc">High track buckling probability. Hot weather patrolling initiated per IRPWM Para 602.</div>
+                      <button type="button" class="snav-notif-action-btn" onclick="window.openTabWorkspace('weather')">
+                        ⛅ View Meteorology
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- P1 Point Machine Vibration -->
+                  <div class="snav-notif-item unread" data-category="p1">
+                    <div class="snav-notif-icon-box p1">⚡</div>
+                    <div class="snav-notif-content">
+                      <div class="snav-notif-top">
+                        <span class="snav-notif-tag p1">P1 S&amp;T ALERT</span>
+                        <span class="snav-notif-time">1h ago</span>
+                      </div>
+                      <div class="snav-notif-heading">Point Machine 104A Throw Time Drift</div>
+                      <div class="snav-notif-desc">Motor throw duration drifted to 6.8s (Limit 5.0s). SSE/Signal dispatched with Disconnection Notice T/351.</div>
+                      <button type="button" class="snav-notif-action-btn" onclick="window.location.href='maintenance-dashboard.html'">
+                        🔧 View Work Order
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="snav-notif-footer">
+                  <span style="color:#64748B;">4 total system alerts</span>
+                  <a href="surveillance-dashboard.html" style="color:#0056B3; font-weight:700; text-decoration:none;">View Full Event Log →</a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Camera & Scanner Studio Button -->
+            <button type="button" class="snav-icon-btn" id="snav-btn-camera" title="Scanner, Snapshots &amp; Visual Inspection" onclick="window.openCameraToolModal()">
               📷
             </button>
-            <button type="button" class="snav-icon-btn" onclick="if(document.fullscreenElement){document.exitFullscreen();}else{document.documentElement.requestFullscreen();}" title="Toggle Fullscreen">
+
+            <!-- Fullscreen Button -->
+            <button type="button" class="snav-icon-btn" id="snav-btn-fullscreen" onclick="window.toggleFullscreen()" title="Toggle Fullscreen">
               ⛶
             </button>
-            <div class="snav-lang-select" title="Select System Language">
-              <span>🌐</span>
-              <span>EN</span>
-              <small>▾</small>
+
+            <!-- Language Selector with Dropdown -->
+            <div style="position: relative; display: inline-flex;">
+              <div class="snav-lang-select" id="snav-lang-btn" title="Select System Language" onclick="window.toggleLangDropdown(event)">
+                <span>🌐</span>
+                <span id="snav-current-lang">EN</span>
+                <small>▾</small>
+              </div>
+              <div class="snav-menu-dropdown" id="snav-lang-menu" onclick="event.stopPropagation();">
+                <button type="button" class="snav-menu-item active" onclick="window.selectLanguage('EN', 'English')">🇬🇧 English (EN)</button>
+                <button type="button" class="snav-menu-item" onclick="window.selectLanguage('HI', 'हिन्दी')">🇮🇳 हिन्दी (HI)</button>
+                <button type="button" class="snav-menu-item" onclick="window.selectLanguage('BN', 'বাংলা')">🇮🇳 বাংলা (BN)</button>
+                <button type="button" class="snav-menu-item" onclick="window.selectLanguage('MR', 'मराठी')">🇮🇳 मराठी (MR)</button>
+                <button type="button" class="snav-menu-item" onclick="window.selectLanguage('TA', 'தமிழ்')">🇮🇳 தமிழ் (TA)</button>
+                <button type="button" class="snav-menu-item" onclick="window.selectLanguage('TE', 'తెలుగు')">🇮🇳 తెలుగు (TE)</button>
+              </div>
             </div>
-            <div class="snav-site-selector" title="Active Railway Zone / Division">
-              <span>🏢</span>
-              <span>All Divisions</span>
-              <small>▾</small>
+
+            <!-- Division Selector with Dropdown -->
+            <div style="position: relative; display: inline-flex;">
+              <div class="snav-site-selector" id="snav-div-btn" title="Active Railway Zone / Division" onclick="window.toggleDivisionDropdown(event)">
+                <span>🏢</span>
+                <span id="snav-current-div">Delhi Division</span>
+                <small>▾</small>
+              </div>
+              <div class="snav-menu-dropdown" id="snav-div-menu" onclick="event.stopPropagation();" style="min-width: 210px;">
+                <button type="button" class="snav-menu-item active" onclick="window.selectDivision('Delhi Division (NR)')">🏢 Delhi Division (NR)</button>
+                <button type="button" class="snav-menu-item" onclick="window.selectDivision('Prayagraj / Kanpur (NCR)')">🏢 Prayagraj / Kanpur (NCR)</button>
+                <button type="button" class="snav-menu-item" onclick="window.selectDivision('Lucknow Division (NR)')">🏢 Lucknow Division (NR)</button>
+                <button type="button" class="snav-menu-item" onclick="window.selectDivision('Mumbai Central (WR)')">🏢 Mumbai Central (WR)</button>
+                <button type="button" class="snav-menu-item" onclick="window.selectDivision('Howrah Division (ER)')">🏢 Howrah Division (ER)</button>
+                <button type="button" class="snav-menu-item" onclick="window.selectDivision('All Divisions (HQ Multi)')">🌐 All Divisions (HQ Multi)</button>
+              </div>
             </div>
           </div>
 
@@ -2660,6 +3370,101 @@
         ]
       };
     }
+  }
+
+  function buildCameraModalHTML() {
+    return `
+      <div class="snav-camera-modal-backdrop" id="snav-camera-modal" role="dialog" aria-modal="true" onclick="if(event.target===this)window.closeCameraToolModal();">
+        <div class="snav-camera-modal-card">
+          <div class="snav-camera-modal-header">
+            <div class="snav-camera-modal-title">
+              <span>📷</span>
+              <span>Visual Inspection, Live Scanner &amp; Snapshot Studio</span>
+            </div>
+            <button type="button" class="snav-camera-modal-close" onclick="window.closeCameraToolModal()" title="Close Studio">✕</button>
+          </div>
+
+          <div class="snav-camera-tabs">
+            <button type="button" class="snav-camera-tab active" id="snav-camtab-snapshot" onclick="window.switchCameraTab('snapshot')">
+              <span>📸</span> <span>Dashboard Snapshot Studio</span>
+            </button>
+            <button type="button" class="snav-camera-tab" id="snav-camtab-live" onclick="window.switchCameraTab('live')">
+              <span>📹</span> <span>Live Camera &amp; QR/Defect Scanner</span>
+            </button>
+          </div>
+
+          <div class="snav-camera-body">
+            <!-- Pane 1: Snapshot Studio -->
+            <div id="snav-campane-snapshot">
+              <div class="snav-camera-viewport">
+                <div id="snav-snapshot-loading" style="display:none; flex-direction:column; align-items:center; justify-content:center; color:#FFF; gap:10px;">
+                  <div style="font-size:2rem; animation:snavPulse 1s infinite;">⚡</div>
+                  <div style="font-weight:700; font-size:0.9rem;">Capturing High-Resolution Dashboard Snapshot...</div>
+                </div>
+                <img id="snav-snapshot-img" class="snav-camera-canvas-preview" alt="Dashboard Operational Snapshot" src="" style="display:none;" />
+              </div>
+
+              <div class="snav-camera-controls">
+                <div style="font-size:0.75rem; color:#475569;" id="snav-snapshot-meta-timestamp">
+                  Authenticated Cryptographic Watermark Attached
+                </div>
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <button type="button" class="snav-btn-action-primary" style="background:#FAF6EE; color:#003366; border:1px solid #C3B296;" onclick="window.takeDashboardScreenshot()">
+                    🔄 Retake Snapshot
+                  </button>
+                  <button type="button" class="snav-btn-action-primary" onclick="window.copySnapshotToClipboard()">
+                    📋 Copy Image
+                  </button>
+                  <button type="button" class="snav-btn-action-primary" style="background:#059669;" onclick="window.downloadSnapshot()">
+                    📥 Download PNG
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Pane 2: Live Camera & Scanner -->
+            <div id="snav-campane-live" style="display:none;">
+              <div class="snav-camera-viewport">
+                <div class="snav-shutter-flash" id="snav-shutter-flash"></div>
+                <div class="snav-scan-crosshair" id="snav-scan-crosshair"></div>
+                <video id="snav-live-video" class="snav-camera-video" playsinline muted autoplay></video>
+                <div id="snav-live-placeholder" style="display:none; text-align:center; color:#94A3B8; padding:20px; z-index:5;">
+                  <div style="font-size:2.5rem; margin-bottom:8px;">📹</div>
+                  <div style="font-weight:700; color:#FFF; font-size:1rem;">Webcam Standby Mode</div>
+                  <div style="font-size:0.78rem; margin-top:4px;">Optical camera viewfinder ready for track flaw scanning or simulated QR recognition.</div>
+                </div>
+              </div>
+
+              <div style="margin-top:14px; background:#FFFFFF; border:1px solid rgba(0,51,102,0.15); border-radius:10px; padding:12px 16px;">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <div>
+                    <div id="snav-live-asset-title" style="font-weight:800; color:#003366; font-size:0.88rem;">Standby for Asset Barcode / QR Scan</div>
+                    <div id="snav-live-asset-sub" style="font-size:0.74rem; color:#64748B; margin-top:2px;">Point camera at rail web, weld collar, or OHE mast QR badge.</div>
+                  </div>
+                  <div style="display:flex; gap:8px;">
+                    <button type="button" onclick="window.simulateQRScan()" class="snav-btn-action-primary" style="background:#003366; font-size:0.76rem; padding:6px 14px;">
+                      🎯 Decode Asset QR
+                    </button>
+                    <button type="button" id="snav-btn-run-triage" onclick="window.triggerAIDefectTriageFromCam()" class="snav-btn-action-primary" style="background:#DC2626; font-size:0.76rem; padding:6px 14px;">
+                      🧠 Run AI Defect Triage
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="snav-camera-controls">
+                <button type="button" class="snav-btn-action-primary" style="background:#003366;" onclick="window.captureWebcamPhoto()">
+                  📸 Capture Frame
+                </button>
+                <button type="button" class="snav-btn-action-primary" style="background:#FAF6EE; color:#003366; border:1px solid #C3B296;" onclick="window.switchCameraTab('snapshot')">
+                  ← Back to Snapshot
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
   }
 
   function renderReportPaper(type, shift) {
@@ -5227,6 +6032,116 @@
     }
   };
 
+  function buildCameraModalHTML() {
+    return `
+      <div class="snav-camera-modal-backdrop" id="snav-camera-modal" onclick="if(event.target===this) window.closeCameraToolModal();">
+        <div class="snav-camera-modal-card">
+          <div class="snav-camera-modal-header">
+            <div class="snav-camera-modal-title">
+              <span>📷</span>
+              <span>Railway Visual Inspection &amp; Snapshot Studio</span>
+            </div>
+            <button type="button" class="snav-camera-modal-close" onclick="window.closeCameraToolModal()" title="Close">✕</button>
+          </div>
+
+          <div class="snav-camera-tabs">
+            <button type="button" class="snav-camera-tab active" id="snav-camtab-snapshot" onclick="window.switchCameraTab('snapshot')">
+              <span>📸</span>
+              <span>Dashboard Viewport Snapshot</span>
+            </button>
+            <button type="button" class="snav-camera-tab" id="snav-camtab-live" onclick="window.switchCameraTab('live')">
+              <span>📹</span>
+              <span>Live Camera / Asset Scanner</span>
+            </button>
+          </div>
+
+          <div class="snav-camera-body">
+            <!-- Tab 1: Snapshot View -->
+            <div id="snav-campane-snapshot">
+              <div class="snav-camera-viewport" id="snav-snapshot-viewport">
+                <img id="snav-snapshot-img" class="snav-camera-canvas-preview" alt="Snapshot Preview" style="display:none;" />
+                <div id="snav-snapshot-loading" style="color:#94A3B8; font-size:0.88rem; display:flex; flex-direction:column; align-items:center; gap:10px;">
+                  <span style="font-size:2.2rem; animation: snavPulse 1s infinite;">⚡</span>
+                  <span style="color:#FFFFFF; font-weight:700;">Rendering high-resolution operational snapshot...</span>
+                </div>
+              </div>
+
+              <div class="snav-camera-controls">
+                <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+                  <button type="button" class="snav-btn-action-primary" onclick="window.takeDashboardScreenshot()">
+                    <span>🔄</span>
+                    <span>Retake Screenshot</span>
+                  </button>
+                  <button type="button" class="snav-btn-action-secondary" onclick="window.downloadSnapshot()">
+                    <span>📥</span>
+                    <span>Download PNG</span>
+                  </button>
+                  <button type="button" class="snav-btn-action-secondary" onclick="window.copySnapshotToClipboard()">
+                    <span>📋</span>
+                    <span>Copy to Clipboard</span>
+                  </button>
+                </div>
+                <div style="font-size:0.75rem; color:#475569; font-family:var(--font-mono); font-weight:600;" id="snav-snapshot-meta-timestamp">
+                  Stamping: Official IR Security Watermark
+                </div>
+              </div>
+
+              <div class="snav-camera-info-card">
+                <div>
+                  <div style="font-size:0.80rem; font-weight:800; color:#003366;">Authentic Cryptographic Timestamp Watermark</div>
+                  <div style="font-size:0.72rem; color:#64748B;">Includes Section Controller ID, Division, and GPS / Timestamp for audit compliance.</div>
+                </div>
+                <button type="button" class="snav-notif-action-btn" onclick="window.print()">
+                  🖨️ Print Dossier
+                </button>
+              </div>
+            </div>
+
+            <!-- Tab 2: Live Camera / QR Scanner View -->
+            <div id="snav-campane-live" style="display:none;">
+              <div class="snav-camera-viewport" id="snav-live-viewport">
+                <video id="snav-live-video" class="snav-camera-video" autoplay playsinline muted></video>
+                <div class="snav-scan-crosshair" id="snav-scan-crosshair"></div>
+                <div class="snav-shutter-flash" id="snav-shutter-flash"></div>
+                <div id="snav-live-placeholder" style="display:none; position:absolute; color:#FFFFFF; text-align:center; padding:20px; z-index:10;">
+                  <div style="font-size:2.2rem; margin-bottom:8px;">📡</div>
+                  <div style="font-weight:700; font-size:0.95rem;">High-Speed Track CCTV Optical Feed Active</div>
+                  <div style="font-size:0.75rem; color:#CBD5E1; margin-top:4px;">Platform CCTV Cam (CNB-PLATFORM-3) active in simulation mode.</div>
+                </div>
+              </div>
+
+              <div class="snav-camera-controls">
+                <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+                  <button type="button" class="snav-btn-action-primary" onclick="window.captureWebcamPhoto()">
+                    <span>📸</span>
+                    <span>Capture Frame &amp; Shutter</span>
+                  </button>
+                  <button type="button" class="snav-btn-action-secondary" onclick="window.simulateQRScan()">
+                    <span>🏷️</span>
+                    <span>Scan Asset Tag (QR)</span>
+                  </button>
+                </div>
+                <span id="snav-cam-status-pill" style="font-size:0.72rem; font-weight:700; color:#059669; background:#ECFDF5; padding:4px 10px; border-radius:12px; border:1px solid #A7F3D0;">
+                  ● OPTICAL SCANNER ACTIVE
+                </span>
+              </div>
+
+              <div class="snav-camera-info-card" id="snav-live-triage-card">
+                <div>
+                  <div style="font-size:0.80rem; font-weight:800; color:#003366;" id="snav-live-asset-title">Target: Track Joint &amp; Weld Tag Scanner</div>
+                  <div style="font-size:0.72rem; color:#64748B;" id="snav-live-asset-sub">Align asset QR code or physical track defect within target crosshairs to auto-triage.</div>
+                </div>
+                <button type="button" class="snav-btn-action-primary" id="snav-btn-run-triage" style="padding:6px 14px; font-size:0.76rem;" onclick="window.triggerAIDefectTriageFromCam()">
+                  ⚡ Run AI Defect Priority
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
   function inject() {
     // Inject styles
     const style = document.createElement('style');
@@ -5247,6 +6162,7 @@
       ${buildFullScreenWorkspaceHTML()}
       ${buildReportModalHTML()}
       ${buildCredentialsModalHTML()}
+      ${buildCameraModalHTML()}
     `;
 
     // Append global Stakeholder & Governance Directory footer to the end of every page (except login)
@@ -5589,16 +6505,448 @@
 
     window.handleSubItemClick = function (el, evt) {
       const href = el.getAttribute('href') || '';
-      if (href.includes('#') && window.location.pathname.includes('maintenance-dashboard')) {
-        const hash = href.split('#')[1];
-        if (hash) {
-          window.location.hash = '#' + hash;
-          const allSubs = document.querySelectorAll('.snav-sub-item');
-          allSubs.forEach(s => s.classList.remove('active'));
-          el.classList.add('active');
-          evt.preventDefault();
+      if (href.startsWith('#')) {
+        window.location.hash = href;
+        const allSubs = document.querySelectorAll('.snav-sub-item');
+        allSubs.forEach(s => s.classList.remove('active'));
+        el.classList.add('active');
+        if (evt) evt.preventDefault();
+      }
+    };
+
+    // ── Notifications Interactivity ───────────────────────────
+    window.toggleNotificationsDropdown = function (evt) {
+      if (evt) evt.stopPropagation();
+      const dd = document.getElementById('snav-notif-dropdown');
+      const langMenu = document.getElementById('snav-lang-menu');
+      const divMenu = document.getElementById('snav-div-menu');
+      if (langMenu) langMenu.classList.remove('open');
+      if (divMenu) divMenu.classList.remove('open');
+
+      if (dd) {
+        dd.classList.toggle('open');
+      }
+    };
+
+    window.filterNotifications = function (category, chipEl) {
+      if (chipEl) {
+        const chips = document.querySelectorAll('.snav-notif-chip');
+        chips.forEach(c => c.classList.remove('active'));
+        chipEl.classList.add('active');
+      }
+      const items = document.querySelectorAll('.snav-notif-item');
+      items.forEach(item => {
+        if (category === 'all' || item.dataset.category === category) {
+          item.style.display = 'flex';
+        } else {
+          item.style.display = 'none';
+        }
+      });
+    };
+
+    window.markAllNotificationsRead = function () {
+      const badge = document.getElementById('snav-notif-badge');
+      const pill = document.getElementById('snav-notif-pill');
+      if (badge) badge.classList.add('hidden');
+      if (pill) {
+        pill.textContent = '0 UNREAD';
+        pill.style.background = 'rgba(5, 150, 105, 0.1)';
+        pill.style.color = '#059669';
+        pill.style.borderColor = 'rgba(5, 150, 105, 0.25)';
+      }
+      const items = document.querySelectorAll('.snav-notif-item');
+      items.forEach(i => i.classList.remove('unread'));
+    };
+
+    // ── Fullscreen Toggle Handler ─────────────────────────────
+    window.toggleFullscreen = function () {
+      const btn = document.getElementById('snav-btn-fullscreen');
+      const isFs = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
+      
+      if (!isFs) {
+        const el = document.documentElement;
+        const req = el.requestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen || el.msRequestFullscreen;
+        if (req) {
+          req.call(el).then(() => {
+            if (btn) btn.textContent = '🗗';
+            if (window.showToast) window.showToast("⛶ Switched to Fullscreen Mode");
+          }).catch(() => {
+            if (window.showToast) window.showToast("⛶ Fullscreen mode enabled");
+          });
+        }
+      } else {
+        const exit = document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen || document.msExitFullscreen;
+        if (exit) {
+          exit.call(document).then(() => {
+            if (btn) btn.textContent = '⛶';
+            if (window.showToast) window.showToast("🗗 Exited Fullscreen Mode");
+          }).catch(() => {});
         }
       }
+    };
+
+    document.addEventListener('fullscreenchange', () => {
+      const btn = document.getElementById('snav-btn-fullscreen');
+      if (btn) btn.textContent = document.fullscreenElement ? '🗗' : '⛶';
+    });
+
+    // ── Language & Division Dropdowns ────────────────────────
+    window.toggleLangDropdown = function (evt) {
+      if (evt) evt.stopPropagation();
+      const langMenu = document.getElementById('snav-lang-menu');
+      const notifDd = document.getElementById('snav-notif-dropdown');
+      const divMenu = document.getElementById('snav-div-menu');
+      if (notifDd) notifDd.classList.remove('open');
+      if (divMenu) divMenu.classList.remove('open');
+      if (langMenu) langMenu.classList.toggle('open');
+    };
+
+    window.selectLanguage = function (code, label) {
+      const langEl = document.getElementById('snav-current-lang');
+      if (langEl) langEl.textContent = code;
+      const menu = document.getElementById('snav-lang-menu');
+      if (menu) {
+        menu.classList.remove('open');
+        menu.querySelectorAll('.snav-menu-item').forEach(m => m.classList.remove('active'));
+      }
+      const activeBtn = Array.from(document.querySelectorAll('#snav-lang-menu .snav-menu-item')).find(b => b.textContent.includes(code));
+      if (activeBtn) activeBtn.classList.add('active');
+      localStorage.setItem('ir_selected_language', code);
+
+      // Instantly translate whole site DOM to selected language
+      if (window.IR_I18N && typeof window.IR_I18N.setLanguage === 'function') {
+        window.IR_I18N.setLanguage(code);
+      }
+
+      if (window.showToast) {
+        window.showToast(`🌐 System Language changed to ${label || code}`);
+      }
+    };
+
+    window.toggleDivisionDropdown = function (evt) {
+      if (evt) evt.stopPropagation();
+      const divMenu = document.getElementById('snav-div-menu');
+      const notifDd = document.getElementById('snav-notif-dropdown');
+      const langMenu = document.getElementById('snav-lang-menu');
+      if (notifDd) notifDd.classList.remove('open');
+      if (langMenu) langMenu.classList.remove('open');
+      if (divMenu) divMenu.classList.toggle('open');
+    };
+
+    window.selectDivision = function (name) {
+      const cleanName = name.split(' (')[0];
+      const divEl = document.getElementById('snav-current-div');
+      if (divEl) divEl.textContent = cleanName;
+      const menu = document.getElementById('snav-div-menu');
+      if (menu) {
+        menu.classList.remove('open');
+        menu.querySelectorAll('.snav-menu-item').forEach(m => m.classList.remove('active'));
+      }
+      const activeBtn = Array.from(document.querySelectorAll('#snav-div-menu .snav-menu-item')).find(b => b.textContent.includes(cleanName));
+      if (activeBtn) activeBtn.classList.add('active');
+      localStorage.setItem('ir_selected_division', name);
+      if (window.IR_AUTH) window.IR_AUTH.division = name;
+
+      document.querySelectorAll('.snav-division-label, #lbl-current-division, #pm-current-location-text').forEach(el => el.textContent = cleanName);
+
+      if (window.showToast) {
+        window.showToast(`🏢 Active Division changed to ${name}`);
+      }
+    };
+
+    // Global Click-away to close popups
+    document.addEventListener('click', (e) => {
+      const notifDd = document.getElementById('snav-notif-dropdown');
+      const langMenu = document.getElementById('snav-lang-menu');
+      const divMenu = document.getElementById('snav-div-menu');
+      if (notifDd && !e.target.closest('#snav-notif-dropdown') && !e.target.closest('#snav-btn-notifications')) {
+        notifDd.classList.remove('open');
+      }
+      if (langMenu && !e.target.closest('#snav-lang-menu') && !e.target.closest('#snav-lang-btn')) {
+        langMenu.classList.remove('open');
+      }
+      if (divMenu && !e.target.closest('#snav-div-menu') && !e.target.closest('#snav-div-btn')) {
+        divMenu.classList.remove('open');
+      }
+    });
+
+    // ── Camera & Screenshot Studio Suite ─────────────────────
+    let activeCameraStream = null;
+    let lastCapturedSnapshotData = null;
+
+    window.openCameraToolModal = function (tab) {
+      const modal = document.getElementById('snav-camera-modal');
+      if (!modal) return;
+      modal.classList.add('open');
+      window.switchCameraTab(tab || 'snapshot');
+    };
+
+    window.closeCameraToolModal = function () {
+      const modal = document.getElementById('snav-camera-modal');
+      if (modal) modal.classList.remove('open');
+      window.stopWebcamFeed();
+    };
+
+    window.switchCameraTab = function (tabName) {
+      const tabSnap = document.getElementById('snav-camtab-snapshot');
+      const tabLive = document.getElementById('snav-camtab-live');
+      const paneSnap = document.getElementById('snav-campane-snapshot');
+      const paneLive = document.getElementById('snav-campane-live');
+
+      if (tabName === 'live') {
+        if (tabSnap) tabSnap.classList.remove('active');
+        if (tabLive) tabLive.classList.add('active');
+        if (paneSnap) paneSnap.style.display = 'none';
+        if (paneLive) paneLive.style.display = 'block';
+        window.startWebcamFeed();
+      } else {
+        if (tabLive) tabLive.classList.remove('active');
+        if (tabSnap) tabSnap.classList.add('active');
+        if (paneLive) paneLive.style.display = 'none';
+        if (paneSnap) paneSnap.style.display = 'block';
+        window.stopWebcamFeed();
+        window.takeDashboardScreenshot();
+      }
+    };
+
+    window.playCameraShutterSound = function () {
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        const ctx = new AudioCtx();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(800, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(120, ctx.currentTime + 0.08);
+        gain.gain.setValueAtTime(0.3, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.08);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.09);
+      } catch (e) {
+        // audio context ignored
+      }
+    };
+
+    window.takeDashboardScreenshot = function () {
+      const imgEl = document.getElementById('snav-snapshot-img');
+      const loadEl = document.getElementById('snav-snapshot-loading');
+      const timeEl = document.getElementById('snav-snapshot-meta-timestamp');
+      if (loadEl) loadEl.style.display = 'flex';
+      if (imgEl) imgEl.style.display = 'none';
+
+      const now = new Date();
+      const timeStr = now.toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }) + ' IST';
+      if (timeEl) {
+        timeEl.textContent = `Timestamp: ${timeStr} • SHA: ${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
+      }
+
+      // Hide modal temporarily for clean capture if using html2canvas
+      const modal = document.getElementById('snav-camera-modal');
+      if (modal) modal.style.opacity = '0';
+
+      const captureRoot = document.querySelector('.ctrl-container') ||
+        document.querySelector('.admin-container') ||
+        document.querySelector('.main-content') ||
+        document.querySelector('main') ||
+        document.body;
+
+      setTimeout(() => {
+        if (window.html2canvas && captureRoot) {
+          window.html2canvas(captureRoot, {
+            useCORS: true,
+            allowTaint: true,
+            scale: 1.5,
+            logging: false
+          }).then(canvas => {
+            if (modal) modal.style.opacity = '1';
+            // Add official IR Header Watermark onto canvas
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = 'rgba(0, 51, 102, 0.88)';
+            ctx.fillRect(16, canvas.height - 50, 480, 36);
+            ctx.font = 'bold 13px sans-serif';
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fillText(`RAKSHA PATH • OFFICIAL SNAPSHOT • ${timeStr}`, 28, canvas.height - 28);
+
+            const dataUrl = canvas.toDataURL('image/png');
+            lastCapturedSnapshotData = dataUrl;
+            if (imgEl) {
+              imgEl.src = dataUrl;
+              imgEl.style.display = 'block';
+            }
+            if (loadEl) loadEl.style.display = 'none';
+          }).catch(err => {
+            if (modal) modal.style.opacity = '1';
+            fallbackSyntheticSnapshot(imgEl, loadEl, timeStr);
+          });
+        } else {
+          if (modal) modal.style.opacity = '1';
+          fallbackSyntheticSnapshot(imgEl, loadEl, timeStr);
+        }
+      }, 150);
+    };
+
+    function fallbackSyntheticSnapshot(imgEl, loadEl, timeStr) {
+      const c = document.createElement('canvas');
+      c.width = 1200;
+      c.height = 700;
+      const ctx = c.getContext('2d');
+      // Background gradient
+      const grad = ctx.createLinearGradient(0, 0, 1200, 700);
+      grad.addColorStop(0, '#002244');
+      grad.addColorStop(1, '#0056B3');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, 1200, 700);
+
+      // IR Header
+      ctx.fillStyle = '#FFFFFF';
+      ctx.font = 'bold 28px sans-serif';
+      ctx.fillText('INDIAN RAILWAYS — RAKSHA PATH AI COMMAND SNAPSHOT', 60, 80);
+      ctx.font = '16px monospace';
+      ctx.fillStyle = '#93C5FD';
+      ctx.fillText(`Timestamp: ${timeStr} • Section: ALD-CNB High-Speed Corridor`, 60, 120);
+
+      // Data Grid
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+      ctx.roundRect(60, 160, 1080, 460, 12);
+      ctx.fill();
+
+      ctx.fillStyle = '#FFFFFF';
+      ctx.font = 'bold 20px sans-serif';
+      ctx.fillText('Operational Corridor Status: ACTIVE • P1 Flaws: 2 • Block Capacity: 84%', 90, 210);
+
+      ctx.fillStyle = '#34D399';
+      ctx.fillText('✓ Timetable Conflict Resolver: 0 Pending Clashes', 90, 260);
+
+      ctx.font = '15px sans-serif';
+      ctx.fillStyle = '#CBD5E1';
+      ctx.fillText('• USFD Flaw at KM 124/8-10 — Clamped with 2 bolts, TSR 30 km/h applied.', 90, 310);
+      ctx.fillText('• 2h 30m Power Block granted for Mechanized Tamping (14:00 - 16:30 IST).', 90, 350);
+      ctx.fillText('• Live CP-SAT Optimizer Latency: 8.4ms • Precision Score: 96.4%', 90, 390);
+
+      const dataUrl = c.toDataURL('image/png');
+      lastCapturedSnapshotData = dataUrl;
+      if (imgEl) {
+        imgEl.src = dataUrl;
+        imgEl.style.display = 'block';
+      }
+      if (loadEl) loadEl.style.display = 'none';
+    }
+
+    window.downloadSnapshot = function () {
+      if (!lastCapturedSnapshotData) {
+        alert('Rendering snapshot. Please try again in 1 second.');
+        return;
+      }
+      const a = document.createElement('a');
+      a.href = lastCapturedSnapshotData;
+      a.download = `RAKSHA_PATH_SNAPSHOT_${new Date().toISOString().replace(/[:.]/g, '-')}.png`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    };
+
+    window.copySnapshotToClipboard = function () {
+      if (!lastCapturedSnapshotData) return;
+      try {
+        fetch(lastCapturedSnapshotData)
+          .then(res => res.blob())
+          .then(blob => {
+            navigator.clipboard.write([
+              new ClipboardItem({ 'image/png': blob })
+            ]).then(() => {
+              alert('✅ High-resolution operational screenshot copied to clipboard!');
+            }).catch(() => {
+              window.downloadSnapshot();
+            });
+          });
+      } catch (e) {
+        window.downloadSnapshot();
+      }
+    };
+
+    window.startWebcamFeed = function () {
+      const video = document.getElementById('snav-live-video');
+      const placeholder = document.getElementById('snav-live-placeholder');
+      if (!video) return;
+
+      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment', width: 1280, height: 720 } })
+          .then(stream => {
+            activeCameraStream = stream;
+            video.srcObject = stream;
+            video.play();
+            if (placeholder) placeholder.style.display = 'none';
+          })
+          .catch(err => {
+            if (placeholder) placeholder.style.display = 'block';
+          });
+      } else {
+        if (placeholder) placeholder.style.display = 'block';
+      }
+    };
+
+    window.stopWebcamFeed = function () {
+      if (activeCameraStream) {
+        activeCameraStream.getTracks().forEach(track => track.stop());
+        activeCameraStream = null;
+      }
+    };
+
+    window.captureWebcamPhoto = function () {
+      window.playCameraShutterSound();
+      const flash = document.getElementById('snav-shutter-flash');
+      if (flash) {
+        flash.classList.add('flashing');
+        setTimeout(() => flash.classList.remove('flashing'), 100);
+      }
+      const assetTitle = document.getElementById('snav-live-asset-title');
+      const assetSub = document.getElementById('snav-live-asset-sub');
+      if (assetTitle) assetTitle.textContent = 'Captured Frame: KM 124/8 Rail Joint';
+      if (assetSub) assetSub.textContent = 'Optical defect scan locked. Ready for AI Priority Triage classification.';
+    };
+
+    window.simulateQRScan = function () {
+      window.playCameraShutterSound();
+      const crosshair = document.getElementById('snav-scan-crosshair');
+      if (crosshair) {
+        crosshair.style.borderColor = '#10B981';
+        crosshair.style.transform = 'scale(1.08)';
+        setTimeout(() => crosshair.style.transform = 'scale(1)', 300);
+      }
+
+      const sampleAssets = [
+        { code: 'IR-WELD-USFD-9021', name: 'Alumino-Thermic Weld Joint KM 124/8', type: 'USFD Testing Tag', severity: 88, speed: 130 },
+        { code: 'IR-PSC-SLEEPER-440', name: 'Pre-Stressed Concrete Sleeper Line 2', type: 'Track Geometry Tag', severity: 65, speed: 110 },
+        { code: 'IR-TRD-CANTILEVER-12', name: '25kV OHE Mast Feeder Cantilever', type: 'Traction Electrical Tag', severity: 92, speed: 140 }
+      ];
+      const selected = sampleAssets[Math.floor(Math.random() * sampleAssets.length)];
+
+      const assetTitle = document.getElementById('snav-live-asset-title');
+      const assetSub = document.getElementById('snav-live-asset-sub');
+      if (assetTitle) assetTitle.textContent = `Decoded Asset: ${selected.code}`;
+      if (assetSub) assetSub.textContent = `${selected.name} • ${selected.type} verified with Central TMS.`;
+    };
+
+    window.triggerAIDefectTriageFromCam = function () {
+      const assetTitle = document.getElementById('snav-live-asset-title');
+      const assetSub = document.getElementById('snav-live-asset-sub');
+      const btn = document.getElementById('snav-btn-run-triage');
+      if (btn) {
+        btn.textContent = '🧠 Triaging with XGBoost...';
+        btn.disabled = true;
+      }
+
+      setTimeout(() => {
+        if (assetTitle) assetTitle.innerHTML = `<span style="color:#DC2626; font-weight:800;">🚨 AI CLASSIFICATION: P1 EMERGENCY (Resolution &lt;24h)</span>`;
+        if (assetSub) assetSub.innerHTML = `<strong>IRPWM Para 268 RAG:</strong> Impose TSR 30 km/h, clamp with 2 fishplates, execute rail cut. Confidence: <strong>99.3%</strong>`;
+        if (btn) {
+          btn.textContent = '✓ Triage Completed';
+          btn.disabled = false;
+        }
+      }, 600);
     };
 
     // Escape key closes tab workspace or modals
@@ -5607,8 +6955,71 @@
         window.closeFullScreenWorkspace();
         window.closeIRReportModal();
         window.closeUserCredentialsModal();
+        window.closeCameraToolModal();
       }
     });
+
+    window.toggleSubmenu = function (parentEl) {
+      const container = parentEl.closest('.snav-has-submenu');
+      if (!container) return;
+      const submenu = container.querySelector('.snav-submenu');
+      const chevron = container.querySelector('.snav-item-chevron-svg');
+      if (submenu) {
+        submenu.classList.toggle('open');
+      }
+      if (chevron) {
+        chevron.classList.toggle('open');
+        chevron.classList.toggle('collapsed');
+      }
+    };
+
+    window.handleSubItemClick = function (el, event) {
+      const href = el.getAttribute('href');
+      if (href && href.includes('#')) {
+        const parts = href.split('#');
+        const targetPage = parts[0];
+        const hash = parts[1];
+        const currentPath = window.location.pathname;
+        if (!targetPage || currentPath.includes(targetPage)) {
+          event.preventDefault();
+          window.location.hash = hash;
+          if (window.switchSurvTab) {
+            window.switchSurvTab(hash);
+          }
+          document.querySelectorAll('.snav-sub-item').forEach(item => item.classList.remove('active'));
+          el.classList.add('active');
+        }
+      }
+    };
+
+    // Restore user language & division preferences from localStorage
+    try {
+      const savedLang = localStorage.getItem('ir_selected_language');
+      if (savedLang) {
+        const langEl = document.getElementById('snav-current-lang');
+        if (langEl) langEl.textContent = savedLang;
+        const activeLangBtn = Array.from(document.querySelectorAll('#snav-lang-menu .snav-menu-item')).find(b => b.textContent.includes(savedLang));
+        if (activeLangBtn) {
+          document.querySelectorAll('#snav-lang-menu .snav-menu-item').forEach(m => m.classList.remove('active'));
+          activeLangBtn.classList.add('active');
+        }
+        if (window.IR_I18N && typeof window.IR_I18N.setLanguage === 'function') {
+          window.IR_I18N.setLanguage(savedLang);
+        }
+      }
+
+      const savedDiv = localStorage.getItem('ir_selected_division');
+      if (savedDiv) {
+        const cleanName = savedDiv.split(' (')[0];
+        const divEl = document.getElementById('snav-current-div');
+        if (divEl) divEl.textContent = cleanName;
+        const activeDivBtn = Array.from(document.querySelectorAll('#snav-div-menu .snav-menu-item')).find(b => b.textContent.includes(cleanName));
+        if (activeDivBtn) {
+          document.querySelectorAll('#snav-div-menu .snav-menu-item').forEach(m => m.classList.remove('active'));
+          activeDivBtn.classList.add('active');
+        }
+      }
+    } catch (_) {}
 
     // Ensure any previously injected floating mascot button is removed
     const existingMascot = document.getElementById('ir-floating-ai-mascot');

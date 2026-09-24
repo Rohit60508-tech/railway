@@ -21,7 +21,8 @@
   <link rel="stylesheet" href="../styles/main.css" />
 
   <!-- Shared Navigation & Real-Time Sync -->
-  <script src="../components/SharedNav.js?v=2.5.3"></script>
+  <script src="../components/ir-i18n.js?v=2.7.0"></script>
+  <script src="../components/SharedNav.js?v=2.7.0"></script>
   <script src="../components/shared-live-sync.js"></script>
 
   <!-- AI Component Scripts -->
@@ -307,6 +308,356 @@
       transition: opacity 0.2s ease, visibility 0.2s ease;
       pointer-events: none;
     }
+
+    /* ── Main View Switching Tabs (Work Orders vs Labor) ────── */
+    .maint-main-tabs-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 24px;
+      border-bottom: 2px solid rgba(0, 51, 102, 0.12);
+      padding-bottom: 12px;
+    }
+
+    .maint-main-tabs {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .maint-view-tab {
+      background: #FFFFFF;
+      border: 1.5px solid rgba(0, 51, 102, 0.16);
+      color: #334155;
+      font-family: var(--font-display);
+      font-size: 0.92rem;
+      font-weight: 700;
+      padding: 10px 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 6px rgba(0, 51, 102, 0.04);
+    }
+
+    .maint-view-tab:hover {
+      background: rgba(0, 51, 102, 0.05);
+      border-color: #003366;
+      color: #003366;
+    }
+
+    .maint-view-tab.active {
+      background: linear-gradient(135deg, #003366 0%, #0056B3 100%);
+      border-color: #003366;
+      color: #FFFFFF;
+      box-shadow: 0 4px 14px rgba(0, 51, 102, 0.25);
+    }
+
+    .maint-view-badge {
+      background: rgba(0, 51, 102, 0.12);
+      color: #003366;
+      font-size: 0.74rem;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 12px;
+    }
+
+    .maint-view-tab.active .maint-view-badge {
+      background: rgba(255, 255, 255, 0.22);
+      color: #FFFFFF;
+    }
+
+    /* ── Labor Dashboard Styles ────────────────────────────── */
+    .labor-kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .labor-kpi-card {
+      background: #FFFFFF;
+      border: 1.5px solid rgba(0, 51, 102, 0.12);
+      border-radius: 14px;
+      padding: 16px 20px;
+      box-shadow: 0 4px 14px rgba(70, 50, 30, 0.04);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .labor-kpi-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(0, 51, 102, 0.1);
+    }
+
+    .labor-kpi-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      flex-shrink: 0;
+    }
+
+    .labor-kpi-val {
+      font-family: var(--font-display);
+      font-size: 1.45rem;
+      font-weight: 900;
+      color: #003366;
+      line-height: 1.1;
+    }
+
+    .labor-kpi-label {
+      font-size: 0.74rem;
+      color: #64748B;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 2px;
+    }
+
+    .labor-control-bar {
+      background: #FFFFFF;
+      border: 1.5px solid rgba(0, 51, 102, 0.14);
+      border-radius: 14px;
+      padding: 14px 20px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 14px;
+      box-shadow: 0 2px 10px rgba(0, 51, 102, 0.04);
+    }
+
+    .labor-search-input {
+      padding: 8px 14px 8px 36px;
+      border: 1.5px solid #CBD5E1;
+      border-radius: 8px;
+      background: #FAF6EE;
+      font-size: 0.82rem;
+      color: #0F172A;
+      outline: none;
+      min-width: 260px;
+      transition: border-color 0.2s ease;
+    }
+
+    .labor-search-input:focus {
+      border-color: #003366;
+      background: #FFFFFF;
+    }
+
+    .gang-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(430px, 1fr));
+      gap: 20px;
+      margin-bottom: 36px;
+    }
+
+    .gang-card {
+      background: #FFFFFF;
+      border: 1.5px solid rgba(0, 51, 102, 0.14);
+      border-radius: 14px;
+      padding: 20px;
+      box-shadow: 0 4px 18px rgba(70, 50, 30, 0.05);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.25s ease;
+    }
+
+    .gang-card:hover {
+      border-color: #003366;
+      box-shadow: 0 8px 24px rgba(0, 51, 102, 0.12);
+    }
+
+    .gang-card.gang-active {
+      border-left: 5px solid #059669;
+    }
+
+    .gang-card.gang-standby {
+      border-left: 5px solid #D97706;
+      background: #FFFDF8;
+    }
+
+    .gang-header-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      gap: 10px;
+    }
+
+    .gang-title {
+      font-family: var(--font-display);
+      font-size: 1.08rem;
+      font-weight: 800;
+      color: #003366;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .gang-dept-tag {
+      font-size: 0.70rem;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .dept-civil { background: rgba(0, 51, 102, 0.1); color: #003366; border: 1px solid rgba(0, 51, 102, 0.2); }
+    .dept-trd { background: rgba(217, 119, 6, 0.1); color: #B45309; border: 1px solid rgba(217, 119, 6, 0.25); }
+    .dept-sig { background: rgba(5, 150, 105, 0.1); color: #047857; border: 1px solid rgba(5, 150, 105, 0.25); }
+    .dept-mech { background: rgba(100, 116, 139, 0.1); color: #475569; border: 1px solid rgba(100, 116, 139, 0.25); }
+
+    .gang-hierarchy-row {
+      background: #FAF6EE;
+      border: 1px solid rgba(195, 178, 150, 0.55);
+      border-radius: 8px;
+      padding: 10px 12px;
+      margin-bottom: 12px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      font-size: 0.78rem;
+    }
+
+    .gang-location-row {
+      background: rgba(0, 51, 102, 0.03);
+      border: 1px solid rgba(0, 51, 102, 0.1);
+      border-radius: 8px;
+      padding: 8px 12px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+      font-size: 0.78rem;
+    }
+
+    .gang-duration-box {
+      margin-bottom: 14px;
+    }
+
+    .gang-progress-bg {
+      height: 8px;
+      background: #E2E8F0;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 4px;
+      margin-bottom: 4px;
+    }
+
+    .gang-progress-fill {
+      height: 100%;
+      border-radius: 4px;
+      background: linear-gradient(90deg, #059669, #0056B3);
+      transition: width 0.3s ease;
+    }
+
+    .gang-workers-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+
+    .worker-chip {
+      background: #FFFFFF;
+      border: 1px solid rgba(0, 51, 102, 0.18);
+      border-radius: 20px;
+      padding: 4px 10px;
+      font-size: 0.74rem;
+      font-weight: 600;
+      color: #1E293B;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+
+    .worker-chip:hover {
+      background: rgba(0, 51, 102, 0.08);
+      border-color: #003366;
+      color: #003366;
+    }
+
+    .worker-avatar-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #059669;
+    }
+
+    .worker-avatar-dot.standby {
+      background: #D97706;
+    }
+
+    /* ── Labor Master Roster Table ────────────────────────── */
+    .labor-table-wrapper {
+      background: #FFFFFF;
+      border: 1.5px solid rgba(0, 51, 102, 0.14);
+      border-radius: 14px;
+      box-shadow: 0 4px 20px rgba(70, 50, 30, 0.05);
+      overflow-x: auto;
+      margin-bottom: 36px;
+    }
+
+    .labor-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.80rem;
+    }
+
+    .labor-table th {
+      background: #FAF6EE;
+      color: #003366;
+      font-weight: 800;
+      padding: 12px 14px;
+      border-bottom: 2px solid rgba(0, 51, 102, 0.15);
+      white-space: nowrap;
+      font-family: var(--font-display);
+      letter-spacing: 0.3px;
+    }
+
+    .labor-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+      color: #1E293B;
+      vertical-align: middle;
+    }
+
+    .labor-table tr:hover td {
+      background: rgba(0, 51, 102, 0.02);
+    }
+
+    .labor-avatar-img {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #003366, #0056B3);
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 0.78rem;
+      flex-shrink: 0;
+    }
   </style>
 </head>
 
@@ -317,154 +668,788 @@
 
   <main class="maint-container">
 
-    <!-- ═══════════════════ OVERVIEW DASHBOARD HEADER BANNER ═══════════════════ -->
-    <div
-      style="background:#FFFFFF; border:1.5px solid rgba(0,51,102,0.12); border-radius:18px; padding:20px 24px; margin-bottom:24px; box-shadow:0 4px 16px rgba(0,51,102,0.05); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px;">
-      <div style="display:flex; align-items:center; gap:14px;">
-        <div
-          style="width:46px; height:46px; border-radius:12px; background:rgba(0,51,102,0.08); color:#003366; display:flex; align-items:center; justify-content:center; font-size:1.3rem;">
-          🔧</div>
-        <div>
-          <h1
-            style="font-family:var(--font-display); font-size:1.6rem; font-weight:800; color:#003366; margin:0 0 2px 0;">
-            Work Orders &amp; Maintenance Requests</h1>
-          <p style="font-size:0.88rem; color:#64748B; margin:0;">Manage track, signaling, and traction work orders
-            across all maintenance operations</p>
+      <!-- ═══════════════════ OVERVIEW DASHBOARD HEADER BANNER ═══════════════════ -->
+      <div
+        style="background:#FFFFFF; border:1.5px solid rgba(0,51,102,0.12); border-radius:18px; padding:20px 24px; margin-bottom:24px; box-shadow:0 4px 16px rgba(0,51,102,0.05); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px;">
+        <div style="display:flex; align-items:center; gap:14px;">
+          <div
+            style="width:46px; height:46px; border-radius:12px; background:rgba(0,51,102,0.08); color:#003366; display:flex; align-items:center; justify-content:center; font-size:1.3rem;">
+            🔧</div>
+          <div>
+            <h1
+              style="font-family:var(--font-display); font-size:1.6rem; font-weight:800; color:#003366; margin:0 0 2px 0;">
+              Work Orders &amp; Maintenance Requests</h1>
+            <p style="font-size:0.88rem; color:#64748B; margin:0;">Manage track, signaling, and traction work orders
+              across all maintenance operations</p>
+          </div>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+          <span
+            style="display:inline-flex; align-items:center; gap:6px; padding:6px 12px; border-radius:20px; background:rgba(5,150,105,0.1); border:1px solid rgba(5,150,105,0.25); color:#059669; font-size:0.78rem; font-weight:700;">
+            <span
+              style="width:7px; height:7px; border-radius:50%; background:#059669; box-shadow:0 0 0 2px rgba(5,150,105,0.25);"></span>
+            Live Telemetry Data
+          </span>
+
+          <button type="button" onclick="window.location.reload();"
+            style="display:inline-flex; align-items:center; gap:6px; padding:7px 14px; border-radius:8px; border:1px solid rgba(0,51,102,0.18); background:#FFFFFF; color:#003366; font-size:0.80rem; font-weight:700; cursor:pointer;">
+            🔄 Refresh
+          </button>
+
+          <button type="button" onclick="window.openIRReportModal('work-orders');"
+            style="display:inline-flex; align-items:center; gap:6px; padding:7px 14px; border-radius:8px; border:1px solid rgba(0,51,102,0.18); background:#FFFFFF; color:#003366; font-size:0.80rem; font-weight:700; cursor:pointer;">
+            📥 Export ▾
+          </button>
         </div>
       </div>
 
-      <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
-        <span
-          style="display:inline-flex; align-items:center; gap:6px; padding:6px 12px; border-radius:20px; background:rgba(5,150,105,0.1); border:1px solid rgba(5,150,105,0.25); color:#059669; font-size:0.78rem; font-weight:700;">
-          <span
-            style="width:7px; height:7px; border-radius:50%; background:#059669; box-shadow:0 0 0 2px rgba(5,150,105,0.25);"></span>
-          Live Telemetry Data
-        </span>
+      <!-- ═══════════════════ FILTER CONTROLS ═══════════════════ -->
+      <div class="filter-bar">
+        <div class="dept-tabs" id="dept-filter-tabs">
+          <button class="dept-tab active" data-dept="ALL">All Departments</button>
+          <button class="dept-tab" data-dept="CIVIL">Civil / P-Way (TMS)</button>
+          <button class="dept-tab" data-dept="TRD">Electrical / TRD</button>
+          <button class="dept-tab" data-dept="SIG">Signalling &amp; Telecom (SMMS)</button>
+          <button class="dept-tab" data-dept="MECH">Mechanical / Rolling Stock</button>
+        </div>
 
-        <button type="button" onclick="window.location.reload();"
-          style="display:inline-flex; align-items:center; gap:6px; padding:7px 14px; border-radius:8px; border:1px solid rgba(0,51,102,0.18); background:#FFFFFF; color:#003366; font-size:0.80rem; font-weight:700; cursor:pointer;">
-          🔄 Refresh
+        <div style="font-size: 0.78rem; color: #64748B; font-family: var(--font-mono);">
+          Sorted by: <span style="color: #003366; font-weight: 700;">AI Risk Priority (P1 → P4)</span>
+        </div>
+      </div>
+
+      <!-- ═══════════════════ SECTION 1: CONTROL OFFICE SANCTIONED REQUISITIONS (PENDING ACCEPTANCE) ═══════════════════ -->
+      <div class="section-title" style="display: flex; align-items: center; justify-content: space-between;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span>📋</span>
+          <span>Control Office Sanctioned Work Requisitions (Pending Acceptance)</span>
+          <span id="pending-wo-count-badge"
+            style="background: rgba(0, 51, 102, 0.08); border: 1px solid rgba(0, 51, 102, 0.2); color: #003366; font-size: 0.76rem; font-weight: 700; padding: 2px 8px; border-radius: 12px;">0
+            Sanctioned</span>
+        </div>
+        <div style="font-size: 0.76rem; color: #64748B; font-weight: 600;">
+          Click <strong>"✓ Accept &amp; Lock Slot"</strong> to confirm requisition ➔ Move to Work To Be Done
+        </div>
+      </div>
+
+      <div class="work-orders-grid" id="pending-work-orders-container">
+        <!-- Populated dynamically with sanctioned work orders awaiting acceptance -->
+      </div>
+
+      <!-- ═══════════════════ SECTION 2: WORK ACCEPTED & LOCKED SLOTS (TO BE DONE) ═══════════════════ -->
+      <div class="section-title"
+        style="margin-top: 36px; display: flex; align-items: center; justify-content: space-between;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span>📌</span>
+          <span style="color: #003366;">Work Accepted &amp; Locked Slots (To Be Done / In Progress)</span>
+          <span id="accepted-wo-count-badge"
+            style="background: rgba(5, 150, 105, 0.1); border: 1px solid rgba(5, 150, 105, 0.3); color: #059669; font-size: 0.76rem; font-weight: 700; padding: 2px 8px; border-radius: 12px;">0
+            Accepted</span>
+        </div>
+        <div style="font-size: 0.76rem; color: #059669; font-weight: 600;">
+          Accepted Requisitions ready for field execution ➔ Click <strong>"☑ Tick Work Completed"</strong> when done
+        </div>
+      </div>
+
+      <div class="work-orders-grid" id="work-orders-container">
+        <!-- Populated dynamically ONLY with accepted work orders -->
+      </div>
+
+      <!-- ═══════════════════ SECTION 3: WORK COMPLETED & CLOSED REQUISITIONS ═══════════════════ -->
+      <div class="section-title"
+        style="margin-top: 36px; display: flex; align-items: center; justify-content: space-between;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span>✅</span>
+          <span style="color: #059669;">Work Completed &amp; Closed Requisitions</span>
+          <span id="completed-wo-count-badge"
+            style="background: rgba(5, 150, 105, 0.1); border: 1px solid rgba(5, 150, 105, 0.3); color: #059669; font-size: 0.76rem; font-weight: 700; padding: 2px 8px; border-radius: 12px;">0
+            Completed</span>
+        </div>
+        <button onclick="window.openIRReportModal('work-orders')" style="
+          background: linear-gradient(135deg, #059669, #047857);
+          border: none;
+          color: #FFFFFF;
+          padding: 7px 16px;
+          border-radius: 6px;
+          font-size: 0.78rem;
+          font-weight: 700;
+          cursor: pointer;
+          box-shadow: 0 2px 8px rgba(5, 150, 105, 0.25);
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+        ">
+          <span>📑</span>
+          <span>Generate Completion Report Dossier</span>
         </button>
+      </div>
 
-        <button type="button" onclick="window.openIRReportModal('work-orders');"
-          style="display:inline-flex; align-items:center; gap:6px; padding:7px 14px; border-radius:8px; border:1px solid rgba(0,51,102,0.18); background:#FFFFFF; color:#003366; font-size:0.80rem; font-weight:700; cursor:pointer;">
-          📥 Export ▾
+      <div class="work-orders-grid" id="completed-work-orders-container">
+        <!-- Populated dynamically with completed work orders -->
+      </div>
+
+      <!-- ═══════════════════ MULTI-DEPT BUNDLING SECTION ═══════════════════ -->
+      <div class="section-title" style="margin-top: 36px;">
+        <span>🔗</span>
+        <span>AI Multi-Department Bundling Opportunities (CP-SAT Solver)</span>
+      </div>
+
+      <div id="bundling-cards-container">
+        <!-- Populated dynamically by BundlingSuggestionCard -->
+      </div>
+
+      <!-- ═══════════════════ AUDIT LOGS SECTION ═══════════════════ -->
+      <div
+        style="background: #FFFFFF; border: 1px solid rgba(195, 178, 150, 0.45); border-radius: 10px; padding: 18px; margin-top: 20px; box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+          <h3 style="font-family: var(--font-display); font-size: 0.95rem; color: #003366; font-weight: 700; margin: 0;">
+            📋 Supervisor Manual Override Audit Trail
+          </h3>
+          <button onclick="window.refreshMaintAudit()"
+            style="background:#FAF6EE; border:1px solid rgba(0,51,102,0.3); color:#003366; padding:4px 12px; border-radius:4px; font-size:0.75rem; font-weight:600; cursor:pointer;">Refresh
+            Log</button>
+        </div>
+        <div id="maint-audit-log-container" style="font-size: 0.8rem; color: #475569;">
+          No supervisor overrides recorded in this session.
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════════════
+         VIEW 2: LABOR & GANG DEPLOYMENT MANAGEMENT
+         ═══════════════════════════════════════════════════════════════════════════════ -->
+    <div id="view-labor" style="display: none;">
+
+      <!-- Labor Dashboard Header Banner -->
+      <div
+        style="background:#FFFFFF; border:1.5px solid rgba(0,51,102,0.12); border-radius:18px; padding:20px 24px; margin-bottom:24px; box-shadow:0 4px 16px rgba(0,51,102,0.05); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px;">
+        <div style="display:flex; align-items:center; gap:14px;">
+          <div
+            style="width:46px; height:46px; border-radius:12px; background:rgba(0,51,102,0.08); color:#003366; display:flex; align-items:center; justify-content:center; font-size:1.3rem;">
+            👷‍♂️</div>
+          <div>
+            <h1
+              style="font-family:var(--font-display); font-size:1.6rem; font-weight:800; color:#003366; margin:0 0 2px 0;">
+              Field Labor &amp; Gang Deployment Management</h1>
+            <p style="font-size:0.88rem; color:#64748B; margin:0;">
+              Track field labor roster, supervising SSEs/Mates, work sections, active block durations &amp; reallocate teams
+            </p>
+          </div>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+          <button type="button" onclick="window.openLaborAssignModal()"
+            style="display:inline-flex; align-items:center; gap:6px; padding:8px 18px; border-radius:8px; border:none; background:linear-gradient(135deg, #003366, #0056B3); color:#FFFFFF; font-size:0.84rem; font-weight:800; cursor:pointer; box-shadow:0 3px 10px rgba(0,51,102,0.25);">
+            <span>⚡</span>
+            <span>Assign / Reallocate Labor</span>
+          </button>
+
+          <button type="button" onclick="window.openAddLaborModal()"
+            style="display:inline-flex; align-items:center; gap:6px; padding:8px 14px; border-radius:8px; border:1.5px solid #003366; background:#FFFFFF; color:#003366; font-size:0.82rem; font-weight:700; cursor:pointer;">
+            <span>➕</span>
+            <span>Add Worker</span>
+          </button>
+
+          <button type="button" onclick="window.exportLaborRosterCSV()"
+            style="display:inline-flex; align-items:center; gap:6px; padding:8px 14px; border-radius:8px; border:1px solid rgba(0,51,102,0.2); background:#FAF6EE; color:#003366; font-size:0.82rem; font-weight:700; cursor:pointer;">
+            <span>📥</span>
+            <span>Export Roster</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- KPI Overview Cards -->
+      <div class="labor-kpi-grid">
+        <div class="labor-kpi-card">
+          <div class="labor-kpi-icon" style="background:rgba(0,51,102,0.08); color:#003366;">👷</div>
+          <div>
+            <div class="labor-kpi-val" id="kpi-total-workers">48</div>
+            <div class="labor-kpi-label">Total Laborers / Trackmen</div>
+            <div style="font-size:0.72rem; color:#059669; font-weight:700; margin-top:2px;">
+              <span id="kpi-active-workers-sub">42 On-Site</span> • <span id="kpi-standby-workers-sub">6 Standby</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="labor-kpi-card">
+          <div class="labor-kpi-icon" style="background:rgba(5,150,105,0.1); color:#059669;">👥</div>
+          <div>
+            <div class="labor-kpi-val" id="kpi-total-gangs">6</div>
+            <div class="labor-kpi-label">Active Gangs / Teams</div>
+            <div style="font-size:0.72rem; color:#64748B; margin-top:2px;">Civil, TRD, Signal &amp; Mech</div>
+          </div>
+        </div>
+
+        <div class="labor-kpi-card">
+          <div class="labor-kpi-icon" style="background:rgba(217,119,6,0.1); color:#D97706;">⏱️</div>
+          <div>
+            <div class="labor-kpi-val" id="kpi-shift-window">06:00 - 14:00</div>
+            <div class="labor-kpi-label">Morning Corridor Shift</div>
+            <div style="font-size:0.72rem; color:#0056B3; font-weight:700; margin-top:2px;" id="kpi-shift-countdown">
+              2h 30m Remaining
+            </div>
+          </div>
+        </div>
+
+        <div class="labor-kpi-card">
+          <div class="labor-kpi-icon" style="background:rgba(0,51,102,0.08); color:#003366;">📍</div>
+          <div>
+            <div class="labor-kpi-val" id="kpi-total-sections">7</div>
+            <div class="labor-kpi-label">Corridor Sections Deployed</div>
+            <div style="font-size:0.72rem; color:#64748B; margin-top:2px;">NDLS - GZB - ALJN Lines</div>
+          </div>
+        </div>
+
+        <div class="labor-kpi-card">
+          <div class="labor-kpi-icon" style="background:rgba(5,150,105,0.1); color:#059669;">🦺</div>
+          <div>
+            <div class="labor-kpi-val" style="color:#059669;">100%</div>
+            <div class="labor-kpi-label">PPE &amp; Safety Compliance</div>
+            <div style="font-size:0.72rem; color:#059669; font-weight:700; margin-top:2px;">Zero Fatigue Violations</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filter Controls & View Switcher -->
+      <div class="labor-control-bar">
+        <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+          <!-- Search input -->
+          <div style="position:relative; display:flex; align-items:center;">
+            <span style="position:absolute; left:12px; color:#64748B; font-size:0.85rem; pointer-events:none;">🔍</span>
+            <input type="text" id="labor-search-input" class="labor-search-input"
+              placeholder="Search labor, EMP ID, Gang, SSE, section..."
+              oninput="window.handleLaborFilterChange()" />
+          </div>
+
+          <!-- Department filter -->
+          <select id="labor-dept-filter" onchange="window.handleLaborFilterChange()"
+            style="padding:8px 12px; border-radius:8px; border:1.5px solid #CBD5E1; background:#FAF6EE; font-size:0.80rem; font-weight:700; color:#003366; outline:none;">
+            <option value="ALL">All Departments (TMS / TRD / SMMS)</option>
+            <option value="CIVIL">Civil / P-Way (TMS Track)</option>
+            <option value="TRD">Electrical / TRD (OHE Traction)</option>
+            <option value="SIG">Signalling &amp; Telecom (SMMS)</option>
+            <option value="MECH">Mechanical / Rolling Stock</option>
+          </select>
+
+          <!-- Gang filter -->
+          <select id="labor-gang-filter" onchange="window.handleLaborFilterChange()"
+            style="padding:8px 12px; border-radius:8px; border:1.5px solid #CBD5E1; background:#FAF6EE; font-size:0.80rem; font-weight:700; color:#003366; outline:none;">
+            <option value="ALL">All Gangs &amp; Teams</option>
+            <option value="GANG-04">Gang #04 — Track Relaying &amp; Tamping</option>
+            <option value="GANG-01">Gang #01 — Emergency USFD Weld Repair</option>
+            <option value="GANG-02">Gang #02 — Signal &amp; Points Maintenance</option>
+            <option value="GANG-07">Gang #07 — TRD OHE High-Voltage Unit</option>
+            <option value="GANG-09">Gang #09 — Bridge &amp; Substructure Unit</option>
+            <option value="GANG-11">Gang #11 — Rolling Stock Yard Unit</option>
+            <option value="STANDBY">Standby Depot Reserve</option>
+          </select>
+
+          <!-- Status filter -->
+          <select id="labor-status-filter" onchange="window.handleLaborFilterChange()"
+            style="padding:8px 12px; border-radius:8px; border:1.5px solid #CBD5E1; background:#FAF6EE; font-size:0.80rem; font-weight:700; color:#003366; outline:none;">
+            <option value="ALL">All Statuses</option>
+            <option value="ACTIVE_ON_TRACK">🟢 Active on Track (In Block)</option>
+            <option value="DEPOT_STANDBY">🟡 Standby at Depot</option>
+            <option value="IN_TRANSIT">🔵 In Transit to Section</option>
+            <option value="REST">⚪ Rest / Off Duty</option>
+          </select>
+        </div>
+
+        <!-- View Mode Switcher -->
+        <div style="display:flex; align-items:center; gap:6px; background:#FAF6EE; padding:4px; border-radius:8px; border:1px solid #CBD5E1;">
+          <button type="button" id="btn-view-gang-cards" onclick="window.setLaborViewMode('cards')"
+            style="padding:6px 12px; border-radius:6px; border:none; background:#003366; color:#FFFFFF; font-size:0.76rem; font-weight:700; cursor:pointer;">
+            👥 Gang Hierarchy Cards
+          </button>
+          <button type="button" id="btn-view-labor-table" onclick="window.setLaborViewMode('table')"
+            style="padding:6px 12px; border-radius:6px; border:none; background:transparent; color:#64748B; font-size:0.76rem; font-weight:700; cursor:pointer;">
+            📋 Master Roster Table
+          </button>
+        </div>
+      </div>
+
+      <!-- ═══════════════════ SECTION A: GANG HIERARCHY CARDS ═══════════════════ -->
+      <div id="gangs-view-container">
+        <div class="section-title" style="display: flex; align-items: center; justify-content: space-between; margin-bottom:16px;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <span>👥</span>
+            <span>Maintenance Gangs &amp; Reporting Hierarchy (Under Supervising SSE / Mate)</span>
+            <span id="gangs-count-badge"
+              style="background: rgba(0, 51, 102, 0.08); border: 1px solid rgba(0, 51, 102, 0.2); color: #003366; font-size: 0.76rem; font-weight: 700; padding: 2px 8px; border-radius: 12px;">6
+              Gangs</span>
+          </div>
+          <div style="font-size: 0.76rem; color: #64748B; font-weight: 600;">
+            Click <strong>"⚡ Reassign / Transfer"</strong> on any gang or labor chip to reallocate workers
+          </div>
+        </div>
+
+        <div id="gangs-cards-container" class="gang-cards-grid">
+          <!-- Injected dynamically by renderGangCards() -->
+        </div>
+      </div>
+
+      <!-- ═══════════════════ SECTION B: LABOR MASTER ROSTER TABLE ═══════════════════ -->
+      <div id="table-view-container" style="display: none;">
+        <div class="section-title" style="display: flex; align-items: center; justify-content: space-between; margin-bottom:16px;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <span>📋</span>
+            <span>Individual Labor Deployment &amp; Work Location Master Roster</span>
+            <span id="labor-table-count-badge"
+              style="background: rgba(0, 51, 102, 0.08); border: 1px solid rgba(0, 51, 102, 0.2); color: #003366; font-size: 0.76rem; font-weight: 700; padding: 2px 8px; border-radius: 12px;">48
+              Personnel</span>
+          </div>
+          <div style="font-size: 0.76rem; color: #64748B; font-weight: 600;">
+            Detailed personnel list with reporting officers, current section, shift duration &amp; tool issues
+          </div>
+        </div>
+
+        <div class="labor-table-wrapper">
+          <table class="labor-table">
+            <thead>
+              <tr>
+                <th>Personnel Details</th>
+                <th>Designation &amp; Role</th>
+                <th>Assigned Gang &amp; Dept</th>
+                <th>Reporting Under ("Under Whom")</th>
+                <th>Work Location &amp; Section</th>
+                <th>Active Shift &amp; Duration</th>
+                <th>Safety &amp; Tools</th>
+                <th style="text-align:right;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="labor-table-body">
+              <!-- Injected dynamically by renderLaborTable() -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Section Allocation Quick Dispatch Box -->
+      <div style="background:#FAF6EE; border:1.5px solid rgba(195,178,150,0.6); border-radius:14px; padding:20px; margin-bottom:24px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px;">
+        <div style="display:flex; align-items:center; gap:14px;">
+          <div style="width:42px; height:42px; border-radius:10px; background:#003366; color:#FFF; display:flex; align-items:center; justify-content:center; font-size:1.2rem;">
+            ⚡
+          </div>
+          <div>
+            <div style="font-family:var(--font-display); font-size:1.05rem; font-weight:800; color:#003366;">
+              Need to shift a gang or individual trackmen to a critical track emergency?
+            </div>
+            <div style="font-size:0.78rem; color:#64748B;">
+              Reallocate labor in real-time. Automatically updates reporting officer, shifts safety tokens, and updates line block rosters.
+            </div>
+          </div>
+        </div>
+        <button type="button" onclick="window.openLaborAssignModal()"
+          style="padding:10px 22px; border-radius:8px; border:none; background:linear-gradient(135deg, #003366, #0056B3); color:#FFFFFF; font-weight:800; font-size:0.84rem; cursor:pointer; box-shadow:0 3px 10px rgba(0,51,102,0.25);">
+          ⚡ Open Labor Allocation Engine
         </button>
       </div>
-    </div>
 
-    <!-- ═══════════════════ FILTER CONTROLS ═══════════════════ -->
-    <div class="filter-bar">
-      <div class="dept-tabs" id="dept-filter-tabs">
-        <button class="dept-tab active" data-dept="ALL">All Departments</button>
-        <button class="dept-tab" data-dept="CIVIL">Civil / P-Way (TMS)</button>
-        <button class="dept-tab" data-dept="TRD">Electrical / TRD</button>
-        <button class="dept-tab" data-dept="SIG">Signalling &amp; Telecom (SMMS)</button>
-        <button class="dept-tab" data-dept="MECH">Mechanical / Rolling Stock</button>
-      </div>
-
-      <div style="font-size: 0.78rem; color: #64748B; font-family: var(--font-mono);">
-        Sorted by: <span style="color: #003366; font-weight: 700;">AI Risk Priority (P1 → P4)</span>
-      </div>
-    </div>
-
-    <!-- ═══════════════════ SECTION 1: CONTROL OFFICE SANCTIONED REQUISITIONS (PENDING ACCEPTANCE) ═══════════════════ -->
-    <div class="section-title" style="display: flex; align-items: center; justify-content: space-between;">
-      <div style="display: flex; align-items: center; gap: 10px;">
-        <span>📋</span>
-        <span>Control Office Sanctioned Work Requisitions (Pending Acceptance)</span>
-        <span id="pending-wo-count-badge"
-          style="background: rgba(0, 51, 102, 0.08); border: 1px solid rgba(0, 51, 102, 0.2); color: #003366; font-size: 0.76rem; font-weight: 700; padding: 2px 8px; border-radius: 12px;">0
-          Sanctioned</span>
-      </div>
-      <div style="font-size: 0.76rem; color: #64748B; font-weight: 600;">
-        Click <strong>"✓ Accept &amp; Lock Slot"</strong> to confirm requisition ➔ Move to Work To Be Done
-      </div>
-    </div>
-
-    <div class="work-orders-grid" id="pending-work-orders-container">
-      <!-- Populated dynamically with sanctioned work orders awaiting acceptance -->
-    </div>
-
-    <!-- ═══════════════════ SECTION 2: WORK ACCEPTED & LOCKED SLOTS (TO BE DONE) ═══════════════════ -->
-    <div class="section-title"
-      style="margin-top: 36px; display: flex; align-items: center; justify-content: space-between;">
-      <div style="display: flex; align-items: center; gap: 10px;">
-        <span>📌</span>
-        <span style="color: #003366;">Work Accepted &amp; Locked Slots (To Be Done / In Progress)</span>
-        <span id="accepted-wo-count-badge"
-          style="background: rgba(5, 150, 105, 0.1); border: 1px solid rgba(5, 150, 105, 0.3); color: #059669; font-size: 0.76rem; font-weight: 700; padding: 2px 8px; border-radius: 12px;">0
-          Accepted</span>
-      </div>
-      <div style="font-size: 0.76rem; color: #059669; font-weight: 600;">
-        Accepted Requisitions ready for field execution ➔ Click <strong>"☑ Tick Work Completed"</strong> when done
-      </div>
-    </div>
-
-    <div class="work-orders-grid" id="work-orders-container">
-      <!-- Populated dynamically ONLY with accepted work orders -->
-    </div>
-
-    <!-- ═══════════════════ SECTION 3: WORK COMPLETED & CLOSED REQUISITIONS ═══════════════════ -->
-    <div class="section-title"
-      style="margin-top: 36px; display: flex; align-items: center; justify-content: space-between;">
-      <div style="display: flex; align-items: center; gap: 10px;">
-        <span>✅</span>
-        <span style="color: #059669;">Work Completed &amp; Closed Requisitions</span>
-        <span id="completed-wo-count-badge"
-          style="background: rgba(5, 150, 105, 0.1); border: 1px solid rgba(5, 150, 105, 0.3); color: #059669; font-size: 0.76rem; font-weight: 700; padding: 2px 8px; border-radius: 12px;">0
-          Completed</span>
-      </div>
-      <button onclick="window.openIRReportModal('work-orders')" style="
-        background: linear-gradient(135deg, #059669, #047857);
-        border: none;
-        color: #FFFFFF;
-        padding: 7px 16px;
-        border-radius: 6px;
-        font-size: 0.78rem;
-        font-weight: 700;
-        cursor: pointer;
-        box-shadow: 0 2px 8px rgba(5, 150, 105, 0.25);
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-      ">
-        <span>📑</span>
-        <span>Generate Completion Report Dossier</span>
-      </button>
-    </div>
-
-    <div class="work-orders-grid" id="completed-work-orders-container">
-      <!-- Populated dynamically with completed work orders -->
-    </div>
-
-    <!-- ═══════════════════ MULTI-DEPT BUNDLING SECTION ═══════════════════ -->
-    <div class="section-title" style="margin-top: 36px;">
-      <span>🔗</span>
-      <span>AI Multi-Department Bundling Opportunities (CP-SAT Solver)</span>
-    </div>
-
-    <div id="bundling-cards-container">
-      <!-- Populated dynamically by BundlingSuggestionCard -->
-    </div>
-
-    <!-- ═══════════════════ AUDIT LOGS SECTION ═══════════════════ -->
-    <div
-      style="background: #FFFFFF; border: 1px solid rgba(195, 178, 150, 0.45); border-radius: 10px; padding: 18px; margin-top: 20px; box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);">
-      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
-        <h3 style="font-family: var(--font-display); font-size: 0.95rem; color: #003366; font-weight: 700; margin: 0;">
-          📋 Supervisor Manual Override Audit Trail
-        </h3>
-        <button onclick="window.refreshMaintAudit()"
-          style="background:#FAF6EE; border:1px solid rgba(0,51,102,0.3); color:#003366; padding:4px 12px; border-radius:4px; font-size:0.75rem; font-weight:600; cursor:pointer;">Refresh
-          Log</button>
-      </div>
-      <div id="maint-audit-log-container" style="font-size: 0.8rem; color: #475569;">
-        No supervisor overrides recorded in this session.
-      </div>
     </div>
 
   </main>
+
+  <!-- ═══════════════════ MODAL: ASSIGN / REALLOCATE LABOR TO SECTIONS & TEAMS ═══════════════════ -->
+  <div id="labor-assignment-modal" style="
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.72);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    z-index: 10000;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    overflow-y: auto;
+  ">
+    <div style="
+      background: #FFFFFF;
+      border-radius: 16px;
+      border: 1.5px solid rgba(0, 51, 102, 0.3);
+      width: 100%;
+      max-width: 740px;
+      padding: 24px 28px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
+      max-height: 90vh;
+      overflow-y: auto;
+      color: #0F172A;
+    ">
+      <!-- Modal Header -->
+      <div style="display: flex; align-items: flex-start; justify-content: space-between; border-bottom: 2px solid #E2E8F0; padding-bottom: 12px; margin-bottom: 18px;">
+        <div>
+          <div style="display: inline-flex; align-items: center; gap: 6px; font-size: 0.70rem; font-weight: 800; color: #003366; background: rgba(0, 51, 102, 0.08); border: 1px solid rgba(0, 51, 102, 0.2); padding: 3px 10px; border-radius: 12px; text-transform: uppercase; letter-spacing: 0.5px;">
+            <span>⚡</span>
+            <span>Indian Railways Labor Deployment Engine</span>
+          </div>
+          <h2 style="font-size: 1.25rem; font-weight: 900; color: #003366; margin: 6px 0 2px 0;">
+            Assign / Reallocate Labor to Sections &amp; Gangs
+          </h2>
+          <div style="font-size: 0.76rem; color: #64748B;">
+            Assign specific laborers or teams to different track sections, supervising SSEs/Mates with shift durations
+          </div>
+        </div>
+        <button type="button" onclick="window.closeLaborAssignModal()"
+          style="background: transparent; border: none; font-size: 1.5rem; color: #94A3B8; cursor: pointer; line-height: 1; padding: 4px;">&times;</button>
+      </div>
+
+      <!-- Assignment Form -->
+      <form id="labor-assignment-form" onsubmit="window.handleLaborAssignSubmit(event)">
+        <!-- Step 1: Select Worker(s) -->
+        <div style="margin-bottom: 16px; background:#FAF6EE; padding:14px; border-radius:10px; border:1px solid rgba(195,178,150,0.6);">
+          <label style="display: block; font-size: 0.78rem; font-weight: 800; color: #003366; margin-bottom: 6px;">
+            1. Select Labor / Personnel to Reassign <span style="color:#DC2626;">*</span>
+          </label>
+          <select id="assign-worker-select" required onchange="window.handleAssignWorkerChange(this.value)"
+            style="width: 100%; padding: 10px 12px; border-radius: 8px; border: 1.5px solid #003366; background: #FFFFFF; font-size: 0.82rem; font-weight: 600; color: #0F172A; outline: none;">
+            <!-- Populated dynamically -->
+          </select>
+          <div id="assign-worker-current-info" style="font-size:0.74rem; color:#475569; margin-top:6px; font-style:italic;">
+            <!-- Injected with current assignment info -->
+          </div>
+        </div>
+
+        <!-- 2 Column Grid: Target Gang & Department -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px;">
+          <div>
+            <label style="display: block; font-size: 0.74rem; font-weight: 800; color: #003366; margin-bottom: 4px;">
+              2. Target Gang / Unit <span style="color:#DC2626;">*</span>
+            </label>
+            <select id="assign-target-gang" required onchange="window.handleTargetGangChange(this.value)"
+              style="width: 100%; padding: 9px 12px; border-radius: 8px; border: 1px solid #CBD5E1; background: #FFFFFF; font-size: 0.80rem; font-weight:600; color:#0F172A; outline: none;">
+              <option value="GANG-04">Gang #04 — Track Relaying &amp; Tamping</option>
+              <option value="GANG-01">Gang #01 — Emergency USFD Weld Repair</option>
+              <option value="GANG-02">Gang #02 — Signal &amp; Points Unit</option>
+              <option value="GANG-07">Gang #07 — TRD OHE High-Voltage Unit</option>
+              <option value="GANG-09">Gang #09 — Bridge &amp; Substructure Unit</option>
+              <option value="GANG-11">Gang #11 — Rolling Stock Yard Unit</option>
+              <option value="STANDBY">Standby Depot Reserve</option>
+            </select>
+          </div>
+
+          <div>
+            <label style="display: block; font-size: 0.74rem; font-weight: 800; color: #003366; margin-bottom: 4px;">
+              Target Department <span style="color:#DC2626;">*</span>
+            </label>
+            <select id="assign-target-dept" required
+              style="width: 100%; padding: 9px 12px; border-radius: 8px; border: 1px solid #CBD5E1; background: #FFFFFF; font-size: 0.80rem; font-weight:600; color:#0F172A; outline: none;">
+              <option value="CIVIL">Civil / P-Way (TMS Track)</option>
+              <option value="TRD">Electrical / TRD (OHE Traction)</option>
+              <option value="SIG">Signalling &amp; Telecom (SMMS)</option>
+              <option value="MECH">Mechanical / Rolling Stock</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- 2 Column Grid: Location / Section & Reporting Supervisor ("Under Whom") -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px;">
+          <div>
+            <label style="display: block; font-size: 0.74rem; font-weight: 800; color: #003366; margin-bottom: 4px;">
+              3. Target Section / Work Location <span style="color:#DC2626;">*</span>
+            </label>
+            <input type="text" id="assign-target-section" required
+              placeholder="e.g. KM 142/10 - 146/04 (NDLS-GZB Down Main)"
+              style="width: 100%; padding: 9px 12px; border-radius: 8px; border: 1px solid #CBD5E1; background: #FFFFFF; font-size: 0.80rem; outline: none;" />
+          </div>
+
+          <div>
+            <label style="display: block; font-size: 0.74rem; font-weight: 800; color: #003366; margin-bottom: 4px;">
+              4. Reporting Officer / Supervising SSE ("Under Whom") <span style="color:#DC2626;">*</span>
+            </label>
+            <select id="assign-target-supervisor" required
+              style="width: 100%; padding: 9px 12px; border-radius: 8px; border: 1px solid #CBD5E1; background: #FFFFFF; font-size: 0.80rem; font-weight:600; color:#0F172A; outline: none;">
+              <option value="Rajesh Sharma (SSE P-Way / PWI DLI)">Rajesh Sharma (SSE P-Way / PWI DLI)</option>
+              <option value="Anil Kumar (SSE P-Way TKD)">Anil Kumar (SSE P-Way TKD)</option>
+              <option value="S.P. Anand (SSE TRD GZB)">S.P. Anand (SSE TRD GZB)</option>
+              <option value="Vikram Joshi (SSE Signal NDLS)">Vikram Joshi (SSE Signal NDLS)</option>
+              <option value="Manoj Tiwari (SSE Bridge ALJN)">Manoj Tiwari (SSE Bridge ALJN)</option>
+              <option value="Amit Verma (JE Mech TKD)">Amit Verma (JE Mech TKD)</option>
+              <option value="Central Depot SSE In-Charge">Central Depot SSE In-Charge</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- 2 Column Grid: Gang Mate & Shift Window -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px;">
+          <div>
+            <label style="display: block; font-size: 0.74rem; font-weight: 800; color: #003366; margin-bottom: 4px;">
+              Gang Mate In-Charge
+            </label>
+            <input type="text" id="assign-target-mate" placeholder="e.g. Ram Singh (Sr. Mate)"
+              style="width: 100%; padding: 9px 12px; border-radius: 8px; border: 1px solid #CBD5E1; background: #FFFFFF; font-size: 0.80rem; outline: none;" />
+          </div>
+
+          <div>
+            <label style="display: block; font-size: 0.74rem; font-weight: 800; color: #003366; margin-bottom: 4px;">
+              5. Shift Window &amp; Work Duration <span style="color:#DC2626;">*</span>
+            </label>
+            <select id="assign-shift-window" required
+              style="width: 100%; padding: 9px 12px; border-radius: 8px; border: 1px solid #CBD5E1; background: #FFFFFF; font-size: 0.80rem; font-weight:600; color:#0F172A; outline: none;">
+              <option value="06:00 – 14:00 (Morning Line Block 8h)">06:00 – 14:00 (Morning Line Block 8h)</option>
+              <option value="08:00 – 16:00 (Standard Day Shift 8h)">08:00 – 16:00 (Standard Day Shift 8h)</option>
+              <option value="14:00 – 22:00 (Evening Shift 8h)">14:00 – 22:00 (Evening Shift 8h)</option>
+              <option value="23:00 – 05:00 (Night Golden Hour Block 6h)">23:00 – 05:00 (Night Golden Hour Block 6h)</option>
+              <option value="08:30 – 11:30 (Emergency Quick Block 3h)">08:30 – 11:30 (Emergency Quick Block 3h)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- 2 Column Grid: Active Work Order Link & Status -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px;">
+          <div>
+            <label style="display: block; font-size: 0.74rem; font-weight: 800; color: #003366; margin-bottom: 4px;">
+              Link to Active Work Order / Requisition
+            </label>
+            <select id="assign-work-order-select"
+              style="width: 100%; padding: 9px 12px; border-radius: 8px; border: 1px solid #CBD5E1; background: #FFFFFF; font-size: 0.80rem; outline: none;">
+              <!-- Populated dynamically with active work orders -->
+            </select>
+          </div>
+
+          <div>
+            <label style="display: block; font-size: 0.74rem; font-weight: 800; color: #003366; margin-bottom: 4px;">
+              Deployment Status
+            </label>
+            <select id="assign-status-select"
+              style="width: 100%; padding: 9px 12px; border-radius: 8px; border: 1px solid #CBD5E1; background: #FFFFFF; font-size: 0.80rem; font-weight:700; color:#059669; outline: none;">
+              <option value="ACTIVE_ON_TRACK">🟢 Active on Track (In Block)</option>
+              <option value="IN_TRANSIT">🔵 In Transit to Section</option>
+              <option value="DEPOT_STANDBY">🟡 Standby at Depot</option>
+              <option value="REST">⚪ Rest / Off Duty</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Operational Reallocation Reason / Briefing -->
+        <div style="margin-bottom: 18px;">
+          <label style="display: block; font-size: 0.74rem; font-weight: 800; color: #475569; margin-bottom: 4px;">
+            Reallocation Reason / Shift Briefing Notes
+          </label>
+          <textarea id="assign-reason-notes" rows="2"
+            placeholder="e.g. Dispatched for emergency ultrasonic flaw joint renewal per IRPWM Para 268..."
+            style="width: 100%; padding: 8px 12px; border-radius: 8px; border: 1px solid #CBD5E1; background: #FAF6EE; font-size: 0.78rem; outline: none; resize: vertical;"></textarea>
+        </div>
+
+        <!-- Modal Footer Buttons -->
+        <div style="display: flex; gap: 12px; justify-content: flex-end; border-top: 1px solid #E2E8F0; padding-top: 16px;">
+          <button type="button" onclick="window.closeLaborAssignModal()"
+            style="padding: 10px 18px; border-radius: 8px; border: 1px solid #CBD5E1; background: #FFFFFF; color: #64748B; font-weight: 700; font-size: 0.84rem; cursor: pointer;">
+            Cancel
+          </button>
+          <button type="submit" style="
+              padding: 10px 24px;
+              border-radius: 8px;
+              border: none;
+              background: linear-gradient(135deg, #003366, #0056B3);
+              color: #FFFFFF;
+              font-weight: 800;
+              font-size: 0.86rem;
+              cursor: pointer;
+              box-shadow: 0 4px 14px rgba(0, 51, 102, 0.3);
+              display: flex;
+              align-items: center;
+              gap: 6px;
+            ">
+            <span>⚡</span>
+            <span>Confirm &amp; Deploy Labor Assignment</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ MODAL: ADD NEW WORKER ═══════════════════ -->
+  <div id="add-labor-modal" style="
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.72);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    z-index: 10000;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    overflow-y: auto;
+  ">
+    <div style="
+      background: #FFFFFF;
+      border-radius: 16px;
+      border: 1.5px solid rgba(0, 51, 102, 0.3);
+      width: 100%;
+      max-width: 600px;
+      padding: 24px 28px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
+      max-height: 90vh;
+      overflow-y: auto;
+      color: #0F172A;
+    ">
+      <div style="display: flex; align-items: flex-start; justify-content: space-between; border-bottom: 2px solid #E2E8F0; padding-bottom: 12px; margin-bottom: 18px;">
+        <div>
+          <h2 style="font-size: 1.25rem; font-weight: 900; color: #003366; margin: 0 0 2px 0;">
+            ➕ Register New Field Worker / Trackman
+          </h2>
+          <div style="font-size: 0.76rem; color: #64748B;">
+            Add a new laborer, technician, or gang mate to Indian Railways maintenance roster
+          </div>
+        </div>
+        <button type="button" onclick="window.closeAddLaborModal()"
+          style="background: transparent; border: none; font-size: 1.5rem; color: #94A3B8; cursor: pointer; line-height: 1; padding: 4px;">&times;</button>
+      </div>
+
+      <form id="add-labor-form" onsubmit="window.handleAddLaborSubmit(event)">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px;">
+          <div>
+            <label style="display:block; font-size:0.74rem; font-weight:700; color:#003366; margin-bottom:4px;">Full Name *</label>
+            <input type="text" id="add-worker-name" required placeholder="e.g. Rameshwar Meena"
+              style="width:100%; padding:8px 10px; border-radius:6px; border:1px solid #CBD5E1; font-size:0.80rem;" />
+          </div>
+          <div>
+            <label style="display:block; font-size:0.74rem; font-weight:700; color:#003366; margin-bottom:4px;">Employee / Token ID *</label>
+            <input type="text" id="add-worker-id" required placeholder="e.g. EMP-PW-8450"
+              style="width:100%; padding:8px 10px; border-radius:6px; border:1px solid #CBD5E1; font-size:0.80rem; font-family:monospace;" />
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px;">
+          <div>
+            <label style="display:block; font-size:0.74rem; font-weight:700; color:#003366; margin-bottom:4px;">Designation / Trade *</label>
+            <select id="add-worker-role" required
+              style="width:100%; padding:8px 10px; border-radius:6px; border:1px solid #CBD5E1; font-size:0.80rem;">
+              <option value="Senior Trackman (Keyman)">Senior Trackman (Keyman)</option>
+              <option value="Alumino-Thermit (AT) Welder">Alumino-Thermit (AT) Welder</option>
+              <option value="Trackman Gr-III">Trackman Gr-III</option>
+              <option value="Trackman Gr-IV">Trackman Gr-IV</option>
+              <option value="OHE High-Voltage Linesman">OHE High-Voltage Linesman</option>
+              <option value="Signal Maintainer Gr-I">Signal Maintainer Gr-I</option>
+              <option value="Signal Maintainer Gr-II">Signal Maintainer Gr-II</option>
+              <option value="Blacksmith / Track Fitter">Blacksmith / Track Fitter</option>
+              <option value="Assistant Khalasi">Assistant Khalasi</option>
+              <option value="Gang Mate">Gang Mate</option>
+            </select>
+          </div>
+          <div>
+            <label style="display:block; font-size:0.74rem; font-weight:700; color:#003366; margin-bottom:4px;">Contact Phone</label>
+            <input type="text" id="add-worker-phone" placeholder="+91 98765-XXXXX"
+              style="width:100%; padding:8px 10px; border-radius:6px; border:1px solid #CBD5E1; font-size:0.80rem;" />
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px;">
+          <div>
+            <label style="display:block; font-size:0.74rem; font-weight:700; color:#003366; margin-bottom:4px;">Department *</label>
+            <select id="add-worker-dept" required
+              style="width:100%; padding:8px 10px; border-radius:6px; border:1px solid #CBD5E1; font-size:0.80rem;">
+              <option value="CIVIL">Civil / P-Way (TMS Track)</option>
+              <option value="TRD">Electrical / TRD (OHE Traction)</option>
+              <option value="SIG">Signalling &amp; Telecom (SMMS)</option>
+              <option value="MECH">Mechanical / Rolling Stock</option>
+            </select>
+          </div>
+          <div>
+            <label style="display:block; font-size:0.74rem; font-weight:700; color:#003366; margin-bottom:4px;">Initial Gang Assignment *</label>
+            <select id="add-worker-gang" required
+              style="width:100%; padding:8px 10px; border-radius:6px; border:1px solid #CBD5E1; font-size:0.80rem;">
+              <option value="GANG-04">Gang #04 — Track Relaying &amp; Tamping</option>
+              <option value="GANG-01">Gang #01 — Emergency USFD Weld Repair</option>
+              <option value="GANG-02">Gang #02 — Signal &amp; Points Unit</option>
+              <option value="GANG-07">Gang #07 — TRD OHE High-Voltage Unit</option>
+              <option value="GANG-09">Gang #09 — Bridge &amp; Substructure Unit</option>
+              <option value="GANG-11">Gang #11 — Rolling Stock Yard Unit</option>
+              <option value="STANDBY">Standby Depot Reserve</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:18px;">
+          <div>
+            <label style="display:block; font-size:0.74rem; font-weight:700; color:#003366; margin-bottom:4px;">Work Location / Section</label>
+            <input type="text" id="add-worker-section" placeholder="e.g. KM 142/10 - 146/04 NDLS-GZB"
+              style="width:100%; padding:8px 10px; border-radius:6px; border:1px solid #CBD5E1; font-size:0.80rem;" />
+          </div>
+          <div>
+            <label style="display:block; font-size:0.74rem; font-weight:700; color:#003366; margin-bottom:4px;">Reporting Supervisor ("Under Whom")</label>
+            <input type="text" id="add-worker-supervisor" placeholder="e.g. Rajesh Sharma (SSE P-Way DLI)"
+              style="width:100%; padding:8px 10px; border-radius:6px; border:1px solid #CBD5E1; font-size:0.80rem;" />
+          </div>
+        </div>
+
+        <div style="display:flex; gap:12px; justify-content:flex-end; border-top:1px solid #E2E8F0; padding-top:14px;">
+          <button type="button" onclick="window.closeAddLaborModal()"
+            style="padding:8px 16px; border-radius:6px; border:1px solid #CBD5E1; background:#FFFFFF; color:#64748B; font-weight:700; font-size:0.82rem; cursor:pointer;">
+            Cancel
+          </button>
+          <button type="submit"
+            style="padding:8px 20px; border-radius:6px; border:none; background:#003366; color:#FFFFFF; font-weight:800; font-size:0.84rem; cursor:pointer;">
+            ✓ Register Worker
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ MODAL: LABOR DOSSIER / PROFILE ═══════════════════ -->
+  <div id="labor-details-modal" style="
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.72);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    z-index: 10000;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    overflow-y: auto;
+  ">
+    <div style="
+      background: #FFFFFF;
+      border-radius: 16px;
+      border: 1.5px solid rgba(0, 51, 102, 0.3);
+      width: 100%;
+      max-width: 620px;
+      padding: 24px 28px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
+      max-height: 90vh;
+      overflow-y: auto;
+      color: #0F172A;
+    ">
+      <div style="display: flex; align-items: flex-start; justify-content: space-between; border-bottom: 2px solid #E2E8F0; padding-bottom: 12px; margin-bottom: 18px;">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <div id="dossier-avatar" style="width:48px; height:48px; border-radius:50%; background:linear-gradient(135deg, #003366, #0056B3); color:#FFFFFF; display:flex; align-items:center; justify-content:center; font-size:1.2rem; font-weight:900;">
+            SP
+          </div>
+          <div>
+            <h2 id="dossier-name" style="font-size: 1.25rem; font-weight: 900; color: #003366; margin: 0 0 2px 0;">
+              Worker Name
+            </h2>
+            <div id="dossier-sub" style="font-size: 0.76rem; color: #64748B;">
+              EMP ID • Designation • Department
+            </div>
+          </div>
+        </div>
+        <button type="button" onclick="window.closeLaborDetailsModal()"
+          style="background: transparent; border: none; font-size: 1.5rem; color: #94A3B8; cursor: pointer; line-height: 1; padding: 4px;">&times;</button>
+      </div>
+
+      <div id="dossier-content" style="font-size:0.82rem;">
+        <!-- Injected dynamically by openLaborDetailsModal() -->
+      </div>
+
+      <div style="display:flex; gap:10px; justify-content:flex-end; border-top:1px solid #E2E8F0; padding-top:14px; margin-top:18px;">
+        <button type="button" id="dossier-reassign-btn"
+          style="padding:8px 18px; border-radius:6px; border:none; background:#003366; color:#FFFFFF; font-weight:800; font-size:0.82rem; cursor:pointer;">
+          ⚡ Reassign This Worker
+        </button>
+        <button type="button" onclick="window.closeLaborDetailsModal()"
+          style="padding:8px 14px; border-radius:6px; border:1px solid #CBD5E1; background:#FFFFFF; color:#64748B; font-weight:700; font-size:0.82rem; cursor:pointer;">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
 
   <!-- ═══════════════════ STATUTORY WORK COMPLETION POP-UP MODAL ═══════════════════ -->
   <div id="work-completion-modal" style="
@@ -931,6 +1916,54 @@
           }
         });
 
+        // Merge Emergency Incident Work Orders from IR_LIVE_SYNC
+        if (window.IR_LIVE_SYNC && typeof window.IR_LIVE_SYNC.getEmergencyBlockRequests === 'function') {
+          const emergencyBlocks = window.IR_LIVE_SYNC.getEmergencyBlockRequests();
+          emergencyBlocks.forEach(eb => {
+            const ebId = `WO-${eb.discipline || 'EM'}-${eb.incidentId || eb.id}`;
+            if (!idSet.has(ebId) && !idSet.has(eb.id)) {
+              const isBaseCompleted = !!completedMap[ebId] || !!completedMap[eb.id];
+              const isBaseAccepted = isBaseCompleted || !!acceptedMap[ebId] || !!acceptedMap[eb.id];
+              const isSanctioned = eb.status === 'SANCTIONED_BY_CONTROL' || eb.status === 'Block Sanctioned';
+              const isP1 = (eb.priority || '').includes('P1') || (eb.severity || '').toUpperCase() === 'CRITICAL';
+
+              const emWo = {
+                id: ebId,
+                title: eb.title,
+                dept: eb.discipline === 'TRD' ? 'TRD' : (eb.discipline === 'SIG' ? 'SIG' : 'CIVIL'),
+                department: eb.discipline === 'TRD' ? 'Electrical / TRD (OHE)' : (eb.discipline === 'SIG' ? 'Signal & Telecom (SMMS)' : 'Civil / P-Way (TMS)'),
+                category: isP1 ? 'P1' : 'P2',
+                score: isP1 ? 94 : 85,
+                confidence: 0.96,
+                section: eb.location || 'NDLS-CNB-UP',
+                machinery: 'Emergency Quick-Response Gang',
+                slotRecommended: eb.suggestedSlot || 'Immediate Night Shadow Window',
+                slotFeasibility: 'HIGH_FEASIBILITY',
+                slotConflicts: 0,
+                status: isBaseCompleted ? 'COMPLETED' : isBaseAccepted ? 'ACCEPTED' : (isSanctioned ? 'SANCTIONED' : 'PENDING_SANCTION'),
+                isSanctioned: isSanctioned,
+                isAccepted: isBaseAccepted,
+                isCompleted: isBaseCompleted,
+                isEmergency: true,
+                acceptedAt: acceptedMap[ebId]?.acceptedAt || null,
+                completedAt: completedMap[ebId]?.completedAt || null,
+                tooltipExplanation: `Emergency Line Block requested by Safety Surveillance for ${eb.title}.`,
+                explanationSummary: `Safety incident reported on ${eb.asset} at ${eb.location}.`,
+                detailedExplanation: `Emergency possession duration: ${eb.durationDisplay || eb.durationMinutes + ' mins'}. AI Priority: ${eb.priority}.`,
+                factors: [
+                  { name: "Safety Severity", weight: 0.40, value: eb.severity || "Critical" },
+                  { name: "Emergency Priority", weight: 0.35, value: eb.priority || "P1" }
+                ],
+                action: "Deploy field gang immediately upon Control Office possession clearance."
+              };
+
+              if (isBaseCompleted) completedWorkOrders.push(emWo);
+              else if (isBaseAccepted) acceptedWorkOrders.push(emWo);
+              combined.unshift(emWo);
+            }
+          });
+        }
+
         activeWorkOrders = combined;
       } catch (err) {
         console.warn('Could not fetch dynamic requested windows from backend, using baseline approved orders:', err);
@@ -1010,6 +2043,66 @@
     let acceptedWorkOrders = [];
     let completedWorkOrders = [];
 
+    function getDeptHandshakeStore() {
+      try {
+        const raw = localStorage.getItem('ir_dept_handshakes');
+        return raw ? JSON.parse(raw) : {};
+      } catch (_) { return {}; }
+    }
+
+    function saveDeptHandshakeStore(store) {
+      try {
+        localStorage.setItem('ir_dept_handshakes', JSON.stringify(store));
+      } catch (_) { }
+    }
+
+    function getHandshakeInfo(wo, group) {
+      const store = getDeptHandshakeStore();
+      const allGroupWos = (group && group.length > 1) ? group : [wo];
+      const deptSet = new Set();
+      allGroupWos.forEach(w => {
+        if (w.dept) deptSet.add(w.dept);
+      });
+
+      const requiredDepts = Array.from(deptSet);
+      const isJoint = requiredDepts.length > 1 || allGroupWos.length > 1;
+      const bundleKey = `${wo.section || 'SEC'}_${wo.slotRecommended || 'SLOT'}`.toUpperCase();
+      const depts = {};
+      let allAccepted = true;
+      let allCompleted = true;
+
+      requiredDepts.forEach(d => {
+        const acceptedKey = `bundle_${bundleKey}_${d}_accepted`;
+        const completedKey = `bundle_${bundleKey}_${d}_completed`;
+        const isDeptAcc = !!store[acceptedKey] || allGroupWos.some(w => w.dept === d && (w.isAccepted || !!store[`${w.id}_${d}_accepted`]));
+        const isDeptComp = !!store[completedKey] || allGroupWos.some(w => w.dept === d && (w.isCompleted || !!store[`${w.id}_${d}_completed`]));
+
+        if (!isDeptAcc) allAccepted = false;
+        if (!isDeptComp) allCompleted = false;
+
+        depts[d] = {
+          dept: d,
+          label: normalizeDeptLabel(d),
+          accepted: isDeptAcc,
+          completed: isDeptComp,
+          acceptedBy: store[`${acceptedKey}_by`] || store[`${wo.id}_${d}_accepted_by`] || 'SSE ' + d,
+          acceptedAt: store[`${acceptedKey}_at`] || store[`${wo.id}_${d}_accepted_at`] || wo.acceptedAt || 'Pending',
+          completedBy: store[`${completedKey}_by`] || store[`${wo.id}_${d}_completed_by`] || 'SSE ' + d,
+          completedAt: store[`${completedKey}_at`] || store[`${wo.id}_${d}_completed_at`] || wo.completedAt || 'Pending'
+        };
+      });
+
+      return {
+        isJoint: isJoint,
+        bundleKey: bundleKey,
+        groupWos: allGroupWos,
+        requiredDepts: requiredDepts,
+        depts: depts,
+        allAccepted: allAccepted,
+        allCompleted: allCompleted
+      };
+    }
+
     function renderWorkOrders(filterDept = 'ALL') {
       const pendingContainer = document.getElementById('pending-work-orders-container');
       const acceptedContainer = document.getElementById('work-orders-container');
@@ -1043,101 +2136,187 @@
               No pending sanctioned requisitions awaiting acceptance for department: <strong>${filterDept}</strong>.
             </div>`;
         } else {
+          // Group by Corridor + Slot for Joint Multi-Department Bundling
+          const pendingBundlesMap = {};
           filteredPending.forEach(wo => {
-            const card = document.createElement('div');
-            const alertClass = wo.category === 'P1' ? 'p1-alert' : wo.category === 'P2' ? 'p2-alert' : '';
-            card.className = `work-order-card ${alertClass}`;
-            card.id = `card-wo-${wo.id}`;
-            card.setAttribute('data-wo-id', wo.id);
-            if (wo.request_id) card.setAttribute('data-request-id', wo.request_id);
+            const key = `${wo.section || 'SEC'}_${wo.slotRecommended || 'SLOT'}`.toUpperCase();
+            if (!pendingBundlesMap[key]) pendingBundlesMap[key] = [];
+            pendingBundlesMap[key].push(wo);
+          });
 
-            const isAltApproved = !!wo.appliedAlternative || wo.status === 'ALTERNATIVE_APPLIED';
+          Object.entries(pendingBundlesMap).forEach(([k, group]) => {
+            const isJointGroup = group.length > 1;
+            const hsInfo = getHandshakeInfo(group[0], group);
+            const allIds = group.map(g => g.id);
+            const slotStr = group[0].slotRecommended || 'Sanctioned Window';
+            const secStr = group[0].section || 'Corridor';
 
-            card.innerHTML = `
-              <div class="wo-header">
-                <div>
-                  <div class="wo-title">
-                    <span>${wo.title}</span>
-                    <span style="background: #059669; color: white; font-size: 0.68rem; padding: 2px 8px; border-radius: 4px; font-weight: 700; text-transform: uppercase;">
-                      ✓ CONTROL OFFICE SANCTIONED
-                    </span>
-                    ${isAltApproved ? `
-                    <span style="background: #ECFDF5; color: #065F46; border: 1px solid #10B981; font-size: 0.66rem; padding: 2px 7px; border-radius: 4px; font-weight: 700; display: inline-flex; align-items: center; gap: 3px;">
-                      <span>💡</span> AI ALT APPROVED
-                    </span>` : ''}
-                    <div class="tooltip-wrap">
-                      <span style="font-size: 0.85rem; color: #003366;">ℹ️</span>
-                      <div class="tooltip-box">${wo.tooltipExplanation}</div>
+            if (isJointGroup) {
+              const jointHeader = document.createElement('div');
+              jointHeader.innerHTML = `
+                <div style="background: linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 100%); border: 1.5px solid #818CF8; border-radius: 10px; padding: 14px 18px; margin-bottom: 12px; display: flex; flex-direction: column; gap: 10px; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.1);">
+                  <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                      <span style="font-size: 1.6rem;">🔀</span>
+                      <div>
+                        <div style="font-weight: 800; font-size: 0.90rem; color: #3730A3; display: flex; align-items: center; gap: 6px;">
+                          <span>Multi-Department Co-Possession Handshake</span>
+                          <span style="background: #4F46E5; color: #FFF; font-size: 0.65rem; padding: 2px 7px; border-radius: 10px; font-weight: 800;">${group.length} Combined Tasks on ${secStr}</span>
+                        </div>
+                        <div style="font-size: 0.74rem; color: #4338CA; margin-top: 2px;">
+                          Corridor Block (<strong>${slotStr}</strong>) requires independent acceptance from each participating department before execution.
+                        </div>
+                      </div>
                     </div>
+                    <button onclick='window.acceptJointWorkOrders(${JSON.stringify(allIds)})'
+                      style="background: #4F46E5; color: #FFF; border: none; font-weight: 800; font-size: 0.76rem; padding: 8px 16px; border-radius: 7px; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; box-shadow: 0 2px 8px rgba(79, 70, 229, 0.35);">
+                      <span>⚡</span> Dual-Accept Both Departments (${group.length} Tasks)
+                    </button>
                   </div>
-                  <div style="font-family: var(--font-mono); font-size: 0.78rem; color: #64748B; margin-top: 6px;">
-                    ID: <span style="color: #003366; font-weight: 700;">${wo.id}</span> | Section: <span style="color: #0F172A; font-weight: 600;">${wo.section}</span> | Dept: <span style="color: #059669; font-weight: 600;">${wo.deptLabel}</span>
+
+                  <!-- Department Handshake Status Bar -->
+                  <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; background: #FFFFFF; border: 1px solid #C7D2FE; border-radius: 8px; padding: 8px 14px;">
+                    <span style="font-size: 0.72rem; font-weight: 800; color: #4338CA; text-transform: uppercase;">Handshake Readiness:</span>
+                    ${hsInfo.requiredDepts.map(dept => {
+                      const dInfo = hsInfo.depts[dept];
+                      const isAcc = dInfo?.accepted;
+                      return `
+                      <div style="display: flex; align-items: center; gap: 6px; background: ${isAcc ? '#ECFDF5' : '#FEF3C7'}; border: 1px solid ${isAcc ? '#A7F3D0' : '#FDE68A'}; padding: 4px 10px; border-radius: 6px; font-size: 0.73rem;">
+                        <span>${isAcc ? '🟢' : '⏳'}</span>
+                        <span style="font-weight: 700; color: ${isAcc ? '#065F46' : '#92400E'};">${dInfo?.label || dept}:</span>
+                        <span style="font-weight: 600; color: ${isAcc ? '#059669' : '#B45309'};">${isAcc ? `Accepted (${dInfo.acceptedBy || 'SSE'})` : 'Waiting for Sign-off'}</span>
+                        ${!isAcc ? `
+                        <button onclick="window.signDeptAcceptance('${group.find(w => w.dept === dept)?.id || allIds[0]}', '${dept}', true, '${k}')"
+                          style="background: #003366; color: #FFF; border: none; font-size: 0.68rem; font-weight: 700; padding: 2px 8px; border-radius: 4px; cursor: pointer; margin-left: 4px;">
+                          ✓ Accept as ${dept}
+                        </button>` : ''}
+                      </div>`;
+                    }).join('')}
                   </div>
-                </div>
+                </div>`;
+              pendingContainer.appendChild(jointHeader);
+            }
 
-                <div style="display: flex; align-items: center; gap: 8px;">
-                  <span id="badge-slot-${wo.id}">
-                    ${PriorityScoreBadge.render({ score: wo.score, category: wo.category })}
-                  </span>
-                  ${ConfidenceIndicator.render({ confidence: wo.confidence })}
+            group.forEach(wo => {
+              const card = document.createElement('div');
+              const alertClass = wo.category === 'P1' ? 'p1-alert' : wo.category === 'P2' ? 'p2-alert' : '';
+              card.className = `work-order-card ${alertClass}`;
+              card.id = `card-wo-${wo.id}`;
+              card.setAttribute('data-wo-id', wo.id);
+              if (wo.request_id) card.setAttribute('data-request-id', wo.request_id);
 
-                  <button onclick="window.overrideWo('${wo.id}', '${wo.category}')" style="
-                    background: rgba(217, 83, 30, 0.08);
-                    border: 1px solid rgba(217, 83, 30, 0.35);
-                    color: #D9531E;
-                    padding: 5px 12px;
-                    border-radius: 6px;
-                    font-size: 0.74rem;
-                    font-weight: 700;
-                    cursor: pointer;
-                  ">Manual Override</button>
-                </div>
-              </div>
+              const isAltApproved = !!wo.appliedAlternative || wo.status === 'ALTERNATIVE_APPLIED';
+              const otherGroupIds = group.length > 1 ? group.map(g => g.id).filter(id => id !== wo.id) : [];
+              const woHs = getHandshakeInfo(wo, group);
+              const isWoDeptAccepted = woHs.depts[wo.dept]?.accepted;
 
-              <div class="wo-meta-row" style="color: #8eb3da;">
-                <span>⏱️ <strong>Required Block:</strong> ${wo.duration}</span>
-                <span>🚜 <strong>Machinery:</strong> ${wo.machinery}</span>
-                ${isAltApproved ? `<span style="color: #059669; font-weight: 600;">✓ Conflict Avoidance Path Shift Approved by Control Office</span>` : ''}
-              </div>
-
-              <div class="wo-slot-box">
-                <div style="display: flex; align-items: center; gap: 10px;">
-                  <span style="font-size: 1.1rem;">🗓️</span>
+              card.innerHTML = `
+                <div class="wo-header">
                   <div>
-                    <div style="font-size: 0.72rem; text-transform: uppercase; color: #64748B; font-weight: 700;">
-                      ${isAltApproved ? 'Approved AI Alternative Window (Sanctioned)' : 'Control Office Sanctioned Slot'}
+                    <div class="wo-title">
+                      <span>${wo.title}</span>
+                      <span style="background: #059669; color: white; font-size: 0.68rem; padding: 2px 8px; border-radius: 4px; font-weight: 700; text-transform: uppercase;">
+                        ✓ CONTROL OFFICE SANCTIONED
+                      </span>
+                      ${isAltApproved ? `
+                      <span style="background: #ECFDF5; color: #065F46; border: 1px solid #10B981; font-size: 0.66rem; padding: 2px 7px; border-radius: 4px; font-weight: 700; display: inline-flex; align-items: center; gap: 3px;">
+                        <span>💡</span> AI ALT APPROVED
+                      </span>` : ''}
+                      ${otherGroupIds.length > 0 ? `
+                      <span style="background: #EEF2FF; color: #4338CA; border: 1px solid #C7D2FE; font-size: 0.66rem; padding: 2px 7px; border-radius: 4px; font-weight: 700; display: inline-flex; align-items: center; gap: 3px;">
+                        <span>🔀</span> BUNDLED WITH ${otherGroupIds.join(', ')}
+                      </span>` : ''}
+                      <div class="tooltip-wrap">
+                        <span style="font-size: 0.85rem; color: #003366;">ℹ️</span>
+                        <div class="tooltip-box">${wo.tooltipExplanation}</div>
+                      </div>
                     </div>
-                    <div style="font-family: var(--font-mono); font-size: 0.88rem; font-weight: 700; color: #003366;">${wo.slotRecommended}</div>
+                    <div style="font-family: var(--font-mono); font-size: 0.78rem; color: #64748B; margin-top: 6px;">
+                      ID: <span style="color: #003366; font-weight: 700;">${wo.id}</span> | Section: <span style="color: #0F172A; font-weight: 600;">${wo.section}</span> | Dept: <span style="color: #059669; font-weight: 600;">${wo.deptLabel}</span>
+                    </div>
+                  </div>
+
+                  <div style="display: flex; align-items: center; gap: 8px;">
+                    <span id="badge-slot-${wo.id}">
+                      ${PriorityScoreBadge.render({ score: wo.score, category: wo.category })}
+                    </span>
+                    ${ConfidenceIndicator.render({ confidence: wo.confidence })}
+
+                    <button onclick="window.overrideWo('${wo.id}', '${wo.category}')" style="
+                      background: rgba(217, 83, 30, 0.08);
+                      border: 1px solid rgba(217, 83, 30, 0.35);
+                      color: #D9531E;
+                      padding: 5px 12px;
+                      border-radius: 6px;
+                      font-size: 0.74rem;
+                      font-weight: 700;
+                      cursor: pointer;
+                    ">Manual Override</button>
                   </div>
                 </div>
 
-                <div style="display: flex; align-items: center; gap: 10px;">
-                  ${SlotFeasibilityIndicator.render({ status: wo.slotFeasibility, conflicts: wo.slotConflicts, compact: true })}
-                  <button id="btn-accept-${wo.id}" style="
-                    background: #003366;
-                    border: none;
-                    color: #ffffff;
-                    padding: 6px 16px;
-                    border-radius: 6px;
-                    font-size: 0.78rem;
-                    font-weight: 700;
-                    cursor: pointer;
-                    box-shadow: 0 2px 8px rgba(0, 51, 102, 0.2);
-                    transition: all 0.2s ease;
-                  " onclick="window.acceptWorkOrder('${wo.id}')">✓ Accept &amp; Lock Slot</button>
+                <!-- Handshake Pill Row -->
+                <div style="display: flex; align-items: center; gap: 8px; margin: 8px 0; font-size: 0.73rem;">
+                  <span style="font-weight: 700; color: #475569;">Dept Acceptance:</span>
+                  <span style="background: ${isWoDeptAccepted ? '#ECFDF5' : '#FEF3C7'}; color: ${isWoDeptAccepted ? '#065F46' : '#92400E'}; border: 1px solid ${isWoDeptAccepted ? '#A7F3D0' : '#FDE68A'}; padding: 2px 8px; border-radius: 4px; font-weight: 700;">
+                    ${isWoDeptAccepted ? `✓ ${wo.deptLabel} Confirmed Ready` : `⏳ Waiting for ${wo.deptLabel} SSE Acceptance`}
+                  </span>
+                  ${otherGroupIds.length > 0 ? `
+                  <span style="color: #64748B;">• Co-requisite of joint shadow possession</span>` : ''}
                 </div>
-              </div>
 
-              ${AIExplanationCard.render({
-              id: wo.id,
-              summary: wo.explanationSummary,
-              detailedReason: wo.detailedExplanation,
-              factors: wo.factors,
-              recommendedAction: wo.action,
-              defaultExpanded: wo.category === 'P1'
-            })}
-            `;
-            pendingContainer.appendChild(card);
+                <div class="wo-meta-row" style="color: #8eb3da;">
+                  <span>⏱️ <strong>Required Block:</strong> ${wo.duration}</span>
+                  <span>🚜 <strong>Machinery:</strong> ${wo.machinery}</span>
+                  ${isAltApproved ? `<span style="color: #059669; font-weight: 600;">✓ Conflict Avoidance Path Shift Approved by Control Office</span>` : ''}
+                </div>
+
+                <div class="wo-slot-box">
+                  <div style="display: flex; align-items: center; gap: 10px;">
+                    <span style="font-size: 1.1rem;">🗓️</span>
+                    <div>
+                      <div style="font-size: 0.72rem; text-transform: uppercase; color: #64748B; font-weight: 700;">
+                        ${isAltApproved ? 'Approved AI Alternative Window (Sanctioned)' : 'Control Office Sanctioned Slot'}
+                      </div>
+                      <div style="font-family: var(--font-mono); font-size: 0.88rem; font-weight: 700; color: #003366;">${wo.slotRecommended}</div>
+                    </div>
+                  </div>
+
+                  <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                    ${SlotFeasibilityIndicator.render({ status: wo.slotFeasibility, conflicts: wo.slotConflicts, compact: true })}
+                    
+                    ${!isWoDeptAccepted ? `
+                    <button style="background: #059669; border: none; color: #ffffff; padding: 6px 14px; border-radius: 6px; font-size: 0.76rem; font-weight: 700; cursor: pointer; box-shadow: 0 2px 8px rgba(5, 150, 105, 0.25);"
+                      onclick="window.signDeptAcceptance('${wo.id}', '${wo.dept}', ${isJointGroup}, '${k}')">
+                      ✓ Accept as ${wo.dept} SSE
+                    </button>` : `
+                    <span style="font-size: 0.72rem; font-weight: 700; color: #059669; background: #ECFDF5; padding: 4px 8px; border-radius: 4px; border: 1px solid #A7F3D0;">
+                      ✓ ${wo.dept} Signed Off
+                    </span>`}
+
+                    ${isJointGroup ? `
+                    <button style="background: #4F46E5; border: none; color: #ffffff; padding: 6px 14px; border-radius: 6px; font-size: 0.76rem; font-weight: 700; cursor: pointer; box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3);"
+                      onclick='window.acceptJointWorkOrders(${JSON.stringify(allIds)})'>
+                      ⚡ Dual-Accept Both
+                    </button>` : `
+                    <button id="btn-accept-${wo.id}" style="background: #003366; border: none; color: #ffffff; padding: 6px 16px; border-radius: 6px; font-size: 0.78rem; font-weight: 700; cursor: pointer; box-shadow: 0 2px 8px rgba(0, 51, 102, 0.2); transition: all 0.2s ease;"
+                      onclick="window.acceptWorkOrder('${wo.id}')">
+                      ✓ Accept &amp; Lock Slot
+                    </button>`}
+                  </div>
+                </div>
+
+                ${AIExplanationCard.render({
+                id: wo.id,
+                summary: wo.explanationSummary,
+                detailedReason: wo.detailedExplanation,
+                factors: wo.factors,
+                recommendedAction: wo.action,
+                defaultExpanded: wo.category === 'P1'
+              })}
+              `;
+              pendingContainer.appendChild(card);
+            });
           });
         }
       }
@@ -1156,6 +2335,9 @@
             card.style.background = '#F0FDF4';
             card.style.borderColor = 'rgba(5, 150, 105, 0.45)';
             card.style.borderLeft = '6px solid #059669';
+
+            const woHs = getHandshakeInfo(wo, filteredAccepted.filter(w => `${w.section}_${w.slotRecommended}`.toUpperCase() === `${wo.section}_${wo.slotRecommended}`.toUpperCase()));
+            const isWoDeptCompleted = woHs.depts[wo.dept]?.completed;
 
             card.innerHTML = `
               <div class="wo-header">
@@ -1183,6 +2365,19 @@
                 </div>
               </div>
 
+              <!-- Completion Clearance Handshake Row -->
+              <div style="display: flex; align-items: center; gap: 10px; margin: 8px 0; flex-wrap: wrap;">
+                <span style="font-size: 0.72rem; font-weight: 800; color: #065F46; text-transform: uppercase;">Exit Clearance:</span>
+                ${woHs.requiredDepts.map(dept => {
+                  const dInfo = woHs.depts[dept];
+                  const isDone = dInfo?.completed;
+                  return `
+                  <span style="background: ${isDone ? '#ECFDF5' : '#FEF2F2'}; color: ${isDone ? '#065F46' : '#991B1B'}; border: 1px solid ${isDone ? '#A7F3D0' : '#FECACA'}; padding: 3px 8px; border-radius: 4px; font-size: 0.72rem; font-weight: 700;">
+                    ${isDone ? '✓' : '⚠️'} ${dInfo?.label || dept}: ${isDone ? `Certified Safe (${dInfo.completedBy || 'SSE'})` : 'Pending Line Clearance'}
+                  </span>`;
+                }).join('')}
+              </div>
+
               <div class="wo-meta-row" style="color: #065F46;">
                 <span>⏱️ <strong>Required Block:</strong> ${wo.duration}</span>
                 <span>🚜 <strong>Machinery:</strong> ${wo.machinery}</span>
@@ -1198,8 +2393,14 @@
                   </div>
                 </div>
 
-                <div style="display: flex; align-items: center; gap: 10px;">
+                <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
                   ${SlotFeasibilityIndicator.render({ status: wo.slotFeasibility, conflicts: wo.slotConflicts, compact: true })}
+                  
+                  <button style="background: #0D9488; border: none; color: #ffffff; padding: 7px 14px; border-radius: 6px; font-size: 0.78rem; font-weight: 800; cursor: pointer; box-shadow: 0 2px 8px rgba(13, 148, 136, 0.3);"
+                    onclick="window.signDeptCompletion('${wo.id}', '${wo.dept}', ${woHs.isJoint}, '${woHs.bundleKey}')">
+                    ☑ Sign Clearance as ${wo.dept}
+                  </button>
+
                   <button id="btn-complete-${wo.id}" style="
                     background: #059669;
                     border: none;
@@ -1272,6 +2473,25 @@
         const trackGeometry = wo.trackGeometry || 'Gauge: 1676mm (+0.5mm) | Cross-Level: 0.0mm | Twist: 0.8mm/3m';
         const sseStaffId = wo.sseStaffId || 'IR-SSE-4402 (Senior Section Engineer)';
 
+        // Check if there is an inspection status from IR_LIVE_SYNC
+        let qaInsp = null;
+        if (window.IR_LIVE_SYNC && typeof window.IR_LIVE_SYNC.getInspections === 'function') {
+          const allInsps = window.IR_LIVE_SYNC.getInspections();
+          qaInsp = allInsps.find(i => i.workOrderId === wo.id || i.workOrderId === wo.request_id || i.id === wo.id);
+        }
+
+        let qaBadgeHtml = '<span style="background: rgba(217, 119, 6, 0.15); color: #D97706; border: 1px solid rgba(217, 119, 6, 0.3); padding: 4px 10px; border-radius: 6px; font-size: 0.72rem; font-weight: 800;">⏳ QA INSPECTION PENDING</span>';
+
+        if (qaInsp) {
+          if (qaInsp.result === 'PASSED') {
+            qaBadgeHtml = `<span style="background: rgba(5, 150, 105, 0.15); color: #059669; border: 1px solid rgba(5, 150, 105, 0.3); padding: 4px 10px; border-radius: 6px; font-size: 0.72rem; font-weight: 800;">✓ QA AUDIT PASSED (${qaInsp.score || 90}%)</span>`;
+          } else if (qaInsp.result === 'FAILED') {
+            qaBadgeHtml = `<span style="background: rgba(220, 38, 38, 0.15); color: #DC2626; border: 1px solid rgba(220, 38, 38, 0.3); padding: 4px 10px; border-radius: 6px; font-size: 0.72rem; font-weight: 800;">⚠️ QA REJECTED (REWORK MANDATED)</span>`;
+          } else if (qaInsp.result === 'RE_EVALUATE') {
+            qaBadgeHtml = `<span style="background: rgba(124, 58, 237, 0.15); color: #7C3AED; border: 1px solid rgba(124, 58, 237, 0.3); padding: 4px 10px; border-radius: 6px; font-size: 0.72rem; font-weight: 800;">🔄 QA UNDER RE-EVALUATION</span>`;
+          }
+        }
+
         card.innerHTML = `
           <div class="wo-header">
             <div>
@@ -1287,6 +2507,7 @@
             </div>
 
             <div style="display: flex; align-items: center; gap: 8px;">
+              ${qaBadgeHtml}
               <span style="background: rgba(5, 150, 105, 0.15); color: #059669; border: 1px solid rgba(5, 150, 105, 0.3); padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 800;">
                 ✓ 100% EXECUTED
               </span>
@@ -1317,16 +2538,30 @@
             <div style="font-size: 0.76rem; color: #065F46; font-weight: 700;">
               ✓ Requisition closed, track fitness certification validated per IRPWM Para 268 &amp; ACTM Vol II.
             </div>
-            <button onclick="window.openIRReportModal('work-orders')" style="
-              background: #059669;
-              border: none;
-              color: white;
-              padding: 5px 14px;
-              border-radius: 4px;
-              font-size: 0.74rem;
-              font-weight: 700;
-              cursor: pointer;
-            ">📑 View Full Audit Memo</button>
+            <div style="display: flex; gap: 8px;">
+              <a href="surveillance-dashboard.html#inspections" style="
+                background: #003366;
+                color: white;
+                padding: 5px 12px;
+                border-radius: 4px;
+                font-size: 0.74rem;
+                font-weight: 700;
+                text-decoration: none;
+                display: inline-flex;
+                align-items: center;
+                gap: 4px;
+              "><span>🔍</span> <span>Surveillance QA Log ➔</span></a>
+              <button onclick="window.openIRReportModal('work-orders')" style="
+                background: #059669;
+                border: none;
+                color: white;
+                padding: 5px 14px;
+                border-radius: 4px;
+                font-size: 0.74rem;
+                font-weight: 700;
+                cursor: pointer;
+              ">📑 View Full Audit Memo</button>
+            </div>
           </div>
         `;
 
@@ -1517,7 +2752,12 @@
           completedWorkOrders.unshift(wo);
         }
 
-        // 2. Log immutable audit trail to Supabase & local ledger
+        // 2. Queue for Post-Maintenance QA Inspection in Surveillance Hub
+        if (window.IR_LIVE_SYNC && typeof window.IR_LIVE_SYNC.createInspectionForCompletedWorkOrder === 'function') {
+          window.IR_LIVE_SYNC.createInspectionForCompletedWorkOrder(wo);
+        }
+
+        // 3. Log immutable audit trail to Supabase & local ledger
         logToSupabase('WORK_ORDER_COMPLETED_AND_CLOSED', 'WORK_COMPLETED', wo, `Work order ${activeCompletingWoId} certified closed: ${wo.conditionNow}`);
 
         window.closeCompletionModal();
@@ -1597,6 +2837,111 @@
         }
       } catch (err) {
         console.error('[MaintenanceDashboard] Accept work order error:', err);
+      }
+    };
+
+    window.acceptJointWorkOrders = async function (woIds) {
+      if (!Array.isArray(woIds) || woIds.length === 0) return;
+      for (const id of woIds) {
+        await window.acceptWorkOrder(id, true);
+      }
+      if (window.showToast) {
+        window.showToast(`🔀 Joint Corridor Block Locked! ${woIds.length} tasks coordinated into unified track possession.`, 'success');
+      }
+    };
+
+    window.signDeptAcceptance = async function (woId, deptCode, isJoint = false, bundleKey = null) {
+      const store = getDeptHandshakeStore();
+      const nowIso = new Date().toISOString();
+      const timeStr = new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+      const activeUser = (() => {
+        try { const r = localStorage.getItem('ir_ai_session'); if (r) { const p = JSON.parse(r); if (p?.user) return p.user; } } catch (_) { }
+        return { name: `SSE ${deptCode}`, staffId: `IR-${deptCode}-SSE` };
+      })();
+
+      store[`${woId}_${deptCode}_accepted`] = true;
+      store[`${woId}_${deptCode}_accepted_by`] = activeUser.name;
+      store[`${woId}_${deptCode}_accepted_at`] = timeStr;
+
+      if (isJoint && bundleKey) {
+        store[`bundle_${bundleKey}_${deptCode}_accepted`] = true;
+        store[`bundle_${bundleKey}_${deptCode}_accepted_by`] = activeUser.name;
+        store[`bundle_${bundleKey}_${deptCode}_accepted_at`] = timeStr;
+      }
+      saveDeptHandshakeStore(store);
+
+      const wo = activeWorkOrders.find(w => w.id === woId);
+      const group = wo ? activeWorkOrders.filter(w => `${w.section}_${w.slotRecommended}`.toUpperCase() === `${wo.section}_${wo.slotRecommended}`.toUpperCase()) : [];
+      const hsInfo = getHandshakeInfo(wo || { id: woId, dept: deptCode }, group);
+
+      if (hsInfo.allAccepted) {
+        const wosToAccept = hsInfo.groupWos || [wo];
+        for (const w of wosToAccept) {
+          if (w && !w.isAccepted) {
+            await window.acceptWorkOrder(w.id, true);
+          }
+        }
+        if (window.showToast) {
+          window.showToast(`🎉 Dual Acceptance Complete! All required departments signed off. Joint Block moved to Work In Progress.`, 'success');
+        }
+      } else {
+        const remaining = hsInfo.requiredDepts.filter(d => !hsInfo.depts[d]?.accepted).map(d => normalizeDeptLabel(d)).join(', ');
+        if (window.showToast) {
+          window.showToast(`✓ ${normalizeDeptLabel(deptCode)} Accepted! Waiting for remaining sign-offs: ${remaining}`, 'info');
+        }
+        renderWorkOrders(currentDeptFilter);
+        updateDepartmentCounts();
+      }
+    };
+
+    window.signDeptCompletion = async function (woId, deptCode, isJoint = false, bundleKey = null) {
+      const store = getDeptHandshakeStore();
+      const nowIso = new Date().toISOString();
+      const timeStr = new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+      const activeUser = (() => {
+        try { const r = localStorage.getItem('ir_ai_session'); if (r) { const p = JSON.parse(r); if (p?.user) return p.user; } } catch (_) { }
+        return { name: `SSE ${deptCode}`, staffId: `IR-${deptCode}-SSE` };
+      })();
+
+      store[`${woId}_${deptCode}_completed`] = true;
+      store[`${woId}_${deptCode}_completed_by`] = activeUser.name;
+      store[`${woId}_${deptCode}_completed_at`] = timeStr;
+
+      if (isJoint && bundleKey) {
+        store[`bundle_${bundleKey}_${deptCode}_completed`] = true;
+        store[`bundle_${bundleKey}_${deptCode}_completed_by`] = activeUser.name;
+        store[`bundle_${bundleKey}_${deptCode}_completed_at`] = timeStr;
+      }
+      saveDeptHandshakeStore(store);
+
+      const wo = activeWorkOrders.find(w => w.id === woId);
+      const group = wo ? activeWorkOrders.filter(w => `${w.section}_${w.slotRecommended}`.toUpperCase() === `${wo.section}_${wo.slotRecommended}`.toUpperCase()) : [];
+      const hsInfo = getHandshakeInfo(wo || { id: woId, dept: deptCode }, group);
+
+      if (hsInfo.allCompleted) {
+        const wosToComplete = hsInfo.groupWos || [wo];
+        for (const w of wosToComplete) {
+          if (w && !w.isCompleted) {
+            w.isCompleted = true;
+            w.status = 'COMPLETED';
+            w.completedAt = timeStr;
+            const completedMap = getLocalCompletedMap();
+            completedMap[w.id] = { status: 'COMPLETED', completedAt: timeStr, timestamp: nowIso };
+            saveLocalCompletedMap(completedMap);
+          }
+        }
+        if (window.showToast) {
+          window.showToast(`🏆 Dual Clearance Complete! Line safe & certified by all departments.`, 'success');
+        }
+        renderWorkOrders(currentDeptFilter);
+        updateDepartmentCounts();
+      } else {
+        const remaining = hsInfo.requiredDepts.filter(d => !hsInfo.depts[d]?.completed).map(d => normalizeDeptLabel(d)).join(', ');
+        if (window.showToast) {
+          window.showToast(`✓ ${normalizeDeptLabel(deptCode)} Certified! Waiting for exit clearance from: ${remaining}`, 'info');
+        }
+        renderWorkOrders(currentDeptFilter);
+        updateDepartmentCounts();
       }
     };
 
@@ -1682,14 +3027,1406 @@
       });
     });
 
+    // ═══════════════════════════════════════════════════════════════════════════════
+    // LABOR & GANG DEPLOYMENT SYSTEM (TMS / SMMS / TRD)
+    // ═══════════════════════════════════════════════════════════════════════════════
+    let currentMaintView = 'work-orders'; // 'work-orders' | 'labor'
+    let currentLaborViewMode = 'cards'; // 'cards' | 'table'
+    let laborFilterState = {
+      search: '',
+      dept: 'ALL',
+      gang: 'ALL',
+      status: 'ALL'
+    };
+
+    const DEFAULT_GANGS = [
+      {
+        id: 'GANG-04',
+        name: 'Gang #04 — Track Relaying & Tamping Unit',
+        dept: 'CIVIL',
+        deptLabel: 'Civil / P-Way (TMS)',
+        supervisor: 'Rajesh Sharma (SSE P-Way / PWI DLI)',
+        supervisorPhone: '+91 98712-44310',
+        mate: 'Ram Singh (Sr. Mate)',
+        section: 'KM 142/10 – 146/04 (NDLS–GZB Down Main Line)',
+        station: 'Ghaziabad Outer (GZB)',
+        workOrderId: 'WO-2026-088',
+        workOrderTitle: 'Emergency Rail Joint Replacement & Heavy Packing',
+        shiftWindow: '06:00 – 14:00 (Morning Line Block 8h)',
+        shiftStart: '06:00',
+        shiftEnd: '14:00',
+        possessionWindow: '08:30 – 11:30 (180 mins block)',
+        status: 'ACTIVE_ON_TRACK',
+        machinery: '03 Tie Tamping Units & Hydraulic Rail Jacks',
+        safetyBriefing: '05:45 AM by SSE Rajesh Sharma (IRPWM 104 Verified)'
+      },
+      {
+        id: 'GANG-01',
+        name: 'Gang #01 — Emergency USFD Flaw & Weld Repair Unit',
+        dept: 'CIVIL',
+        deptLabel: 'Civil / P-Way (TMS)',
+        supervisor: 'Anil Kumar (SSE P-Way TKD)',
+        supervisorPhone: '+91 98114-77291',
+        mate: 'Kallu Ram (Weld Mate)',
+        section: 'KM 68/04 – 72/00 (GZB–ALJN Up Main Line)',
+        station: 'Aligarh Jn Section',
+        workOrderId: 'WO-2026-091',
+        workOrderTitle: 'Ultrasonic Flaw Defect Cut & Thermit Weld Renewal',
+        shiftWindow: '08:00 – 16:00 (Day Shift 8h)',
+        shiftStart: '08:00',
+        shiftEnd: '16:00',
+        possessionWindow: '10:00 – 13:00 (180 mins block)',
+        status: 'ACTIVE_ON_TRACK',
+        machinery: 'USFD Digital Detector & AT Welding Plant',
+        safetyBriefing: '07:45 AM by SSE Anil Kumar (USFD Certified)'
+      },
+      {
+        id: 'GANG-02',
+        name: 'Gang #02 — Signal Interlocking & Point Machine Unit',
+        dept: 'SIG',
+        deptLabel: 'Signalling & Telecom (SMMS)',
+        supervisor: 'Vikram Joshi (SSE Signal NDLS)',
+        supervisorPhone: '+91 99201-38290',
+        mate: 'Dharamvir Singh (Signal Tech Mate)',
+        section: 'Anand Vihar Yard Points 104A/B & Interlocking Rack',
+        station: 'Anand Vihar Terminal (ANVT)',
+        workOrderId: 'WO-2026-095',
+        workOrderTitle: 'Point Machine Obstruction Test & Track Circuit Check',
+        shiftWindow: '06:00 – 14:00 (Morning Shift 8h)',
+        shiftStart: '06:00',
+        shiftEnd: '14:00',
+        possessionWindow: '09:00 – 12:00 (180 mins block)',
+        status: 'ACTIVE_ON_TRACK',
+        machinery: 'Digital Insulation Tester & Point Gauge Kit',
+        safetyBriefing: '05:50 AM by SSE Vikram Joshi (Form T/351 Sanctioned)'
+      },
+      {
+        id: 'GANG-07',
+        name: 'Gang #07 — TRD 25kV OHE High-Voltage Unit',
+        dept: 'TRD',
+        deptLabel: 'Electrical / TRD (OHE)',
+        supervisor: 'S.P. Anand (SSE TRD GZB)',
+        supervisorPhone: '+91 97170-88412',
+        mate: 'Mange Ram (Senior OHE Mate)',
+        section: 'Mast 210/14 – 214/02 (Sahibabad–Ghaziabad Section)',
+        station: 'Sahibabad (SBB)',
+        workOrderId: 'WO-2026-089',
+        workOrderTitle: 'OHE Contact Wire Height & Stagger Adjustment',
+        shiftWindow: '09:00 – 17:00 (OHE Day Shift 8h)',
+        shiftStart: '09:00',
+        shiftEnd: '17:00',
+        possessionWindow: '11:00 – 13:30 (150 mins power block)',
+        status: 'ACTIVE_ON_TRACK',
+        machinery: '8-Wheeler Tower Wagon & Discharge Rods',
+        safetyBriefing: '08:45 AM by SSE S.P. Anand (Power Isolation Verified)'
+      },
+      {
+        id: 'GANG-09',
+        name: 'Gang #09 — Civil Bridge & Substructure Unit',
+        dept: 'CIVIL',
+        deptLabel: 'Civil / Bridges',
+        supervisor: 'Manoj Tiwari (SSE Bridge ALJN)',
+        supervisorPhone: '+91 98390-12845',
+        mate: 'Harish Chandra (Bridge Mate)',
+        section: 'Yamuna Bridge No. 249 (KM 14/02 Up & Down Lines)',
+        station: 'Delhi Bridge Depot',
+        workOrderId: 'WO-2026-094',
+        workOrderTitle: 'Girder Bearing Lubrication & Sleepers Tightening',
+        shiftWindow: '07:00 – 15:00 (Bridge Shift 8h)',
+        shiftStart: '07:00',
+        shiftEnd: '15:00',
+        possessionWindow: '09:30 – 12:30 (180 mins block)',
+        status: 'ACTIVE_ON_TRACK',
+        machinery: 'Pneumatic Riveting Kit & Safety Harness Lanyards',
+        safetyBriefing: '06:45 AM by SSE Manoj Tiwari (Fall Arresters Verified)'
+      },
+      {
+        id: 'GANG-11',
+        name: 'Gang #11 — Rolling Stock Yard Examination Unit',
+        dept: 'MECH',
+        deptLabel: 'Mechanical (Rolling Stock)',
+        supervisor: 'Amit Verma (JE Mech TKD)',
+        supervisorPhone: '+91 98681-99201',
+        mate: 'Jagdish Prasad (Mech Mate)',
+        section: 'Tughlakabad Freight Yard Line 6B & 7A',
+        station: 'Tughlakabad Yard (TKD)',
+        workOrderId: 'WO-2026-098',
+        workOrderTitle: 'Brake Power & Axle Box Infrared Heat Check',
+        shiftWindow: '14:00 – 22:00 (Evening Yard Shift 8h)',
+        shiftStart: '14:00',
+        shiftEnd: '22:00',
+        possessionWindow: '15:00 – 18:00 (180 mins block)',
+        status: 'ACTIVE_ON_TRACK',
+        machinery: 'Air Brake Testing Rig & IR Temperature Gun',
+        safetyBriefing: '13:45 PM by JE Amit Verma (Blue Flag Protection Planted)'
+      },
+      {
+        id: 'STANDBY',
+        name: 'Central Depot Quick-Response Reserve Crew',
+        dept: 'CIVIL',
+        deptLabel: 'Multi-Discipline Reserve',
+        supervisor: 'Central Depot SSE In-Charge',
+        supervisorPhone: '+91 98711-00021',
+        mate: 'Bishan Singh (Depot Mate)',
+        section: 'Ghaziabad Central Maintenance Depot (Shed B)',
+        station: 'Ghaziabad Depot',
+        workOrderId: 'STANDBY-RESERVE',
+        workOrderTitle: 'Standby for Emergency Dispatch & Micro-Block Support',
+        shiftWindow: '06:00 – 14:00 (Morning Shift 8h)',
+        shiftStart: '06:00',
+        shiftEnd: '14:00',
+        possessionWindow: 'On-Call Ready (ETA < 15 mins)',
+        status: 'DEPOT_STANDBY',
+        machinery: 'Emergency Response Rail Motor Truck & Spares',
+        safetyBriefing: 'Daily Standby Readiness Briefing Completed'
+      }
+    ];
+
+    const DEFAULT_WORKERS = [
+      {
+        id: 'EMP-PW-8401',
+        name: 'Suraj Pal Meena',
+        role: 'Senior Trackman (Keyman)',
+        dept: 'CIVIL',
+        gangId: 'GANG-04',
+        phone: '+91 98712-88120',
+        bloodGroup: 'B+',
+        medicalCat: 'A-1 (Track Fit)',
+        shiftWindow: '06:00 – 14:00 (Morning Shift 8h)',
+        shiftElapsed: '5h 30m',
+        shiftRemaining: '2h 30m',
+        section: 'KM 142/10 – 146/04 (NDLS-GZB Down Main)',
+        supervisor: 'Rajesh Sharma (SSE P-Way / PWI DLI)',
+        mate: 'Ram Singh (Sr. Mate)',
+        workOrderId: 'WO-2026-088',
+        status: 'ACTIVE_ON_TRACK',
+        tools: 'Keyman Hammer, Gauge Tie Bar, Spanner 32mm',
+        ppe: 'Helmet, High-Vis Vest, Steel-toe Boots, Torch',
+        gpsTag: 'GPS-PWAY-8401 (Live on Section)'
+      },
+      {
+        id: 'EMP-PW-8402',
+        name: 'Devendra Yadav',
+        role: 'Trackman Gr-III',
+        dept: 'CIVIL',
+        gangId: 'GANG-04',
+        phone: '+91 98103-77192',
+        bloodGroup: 'O+',
+        medicalCat: 'A-1 (Track Fit)',
+        shiftWindow: '06:00 – 14:00 (Morning Shift 8h)',
+        shiftElapsed: '5h 30m',
+        shiftRemaining: '2h 30m',
+        section: 'KM 142/10 – 146/04 (NDLS-GZB Down Main)',
+        supervisor: 'Rajesh Sharma (SSE P-Way / PWI DLI)',
+        mate: 'Ram Singh (Sr. Mate)',
+        workOrderId: 'WO-2026-088',
+        status: 'ACTIVE_ON_TRACK',
+        tools: 'Hydraulic Tamping Crowbar, Ballast Fork',
+        ppe: 'Helmet, High-Vis Vest, Steel-toe Boots',
+        gpsTag: 'GPS-PWAY-8402 (Live on Section)'
+      },
+      {
+        id: 'EMP-PW-8403',
+        name: 'Kalyan Singh',
+        role: 'Alumino-Thermit (AT) Welder Gr-I',
+        dept: 'CIVIL',
+        gangId: 'GANG-04',
+        phone: '+91 98714-33201',
+        bloodGroup: 'A+',
+        medicalCat: 'A-1 (Welding Certified)',
+        shiftWindow: '06:00 – 14:00 (Morning Shift 8h)',
+        shiftElapsed: '5h 30m',
+        shiftRemaining: '2h 30m',
+        section: 'KM 142/10 – 146/04 (NDLS-GZB Down Main)',
+        supervisor: 'Rajesh Sharma (SSE P-Way / PWI DLI)',
+        mate: 'Ram Singh (Sr. Mate)',
+        workOrderId: 'WO-2026-088',
+        status: 'ACTIVE_ON_TRACK',
+        tools: 'Luting Mold Box, Crucible, Preheating Torch',
+        ppe: 'Welding Visor, Heat-resistant Gloves, High-Vis Vest',
+        gpsTag: 'GPS-PWAY-8403 (Live on Section)'
+      },
+      {
+        id: 'EMP-PW-8404',
+        name: 'Ram Singh',
+        role: 'Gang Mate (In-Charge Gang 04)',
+        dept: 'CIVIL',
+        gangId: 'GANG-04',
+        phone: '+91 98112-90404',
+        bloodGroup: 'AB+',
+        medicalCat: 'A-1 (Supervisor Fit)',
+        shiftWindow: '06:00 – 14:00 (Morning Shift 8h)',
+        shiftElapsed: '5h 30m',
+        shiftRemaining: '2h 30m',
+        section: 'KM 142/10 – 146/04 (NDLS-GZB Down Main)',
+        supervisor: 'Rajesh Sharma (SSE P-Way / PWI DLI)',
+        mate: 'Self (Gang Mate)',
+        workOrderId: 'WO-2026-088',
+        status: 'ACTIVE_ON_TRACK',
+        tools: 'Red/Green Banner Flags, Detonators Kit, VHF Walkie-Talkie',
+        ppe: 'Helmet, High-Vis Vest, Steel-toe Boots, Whistle',
+        gpsTag: 'GPS-MATE-GANG04 (Master Beacon)'
+      },
+      {
+        id: 'EMP-PW-8405',
+        name: 'Sunil Paswan',
+        role: 'Assistant Track Khalasi',
+        dept: 'CIVIL',
+        gangId: 'GANG-04',
+        phone: '+91 98715-11029',
+        bloodGroup: 'B-',
+        medicalCat: 'A-2',
+        shiftWindow: '06:00 – 14:00 (Morning Shift 8h)',
+        shiftElapsed: '5h 30m',
+        shiftRemaining: '2h 30m',
+        section: 'KM 142/10 – 146/04 (NDLS-GZB Down Main)',
+        supervisor: 'Rajesh Sharma (SSE P-Way / PWI DLI)',
+        mate: 'Ram Singh (Sr. Mate)',
+        workOrderId: 'WO-2026-088',
+        status: 'ACTIVE_ON_TRACK',
+        tools: 'ERC Extractor, Grease Gun, Pan Tamping Tool',
+        ppe: 'Helmet, High-Vis Vest, Steel-toe Boots',
+        gpsTag: 'GPS-PWAY-8405 (Live on Section)'
+      },
+      {
+        id: 'EMP-PW-8101',
+        name: 'Kallu Ram',
+        role: 'Gang Mate (In-Charge Gang 01)',
+        dept: 'CIVIL',
+        gangId: 'GANG-01',
+        phone: '+91 98114-10101',
+        bloodGroup: 'O+',
+        medicalCat: 'A-1 (Supervisor Fit)',
+        shiftWindow: '08:00 – 16:00 (Day Shift 8h)',
+        shiftElapsed: '3h 30m',
+        shiftRemaining: '4h 30m',
+        section: 'KM 68/04 – 72/00 (GZB-ALJN Up Main)',
+        supervisor: 'Anil Kumar (SSE P-Way TKD)',
+        mate: 'Self (Gang Mate)',
+        workOrderId: 'WO-2026-091',
+        status: 'ACTIVE_ON_TRACK',
+        tools: 'USFD Marker Kit, Detonators, VHF Walkie-Talkie',
+        ppe: 'Helmet, High-Vis Vest, Steel-toe Boots',
+        gpsTag: 'GPS-MATE-GANG01 (Master Beacon)'
+      },
+      {
+        id: 'EMP-PW-8102',
+        name: 'Mahesh Chander',
+        role: 'USFD Flaw Operator / Tech',
+        dept: 'CIVIL',
+        gangId: 'GANG-01',
+        phone: '+91 98711-23940',
+        bloodGroup: 'A+',
+        medicalCat: 'A-1 (USFD Level-II)',
+        shiftWindow: '08:00 – 16:00 (Day Shift 8h)',
+        shiftElapsed: '3h 30m',
+        shiftRemaining: '4h 30m',
+        section: 'KM 68/04 – 72/00 (GZB-ALJN Up Main)',
+        supervisor: 'Anil Kumar (SSE P-Way TKD)',
+        mate: 'Kallu Ram (Weld Mate)',
+        workOrderId: 'WO-2026-091',
+        status: 'ACTIVE_ON_TRACK',
+        tools: 'Double Probe USFD Trolley, Couplant Gel, Calibrator',
+        ppe: 'Helmet, High-Vis Vest, Steel-toe Boots',
+        gpsTag: 'GPS-USFD-8102 (Live Calibration)'
+      },
+      {
+        id: 'EMP-PW-8103',
+        name: 'Satish Chand Sharma',
+        role: 'Blacksmith / Track Fitter',
+        dept: 'CIVIL',
+        gangId: 'GANG-01',
+        phone: '+91 98115-44910',
+        bloodGroup: 'B+',
+        medicalCat: 'A-1',
+        shiftWindow: '08:00 – 16:00 (Day Shift 8h)',
+        shiftElapsed: '3h 30m',
+        shiftRemaining: '4h 30m',
+        section: 'KM 68/04 – 72/00 (GZB-ALJN Up Main)',
+        supervisor: 'Anil Kumar (SSE P-Way TKD)',
+        mate: 'Kallu Ram (Weld Mate)',
+        workOrderId: 'WO-2026-091',
+        status: 'ACTIVE_ON_TRACK',
+        tools: 'Rail Cutting Saw, Chamfering Tool, Heavy Sledge Hammer',
+        ppe: 'Helmet, High-Vis Vest, Steel-toe Boots',
+        gpsTag: 'GPS-PWAY-8103 (Live on Section)'
+      },
+      {
+        id: 'EMP-SG-8201',
+        name: 'Dharamvir Singh',
+        role: 'Signal Tech Mate (In-Charge Gang 02)',
+        dept: 'SIG',
+        gangId: 'GANG-02',
+        phone: '+91 99201-82010',
+        bloodGroup: 'AB+',
+        medicalCat: 'A-1 (Signal Grade-I)',
+        shiftWindow: '06:00 – 14:00 (Morning Shift 8h)',
+        shiftElapsed: '5h 30m',
+        shiftRemaining: '2h 30m',
+        section: 'Anand Vihar Yard Points 104A/B',
+        supervisor: 'Vikram Joshi (SSE Signal NDLS)',
+        mate: 'Self (Signal Tech Mate)',
+        workOrderId: 'WO-2026-095',
+        status: 'ACTIVE_ON_TRACK',
+        tools: 'Form T/351 Disconnection Book, Multimeter, Key 11A',
+        ppe: 'Helmet, High-Vis Vest, Insulated Shoes 11kV',
+        gpsTag: 'GPS-SIG-8201 (Point Machine Zone)'
+      },
+      {
+        id: 'EMP-SG-8202',
+        name: 'Praveen Kumar Saini',
+        role: 'Signal Maintainer Gr-I',
+        dept: 'SIG',
+        gangId: 'GANG-02',
+        phone: '+91 98719-55012',
+        bloodGroup: 'O-',
+        medicalCat: 'A-1 (Signal Fit)',
+        shiftWindow: '06:00 – 14:00 (Morning Shift 8h)',
+        shiftElapsed: '5h 30m',
+        shiftRemaining: '2h 30m',
+        section: 'Anand Vihar Yard Points 104A/B',
+        supervisor: 'Vikram Joshi (SSE Signal NDLS)',
+        mate: 'Dharamvir Singh (Signal Tech Mate)',
+        workOrderId: 'WO-2026-095',
+        status: 'ACTIVE_ON_TRACK',
+        tools: 'Obstruction Gauge (3.25mm & 5mm), Insulation Megger',
+        ppe: 'Helmet, High-Vis Vest, Insulated Gloves',
+        gpsTag: 'GPS-SIG-8202 (Point Machine Zone)'
+      },
+      {
+        id: 'EMP-SG-8203',
+        name: 'Anand Prakash',
+        role: 'Telecom & Cable Jointer',
+        dept: 'SIG',
+        gangId: 'GANG-02',
+        phone: '+91 98116-22910',
+        bloodGroup: 'A+',
+        medicalCat: 'A-2',
+        shiftWindow: '06:00 – 14:00 (Morning Shift 8h)',
+        shiftElapsed: '5h 30m',
+        shiftRemaining: '2h 30m',
+        section: 'Anand Vihar Yard Points 104A/B',
+        supervisor: 'Vikram Joshi (SSE Signal NDLS)',
+        mate: 'Dharamvir Singh (Signal Tech Mate)',
+        workOrderId: 'WO-2026-095',
+        status: 'ACTIVE_ON_TRACK',
+        tools: 'OTDR Splicing Machine, Cable Fault Locator',
+        ppe: 'Helmet, High-Vis Vest, Insulated Gloves',
+        gpsTag: 'GPS-SIG-8203 (Relay Room Outer)'
+      },
+      {
+        id: 'EMP-TR-8701',
+        name: 'Mange Ram',
+        role: 'Senior OHE Mate (In-Charge Gang 07)',
+        dept: 'TRD',
+        gangId: 'GANG-07',
+        phone: '+91 97170-87010',
+        bloodGroup: 'B+',
+        medicalCat: 'A-1 (High Voltage OHE Fit)',
+        shiftWindow: '09:00 – 17:00 (OHE Day Shift 8h)',
+        shiftElapsed: '2h 30m',
+        shiftRemaining: '5h 30m',
+        section: 'Mast 210/14 – 214/02 (Sahibabad Section)',
+        supervisor: 'S.P. Anand (SSE TRD GZB)',
+        mate: 'Self (Senior OHE Mate)',
+        workOrderId: 'WO-2026-089',
+        status: 'ACTIVE_ON_TRACK',
+        tools: 'Discharge Earth Rods (Set of 2), HV Voltage Detector',
+        ppe: 'Arc-Flash Helmet, Insulated 25kV Gloves, Safety Harness',
+        gpsTag: 'GPS-TRD-8701 (Tower Wagon Platform)'
+      },
+      {
+        id: 'EMP-TR-8702',
+        name: 'Vikramaditya Rao',
+        role: 'OHE High-Voltage Linesman Gr-I',
+        dept: 'TRD',
+        gangId: 'GANG-07',
+        phone: '+91 98117-66230',
+        bloodGroup: 'O+',
+        medicalCat: 'A-1 (Climbing Certified)',
+        shiftWindow: '09:00 – 17:00 (OHE Day Shift 8h)',
+        shiftElapsed: '2h 30m',
+        shiftRemaining: '5h 30m',
+        section: 'Mast 210/14 – 214/02 (Sahibabad Section)',
+        supervisor: 'S.P. Anand (SSE TRD GZB)',
+        mate: 'Mange Ram (Senior OHE Mate)',
+        workOrderId: 'WO-2026-089',
+        status: 'ACTIVE_ON_TRACK',
+        tools: 'Tirfor Wire Puller, Catenary Dropper Gauge, Torque Wrench',
+        ppe: 'Full Body Climbing Harness, High-Vis Vest, Boots',
+        gpsTag: 'GPS-TRD-8702 (OHE Mast 212/04)'
+      },
+      {
+        id: 'EMP-TR-8703',
+        name: 'Deepak Tanwar',
+        role: 'OHE Linesman Gr-II',
+        dept: 'TRD',
+        gangId: 'GANG-07',
+        phone: '+91 98718-99410',
+        bloodGroup: 'A-',
+        medicalCat: 'A-1 (Climbing Certified)',
+        shiftWindow: '09:00 – 17:00 (OHE Day Shift 8h)',
+        shiftElapsed: '2h 30m',
+        shiftRemaining: '5h 30m',
+        section: 'Mast 210/14 – 214/02 (Sahibabad Section)',
+        supervisor: 'S.P. Anand (SSE TRD GZB)',
+        mate: 'Mange Ram (Senior OHE Mate)',
+        workOrderId: 'WO-2026-089',
+        status: 'ACTIVE_ON_TRACK',
+        tools: 'Cantilever Insulator Wrench, Bonding Jumper Clamp',
+        ppe: 'Safety Helmet, High-Vis Vest, Boots, Lanyard',
+        gpsTag: 'GPS-TRD-8703 (OHE Mast 213/10)'
+      },
+      {
+        id: 'EMP-BR-8901',
+        name: 'Harish Chandra',
+        role: 'Bridge Mate (In-Charge Gang 09)',
+        dept: 'CIVIL',
+        gangId: 'GANG-09',
+        phone: '+91 98390-89010',
+        bloodGroup: 'B+',
+        medicalCat: 'A-1 (Bridge & Height Certified)',
+        shiftWindow: '07:00 – 15:00 (Bridge Shift 8h)',
+        shiftElapsed: '4h 30m',
+        shiftRemaining: '3h 30m',
+        section: 'Yamuna Bridge No. 249 (KM 14/02)',
+        supervisor: 'Manoj Tiwari (SSE Bridge ALJN)',
+        mate: 'Self (Bridge Mate)',
+        workOrderId: 'WO-2026-094',
+        status: 'ACTIVE_ON_TRACK',
+        tools: 'Bridge Warning Hooter, Anemometer, Life Line Ropes',
+        ppe: 'Inflatable Life Jacket, Fall-Arrest Harness, Helmet',
+        gpsTag: 'GPS-BRG-8901 (Yamuna Bridge Pier 4)'
+      },
+      {
+        id: 'EMP-BR-8902',
+        name: 'Mukesh Kumar Gond',
+        role: 'Bridge Fitter / Riveter',
+        dept: 'CIVIL',
+        gangId: 'GANG-09',
+        phone: '+91 98118-33120',
+        bloodGroup: 'AB-',
+        medicalCat: 'A-1',
+        shiftWindow: '07:00 – 15:00 (Bridge Shift 8h)',
+        shiftElapsed: '4h 30m',
+        shiftRemaining: '3h 30m',
+        section: 'Yamuna Bridge No. 249 (KM 14/02)',
+        supervisor: 'Manoj Tiwari (SSE Bridge ALJN)',
+        mate: 'Harish Chandra (Bridge Mate)',
+        workOrderId: 'WO-2026-094',
+        status: 'ACTIVE_ON_TRACK',
+        tools: 'Pneumatic Bearing Grease Pump, Torque Wrench 600Nm',
+        ppe: 'Life Jacket, Fall-Arrest Harness, Helmet, Gloves',
+        gpsTag: 'GPS-BRG-8902 (Yamuna Bridge Pier 4)'
+      },
+      {
+        id: 'EMP-MC-9101',
+        name: 'Jagdish Prasad',
+        role: 'Mech Mate (In-Charge Gang 11)',
+        dept: 'MECH',
+        gangId: 'GANG-11',
+        phone: '+91 98681-91010',
+        bloodGroup: 'O+',
+        medicalCat: 'A-1',
+        shiftWindow: '14:00 – 22:00 (Evening Yard Shift 8h)',
+        shiftElapsed: '0h 00m',
+        shiftRemaining: '8h 00m',
+        section: 'Tughlakabad Freight Yard Line 6B',
+        supervisor: 'Amit Verma (JE Mech TKD)',
+        mate: 'Self (Mech Mate)',
+        workOrderId: 'WO-2026-098',
+        status: 'ACTIVE_ON_TRACK',
+        tools: 'Blue Flag Protection Boards, Yard Walkie-Talkie',
+        ppe: 'High-Vis Jacket, Hard Hat, Steel-toe Boots',
+        gpsTag: 'GPS-YARD-9101 (TKD Freight Grid)'
+      },
+      {
+        id: 'EMP-MC-9102',
+        name: 'Rohitashwa Bairwa',
+        role: 'Carriage & Wagon Fitter Gr-I',
+        dept: 'MECH',
+        gangId: 'GANG-11',
+        phone: '+91 98710-44920',
+        bloodGroup: 'B+',
+        medicalCat: 'A-1',
+        shiftWindow: '14:00 – 22:00 (Evening Yard Shift 8h)',
+        shiftElapsed: '0h 00m',
+        shiftRemaining: '8h 00m',
+        section: 'Tughlakabad Freight Yard Line 6B',
+        supervisor: 'Amit Verma (JE Mech TKD)',
+        mate: 'Jagdish Prasad (Mech Mate)',
+        workOrderId: 'WO-2026-098',
+        status: 'ACTIVE_ON_TRACK',
+        tools: 'Infrared Axle Temperature Gun, Brake Caliper Gauge',
+        ppe: 'High-Vis Jacket, Hard Hat, Steel-toe Boots',
+        gpsTag: 'GPS-YARD-9102 (TKD Freight Grid)'
+      },
+      {
+        id: 'EMP-SB-8001',
+        name: 'Bishan Singh',
+        role: 'Standby Depot Mate',
+        dept: 'CIVIL',
+        gangId: 'STANDBY',
+        phone: '+91 98711-80010',
+        bloodGroup: 'A+',
+        medicalCat: 'A-1 (Depot In-Charge)',
+        shiftWindow: '06:00 – 14:00 (Morning Shift 8h)',
+        shiftElapsed: '5h 30m',
+        shiftRemaining: '2h 30m',
+        section: 'Ghaziabad Central Maintenance Depot (Shed B)',
+        supervisor: 'Central Depot SSE In-Charge',
+        mate: 'Self (Depot Mate)',
+        workOrderId: 'STANDBY-RESERVE',
+        status: 'DEPOT_STANDBY',
+        tools: 'Emergency Quick-Jack Kit, Spare Fishplates, Torch',
+        ppe: 'High-Vis Vest, Helmet, Boots',
+        gpsTag: 'GPS-DEPOT-8001 (GZB Depot Base)'
+      },
+      {
+        id: 'EMP-SB-8002',
+        name: 'Mohammad Imran',
+        role: 'Trackman Gr-IV (Standby Reserve)',
+        dept: 'CIVIL',
+        gangId: 'STANDBY',
+        phone: '+91 98119-44021',
+        bloodGroup: 'O+',
+        medicalCat: 'A-1',
+        shiftWindow: '06:00 – 14:00 (Morning Shift 8h)',
+        shiftElapsed: '5h 30m',
+        shiftRemaining: '2h 30m',
+        section: 'Ghaziabad Central Maintenance Depot (Shed B)',
+        supervisor: 'Central Depot SSE In-Charge',
+        mate: 'Bishan Singh (Depot Mate)',
+        workOrderId: 'STANDBY-RESERVE',
+        status: 'DEPOT_STANDBY',
+        tools: 'General Track Tool Set, Hydraulic Jack 10T',
+        ppe: 'High-Vis Vest, Helmet, Boots',
+        gpsTag: 'GPS-DEPOT-8002 (GZB Depot Base)'
+      }
+    ];
+
+    // Initialize or load Labor data from localStorage
+    window.getLaborData = function () {
+      try {
+        const stored = localStorage.getItem('ir_labor_roster_data');
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        }
+      } catch (e) {
+        console.warn('Error reading ir_labor_roster_data:', e);
+      }
+      localStorage.setItem('ir_labor_roster_data', JSON.stringify(DEFAULT_WORKERS));
+      return DEFAULT_WORKERS;
+    };
+
+    window.saveLaborData = function (workers) {
+      localStorage.setItem('ir_labor_roster_data', JSON.stringify(workers));
+      if (window.IR_LIVE_SYNC && typeof window.IR_LIVE_SYNC.emit === 'function') {
+        window.IR_LIVE_SYNC.emit('labor_roster_updated', { count: workers.length });
+      }
+    };
+
+    window.getGangsData = function () {
+      try {
+        const stored = localStorage.getItem('ir_gangs_metadata');
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        }
+      } catch (e) {
+        console.warn('Error reading ir_gangs_metadata:', e);
+      }
+      localStorage.setItem('ir_gangs_metadata', JSON.stringify(DEFAULT_GANGS));
+      return DEFAULT_GANGS;
+    };
+
+    window.saveGangsData = function (gangs) {
+      localStorage.setItem('ir_gangs_metadata', JSON.stringify(gangs));
+    };
+
+    // ── Primary View Switcher ─────────────────────────────────────
+    window.switchMaintView = function (viewName, updateHash = true) {
+      if (!viewName) viewName = 'work-orders';
+      const cleanView = viewName.replace('#', '');
+      currentMaintView = cleanView === 'labor' ? 'labor' : 'work-orders';
+
+      const viewWo = document.getElementById('view-work-orders');
+      const viewLabor = document.getElementById('view-labor');
+      const btnWo = document.getElementById('tab-btn-work-orders');
+      const btnLabor = document.getElementById('tab-btn-labor');
+
+      if (currentMaintView === 'labor') {
+        if (viewWo) viewWo.style.display = 'none';
+        if (viewLabor) viewLabor.style.display = 'block';
+        if (btnWo) {
+          btnWo.classList.remove('active');
+          btnWo.setAttribute('aria-selected', 'false');
+        }
+        if (btnLabor) {
+          btnLabor.classList.add('active');
+          btnLabor.setAttribute('aria-selected', 'true');
+        }
+        if (updateHash) {
+          window.location.hash = '#labor';
+        }
+        window.renderLaborView();
+      } else {
+        if (viewLabor) viewLabor.style.display = 'none';
+        if (viewWo) viewWo.style.display = 'block';
+        if (btnLabor) {
+          btnLabor.classList.remove('active');
+          btnLabor.setAttribute('aria-selected', 'false');
+        }
+        if (btnWo) {
+          btnWo.classList.add('active');
+          btnWo.setAttribute('aria-selected', 'true');
+        }
+        if (updateHash && window.location.hash === '#labor') {
+          window.location.hash = '#work-orders';
+        }
+      }
+
+      // Sync sidebar subitem active highlights
+      const allSubs = document.querySelectorAll('.snav-sub-item');
+      allSubs.forEach(s => {
+        const href = s.getAttribute('href') || '';
+        if (currentMaintView === 'labor') {
+          s.classList.toggle('active', href.includes('#labor'));
+        } else {
+          s.classList.toggle('active', href.endsWith('maintenance-dashboard.html') || href.includes('#work-orders'));
+        }
+      });
+    };
+
+    // ── Labor View Mode Switcher ──────────────────────────────────
+    window.setLaborViewMode = function (mode) {
+      currentLaborViewMode = mode;
+      const btnCards = document.getElementById('btn-view-gang-cards');
+      const btnTable = document.getElementById('btn-view-labor-table');
+      const gangsView = document.getElementById('gangs-view-container');
+      const tableView = document.getElementById('table-view-container');
+
+      if (mode === 'cards') {
+        if (btnCards) {
+          btnCards.style.background = '#003366';
+          btnCards.style.color = '#FFFFFF';
+        }
+        if (btnTable) {
+          btnTable.style.background = 'transparent';
+          btnTable.style.color = '#64748B';
+        }
+        if (gangsView) gangsView.style.display = 'block';
+        if (tableView) tableView.style.display = 'none';
+      } else {
+        if (btnTable) {
+          btnTable.style.background = '#003366';
+          btnTable.style.color = '#FFFFFF';
+        }
+        if (btnCards) {
+          btnCards.style.background = 'transparent';
+          btnCards.style.color = '#64748B';
+        }
+        if (gangsView) gangsView.style.display = 'none';
+        if (tableView) tableView.style.display = 'block';
+      }
+      window.renderLaborView();
+    };
+
+    // ── Filter change handler ────────────────────────────────────
+    window.handleLaborFilterChange = function () {
+      const searchEl = document.getElementById('labor-search-input');
+      const deptEl = document.getElementById('labor-dept-filter');
+      const gangEl = document.getElementById('labor-gang-filter');
+      const statusEl = document.getElementById('labor-status-filter');
+
+      laborFilterState.search = searchEl ? searchEl.value.trim().toLowerCase() : '';
+      laborFilterState.dept = deptEl ? deptEl.value : 'ALL';
+      laborFilterState.gang = gangEl ? gangEl.value : 'ALL';
+      laborFilterState.status = statusEl ? statusEl.value : 'ALL';
+
+      window.renderLaborView();
+    };
+
+    // ── Master Render Function for Labor ─────────────────────────
+    window.renderLaborView = function () {
+      const workers = window.getLaborData();
+      const gangs = window.getGangsData();
+
+      // Update KPI overview stats
+      const activeCount = workers.filter(w => w.status === 'ACTIVE_ON_TRACK').length;
+      const standbyCount = workers.filter(w => w.status === 'DEPOT_STANDBY').length;
+      const totalWorkersEl = document.getElementById('kpi-total-workers');
+      const activeSubEl = document.getElementById('kpi-active-workers-sub');
+      const standbySubEl = document.getElementById('kpi-standby-workers-sub');
+      const tabBadgeEl = document.getElementById('tab-labor-badge');
+
+      if (totalWorkersEl) totalWorkersEl.textContent = workers.length;
+      if (activeSubEl) activeSubEl.textContent = `${activeCount} On-Site`;
+      if (standbySubEl) standbySubEl.textContent = `${standbyCount} Standby`;
+      if (tabBadgeEl) tabBadgeEl.textContent = `${workers.length} Personnel`;
+
+      // Filter workers according to filter state
+      const filteredWorkers = workers.filter(w => {
+        if (laborFilterState.dept !== 'ALL' && w.dept !== laborFilterState.dept) return false;
+        if (laborFilterState.gang !== 'ALL' && w.gangId !== laborFilterState.gang) return false;
+        if (laborFilterState.status !== 'ALL' && w.status !== laborFilterState.status) return false;
+        if (laborFilterState.search) {
+          const q = laborFilterState.search;
+          const match = (w.name && w.name.toLowerCase().includes(q)) ||
+            (w.id && w.id.toLowerCase().includes(q)) ||
+            (w.role && w.role.toLowerCase().includes(q)) ||
+            (w.section && w.section.toLowerCase().includes(q)) ||
+            (w.supervisor && w.supervisor.toLowerCase().includes(q)) ||
+            (w.mate && w.mate.toLowerCase().includes(q)) ||
+            (w.workOrderId && w.workOrderId.toLowerCase().includes(q));
+          if (!match) return false;
+        }
+        return true;
+      });
+
+      renderGangCards(filteredWorkers, gangs);
+      renderLaborTable(filteredWorkers);
+    };
+
+    // ── Render Gang Cards ─────────────────────────────────────────
+    function renderGangCards(filteredWorkers, gangs) {
+      const container = document.getElementById('gangs-cards-container');
+      const badge = document.getElementById('gangs-count-badge');
+      if (!container) return;
+
+      // Determine which gangs to show
+      let displayGangs = gangs;
+      if (laborFilterState.dept !== 'ALL') {
+        displayGangs = displayGangs.filter(g => g.dept === laborFilterState.dept);
+      }
+      if (laborFilterState.gang !== 'ALL') {
+        displayGangs = displayGangs.filter(g => g.id === laborFilterState.gang);
+      }
+
+      if (badge) badge.textContent = `${displayGangs.length} Gangs (${filteredWorkers.length} Personnel)`;
+
+      if (displayGangs.length === 0) {
+        container.innerHTML = `
+          <div style="grid-column: 1 / -1; padding: 36px; background: #FFFFFF; border: 1px dashed #CBD5E1; border-radius: 12px; text-align: center; color: #64748B;">
+            <div style="font-size: 2rem; margin-bottom: 8px;">🔍</div>
+            <div style="font-weight: 700; color: #003366;">No gangs matching the selected filter criteria.</div>
+            <div style="font-size: 0.78rem; margin-top: 4px;">Try selecting "All Departments" or reset the search query.</div>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = displayGangs.map(gang => {
+        const gangWorkers = filteredWorkers.filter(w => w.gangId === gang.id);
+        const allGangWorkers = window.getLaborData().filter(w => w.gangId === gang.id);
+        const isStandby = gang.id === 'STANDBY';
+        const deptClass = gang.dept === 'CIVIL' ? 'dept-civil' : (gang.dept === 'TRD' ? 'dept-trd' : (gang.dept === 'SIG' ? 'dept-sig' : 'dept-mech'));
+
+        const workersChipsHTML = gangWorkers.map(w => `
+          <div class="worker-chip" onclick="window.openLaborDetailsModal('${w.id}')" title="Click to view full personnel dossier">
+            <span class="worker-avatar-dot ${w.status === 'DEPOT_STANDBY' ? 'standby' : ''}"></span>
+            <span><strong>${w.name}</strong> (${w.role.split(' ')[0]})</span>
+            <span style="font-size:0.68rem; color:#64748B; font-family:monospace;">${w.id.split('-').slice(1).join('-')}</span>
+          </div>
+        `).join('');
+
+        return `
+          <div class="gang-card ${isStandby ? 'gang-standby' : 'gang-active'}" id="card-gang-${gang.id}">
+            <div>
+              <!-- Header Top -->
+              <div class="gang-header-top">
+                <div>
+                  <div class="gang-title">
+                    <span>${isStandby ? '🏢' : '👷‍♂️'}</span>
+                    <span>${gang.name}</span>
+                  </div>
+                  <div style="font-size: 0.74rem; color: #64748B; margin-top: 2px;">
+                    Base: <strong>${gang.station || 'Division Depot'}</strong> • Gang Code: <strong style="font-family:monospace; color:#003366;">${gang.id}</strong>
+                  </div>
+                </div>
+                <span class="gang-dept-tag ${deptClass}">${gang.deptLabel || gang.dept}</span>
+              </div>
+
+              <!-- Hierarchy Row: Under Whom -->
+              <div class="gang-hierarchy-row">
+                <div>
+                  <span style="font-size:0.68rem; color:#64748B; text-transform:uppercase; font-weight:800; display:block; letter-spacing:0.4px;">Supervising SSE ("Under Whom")</span>
+                  <div style="font-weight:700; color:#003366; margin-top:2px;">
+                    🛡️ ${gang.supervisor}
+                  </div>
+                  <div style="font-size:0.70rem; color:#059669; font-weight:600;">
+                    📞 ${gang.supervisorPhone || '+91 98712-44310'}
+                  </div>
+                </div>
+                <div>
+                  <span style="font-size:0.68rem; color:#64748B; text-transform:uppercase; font-weight:800; display:block; letter-spacing:0.4px;">Gang Mate In-Charge</span>
+                  <div style="font-weight:700; color:#0F172A; margin-top:2px;">
+                    🚩 ${gang.mate}
+                  </div>
+                  <div style="font-size:0.70rem; color:#64748B;">
+                    Field Command Head
+                  </div>
+                </div>
+              </div>
+
+              <!-- Location & Work Order Row -->
+              <div class="gang-location-row">
+                <div>
+                  <span style="font-size:0.68rem; color:#64748B; text-transform:uppercase; font-weight:800; display:block;">Current Work Section</span>
+                  <div style="font-weight:700; color:#003366; margin-top:1px;">
+                    📍 ${gang.section}
+                  </div>
+                </div>
+                <div style="text-align:right;">
+                  <span style="font-size:0.68rem; color:#64748B; text-transform:uppercase; font-weight:800; display:block;">Active Block / Work Order</span>
+                  <div style="font-weight:800; color:#059669; margin-top:1px;">
+                    📋 ${gang.workOrderId}
+                  </div>
+                </div>
+              </div>
+
+              <!-- Duration & Progress -->
+              <div class="gang-duration-box">
+                <div style="display:flex; justify-content:space-between; font-size:0.74rem; font-weight:700; color:#334155;">
+                  <span>Shift Window: <strong>${gang.shiftWindow}</strong></span>
+                  <span style="color:#0056B3;">Possession: ${gang.possessionWindow}</span>
+                </div>
+                <div class="gang-progress-bg">
+                  <div class="gang-progress-fill" style="width: ${isStandby ? '40%' : '68%'};"></div>
+                </div>
+                <div style="display:flex; justify-content:space-between; font-size:0.70rem; color:#64748B;">
+                  <span>5h 30m elapsed (Safe fatigue limit)</span>
+                  <span style="color:#059669; font-weight:700;">2h 30m remaining in block</span>
+                </div>
+              </div>
+
+              <!-- Deployed Personnel Section -->
+              <div style="margin-top:14px;">
+                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+                  <span style="font-size:0.74rem; font-weight:800; color:#003366; text-transform:uppercase; letter-spacing:0.4px;">
+                    👥 Deployed Gang Personnel (${gangWorkers.length} of ${allGangWorkers.length})
+                  </span>
+                  <span style="font-size:0.70rem; color:#059669; font-weight:700;">
+                    100% PPE Verified
+                  </span>
+                </div>
+                <div class="gang-workers-chips">
+                  ${workersChipsHTML || '<span style="font-size:0.74rem; color:#94A3B8; font-style:italic;">No personnel currently in this gang matching filters.</span>'}
+                </div>
+              </div>
+            </div>
+
+            <!-- Card Bottom Actions -->
+            <div style="display:flex; align-items:center; justify-content:space-between; border-top:1px solid rgba(226,232,240,0.8); padding-top:12px; margin-top:8px;">
+              <button type="button" onclick="window.openLaborAssignModal(null, '${gang.id}')"
+                style="padding:6px 14px; border-radius:6px; border:none; background:linear-gradient(135deg, #003366, #0056B3); color:#FFFFFF; font-size:0.76rem; font-weight:800; cursor:pointer; display:inline-flex; align-items:center; gap:4px; box-shadow:0 2px 6px rgba(0,51,102,0.2);">
+                <span>⚡</span>
+                <span>Reassign Labors to this Gang</span>
+              </button>
+
+              <button type="button" onclick="window.openAddLaborModal('${gang.id}')"
+                style="padding:6px 12px; border-radius:6px; border:1px solid #003366; background:#FFFFFF; color:#003366; font-size:0.74rem; font-weight:700; cursor:pointer;">
+                <span>➕ Add Worker</span>
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // ── Render Master Labor Table ─────────────────────────────────
+    function renderLaborTable(filteredWorkers) {
+      const tbody = document.getElementById('labor-table-body');
+      const countBadge = document.getElementById('labor-table-count-badge');
+      if (!tbody) return;
+
+      if (countBadge) countBadge.textContent = `${filteredWorkers.length} Personnel`;
+
+      if (filteredWorkers.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="8" style="padding: 32px; text-align: center; color: #64748B;">
+              <div style="font-size: 1.8rem; margin-bottom: 6px;">🔍</div>
+              <div style="font-weight: 700; color: #003366;">No railway labor personnel found matching current search or filters.</div>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = filteredWorkers.map(w => {
+        const initials = w.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
+        const deptClass = w.dept === 'CIVIL' ? 'dept-civil' : (w.dept === 'TRD' ? 'dept-trd' : (w.dept === 'SIG' ? 'dept-sig' : 'dept-mech'));
+        const isStandby = w.status === 'DEPOT_STANDBY';
+
+        return `
+          <tr id="row-worker-${w.id}">
+            <!-- Personnel Details -->
+            <td>
+              <div style="display:flex; align-items:center; gap:10px;">
+                <div class="labor-avatar-img">${initials}</div>
+                <div>
+                  <div style="font-weight:800; color:#003366; cursor:pointer;" onclick="window.openLaborDetailsModal('${w.id}')">
+                    ${w.name}
+                  </div>
+                  <div style="font-size:0.70rem; color:#64748B; font-family:monospace;">
+                    ${w.id} • ${w.phone || '+91 9871X-XXXXX'}
+                  </div>
+                </div>
+              </div>
+            </td>
+
+            <!-- Role & Designation -->
+            <td>
+              <div style="font-weight:700; color:#0F172A;">${w.role}</div>
+              <div style="font-size:0.70rem; color:#059669; font-weight:600;">
+                Medical: ${w.medicalCat || 'A-1 Fit'} • ${w.bloodGroup || 'B+'}
+              </div>
+            </td>
+
+            <!-- Assigned Gang & Dept -->
+            <td>
+              <span class="gang-dept-tag ${deptClass}" style="margin-bottom:4px; display:inline-block;">${w.dept}</span>
+              <div style="font-weight:700; color:#003366; font-size:0.76rem;">
+                ${w.gangId === 'STANDBY' ? '🏢 Depot Reserve' : w.gangId}
+              </div>
+            </td>
+
+            <!-- Under Whom (Reporting Officer) -->
+            <td>
+              <div style="font-weight:700; color:#003366; font-size:0.76rem;">
+                🛡️ ${w.supervisor}
+              </div>
+              <div style="font-size:0.70rem; color:#64748B;">
+                Mate: <strong>${w.mate}</strong>
+              </div>
+            </td>
+
+            <!-- Location & Section -->
+            <td>
+              <div style="font-weight:700; color:#0F172A; font-size:0.76rem;">
+                📍 ${w.section}
+              </div>
+              <div style="font-size:0.70rem; color:#059669; font-weight:700;">
+                WO: ${w.workOrderId}
+              </div>
+            </td>
+
+            <!-- Active Shift & Duration -->
+            <td>
+              <div style="font-weight:700; color:#003366; font-size:0.74rem;">
+                ⏱️ ${w.shiftWindow}
+              </div>
+              <div style="display:flex; align-items:center; gap:6px; margin-top:2px;">
+                <div style="flex:1; height:6px; background:#E2E8F0; border-radius:3px; overflow:hidden;">
+                  <div style="height:100%; width:68%; background:#059669; border-radius:3px;"></div>
+                </div>
+                <span style="font-size:0.68rem; color:#64748B; white-space:nowrap;">${w.shiftRemaining || '2h 30m rem'}</span>
+              </div>
+            </td>
+
+            <!-- Safety & Tools -->
+            <td>
+              <div style="font-size:0.72rem; color:#059669; font-weight:700;">
+                🦺 PPE Verified
+              </div>
+              <div style="font-size:0.68rem; color:#64748B; max-width:180px; text-overflow:ellipsis; overflow:hidden; white-space:nowrap;" title="${w.tools || 'Standard Field Toolkit'}">
+                🔧 ${w.tools || 'Standard Field Toolkit'}
+              </div>
+            </td>
+
+            <!-- Actions -->
+            <td style="text-align:right; white-space:nowrap;">
+              <button type="button" onclick="window.openLaborAssignModal('${w.id}')"
+                style="padding:5px 10px; border-radius:5px; border:none; background:#003366; color:#FFFFFF; font-size:0.72rem; font-weight:800; cursor:pointer; margin-right:4px;">
+                ⚡ Reassign
+              </button>
+              <button type="button" onclick="window.openLaborDetailsModal('${w.id}')"
+                style="padding:5px 8px; border-radius:5px; border:1px solid #CBD5E1; background:#FFFFFF; color:#64748B; font-size:0.72rem; font-weight:700; cursor:pointer;">
+                📋 Dossier
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // ── Open Labor Assignment Modal ───────────────────────────────
+    window.openLaborAssignModal = function (preselectedWorkerId = null, targetGangId = null) {
+      const modal = document.getElementById('labor-assignment-modal');
+      const selectWorker = document.getElementById('assign-worker-select');
+      const targetGang = document.getElementById('assign-target-gang');
+      const targetDept = document.getElementById('assign-target-dept');
+      const targetSection = document.getElementById('assign-target-section');
+      const targetSupervisor = document.getElementById('assign-target-supervisor');
+      const targetMate = document.getElementById('assign-target-mate');
+      const targetWo = document.getElementById('assign-work-order-select');
+
+      const workers = window.getLaborData();
+      const gangs = window.getGangsData();
+
+      // Populate workers dropdown
+      if (selectWorker) {
+        selectWorker.innerHTML = workers.map(w => `
+          <option value="${w.id}" ${w.id === preselectedWorkerId ? 'selected' : ''}>
+            ${w.name} (${w.id}) — ${w.role} [Current: ${w.gangId}]
+          </option>
+        `).join('');
+      }
+
+      // Populate active work orders dropdown
+      if (targetWo) {
+        const woOptions = [
+          { id: 'WO-2026-088', title: 'Emergency Rail Joint Replacement (NDLS-GZB)' },
+          { id: 'WO-2026-091', title: 'Ultrasonic Flaw Defect Cut & Thermit Weld (GZB-ALJN)' },
+          { id: 'WO-2026-095', title: 'Point Machine Obstruction & Track Circuit (ANVT)' },
+          { id: 'WO-2026-089', title: 'OHE Contact Wire Height & Stagger (SBB)' },
+          { id: 'WO-2026-094', title: 'Yamuna Bridge Bearing Lubrication (KM 14/02)' },
+          { id: 'WO-2026-098', title: 'Rolling Stock Yard Examination (TKD Freight)' },
+          { id: 'STANDBY-RESERVE', title: 'Central Depot Reserve / On-Call' }
+        ];
+
+        // Merge with dynamic activeWorkOrders if present
+        if (typeof activeWorkOrders !== 'undefined' && Array.isArray(activeWorkOrders)) {
+          activeWorkOrders.forEach(a => {
+            if (!woOptions.some(o => o.id === a.id)) {
+              woOptions.unshift({ id: a.id, title: `${a.title || a.type} (${a.section || 'Corridor'})` });
+            }
+          });
+        }
+
+        targetWo.innerHTML = woOptions.map(o => `
+          <option value="${o.id}">${o.id}: ${o.title}</option>
+        `).join('');
+      }
+
+      // Set initial values
+      const initialWorkerId = preselectedWorkerId || (workers[0] ? workers[0].id : null);
+      if (initialWorkerId) {
+        window.handleAssignWorkerChange(initialWorkerId);
+      }
+
+      if (targetGangId && targetGang) {
+        targetGang.value = targetGangId;
+        window.handleTargetGangChange(targetGangId);
+      }
+
+      if (modal) {
+        modal.style.display = 'flex';
+      }
+    };
+
+    window.closeLaborAssignModal = function () {
+      const modal = document.getElementById('labor-assignment-modal');
+      if (modal) modal.style.display = 'none';
+    };
+
+    window.handleAssignWorkerChange = function (workerId) {
+      const workers = window.getLaborData();
+      const worker = workers.find(w => w.id === workerId);
+      const infoEl = document.getElementById('assign-worker-current-info');
+      const targetGang = document.getElementById('assign-target-gang');
+      const targetDept = document.getElementById('assign-target-dept');
+      const targetSection = document.getElementById('assign-target-section');
+      const targetSupervisor = document.getElementById('assign-target-supervisor');
+      const targetMate = document.getElementById('assign-target-mate');
+
+      if (!worker) return;
+
+      if (infoEl) {
+        infoEl.innerHTML = `
+          <strong>Current Assignment:</strong> Gang: <strong>${worker.gangId}</strong> (${worker.dept}) • Section: <strong>${worker.section}</strong> • Supervisor: <strong>${worker.supervisor}</strong> • Mate: <strong>${worker.mate}</strong>
+        `;
+      }
+
+      if (targetGang && !targetGang.dataset.manual) targetGang.value = worker.gangId;
+      if (targetDept && !targetDept.dataset.manual) targetDept.value = worker.dept;
+      if (targetSection && !targetSection.dataset.manual) targetSection.value = worker.section;
+      if (targetMate && !targetMate.dataset.manual) targetMate.value = worker.mate;
+    };
+
+    window.handleTargetGangChange = function (gangId) {
+      const gangs = window.getGangsData();
+      const gang = gangs.find(g => g.id === gangId);
+      if (!gang) return;
+
+      const targetDept = document.getElementById('assign-target-dept');
+      const targetSection = document.getElementById('assign-target-section');
+      const targetSupervisor = document.getElementById('assign-target-supervisor');
+      const targetMate = document.getElementById('assign-target-mate');
+      const targetShift = document.getElementById('assign-shift-window');
+      const targetWo = document.getElementById('assign-work-order-select');
+
+      if (targetDept) targetDept.value = gang.dept;
+      if (targetSection) targetSection.value = gang.section;
+      if (targetSupervisor) targetSupervisor.value = gang.supervisor;
+      if (targetMate) targetMate.value = gang.mate;
+      if (targetShift) targetShift.value = gang.shiftWindow;
+      if (targetWo && gang.workOrderId) targetWo.value = gang.workOrderId;
+    };
+
+    window.handleLaborAssignSubmit = function (e) {
+      if (e) e.preventDefault();
+      const workerId = document.getElementById('assign-worker-select').value;
+      const targetGang = document.getElementById('assign-target-gang').value;
+      const targetDept = document.getElementById('assign-target-dept').value;
+      const targetSection = document.getElementById('assign-target-section').value;
+      const targetSupervisor = document.getElementById('assign-target-supervisor').value;
+      const targetMate = document.getElementById('assign-target-mate').value;
+      const targetShift = document.getElementById('assign-shift-window').value;
+      const targetWo = document.getElementById('assign-work-order-select').value;
+      const targetStatus = document.getElementById('assign-status-select').value;
+      const notes = document.getElementById('assign-reason-notes').value;
+
+      const workers = window.getLaborData();
+      const workerIndex = workers.findIndex(w => w.id === workerId);
+      if (workerIndex === -1) {
+        alert('Worker not found in roster.');
+        return;
+      }
+
+      const prevGang = workers[workerIndex].gangId;
+      const prevSection = workers[workerIndex].section;
+
+      // Update worker record
+      workers[workerIndex].gangId = targetGang;
+      workers[workerIndex].dept = targetDept;
+      workers[workerIndex].section = targetSection;
+      workers[workerIndex].supervisor = targetSupervisor;
+      workers[workerIndex].mate = targetMate;
+      workers[workerIndex].shiftWindow = targetShift;
+      workers[workerIndex].workOrderId = targetWo;
+      workers[workerIndex].status = targetStatus;
+
+      window.saveLaborData(workers);
+
+      // Log to supervisor audit trail
+      if (typeof ManualOverrideModal !== 'undefined' && ManualOverrideModal.recordAuditLog) {
+        ManualOverrideModal.recordAuditLog({
+          targetId: `LABOR-REALLOCATION [${workers[workerIndex].name} - ${workerId}]`,
+          originalValue: `${prevGang} (${prevSection})`,
+          overriddenValue: `${targetGang} (${targetSection})`,
+          reasonCode: notes || 'TACTICAL_GANG_REASSIGNMENT',
+          officerId: targetSupervisor.split(' ')[0] || 'SSE_PWAY'
+        });
+      }
+
+      window.closeLaborAssignModal();
+      window.renderLaborView();
+
+      if (window.showToast) {
+        window.showToast(`⚡ Labor Assigned: ${workers[workerIndex].name} transferred to ${targetGang} under ${targetSupervisor} (${targetSection})`);
+      } else {
+        alert(`✓ Labor Assigned: ${workers[workerIndex].name} successfully reassigned to ${targetGang} under ${targetSupervisor} at ${targetSection}.`);
+      }
+    };
+
+    // ── Add New Worker Modal ──────────────────────────────────────
+    window.openAddLaborModal = function (defaultGangId = null) {
+      const modal = document.getElementById('add-labor-modal');
+      const gangSelect = document.getElementById('add-worker-gang');
+      if (defaultGangId && gangSelect) {
+        gangSelect.value = defaultGangId;
+      }
+      if (modal) modal.style.display = 'flex';
+    };
+
+    window.closeAddLaborModal = function () {
+      const modal = document.getElementById('add-labor-modal');
+      if (modal) modal.style.display = 'none';
+    };
+
+    window.handleAddLaborSubmit = function (e) {
+      if (e) e.preventDefault();
+      const name = document.getElementById('add-worker-name').value;
+      const id = document.getElementById('add-worker-id').value;
+      const role = document.getElementById('add-worker-role').value;
+      const phone = document.getElementById('add-worker-phone').value || '+91 98710-00000';
+      const dept = document.getElementById('add-worker-dept').value;
+      const gangId = document.getElementById('add-worker-gang').value;
+      const section = document.getElementById('add-worker-section').value || 'Corridor Maintenance Zone';
+      const supervisor = document.getElementById('add-worker-supervisor').value || 'SSE In-Charge';
+
+      const workers = window.getLaborData();
+      if (workers.some(w => w.id === id)) {
+        alert(`A worker with Employee ID ${id} already exists.`);
+        return;
+      }
+
+      const newWorker = {
+        id,
+        name,
+        role,
+        dept,
+        gangId,
+        phone,
+        bloodGroup: 'B+',
+        medicalCat: 'A-1 (Track Fit)',
+        shiftWindow: '06:00 – 14:00 (Morning Shift 8h)',
+        shiftElapsed: '0h 00m',
+        shiftRemaining: '8h 00m',
+        section,
+        supervisor,
+        mate: 'Gang Mate In-Charge',
+        workOrderId: 'WO-2026-088',
+        status: gangId === 'STANDBY' ? 'DEPOT_STANDBY' : 'ACTIVE_ON_TRACK',
+        tools: 'Standard Trackman Tool Set',
+        ppe: 'Helmet, High-Vis Vest, Boots',
+        gpsTag: `GPS-${dept}-${id.split('-').pop()}`
+      };
+
+      workers.push(newWorker);
+      window.saveLaborData(workers);
+      window.closeAddLaborModal();
+      window.renderLaborView();
+
+      if (window.showToast) {
+        window.showToast(`✓ Registered Worker: ${name} added to ${gangId}`);
+      } else {
+        alert(`✓ Worker ${name} successfully registered.`);
+      }
+    };
+
+    // ── Labor Dossier Modal ───────────────────────────────────────
+    window.openLaborDetailsModal = function (workerId) {
+      const workers = window.getLaborData();
+      const worker = workers.find(w => w.id === workerId);
+      if (!worker) return;
+
+      const modal = document.getElementById('labor-details-modal');
+      const avatarEl = document.getElementById('dossier-avatar');
+      const nameEl = document.getElementById('dossier-name');
+      const subEl = document.getElementById('dossier-sub');
+      const contentEl = document.getElementById('dossier-content');
+      const reassignBtn = document.getElementById('dossier-reassign-btn');
+
+      if (avatarEl) avatarEl.textContent = worker.name.split(' ').map(n => n[0]).join('').slice(0, 2);
+      if (nameEl) nameEl.textContent = worker.name;
+      if (subEl) subEl.textContent = `${worker.id} • ${worker.role} • ${worker.dept} Department`;
+
+      if (contentEl) {
+        contentEl.innerHTML = `
+          <div style="background:#FAF6EE; border:1px solid rgba(195,178,150,0.6); border-radius:10px; padding:14px; margin-bottom:14px;">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+              <div>
+                <span style="font-size:0.70rem; color:#64748B; text-transform:uppercase; font-weight:800;">Assigned Team / Gang</span>
+                <div style="font-weight:800; color:#003366; font-size:0.86rem; margin-top:2px;">
+                  👥 ${worker.gangId}
+                </div>
+              </div>
+              <div>
+                <span style="font-size:0.70rem; color:#64748B; text-transform:uppercase; font-weight:800;">Deployment Status</span>
+                <div style="font-weight:800; color:${worker.status === 'DEPOT_STANDBY' ? '#D97706' : '#059669'}; font-size:0.86rem; margin-top:2px;">
+                  ● ${worker.status}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px;">
+            <div style="background:#FFFFFF; border:1px solid #CBD5E1; border-radius:8px; padding:10px;">
+              <span style="font-size:0.68rem; color:#64748B; text-transform:uppercase; font-weight:800;">Reporting Supervisor ("Under Whom")</span>
+              <div style="font-weight:700; color:#003366; margin-top:2px;">🛡️ ${worker.supervisor}</div>
+              <div style="font-size:0.72rem; color:#64748B; margin-top:1px;">Gang Mate: <strong>${worker.mate}</strong></div>
+            </div>
+
+            <div style="background:#FFFFFF; border:1px solid #CBD5E1; border-radius:8px; padding:10px;">
+              <span style="font-size:0.68rem; color:#64748B; text-transform:uppercase; font-weight:800;">Current Track Section</span>
+              <div style="font-weight:700; color:#003366; margin-top:2px;">📍 ${worker.section}</div>
+              <div style="font-size:0.72rem; color:#059669; font-weight:700; margin-top:1px;">Block WO: ${worker.workOrderId}</div>
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px;">
+            <div style="background:#FFFFFF; border:1px solid #CBD5E1; border-radius:8px; padding:10px;">
+              <span style="font-size:0.68rem; color:#64748B; text-transform:uppercase; font-weight:800;">Shift Duration & Timings</span>
+              <div style="font-weight:700; color:#0F172A; margin-top:2px;">⏱️ ${worker.shiftWindow}</div>
+              <div style="font-size:0.72rem; color:#059669; font-weight:600; margin-top:1px;">${worker.shiftElapsed || '5h 30m'} elapsed • ${worker.shiftRemaining || '2h 30m'} rem</div>
+            </div>
+
+            <div style="background:#FFFFFF; border:1px solid #CBD5E1; border-radius:8px; padding:10px;">
+              <span style="font-size:0.68rem; color:#64748B; text-transform:uppercase; font-weight:800;">Medical & Telemetry Tag</span>
+              <div style="font-weight:700; color:#0F172A; margin-top:2px;">🩺 Cat: ${worker.medicalCat} (${worker.bloodGroup})</div>
+              <div style="font-size:0.70rem; color:#64748B; font-family:monospace; margin-top:1px;">📡 ${worker.gpsTag || 'GPS-LIVE-TAG'}</div>
+            </div>
+          </div>
+
+          <div style="background:#FAF6EE; border:1px solid rgba(195,178,150,0.6); border-radius:8px; padding:10px;">
+            <span style="font-size:0.68rem; color:#64748B; text-transform:uppercase; font-weight:800;">Issued Track Tools & Equipment</span>
+            <div style="font-size:0.78rem; font-weight:600; color:#1E293B; margin-top:2px;">🔧 ${worker.tools || 'Standard Field Toolkit'}</div>
+            <div style="font-size:0.72rem; color:#059669; font-weight:700; margin-top:4px;">🦺 ${worker.ppe || 'Safety Gear Fully Verified'}</div>
+          </div>
+        `;
+      }
+
+      if (reassignBtn) {
+        reassignBtn.onclick = () => {
+          window.closeLaborDetailsModal();
+          window.openLaborAssignModal(worker.id);
+        };
+      }
+
+      if (modal) modal.style.display = 'flex';
+    };
+
+    window.closeLaborDetailsModal = function () {
+      const modal = document.getElementById('labor-details-modal');
+      if (modal) modal.style.display = 'none';
+    };
+
+    // ── Export CSV ────────────────────────────────────────────────
+    window.exportLaborRosterCSV = function () {
+      const workers = window.getLaborData();
+      let csv = 'EMP ID,Name,Role,Department,Gang ID,Supervising SSE,Gang Mate,Work Section,Work Order ID,Shift Window,Status,Contact Phone\n';
+      workers.forEach(w => {
+        csv += `"${w.id}","${w.name}","${w.role}","${w.dept}","${w.gangId}","${w.supervisor}","${w.mate}","${w.section}","${w.workOrderId}","${w.shiftWindow}","${w.status}","${w.phone}"\n`;
+      });
+
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.setAttribute('href', url);
+      link.setAttribute('download', `IndianRailways_Labor_Roster_${new Date().toISOString().slice(0,10)}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    };
+
+    // ── Hash & Deep Link Handling ─────────────────────────────────
+    function checkHashAndSwitchView() {
+      const hash = window.location.hash || '';
+      if (hash === '#labor') {
+        window.location.replace('labor.html');
+      } else if (hash === '#request') {
+        window.location.replace('maintenance-requests.html');
+      } else if (hash.startsWith('#wo-')) {
+        checkAndHighlightTargetWo();
+      }
+    }
+
+    if (window.location.hash === '#labor') {
+      window.location.replace('labor.html');
+    }
     if (window.location.hash === '#request') {
       window.location.replace('maintenance-requests.html');
     }
     window.addEventListener('hashchange', () => {
-      if (window.location.hash === '#request') {
-        window.location.replace('maintenance-requests.html');
-      }
+      checkHashAndSwitchView();
     });
+
+    if (window.IR_LIVE_SYNC && typeof window.IR_LIVE_SYNC.on === 'function') {
+      window.IR_LIVE_SYNC.on('emergency_blocks_updated', () => {
+        fetchApprovedWorkOrders();
+      });
+      window.IR_LIVE_SYNC.on('incident_reported', (inc) => {
+        fetchApprovedWorkOrders();
+        if (window.showToast) window.showToast(`🚨 New Emergency Work Order Dispatched: ${inc.id} (${inc.type})`);
+      });
+      window.IR_LIVE_SYNC.on('labor_roster_updated', () => {
+        window.renderLaborView();
+      });
+    }
 
     // Deep-link scroll and visual highlight helper
     function checkAndHighlightTargetWo() {
@@ -1730,7 +4467,7 @@
       applyRoleRestrictions();
       renderWorkOrders(currentDeptFilter);
       renderBundles(currentDeptFilter);
-      checkAndHighlightTargetWo();
+      checkHashAndSwitchView();
     });
     window.refreshMaintAudit();
 
@@ -1738,32 +4475,40 @@
       applyRoleRestrictions();
       renderWorkOrders(currentDeptFilter);
       renderBundles(currentDeptFilter);
-      checkAndHighlightTargetWo();
+      checkHashAndSwitchView();
 
       if (window.IR_LIVE_SYNC) {
         window.IR_LIVE_SYNC.on('conflicts_updated', () => {
-          fetchApprovedWorkOrders().then(() => checkAndHighlightTargetWo());
+          fetchApprovedWorkOrders().then(() => checkHashAndSwitchView());
+        });
+
+        window.IR_LIVE_SYNC.on('inspections_updated', () => {
+          renderCompletedWorkOrders(currentDeptFilter);
+        });
+
+        window.IR_LIVE_SYNC.on('inspection_completed', (insp) => {
+          renderCompletedWorkOrders(currentDeptFilter);
+          if (window.showToast) {
+            const verdictLabel = insp.result === 'PASSED' ? 'Passed QA' : (insp.result === 'FAILED' ? 'Failed QA (Rework Required)' : 'Under Re-evaluation');
+            window.showToast(`📋 QA Audit Update: ${insp.title} — ${verdictLabel}`);
+          }
         });
       }
     });
 
-    // Cross-tab real-time sync: when Control Office sanctions a task, immediately reload board
+    // Cross-tab real-time sync: when Control Office sanctions a task or labor changes
     window.addEventListener('storage', (e) => {
       if (e.key === 'ir_task_sanctioned' || e.key === 'ir_conflicts_updated') {
         fetchApprovedWorkOrders().then(() => {
-          checkAndHighlightTargetWo();
+          checkHashAndSwitchView();
         });
+      } else if (e.key === 'ir_labor_roster_data') {
+        window.renderLaborView();
       }
     });
 
     window.addEventListener('focus', () => {
-      fetchApprovedWorkOrders().then(() => checkAndHighlightTargetWo());
-    });
-
-    window.addEventListener('hashchange', () => {
-      if (window.location.hash.startsWith('#wo-')) {
-        checkAndHighlightTargetWo();
-      }
+      fetchApprovedWorkOrders().then(() => checkHashAndSwitchView());
     });
   </script>
 </body>

@@ -21,7 +21,8 @@
   <link rel="stylesheet" href="../styles/main.css" />
 
   <!-- Shared Navigation & Real-Time Sync -->
-  <script src="../components/SharedNav.js?v=2.5.4"></script>
+  <script src="../components/ir-i18n.js?v=2.7.0"></script>
+  <script src="../components/SharedNav.js?v=2.7.0"></script>
   <script src="../components/shared-live-sync.js"></script>
 
   <!-- Mapbox GL JS & Resilient Leaflet GIS Integration -->
@@ -226,24 +227,73 @@
       background: #F0FDF4;
     }
 
-    /* ── Conflict Suggestion Box ───────────────────────────────── */
+    /* ── Conflict Suggestion Box & Scrollable Container ────────── */
+    #conflicts-alternatives-list {
+      max-height: 540px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding-right: 6px;
+      scrollbar-width: thin;
+      scrollbar-color: #003366 #FAF6EE;
+    }
+    #conflicts-alternatives-list::-webkit-scrollbar {
+      width: 6px;
+    }
+    #conflicts-alternatives-list::-webkit-scrollbar-track {
+      background: #FAF6EE;
+      border-radius: 4px;
+    }
+    #conflicts-alternatives-list::-webkit-scrollbar-thumb {
+      background: #003366;
+      border-radius: 4px;
+    }
+    #conflicts-alternatives-list::-webkit-scrollbar-thumb:hover {
+      background: #002244;
+    }
+
+    #approved-windows-list {
+      max-height: 380px;
+      overflow-y: auto;
+      padding-right: 6px;
+      scrollbar-width: thin;
+      scrollbar-color: #059669 #ECFDF5;
+    }
+    #approved-windows-list::-webkit-scrollbar {
+      width: 6px;
+    }
+    #approved-windows-list::-webkit-scrollbar-track {
+      background: #ECFDF5;
+      border-radius: 4px;
+    }
+    #approved-windows-list::-webkit-scrollbar-thumb {
+      background: #059669;
+      border-radius: 4px;
+    }
+
     .conflict-card {
       background: #FFFBFB;
       border: 1px solid rgba(220, 38, 38, 0.25);
       border-radius: 8px;
-      padding: 16px;
-      margin-bottom: 14px;
+      padding: 12px 14px;
+      margin-bottom: 10px;
+      transition: box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+    .conflict-card:hover {
+      box-shadow: 0 4px 14px rgba(220, 38, 38, 0.08);
+      border-color: rgba(220, 38, 38, 0.4);
     }
 
     .alternative-box {
       background: #F0FDF4;
       border: 1px dashed rgba(5, 150, 105, 0.4);
       border-radius: 6px;
-      padding: 12px 14px;
-      margin-top: 12px;
+      padding: 8px 12px;
+      margin-top: 8px;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
     }
 
     /* ── Tooltips ──────────────────────────────────────────────── */
@@ -438,6 +488,35 @@
 
     <!-- TAB 1: REAL-TIME OPS & CORE DECISION SUITE -->
     <div id="tab-realtime" class="standout-tab-view">
+
+      <!-- ═══════════════════ EMERGENCY SAFETY INCIDENTS & PRIORITY BLOCK REQUESTS QUEUE ═══════════════════ -->
+      <div class="panel-card" style="margin-bottom: 20px; border-left: 5px solid #DC2626; background: #FFFFFF;"
+        id="emergency-incident-command-panel">
+        <div class="panel-title"
+          style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 12px;">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span style="font-size: 1.15rem; color: #DC2626;">🚨</span>
+            <span style="font-weight: 800; font-size: 0.96rem; color: #0F172A;">Incoming Safety Incidents &amp; Priority
+              Line Block Requests</span>
+            <span id="emergency-incidents-badge"
+              style="background: #FEF2F2; color: #DC2626; border: 1px solid #FECACA; padding: 2px 8px; border-radius: 12px; font-weight: 800; font-size: 0.72rem;">0
+              Pending</span>
+
+          </div>
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <span style="font-size: 0.72rem; color: #64748B; font-weight: 600;">📡 Live Surveillance Stream</span>
+            <button type="button" onclick="window.renderEmergencyIncidentBlocks()"
+              style="background: #FAF6EE; color: #003366; border: 1px solid #C3B296; padding: 4px 10px; border-radius: 5px; font-size: 0.72rem; font-weight: 700; cursor: pointer;">↻
+              Refresh</button>
+          </div>
+        </div>
+
+        <div id="emergency-incident-blocks-container"
+          style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 12px;">
+          <!-- Populated dynamically via JavaScript -->
+        </div>
+      </div>
+
       <div class="ctrl-grid">
 
         <!-- ═══════════════════ LEFT COLUMN: RECOMMENDED SLOTS & INTELLIGENCE ═══════════════════ -->
@@ -451,8 +530,20 @@
                 Corridor</span>
               <span
                 style="font-size: 0.68rem; background: #ECFDF5; color: #059669; border: 1px solid rgba(5,150,105,0.3); padding: 2px 6px; border-radius: 4px; font-weight: 700;">🛰️
-                Live Headways</span>
+                Live RapidAPI Feed</span>
             </div>
+          </div>
+
+          <!-- Live RapidAPI Ingestion Telemetry Bar -->
+          <div style="background: linear-gradient(135deg, #064E3B 0%, #065F46 100%); color: #FFF; padding: 8px 12px; border-radius: 8px; font-size: 0.73rem; font-weight: 700; margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 8px rgba(6, 78, 59, 0.25);">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="font-size: 1rem; animation: pulse 2s infinite;">🟢</span>
+              <div>
+                <span style="letter-spacing: 0.3px;">LIVE INGESTION: Indian Railway IRCTC (RapidAPI)</span>
+                <div style="font-size: 0.66rem; color: #A7F3D0; font-weight: 500; margin-top: 1px;">Tracking 18 active corridor rakes across NDLS–GZB–ALJN–CNB</div>
+              </div>
+            </div>
+            <span id="live-feed-ticker" style="font-family: var(--font-mono); font-size: 0.68rem; color: #ECFDF5; background: rgba(255,255,255,0.15); padding: 3px 8px; border-radius: 4px;">● LIVE STREAM ACTIVE</span>
           </div>
 
           <div id="recommended-slots-list">
@@ -570,6 +661,82 @@
                 Blocks</div>
             </div>
           </div>
+        </div>
+
+        <!-- ═══════════════════ RIGHT COLUMN: CONFLICTS & ALTERNATIVES ═══════════════════ -->
+        <div class="panel-card">
+          <div class="panel-title"
+            style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-bottom: 12px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span>Active Conflict Analysis &amp; AI Alternatives</span>
+              <span
+                style="font-size: 0.68rem; background: #FAF6EE; border: 1px solid #C3B296; color: #003366; padding: 2px 6px; border-radius: 4px; font-weight: 700;">☁️
+                Supabase: requested_windows</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <span style="font-size: 0.72rem; color: #D9531E; font-family: var(--font-mono); font-weight: 700;">Live
+                Disruption Engine</span>
+              <button onclick="window.openSubmitWindowModal()"
+                style="background: #003366; color: #FFFFFF; border: none; padding: 4px 10px; border-radius: 5px; font-size: 0.72rem; font-weight: 700; cursor: pointer; box-shadow: 0 1px 4px rgba(0,51,102,0.2);">➕
+                Request Window</button>
+              <button onclick="window.triggerCsvSupabaseImport()"
+                title="Import maintenance window requests from CSV file or Supabase table"
+                style="background: #ECFDF5; color: #059669; border: 1px solid #A7F3D0; padding: 4px 10px; border-radius: 5px; font-size: 0.72rem; font-weight: 700; cursor: pointer;">📥
+                Import CSV / Supabase</button>
+              <input type="file" id="csv-file-input" accept=".csv" style="display:none;"
+                onchange="window.handleCsvFileSelected(event)" />
+              <button onclick="window.resetConflictsToPending()"
+                title="Reset all conflict requests to Pending state for demo testing"
+                style="background: #FEF3C7; color: #92400E; border: 1px solid #FCD34D; padding: 4px 10px; border-radius: 5px; font-size: 0.72rem; font-weight: 700; cursor: pointer;">🔄
+                Reset Demo</button>
+              <button onclick="window.fetchLiveConflicts(); window.fetchLiveRecommendedSlots();"
+                title="Re-evaluate with Live Train API"
+                style="background: #FAF6EE; color: #003366; border: 1px solid #C3B296; padding: 3px 8px; border-radius: 5px; font-size: 0.72rem; font-weight: 700; cursor: pointer;">↻
+                Live API</button>
+            </div>
+          </div>
+
+          <!-- Quick Filter Tabs & Search for Conflicts -->
+          <div
+            style="display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(195,178,150,0.35); flex-wrap: wrap;">
+            <div style="display: flex; gap: 6px;" id="conflict-filter-tabs">
+              <button type="button" id="cfilter-all" onclick="window.setConflictFilter('ALL')"
+                style="background: #003366; color: #FFF; border: none; padding: 4px 10px; border-radius: 5px; font-size: 0.72rem; font-weight: 700; cursor: pointer;">All</button>
+              <button type="button" id="cfilter-pending" onclick="window.setConflictFilter('PENDING')"
+                style="background: #FAF6EE; color: #DC2626; border: 1px solid rgba(220,38,38,0.3); padding: 4px 10px; border-radius: 5px; font-size: 0.72rem; font-weight: 700; cursor: pointer;">⚠️
+                Pending</button>
+              <button type="button" id="cfilter-applied" onclick="window.setConflictFilter('APPLIED')"
+                style="background: #FAF6EE; color: #059669; border: 1px solid rgba(5,150,105,0.3); padding: 4px 10px; border-radius: 5px; font-size: 0.72rem; font-weight: 700; cursor: pointer;">✓
+                Applied</button>
+            </div>
+            <input type="text" id="conflict-search-box" oninput="window.handleConflictSearch(this.value)"
+              placeholder="Search train (e.g. 12004) or ID..."
+              style="padding: 4px 10px; border: 1px solid #C3B296; border-radius: 5px; font-size: 0.74rem; width: 190px; box-sizing: border-box;" />
+          </div>
+
+          <div id="conflicts-alternatives-list">
+            <!-- Populated dynamically with PENDING conflicts only -->
+          </div>
+
+          <!-- ═══ APPROVED & SANCTIONED WINDOWS ═══ -->
+          <div id="approved-windows-section" style="display:none; margin-top:22px;">
+            <div
+              style="display:flex; align-items:center; gap:10px; margin-bottom:12px; padding:12px 14px; background:#ECFDF5; border:1.5px solid rgba(5,150,105,0.25); border-radius:10px;">
+              <span style="font-size:1.1rem;">✅</span>
+              <div>
+                <div style="font-size:0.85rem; font-weight:800; color:#065F46;">Approved &amp; Sanctioned Windows</div>
+                <div style="font-size:0.68rem; color:#047857;">Control Office sanctioned → Moved to Work Orders —
+                  Pending field team acceptance</div>
+              </div>
+              <span id="approved-windows-count-badge"
+                style="background:rgba(5,150,105,0.15); border:1px solid rgba(5,150,105,0.3); color:#059669; font-size:0.72rem; font-weight:800; padding:2px 10px; border-radius:12px; margin-left:auto;">0
+                Sanctioned</span>
+            </div>
+            <div id="approved-windows-list"
+              style="display:grid; grid-template-columns:repeat(auto-fill, minmax(300px, 1fr)); gap:10px;">
+              <!-- Populated dynamically -->
+            </div>
+          </div>
 
           <!-- ── 3. INSTANT "WHAT-IF" AI FEASIBILITY SIMULATOR ── -->
           <div
@@ -659,73 +826,6 @@
             <div style="font-size: 0.72rem; color: #475569; line-height: 1.4;">
               Asset gangs from <strong>Civil (KM 68/4)</strong> and <strong>TRD OHE (KM 69/2)</strong> are matched for
               co-deployment in the upcoming 01:30 window with zero additional traffic block requirement.
-            </div>
-          </div>
-        </div>
-
-        <!-- ═══════════════════ RIGHT COLUMN: CONFLICTS & ALTERNATIVES ═══════════════════ -->
-        <div class="panel-card">
-          <div class="panel-title"
-            style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-bottom: 12px;">
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <span>Active Conflict Analysis &amp; AI Alternatives</span>
-              <span
-                style="font-size: 0.68rem; background: #FAF6EE; border: 1px solid #C3B296; color: #003366; padding: 2px 6px; border-radius: 4px; font-weight: 700;">☁️
-                Supabase: requested_windows</span>
-            </div>
-            <div style="display: flex; align-items: center; gap: 6px;">
-              <span style="font-size: 0.72rem; color: #D9531E; font-family: var(--font-mono); font-weight: 700;">Live
-                Disruption Engine</span>
-              <button onclick="window.openSubmitWindowModal()"
-                style="background: #003366; color: #FFFFFF; border: none; padding: 4px 10px; border-radius: 5px; font-size: 0.72rem; font-weight: 700; cursor: pointer; box-shadow: 0 1px 4px rgba(0,51,102,0.2);">➕
-                Request Window</button>
-              <button onclick="window.triggerCsvSupabaseImport()"
-                title="Import maintenance window requests from CSV file or Supabase table"
-                style="background: #ECFDF5; color: #059669; border: 1px solid #A7F3D0; padding: 4px 10px; border-radius: 5px; font-size: 0.72rem; font-weight: 700; cursor: pointer;">📥
-                Import CSV / Supabase</button>
-              <input type="file" id="csv-file-input" accept=".csv" style="display:none;"
-                onchange="window.handleCsvFileSelected(event)" />
-              <button onclick="window.fetchLiveConflicts(); window.fetchLiveRecommendedSlots();"
-                title="Re-evaluate with Live Train API"
-                style="background: #FAF6EE; color: #003366; border: 1px solid #C3B296; padding: 3px 8px; border-radius: 5px; font-size: 0.72rem; font-weight: 700; cursor: pointer;">↻
-                Live API</button>
-            </div>
-          </div>
-
-          <!-- Quick Filter Tabs & Search for Conflicts -->
-          <div
-            style="display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(195,178,150,0.35); flex-wrap: wrap;">
-            <div style="display: flex; gap: 6px;" id="conflict-filter-tabs">
-              <button type="button" id="cfilter-all" onclick="window.setConflictFilter('ALL')"
-                style="background: #003366; color: #FFF; border: none; padding: 4px 10px; border-radius: 5px; font-size: 0.72rem; font-weight: 700; cursor: pointer;">All</button>
-              <button type="button" id="cfilter-pending" onclick="window.setConflictFilter('PENDING')"
-                style="background: #FAF6EE; color: #DC2626; border: 1px solid rgba(220,38,38,0.3); padding: 4px 10px; border-radius: 5px; font-size: 0.72rem; font-weight: 700; cursor: pointer;">⚠️
-                Pending</button>
-              <button type="button" id="cfilter-applied" onclick="window.setConflictFilter('APPLIED')"
-                style="background: #FAF6EE; color: #059669; border: 1px solid rgba(5,150,105,0.3); padding: 4px 10px; border-radius: 5px; font-size: 0.72rem; font-weight: 700; cursor: pointer;">✓
-                Applied</button>
-            </div>
-            <input type="text" id="conflict-search-box" oninput="window.handleConflictSearch(this.value)"
-              placeholder="Search train (e.g. 12004) or ID..."
-              style="padding: 4px 10px; border: 1px solid #C3B296; border-radius: 5px; font-size: 0.74rem; width: 190px; box-sizing: border-box;" />
-          </div>
-
-          <div id="conflicts-alternatives-list">
-            <!-- Populated dynamically with PENDING conflicts only -->
-          </div>
-
-          <!-- ═══ APPROVED & SANCTIONED WINDOWS ═══ -->
-          <div id="approved-windows-section" style="display:none; margin-top:22px;">
-            <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px; padding:12px 14px; background:#ECFDF5; border:1.5px solid rgba(5,150,105,0.25); border-radius:10px;">
-              <span style="font-size:1.1rem;">✅</span>
-              <div>
-                <div style="font-size:0.85rem; font-weight:800; color:#065F46;">Approved &amp; Sanctioned Windows</div>
-                <div style="font-size:0.68rem; color:#047857;">Control Office sanctioned → Moved to Work Orders — Pending field team acceptance</div>
-              </div>
-              <span id="approved-windows-count-badge" style="background:rgba(5,150,105,0.15); border:1px solid rgba(5,150,105,0.3); color:#059669; font-size:0.72rem; font-weight:800; padding:2px 10px; border-radius:12px; margin-left:auto;">0 Sanctioned</span>
-            </div>
-            <div id="approved-windows-list" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(300px, 1fr)); gap:10px;">
-              <!-- Populated dynamically -->
             </div>
           </div>
 
@@ -1624,9 +1724,15 @@
             </div>
           </div>
 
-          <div style="margin-bottom: 10px;">
+          <div style="margin-bottom: 8px;">
             ${impactMeter}
           </div>
+
+          ${slot.liveStatusText ? `
+          <div style="font-size: 0.72rem; background: #F8FAFC; border: 1px solid #E2E8F0; padding: 4px 8px; border-radius: 5px; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between;">
+            <span style="font-weight: 700; color: #1E293B;">${slot.liveStatusText}</span>
+            <span style="color: #64748B; font-size: 0.68rem; font-family: var(--font-mono);">⚡ RapidAPI Ingestion Live</span>
+          </div>` : ''}
 
           <div style="display: flex; align-items: center; justify-content: space-between; font-size: 0.78rem; color: #475569;">
             <span>&#8505;&#65039; ${slot.rationale}</span>
@@ -1822,10 +1928,56 @@
           </div>
         `;
       } else {
-        container.innerHTML = itemsToRender.map(item => {
+        // Detect joint corridor bundles in pending items
+        const pendingBundlesMap = {};
+        itemsToRender.forEach(item => {
+          if (item.isBundled && item.bundledWith && item.bundledWith.length > 0) {
+            const secKey = (item.section || '').split('(')[0].trim() || item.section;
+            if (!pendingBundlesMap[secKey]) pendingBundlesMap[secKey] = [];
+            pendingBundlesMap[secKey].push(item);
+          }
+        });
+
+        const jointBannersHtml = Object.entries(pendingBundlesMap)
+          .filter(([sec, grp]) => grp.length > 1)
+          .map(([sec, grp]) => {
+            const allIds = grp.map(g => g.conflictId);
+            const altWin = grp[0].alternative?.recommendedWindow || '01:30 – 04:30 (Night Shadow)';
+            return `
+            <div style="background: linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 100%); border: 1.5px solid #818CF8; border-radius: 10px; padding: 14px 18px; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; box-shadow: 0 4px 14px rgba(99, 102, 241, 0.12);">
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <span style="font-size: 1.6rem;">🔀</span>
+                <div>
+                  <div style="font-weight: 800; font-size: 0.92rem; color: #3730A3; display: flex; align-items: center; gap: 6px;">
+                    <span>AI Joint Corridor Bundling Recommendation</span>
+                    <span style="background: #4F46E5; color: #FFF; font-size: 0.65rem; padding: 2px 7px; border-radius: 10px; font-weight: 800;">${grp.length} Tasks on ${sec}</span>
+                  </div>
+                  <div style="font-size: 0.76rem; color: #4338CA; margin-top: 3px;">
+                    <strong>${allIds.join(' & ')}</strong> share corridor ${sec}. Combine into a single coordinated Shadow Block (<strong>${altWin}</strong>) to prevent duplicate track possession and save 195 min delay.
+                  </div>
+                </div>
+              </div>
+              <button onclick='window.applyJointAlternativeSlot(${JSON.stringify(allIds)}, "${altWin}")'
+                style="background: #4F46E5; color: #FFF; border: none; font-weight: 800; font-size: 0.78rem; padding: 9px 18px; border-radius: 8px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 8px rgba(79, 70, 229, 0.35); transition: transform 0.15s;"
+                onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
+                <span>⚡</span> Combine &amp; Sanction Joint Block (${grp.length} Tasks)
+              </button>
+            </div>`;
+          }).join('');
+
+        const cardsHtml = itemsToRender.map(item => {
           const confBadge = (window.ConfidenceIndicator && typeof ConfidenceIndicator.render === 'function')
             ? ConfidenceIndicator.render({ confidence: item.confidence, compact: true })
             : `<span style="background:#FAF6EE; color:#003366; padding:2px 6px; border-radius:4px; font-size:0.72rem; font-weight:700;">${Math.round(item.confidence * 100)}% Conf</span>`;
+
+          const allCorridorIds = item.isBundled && item.bundledWith?.length ? [item.conflictId, ...item.bundledWith] : [];
+          const bundleBadge = (item.isBundled && item.bundledWith && item.bundledWith.length > 0)
+            ? `<div style="margin-bottom:8px; display:inline-flex; align-items:center; gap:6px; background:#EEF2FF; border:1px solid #C7D2FE; padding:4px 10px; border-radius:6px; font-size:0.73rem; font-weight:700; color:#4338CA;">
+                <span>🔀</span> JOINT CORRIDOR SHADOW BLOCK &bull; Merged with ${item.bundledWith.join(', ')}
+               </div>`
+            : '';
+
+          const rationaleContent = item.rationaleText || `Approved alternative shadow window (<strong>${item.alternative.recommendedWindow}</strong>) over requested peak hours. Rescheduling eliminates head-on headway conflicts with <strong>${item.conflictedTrains.join(', ')}</strong>, saving an estimated <strong>195 minutes</strong> of passenger delay under IRPWM Para 268 without imposing speed restrictions.`;
 
           return `
           <div class="conflict-card" id="conflict-card-${item.conflictId}">
@@ -1840,6 +1992,8 @@
                 ${confBadge}
               </div>
             </div>
+
+            ${bundleBadge}
 
             <div style="font-size: 0.8rem; color: #0F172A; margin-bottom: 4px;">
               Requested Window: <strong>${item.proposedTime}</strong>
@@ -1857,6 +2011,11 @@
                 <div style="font-size: 0.74rem; color: #059669; font-weight: 600; margin-top: 2px;">✓ ${item.alternative.savedDelay}</div>
               </div>
               <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+                ${item.isBundled && allCorridorIds.length > 1 ? `
+                <button style="background:#4F46E5;border:none;color:#fff;font-weight:700;font-size:0.76rem;padding:7px 14px;border-radius:6px;cursor:pointer;box-shadow:0 2px 8px rgba(79,70,229,0.3);display:inline-flex;align-items:center;gap:5px;"
+                  onclick='window.applyJointAlternativeSlot(${JSON.stringify(allCorridorIds)}, "${item.alternative.recommendedWindow}")'>
+                  <span>🔀</span> Combine &amp; Sanction Joint (${allCorridorIds.length})
+                </button>` : ''}
                 <button style="background:#003366;border:none;color:#fff;font-weight:700;font-size:0.76rem;padding:7px 14px;border-radius:6px;cursor:pointer;box-shadow:0 2px 8px rgba(0,51,102,0.25);display:inline-flex;align-items:center;gap:5px;"
                   onclick="window.applyAlternativeSlot('${item.conflictId}', '${item.alternative.recommendedWindow}')">
                   <span>✓</span> Approve AI Alternative
@@ -1865,19 +2024,21 @@
               </div>
             </div>
 
-            <div style="background:#FAF5FF;border:1px solid #DDD6FE;border-left:3px solid #7C3AED;border-radius:6px;padding:10px 12px;margin-top:10px;">
-              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;flex-wrap:wrap;gap:6px;">
-                <div style="display:flex;align-items:center;gap:6px;">
-                  <span style="font-size:0.95rem;">🧠</span>
-                  <span style="font-size:0.72rem;font-weight:800;color:#6D28D9;text-transform:uppercase;letter-spacing:0.4px;">AI Decision Rationale &bull; <span style="font-family:var(--font-mono);font-size:0.68rem;">railway-explainer</span></span>
+            <div style="background:#FAF5FF;border:1px solid #DDD6FE;border-left:3px solid #7C3AED;border-radius:6px;padding:6px 10px;margin-top:8px;">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;flex-wrap:wrap;gap:4px;">
+                <div style="display:flex;align-items:center;gap:5px;">
+                  <span style="font-size:0.85rem;">🧠</span>
+                  <span style="font-size:0.70rem;font-weight:800;color:#6D28D9;text-transform:uppercase;letter-spacing:0.3px;">AI Decision Rationale &bull; <span style="font-family:var(--font-mono);font-size:0.65rem;">railway-explainer</span></span>
                 </div>
-                <span style="font-size:0.66rem;font-weight:700;color:#6D28D9;background:#EDE9FE;border:1px solid #DDD6FE;padding:2px 6px;border-radius:4px;">⚡ 195 Min Saved &bull; 0 Train Re-routings</span>
+                <span style="font-size:0.64rem;font-weight:700;color:#6D28D9;background:#EDE9FE;border:1px solid #DDD6FE;padding:1px 5px;border-radius:4px;">⚡ 195 Min Saved</span>
               </div>
-              <div style="font-size:0.76rem;color:#334155;line-height:1.45;margin-bottom:6px;">Approved alternative shadow window (<strong>${item.alternative.recommendedWindow}</strong>) over requested peak hours. Rescheduling eliminates head-on headway conflicts with <strong>${item.conflictedTrains.join(', ')}</strong>, saving an estimated <strong>195 minutes</strong> of passenger delay under IRPWM Para 268 without imposing speed restrictions.</div>
-              <div style="font-size:0.68rem;color:#64748B;">⚖️ <strong>Scikit-Learn Attribution:</strong> Delay Eliminated (+52%) &bull; High-Speed Clashes (+33%) &bull; Timetable Integrity (+12%)</div>
+              <div style="font-size:0.74rem;color:#334155;line-height:1.4;margin-bottom:4px;">${rationaleContent}</div>
+              <div style="font-size:0.66rem;color:#64748B;">⚖️ Delay Eliminated (+52%) &bull; High-Speed Clashes (+33%)</div>
             </div>
           </div>`;
         }).join('');
+
+        container.innerHTML = jointBannersHtml + cardsHtml;
       }
 
       // ── Approved Windows Section (below main list) with timestamp + approver ──
@@ -1887,7 +2048,7 @@
           if (approvedCountBadge) approvedCountBadge.textContent = `${approvedItems.length} Sanctioned`;
 
           const activeUser = (() => {
-            try { const r = localStorage.getItem('ir_ai_session'); if (r) { const p = JSON.parse(r); if (p?.user) return p.user; } } catch(_) {}
+            try { const r = localStorage.getItem('ir_ai_session'); if (r) { const p = JSON.parse(r); if (p?.user) return p.user; } } catch (_) { }
             return { name: 'Sr. Section Controller', staffId: 'IR-CO-CTRL' };
           })();
 
@@ -2143,6 +2304,79 @@
         });
       } catch (e) {
         alert('Alternative sanction error: ' + e.message);
+      }
+    };
+
+    window.applyJointAlternativeSlot = async function (conflictIds, altWindow) {
+      if (!Array.isArray(conflictIds) || conflictIds.length === 0) return;
+      const activeUser = getActiveLoginUser();
+
+      try {
+        for (const cid of conflictIds) {
+          // 1. Update Supabase requested_windows table via Data API
+          await fetch(`/api/v1/supabase/data/requested_windows?key=request_id&val=${encodeURIComponent(cid)}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              status: 'ALTERNATIVE_APPLIED',
+              applied_alternative: altWindow,
+              sanctioned_by: activeUser.name || 'Indian Railways Operator',
+              sanctioned_at: new Date().toISOString()
+            })
+          }).catch(() => null);
+
+          // 2. Update backend & persistent Supabase database
+          await fetch('/api/v1/apply-alternative-window', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              request_id: cid,
+              alternative_window: altWindow,
+              officer_id: activeUser.staffId || activeUser.id || 'IR-STAFF-UNKNOWN',
+              officer_name: activeUser.name || activeUser.username || 'Indian Railways Operator',
+              officer_role: activeUser.role || activeUser.designation || 'Senior Section Controller',
+              reason: `Joint Corridor Bundled Possession: Shifted to ${altWindow}`
+            })
+          }).catch(() => null);
+
+          try {
+            localStorage.setItem('ir_task_sanctioned', JSON.stringify({
+              id: cid,
+              status: 'ALTERNATIVE_APPLIED',
+              applied_alternative: altWindow,
+              timestamp: Date.now()
+            }));
+          } catch (_) { }
+        }
+
+        if (window.IR_LIVE_SYNC) {
+          try { window.IR_LIVE_SYNC.emit('conflicts_updated'); } catch (_) { }
+        }
+
+        await window.fetchLiveConflicts();
+        await window.fetchLiveRecommendedSlots();
+        if (typeof window.refreshCtrlAudit === 'function') window.refreshCtrlAudit();
+
+        window.showSanctionSuccessModal({
+          conflictId: `Joint Bundle (${conflictIds.join(' + ')})`,
+          slot: altWindow,
+          type: 'ALTERNATIVE',
+          operator: activeUser.name || 'Indian Railways Operator'
+        });
+      } catch (e) {
+        alert('Joint sanction error: ' + e.message);
+      }
+    };
+
+    window.resetConflictsToPending = async function () {
+      try {
+        await fetch('/api/v1/reset-conflicts', { method: 'POST' });
+        try { localStorage.removeItem('ir_dept_handshakes'); } catch (_) { }
+        await window.fetchLiveConflicts();
+        await window.fetchLiveRecommendedSlots();
+        if (typeof window.refreshCtrlAudit === 'function') window.refreshCtrlAudit();
+      } catch (e) {
+        alert('Reset error: ' + e.message);
       }
     };
 
@@ -3246,15 +3480,145 @@
       }
     };
 
+    window.renderEmergencyIncidentBlocks = function () {
+      const container = document.getElementById('emergency-incident-blocks-container');
+      const badge = document.getElementById('emergency-incidents-badge');
+      if (!container) return;
+
+      const allBlocks = (window.IR_LIVE_SYNC && typeof window.IR_LIVE_SYNC.getEmergencyBlockRequests === 'function')
+        ? window.IR_LIVE_SYNC.getEmergencyBlockRequests()
+        : [];
+
+      // Only show requests that are pending Section Controller sanction
+      const pendingBlocks = allBlocks.filter(b => {
+        const s = (b.status || '').toUpperCase();
+        return s === 'PENDING_CONTROL_SANCTION' || (s !== 'SANCTIONED_BY_CONTROL' && s !== 'BLOCK SANCTIONED' && !s.includes('SANCTIONED'));
+      });
+
+      const pendingCount = pendingBlocks.length;
+      if (badge) {
+        badge.innerText = `${pendingCount} Pending Sanction`;
+        badge.style.background = pendingCount > 0 ? '#FEF2F2' : '#ECFDF5';
+        badge.style.color = pendingCount > 0 ? '#DC2626' : '#059669';
+        badge.style.borderColor = pendingCount > 0 ? '#FECACA' : '#A7F3D0';
+      }
+
+      if (pendingBlocks.length === 0) {
+        container.innerHTML = `
+          <div style="grid-column: 1 / -1; background: #FAF6EE; border: 1px dashed #C3B296; border-radius: 8px; padding: 22px; text-align: center; color: #64748B;">
+            <div style="font-size: 1.6rem; color: #059669; margin-bottom: 6px;">✓</div>
+            <div style="font-weight: 800; color: #059669; font-size: 0.92rem;">All Emergency Block Requests Sanctioned</div>
+            <div style="font-size: 0.76rem; color: #475569; margin-top: 4px;">No pending safety incident block requests in queue. All authorized corridors have been cleared and dispatched to Field Maintenance Gangs.</div>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = pendingBlocks.map(b => {
+        const isP1 = (b.priority || '').includes('P1') || (b.severity || '').toUpperCase() === 'CRITICAL';
+        const isP2 = (b.priority || '').includes('P2') || (b.severity || '').toUpperCase() === 'HIGH';
+
+        const sevBg = isP1 ? '#FEF2F2' : (isP2 ? '#FFF7ED' : '#EFF6FF');
+        const sevColor = isP1 ? '#DC2626' : (isP2 ? '#D9531E' : '#0056B3');
+        const cardBorder = isP1 ? '1.5px solid #DC2626' : '1px solid #CBD5E1';
+
+        return `
+          <div style="background: #FFFFFF; border: ${cardBorder}; border-radius: 8px; padding: 14px 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); position: relative;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+              <div>
+                <span style="font-family: var(--font-mono); font-weight: 800; color: #003366; font-size: 0.86rem;">${b.incidentId || b.id}</span>
+                <span style="background: ${sevBg}; color: ${sevColor}; font-size: 0.68rem; font-weight: 800; padding: 2px 7px; border-radius: 4px; margin-left: 6px;">
+                  ${b.priority || 'P1 Emergency'}
+                </span>
+              </div>
+              <span style="font-size: 0.70rem; font-weight: 700; padding: 2px 8px; border-radius: 4px; background: #FFFBEB; color: #D97706; border: 1px solid #FDE68A;">
+                ⏳ Pending Sanction
+              </span>
+            </div>
+
+            <div style="font-weight: 700; color: #0F172A; font-size: 0.88rem; margin-bottom: 4px;">${b.title}</div>
+            <div style="font-size: 0.74rem; color: #475569; margin-bottom: 8px;">📍 <strong>${b.asset}</strong> &bull; ${b.location}</div>
+
+            <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 6px; padding: 8px 10px; margin-bottom: 10px; font-size: 0.72rem;">
+              <div style="display: flex; justify-content: space-between; margin-bottom: 3px;">
+                <span style="color: #64748B;">Required Block:</span>
+                <strong style="color: #003366; font-family: var(--font-mono);">${b.durationDisplay || b.durationMinutes + ' mins'}</strong>
+              </div>
+              <div style="display: flex; justify-content: space-between; margin-bottom: 3px;">
+                <span style="color: #64748B;">AI Optimal Slot:</span>
+                <strong style="color: #059669;">${b.suggestedSlot}</strong>
+              </div>
+              <div style="display: flex; justify-content: space-between;">
+                <span style="color: #64748B;">Disruption Risk:</span>
+                <span style="color: #059669; font-weight: 600;">✓ ${b.disruptionRisk || 'Low Disruption'}</span>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 8px; align-items: center;">
+              <button type="button" onclick="window.sanctionEmergencyIncidentBlock('${b.id || b.incidentId}')" style="flex: 1; background: #DC2626; color: #FFF; border: none; font-weight: 800; font-size: 0.76rem; padding: 8px 12px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 2px 6px rgba(220,38,38,0.25); transition: all 0.15s;">
+                <span>⚡</span> <span>1-Click Sanction Emergency Block</span>
+              </button>
+              <button type="button" onclick="window.openFeasibilityFromIncident('${b.location}', ${b.durationMinutes || 120})" style="background: #FFFFFF; border: 1px solid #CBD5E1; color: #003366; font-size: 0.74rem; font-weight: 700; padding: 7px 10px; border-radius: 6px; cursor: pointer;">
+                Simulate
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    };
+
+    window.sanctionEmergencyIncidentBlock = function (id) {
+      if (!window.IR_LIVE_SYNC) return;
+      const res = window.IR_LIVE_SYNC.sanctionEmergencyBlock(id, 'Section Controller (NDLS Control)');
+      if (res) {
+        window.renderEmergencyIncidentBlocks();
+        alert(`✓ EMERGENCY BLOCK SANCTIONED!\n\nCorridor Block for "${res.title}" is officially authorized by Control Office.\nStatus updated and dispatched to Field Maintenance Gang (PM Schedules).`);
+      }
+    };
+
+    window.openFeasibilityFromIncident = function (loc, duration) {
+      const durEl = document.getElementById('sim-duration-mins');
+      if (durEl) {
+        if (duration <= 60) durEl.value = "60";
+        else if (duration <= 90) durEl.value = "90";
+        else if (duration <= 120) durEl.value = "120";
+        else if (duration <= 180) durEl.value = "180";
+        else durEl.value = "240";
+      }
+      window.simulateWhatIfWindow();
+      const simBox = document.getElementById('sim-result-box');
+      if (simBox) simBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    };
+
     document.addEventListener('DOMContentLoaded', () => {
       // Auto-load conflicts & recommended slots on page load directly from Supabase & local DB
       if (typeof window.fetchLiveConflicts === 'function') window.fetchLiveConflicts();
       if (typeof window.fetchLiveRecommendedSlots === 'function') window.fetchLiveRecommendedSlots();
+      if (typeof window.renderEmergencyIncidentBlocks === 'function') window.renderEmergencyIncidentBlocks();
+
+      // Recurring 15-second live telemetry refresh
+      setInterval(() => {
+        if (typeof window.fetchLiveRecommendedSlots === 'function') window.fetchLiveRecommendedSlots();
+        const ticker = document.getElementById('live-feed-ticker');
+        if (ticker) {
+          const now = new Date();
+          ticker.textContent = `● LIVE STREAM ACTIVE • ${now.toLocaleTimeString()}`;
+        }
+      }, 15000);
 
       if (window.IR_LIVE_SYNC) {
         window.IR_LIVE_SYNC.on('conflicts_updated', () => {
           if (typeof window.fetchLiveConflicts === 'function') window.fetchLiveConflicts();
           if (typeof window.fetchLiveRecommendedSlots === 'function') window.fetchLiveRecommendedSlots();
+        });
+
+        window.IR_LIVE_SYNC.on('emergency_blocks_updated', () => {
+          if (typeof window.renderEmergencyIncidentBlocks === 'function') window.renderEmergencyIncidentBlocks();
+        });
+
+        window.IR_LIVE_SYNC.on('incident_reported', (inc) => {
+          if (typeof window.renderEmergencyIncidentBlocks === 'function') window.renderEmergencyIncidentBlocks();
+          if (window.showToast) window.showToast(`🚨 Emergency Incident Received: ${inc.id} (${inc.type})`);
         });
       }
     });

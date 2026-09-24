@@ -96,6 +96,7 @@ async def root_index():
             "optimizer": [
                 "POST /api/v1/optimize/schedule",
                 "POST /api/v1/optimize/bundle",
+                "POST /api/v1/optimize/vlm-shadow-schedule",
                 "GET  /api/v1/optimize/constraints",
                 "POST /api/v1/optimize/validate",
             ],

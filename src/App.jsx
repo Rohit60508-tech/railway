@@ -84,7 +84,11 @@ function MainApp() {
       case 'maintenance':
         return <FieldEngineerView />;
       case 'surveillance':
-        return <SurveillanceView />;
+        return <SurveillanceView initialSubTab="telemetry" />;
+      case 'inspections':
+        return <SurveillanceView initialSubTab="inspections" />;
+      case 'incidents':
+        return <SurveillanceView initialSubTab="incidents" />;
       case 'dashboard':
         return (
           <div>

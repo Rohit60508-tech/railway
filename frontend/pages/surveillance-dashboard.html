@@ -20,8 +20,10 @@
   <!-- Core Styles -->
   <link rel="stylesheet" href="../styles/main.css" />
 
-  <!-- Shared Navigation -->
-  <script src="../components/SharedNav.js?v=2.5.4"></script>
+  <!-- Shared Navigation & Real-Time Sync -->
+  <script src="../components/ir-i18n.js?v=2.7.0"></script>
+  <script src="../components/SharedNav.js?v=2.7.0"></script>
+  <script src="../components/shared-live-sync.js"></script>
 
   <!-- AI Component Scripts -->
   <script type="module" src="../components/PriorityScoreBadge.js"></script>
@@ -239,17 +241,17 @@
       border: 1px solid #003366;
       color: #FAF6EE;
       text-align: left;
-      border-radius: 8px;
-      padding: 10px 12px;
+      border-radius: 6px;
+      padding: 8px 12px;
       position: absolute;
-      z-index: 1000;
+      z-index: 10;
       bottom: 125%;
       left: 50%;
       transform: translateX(-50%);
-      font-size: 0.74rem;
-      line-height: 1.4;
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
-      transition: opacity 0.2s ease, visibility 0.2s ease;
+      font-size: 0.72rem;
+      line-height: 1.35;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+      transition: opacity 0.2s;
       pointer-events: none;
     }
 
@@ -267,6 +269,455 @@
       margin-top: 24px;
       box-shadow: 0 4px 16px rgba(70, 50, 30, 0.05);
     }
+
+    /* ── Surveillance Sub-Tabs ─────────────────────────────────── */
+    .surv-subnav {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 22px;
+      border-bottom: 1.5px solid rgba(0, 51, 102, 0.12);
+      padding-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .surv-tab-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 18px;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      background: #FFFFFF;
+      color: #475569;
+      font-size: 0.84rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+    }
+
+    .surv-tab-btn:hover {
+      background: #F8FAFC;
+      color: #003366;
+      border-color: rgba(0, 51, 102, 0.2);
+    }
+
+    .surv-tab-btn.active {
+      background: #003366;
+      color: #FFFFFF;
+      border-color: #003366;
+      box-shadow: 0 4px 12px rgba(0, 51, 102, 0.22);
+    }
+
+    /* ── Modern Oxmaint-Style KPI Summary Cards ────────────────── */
+    .ox-kpi-grid-5 {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .ox-kpi-grid-6 {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    @media (max-width: 1200px) {
+      .ox-kpi-grid-5 {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      .ox-kpi-grid-6 {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .ox-kpi-grid-5,
+      .ox-kpi-grid-6 {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .ox-kpi-card {
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      border-radius: 12px;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      cursor: pointer;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+      user-select: none;
+    }
+
+    .ox-kpi-card:hover {
+      border-color: #CBD5E1;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .ox-kpi-card.active-blue {
+      border: 2px solid #3B82F6 !important;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.14) !important;
+    }
+
+    .ox-kpi-icon-box {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.15rem;
+      flex-shrink: 0;
+    }
+
+    .ox-kpi-icon-box.blue { background: #EFF6FF; color: #3B82F6; }
+    .ox-kpi-icon-box.purple { background: #FAF5FF; color: #9333EA; }
+    .ox-kpi-icon-box.red { background: #FEF2F2; color: #EF4444; }
+    .ox-kpi-icon-box.yellow { background: #FEFCE8; color: #EAB308; }
+    .ox-kpi-icon-box.slate { background: #F8FAFC; color: #64748B; }
+    .ox-kpi-icon-box.green { background: #ECFDF5; color: #10B981; }
+    .ox-kpi-icon-box.orange { background: #FFF7ED; color: #D9531E; }
+
+    .ox-kpi-text {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      min-width: 0;
+    }
+
+    .ox-kpi-num {
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: #0F172A;
+      line-height: 1.1;
+    }
+
+    .ox-kpi-label {
+      font-size: 0.76rem;
+      font-weight: 600;
+      color: #64748B;
+      white-space: nowrap;
+    }
+
+    /* ── Progress Rate Meters ──────────────────────────────────── */
+    .rate-meters-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .rate-meter-card {
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      border-radius: 12px;
+      padding: 18px 20px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+    }
+
+    .meter-progress-track {
+      height: 8px;
+      background: #F1F5F9;
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 10px 0 6px 0;
+    }
+
+    .meter-progress-fill {
+      height: 100%;
+      border-radius: 10px;
+      transition: width 0.4s ease;
+    }
+
+    /* ── Toolbar Card & Filter Controls ────────────────────────── */
+    .ox-toolbar-card {
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      border-radius: 12px;
+      padding: 14px 18px;
+      margin-bottom: 16px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+    }
+
+    .ox-toolbar-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .ox-search-box {
+      position: relative;
+      flex: 1;
+      min-width: 260px;
+    }
+
+    .ox-search-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #94A3B8;
+      pointer-events: none;
+      font-size: 0.95rem;
+    }
+
+    .ox-search-input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 9px 14px 9px 38px;
+      font-size: 0.84rem;
+      border: 1px solid #E2E8F0;
+      border-radius: 8px;
+      outline: none;
+      background: #FFFFFF;
+      color: #0F172A;
+      transition: all 0.15s ease;
+    }
+
+    .ox-search-input:focus {
+      border-color: #3B82F6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    .ox-btn-filter {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: 1px solid #E2E8F0;
+      background: #FFFFFF;
+      color: #334155;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .ox-btn-filter:hover {
+      background: #F8FAFC;
+      border-color: #CBD5E1;
+    }
+
+    .ox-view-toggle {
+      display: inline-flex;
+      border: 1px solid #E2E8F0;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .ox-view-btn {
+      padding: 8px 12px;
+      border: none;
+      background: #FFFFFF;
+      color: #64748B;
+      cursor: pointer;
+      font-size: 0.92rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+    }
+
+    .ox-view-btn.active {
+      background: #001F3F;
+      color: #FFFFFF;
+    }
+
+    .ox-showing-label {
+      font-size: 0.78rem;
+      color: #64748B;
+      font-weight: 500;
+      margin-top: 10px;
+    }
+
+    /* ── Content Container & Empty State ───────────────────────── */
+    .ox-content-card {
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+
+    .ox-empty-state {
+      padding: 60px 20px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ox-empty-icon-circle {
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      border: 2px solid #10B981;
+      background: #ECFDF5;
+      color: #10B981;
+      font-size: 1.55rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+      box-shadow: 0 0 0 6px rgba(16, 185, 129, 0.08);
+    }
+
+    .ox-empty-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #0F172A;
+      margin-bottom: 6px;
+    }
+
+    .ox-empty-desc {
+      font-size: 0.84rem;
+      color: #64748B;
+      margin-bottom: 22px;
+      max-width: 480px;
+      line-height: 1.45;
+    }
+
+    .ox-btn-red-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #DC2626;
+      color: #FFFFFF;
+      font-weight: 700;
+      font-size: 0.84rem;
+      border: none;
+      padding: 9px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(220, 38, 38, 0.25);
+      transition: all 0.18s ease;
+    }
+
+    .ox-btn-red-pill:hover {
+      background: #B91C1C;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(220, 38, 38, 0.35);
+    }
+
+    /* Data Table styles */
+    .surv-data-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-size: 0.83rem;
+      text-align: left;
+      min-width: 1080px;
+    }
+
+    .surv-data-table th {
+      background: #F8FAFC;
+      color: #003366;
+      font-weight: 700;
+      padding: 12px 16px;
+      border-bottom: 2px solid #E2E8F0;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+      vertical-align: middle;
+    }
+
+    .surv-data-table td {
+      padding: 14px 16px;
+      border-bottom: 1px solid #F1F5F9;
+      color: #1E293B;
+      vertical-align: middle;
+    }
+
+    .surv-data-table tr:hover td {
+      background: #FAF6EE;
+    }
+
+    /* Grid view styles */
+    .ox-incidents-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 16px;
+      padding: 20px;
+    }
+
+    .ox-incident-item-card {
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      border-radius: 10px;
+      padding: 16px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+      transition: all 0.2s;
+    }
+
+    .ox-incident-item-card:hover {
+      border-color: #CBD5E1;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.06);
+    }
+
+    /* ── Modals & Overlays ─────────────────────────────────────── */
+    .surv-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 16px;
+    }
+
+    .surv-modal-dialog {
+      background: #FFFFFF;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 840px;
+      max-height: 92vh;
+      overflow-y: auto;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.3);
+      border: 1px solid rgba(0, 51, 102, 0.15);
+    }
+
+    .surv-modal-header {
+      padding: 18px 24px;
+      border-bottom: 1px solid #E2E8F0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      background: #FFFFFF;
+      z-index: 10;
+    }
+
+    .surv-modal-body {
+      padding: 22px 24px;
+    }
+
+    .surv-modal-footer {
+      padding: 16px 24px;
+      border-top: 1px solid #E2E8F0;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 12px;
+      position: sticky;
+      bottom: 0;
+      background: #F8FAFC;
+    }
   </style>
 </head>
 
@@ -279,7 +730,7 @@
 
     <!-- ═══════════════════ OVERVIEW DASHBOARD HEADER BANNER ═══════════════════ -->
     <div
-      style="background:#FFFFFF; border:1.5px solid rgba(0,51,102,0.12); border-radius:18px; padding:20px 24px; margin-bottom:24px; box-shadow:0 4px 16px rgba(0,51,102,0.05); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px;">
+      style="background:#FFFFFF; border:1.5px solid rgba(0,51,102,0.12); border-radius:18px; padding:20px 24px; margin-bottom:20px; box-shadow:0 4px 16px rgba(0,51,102,0.05); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px;">
       <div style="display:flex; align-items:center; gap:14px;">
         <div
           style="width:46px; height:46px; border-radius:12px; background:rgba(0,51,102,0.08); color:#003366; display:flex; align-items:center; justify-content:center; font-size:1.3rem;">
@@ -287,30 +738,20 @@
         <div>
           <h1
             style="font-family:var(--font-display); font-size:1.6rem; font-weight:800; color:#003366; margin:0 0 2px 0;">
-            Surveillance &amp; Track Inspection</h1>
-          <p style="font-size:0.88rem; color:#64748B; margin:0;">Automated track defect scoring, USFD flaw detection,
-            TRC geometry &amp; drone feeds</p>
+            Surveillance &amp; Track Inspection Center</h1>
+          <p style="font-size:0.88rem; color:#64748B; margin:0;">Automated defect telemetry, statutory inspection reports, incident logging &amp; drone feeds</p>
         </div>
       </div>
 
       <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
-        <div
-          style="background:rgba(0,51,102,0.04); border:1px solid rgba(0,51,102,0.12); border-radius:8px; padding:4px; display:flex; gap:4px;">
-          <button type="button"
-            style="padding:5px 12px; border-radius:6px; border:none; background:#003366; color:#FFFFFF; font-size:0.78rem; font-weight:700; cursor:pointer;">Organization</button>
-          <button type="button"
-            style="padding:5px 12px; border-radius:6px; border:none; background:transparent; color:#64748B; font-size:0.78rem; font-weight:600; cursor:pointer;">Officer
-            Specific</button>
-        </div>
-
         <span
           style="display:inline-flex; align-items:center; gap:6px; padding:6px 12px; border-radius:20px; background:rgba(5,150,105,0.1); border:1px solid rgba(5,150,105,0.25); color:#059669; font-size:0.78rem; font-weight:700;">
           <span
             style="width:7px; height:7px; border-radius:50%; background:#059669; box-shadow:0 0 0 2px rgba(5,150,105,0.25);"></span>
-          Live Feed
+          Live Surveillance
         </span>
 
-        <button type="button" onclick="window.location.reload();"
+        <button type="button" onclick="window.refreshActiveSurvTab();"
           style="display:inline-flex; align-items:center; gap:6px; padding:7px 14px; border-radius:8px; border:1px solid rgba(0,51,102,0.18); background:#FFFFFF; color:#003366; font-size:0.80rem; font-weight:700; cursor:pointer;">
           🔄 Refresh
         </button>
@@ -322,80 +763,923 @@
       </div>
     </div>
 
-    <!-- ═══════════════════ LIVE TELEMETRY STREAMS ═══════════════════ -->
-    <div class="streams-grid">
-      <div class="stream-card">
-        <div class="stream-icon">🚆</div>
-        <div>
-          <div class="stream-name">USFD Car Flaw Feed</div>
-          <div class="stream-status"><span style="color:#059669;">●</span> Real-time Streaming (99.8%)</div>
-        </div>
-      </div>
+    <!-- ═══════════════════ SURVEILLANCE SUB-TABS NAVIGATION ═══════════════════ -->
+    <div class="surv-subnav">
+      <button type="button" class="surv-tab-btn active" id="btn-tab-telemetry" onclick="window.switchSurvTab('telemetry')">
+        <span>📡</span>
+        <span>Live Telemetry &amp; GIS Feeds</span>
+      </button>
 
-      <div class="stream-card">
-        <div class="stream-icon">📏</div>
-        <div>
-          <div class="stream-name">TRC Track Geometry</div>
-          <div class="stream-status"><span style="color:#059669;">●</span> Active Corridor Run</div>
-        </div>
-      </div>
+      <button type="button" class="surv-tab-btn" id="btn-tab-inspections" onclick="window.switchSurvTab('inspections')">
+        <span>📋</span>
+        <span>Inspection Reports</span>
+        <span id="badge-count-inspections" style="font-size: 0.70rem; background: rgba(0,51,102,0.1); padding: 2px 7px; border-radius: 12px;">4</span>
+      </button>
 
-      <div class="stream-card">
-        <div class="stream-icon">🛸</div>
-        <div>
-          <div class="stream-name">Drone LiDAR & Thermal</div>
-          <div class="stream-status"><span style="color:#0056B3;">●</span> 14 Missions Ingested</div>
-        </div>
-      </div>
-
-      <div class="stream-card">
-        <div class="stream-icon">🚶</div>
-        <div>
-          <div class="stream-name">IoT Trackman Patrol</div>
-          <div class="stream-status"><span style="color:#059669;">●</span> 128 Patrols Active</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ═══════════════════ HIGH-PRIORITY INSPECTION ANOMALIES ═══════════════════ -->
-    <div class="section-bar">
-      <div class="section-title">
+      <button type="button" class="surv-tab-btn" id="btn-tab-incidents" onclick="window.switchSurvTab('incidents')">
         <span>🚨</span>
-        <span>High-Priority Inspection Anomalies (AI-Scored Criticality)</span>
-      </div>
-
-      <div style="font-size: 0.78rem; color: #64748B; font-family: var(--font-mono);">
-        Filtered by: <span style="color: #DC2626; font-weight: 700;">Urgent P1 & P2 Risks</span>
-      </div>
+        <span>Incident Reports</span>
+        <span id="badge-count-incidents" style="font-size: 0.70rem; background: rgba(220,38,38,0.15); color: #DC2626; padding: 2px 7px; border-radius: 12px; font-weight: 800;">3</span>
+      </button>
     </div>
 
-    <div class="inspection-grid" id="inspection-cards-container">
-      <!-- Populated dynamically -->
-    </div>
-
-    <!-- ═══════════════════ AUDIT OVERRIDE TRAIL ═══════════════════ -->
-    <div class="audit-panel">
-      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
-        <div
-          style="font-family: var(--font-display); font-size: 0.95rem; color: #003366; font-weight: 700; display: flex; align-items: center; gap: 8px;">
-          <span>📋</span>
-          <span>Recent Manual Overrides & Regulatory Audit Trail</span>
+    <!-- ══════════════════════════════════════════════════════════════ -->
+    <!-- TAB 1: LIVE TELEMETRY & GIS FEEDS                              -->
+    <!-- ══════════════════════════════════════════════════════════════ -->
+    <div id="view-surv-telemetry">
+      <!-- Live Streams Grid -->
+      <div class="streams-grid">
+        <div class="stream-card">
+          <div class="stream-icon">🚆</div>
+          <div>
+            <div class="stream-name">USFD Car Flaw Feed</div>
+            <div class="stream-status"><span style="color:#059669;">●</span> Real-time Streaming (99.8%)</div>
+          </div>
         </div>
-        <button onclick="window.refreshAuditLogs()" style="
-          background: #FAF6EE;
-          border: 1px solid rgba(0, 51, 102, 0.3);
-          color: #003366;
-          padding: 4px 12px;
-          border-radius: 4px;
-          font-size: 0.74rem;
-          font-weight: 600;
-          cursor: pointer;
-        ">Refresh Log</button>
+
+        <div class="stream-card">
+          <div class="stream-icon">📏</div>
+          <div>
+            <div class="stream-name">TRC Track Geometry</div>
+            <div class="stream-status"><span style="color:#059669;">●</span> Active Corridor Run</div>
+          </div>
+        </div>
+
+        <div class="stream-card">
+          <div class="stream-icon">🛸</div>
+          <div>
+            <div class="stream-name">Drone LiDAR &amp; Thermal</div>
+            <div class="stream-status"><span style="color:#0056B3;">●</span> 14 Missions Ingested</div>
+          </div>
+        </div>
+
+        <div class="stream-card">
+          <div class="stream-icon">🚶</div>
+          <div>
+            <div class="stream-name">IoT Trackman Patrol</div>
+            <div class="stream-status"><span style="color:#059669;">●</span> 128 Patrols Active</div>
+          </div>
+        </div>
       </div>
 
-      <div id="audit-log-list" style="font-size: 0.8rem; color: #475569;">
-        No manual overrides recorded in current browser session. Overrides made via the "Manual Override" button are
-        logged here with officer IDs and justification codes.
+      <!-- High-Priority Inspection Anomalies -->
+      <div class="section-bar">
+        <div class="section-title">
+          <span>🚨</span>
+          <span>High-Priority Inspection Anomalies (AI-Scored Criticality)</span>
+        </div>
+
+        <div style="font-size: 0.78rem; color: #64748B; font-family: var(--font-mono);">
+          Filtered by: <span style="color: #DC2626; font-weight: 700;">Urgent P1 &amp; P2 Risks</span>
+        </div>
+      </div>
+
+      <div class="inspection-grid" id="inspection-cards-container">
+        <!-- Populated dynamically -->
+      </div>
+
+      <!-- Audit Override Trail -->
+      <div class="audit-panel">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+          <div
+            style="font-family: var(--font-display); font-size: 0.95rem; color: #003366; font-weight: 700; display: flex; align-items: center; gap: 8px;">
+            <span>📋</span>
+            <span>Recent Manual Overrides &amp; Regulatory Audit Trail</span>
+          </div>
+          <button onclick="window.refreshAuditLogs()" style="
+            background: #FAF6EE;
+            border: 1px solid rgba(0, 51, 102, 0.3);
+            color: #003366;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 0.74rem;
+            font-weight: 600;
+            cursor: pointer;
+          ">Refresh Log</button>
+        </div>
+
+        <div id="audit-log-list" style="font-size: 0.8rem; color: #475569;">
+          No manual overrides recorded in current browser session. Overrides made via the "Manual Override" button are
+          logged here with officer IDs and justification codes.
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════════ -->
+    <!-- TAB 2: INSPECTION REPORTS HUB                                  -->
+    <!-- ══════════════════════════════════════════════════════════════ -->
+    <div id="view-surv-inspections" style="display: none;">
+      <!-- Title & Header Actions -->
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 14px;">
+        <div>
+          <h1 style="font-size: 1.6rem; font-weight: 800; color: #0F172A; margin: 0 0 4px 0; letter-spacing: -0.2px;">Inspection Reports</h1>
+          <p style="font-size: 0.84rem; color: #64748B; margin: 0;">Track and manage all inspection activities across your railway assets</p>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+          <div style="background: #F1F5F9; border: 1px solid #E2E8F0; border-radius: 8px; padding: 3px; display: flex; gap: 3px;">
+            <button type="button" id="btn-insp-view-overall" onclick="window.setInspectionFilterMode('overall')" style="padding: 6px 14px; border-radius: 6px; border: none; background: #0A1931; color: #FFF; font-size: 0.78rem; font-weight: 700; cursor: pointer; transition: all 0.15s;">Overall</button>
+            <button type="button" id="btn-insp-view-tech" onclick="window.setInspectionFilterMode('technician')" style="padding: 6px 14px; border-radius: 6px; border: none; background: transparent; color: #475569; font-size: 0.78rem; font-weight: 600; cursor: pointer; transition: all 0.15s;">By Technician</button>
+          </div>
+
+          <button type="button" onclick="window.openLocationFilterModal()" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 8px; border: 1px solid #E2E8F0; background: #FFFFFF; font-size: 0.80rem; font-weight: 600; color: #334155; cursor: pointer; transition: all 0.15s;">
+            <span>📍</span> <span id="lbl-insp-location">All Locations</span>
+          </button>
+
+          <button type="button" onclick="window.openIRReportModal('inspections')" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 8px; border: 1px solid #E2E8F0; background: #FFFFFF; font-size: 0.80rem; font-weight: 600; color: #334155; cursor: pointer; transition: all 0.15s;">
+            <span>📥</span> <span>Export</span>
+          </button>
+
+          <button type="button" onclick="window.openNewInspectionModal()" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 18px; border-radius: 8px; border: none; background: #0A1931; color: #FFFFFF; font-size: 0.84rem; font-weight: 700; cursor: pointer; box-shadow: 0 2px 8px rgba(10,25,49,0.25); transition: all 0.15s;">
+            <span>+</span> <span>New Inspection</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 6 Summary Metric Cards Grid -->
+      <div class="ox-kpi-grid-6" id="summary-cards-inspections">
+        <div class="ox-kpi-card active-blue" id="kpi-card-insp-total" onclick="window.filterInspectionsByKpi('ALL', this)">
+          <div class="ox-kpi-icon-box blue">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
+          </div>
+          <div class="ox-kpi-text">
+            <div class="ox-kpi-num" id="stat-insp-total">4</div>
+            <div class="ox-kpi-label">Total Inspections</div>
+          </div>
+        </div>
+
+        <div class="ox-kpi-card" id="kpi-card-insp-completed" onclick="window.filterInspectionsByKpi('COMPLETED', this)">
+          <div class="ox-kpi-icon-box green">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div class="ox-kpi-text">
+            <div class="ox-kpi-num" id="stat-insp-completed" style="color: #059669;">3</div>
+            <div class="ox-kpi-label">Completed</div>
+          </div>
+        </div>
+
+        <div class="ox-kpi-card" id="kpi-card-insp-pending" onclick="window.filterInspectionsByKpi('PENDING', this)">
+          <div class="ox-kpi-icon-box yellow">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div class="ox-kpi-text">
+            <div class="ox-kpi-num" id="stat-insp-pending" style="color: #D97706;">1</div>
+            <div class="ox-kpi-label">Pending</div>
+          </div>
+        </div>
+
+        <div class="ox-kpi-card" id="kpi-card-insp-passed" onclick="window.filterInspectionsByKpi('PASSED', this)">
+          <div class="ox-kpi-icon-box green">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+          </div>
+          <div class="ox-kpi-text">
+            <div class="ox-kpi-num" id="stat-insp-passed" style="color: #059669;">2</div>
+            <div class="ox-kpi-label">Passed</div>
+          </div>
+        </div>
+
+        <div class="ox-kpi-card" id="kpi-card-insp-failed" onclick="window.filterInspectionsByKpi('FAILED', this)">
+          <div class="ox-kpi-icon-box red">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          </div>
+          <div class="ox-kpi-text">
+            <div class="ox-kpi-num" id="stat-insp-failed" style="color: #DC2626;">1</div>
+            <div class="ox-kpi-label">Failed</div>
+          </div>
+        </div>
+
+        <div class="ox-kpi-card" id="kpi-card-insp-overdue" onclick="window.filterInspectionsByKpi('OVERDUE', this)">
+          <div class="ox-kpi-icon-box orange">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2"/><path d="M5 3 2 6"/><path d="m22 6-3-3"/><path d="M6.38 18.7 4 21"/><path d="M17.64 18.67 20 21"/></svg>
+          </div>
+          <div class="ox-kpi-text">
+            <div class="ox-kpi-num" id="stat-insp-overdue" style="color: #D9531E;">0</div>
+            <div class="ox-kpi-label">Overdue</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Rate Progress Meters -->
+      <div class="rate-meters-grid">
+        <div class="rate-meter-card">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div style="font-weight: 700; color: #003366; font-size: 0.86rem; display: flex; align-items: center; gap: 8px;">
+              <span>🎯</span>
+              <span>Completion Rate</span>
+            </div>
+            <strong style="font-size: 1.3rem; color: #003366; font-weight: 800;" id="meter-completion-rate">75%</strong>
+          </div>
+          <div class="meter-progress-track">
+            <div class="meter-progress-fill" id="meter-completion-fill" style="width: 75%; background: linear-gradient(90deg, #0056B3, #003366);"></div>
+          </div>
+          <div style="font-size: 0.72rem; color: #64748B;" id="meter-completion-sub">3 of 4 inspections completed</div>
+        </div>
+
+        <div class="rate-meter-card">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div style="font-weight: 700; color: #059669; font-size: 0.86rem; display: flex; align-items: center; gap: 8px;">
+              <span>🛡️</span>
+              <span>Pass Rate</span>
+            </div>
+            <strong style="font-size: 1.3rem; color: #059669; font-weight: 800;" id="meter-pass-rate">66.7%</strong>
+          </div>
+          <div class="meter-progress-track">
+            <div class="meter-progress-fill" id="meter-pass-fill" style="width: 66.7%; background: linear-gradient(90deg, #10B981, #059669);"></div>
+          </div>
+          <div style="font-size: 0.72rem; color: #64748B;" id="meter-pass-sub">2 of 3 completed inspections passed</div>
+        </div>
+
+        <div class="rate-meter-card">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div style="font-weight: 700; color: #7C3AED; font-size: 0.86rem; display: flex; align-items: center; gap: 8px;">
+              <span>📊</span>
+              <span>Average Score</span>
+            </div>
+            <strong style="font-size: 1.3rem; color: #7C3AED; font-weight: 800;" id="meter-avg-score">82.4</strong>
+          </div>
+          <div class="meter-progress-track">
+            <div class="meter-progress-fill" id="meter-score-fill" style="width: 82.4%; background: linear-gradient(90deg, #A855F7, #7C3AED);"></div>
+          </div>
+          <div style="font-size: 0.72rem; color: #64748B;">Average score across all completed inspections</div>
+        </div>
+      </div>
+
+      <!-- Search & Filter Toolbar -->
+      <div class="ox-toolbar-card">
+        <div class="ox-toolbar-row">
+          <div class="ox-search-box">
+            <span class="ox-search-icon">🔍</span>
+            <input type="text" id="insp-search-input" class="ox-search-input" placeholder="Search inspections by asset, section, ID, or technician..." oninput="window.filterInspections()" />
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+            <select id="insp-filter-status" onchange="window.filterInspections()" style="padding: 8px 12px; border-radius: 8px; border: 1px solid #E2E8F0; font-size: 0.80rem; background: #FFF; outline: none; font-weight: 600; color: #334155;">
+              <option value="ALL">All Statuses</option>
+              <option value="PASSED">Passed</option>
+              <option value="FAILED">Failed</option>
+              <option value="PENDING">Pending</option>
+            </select>
+
+            <select id="insp-filter-dept" onchange="window.filterInspections()" style="padding: 8px 12px; border-radius: 8px; border: 1px solid #E2E8F0; font-size: 0.80rem; background: #FFF; outline: none; font-weight: 600; color: #334155;">
+              <option value="ALL">All Departments</option>
+              <option value="Engineering (Civil)">Civil Engineering</option>
+              <option value="Electrical (TRD)">Electrical TRD</option>
+              <option value="Signal (S&T)">Signal &amp; Telecom</option>
+            </select>
+
+            <button type="button" onclick="window.openNewInspectionModal()" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; border: none; background: #003366; color: #FFFFFF; font-size: 0.80rem; font-weight: 700; cursor: pointer; box-shadow: 0 2px 6px rgba(0,51,102,0.2);">
+              <span>+</span> <span>Start Inspection</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="ox-showing-label" id="lbl-insp-showing-text">
+          Showing <span id="lbl-table-insp-count">4</span> inspections
+        </div>
+      </div>
+
+      <!-- Inspections Table Content Card -->
+      <div class="ox-content-card">
+        <div style="overflow-x: auto;">
+          <table class="surv-data-table">
+            <thead>
+              <tr>
+                <th style="white-space: nowrap; width: 150px;">Inspection ID</th>
+                <th style="min-width: 250px;">Asset / Section</th>
+                <th style="white-space: nowrap; text-align: center;">Department</th>
+                <th style="white-space: nowrap;">Technician / Inspector</th>
+                <th style="white-space: nowrap; text-align: center;">Date &amp; Time</th>
+                <th style="text-align: center; white-space: nowrap; width: 70px;">Score</th>
+                <th style="text-align: center; white-space: nowrap; width: 110px;">Result</th>
+                <th style="text-align: center; white-space: nowrap; width: 110px;">Status</th>
+                <th style="text-align: right; white-space: nowrap; width: 110px;">Action</th>
+              </tr>
+            </thead>
+            <tbody id="inspections-tbody">
+              <!-- Populated via JavaScript -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════════ -->
+    <!-- TAB 3: INCIDENT REPORTS HUB                                    -->
+    <!-- ══════════════════════════════════════════════════════════════ -->
+    <div id="view-surv-incidents" style="display: none;">
+      <!-- Title & Header Actions -->
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 14px;">
+        <div>
+          <h1 style="font-size: 1.6rem; font-weight: 800; color: #0F172A; margin: 0 0 4px 0; letter-spacing: -0.2px;">Incident Reports</h1>
+          <p style="font-size: 0.84rem; color: #64748B; margin: 0;">Track and manage safety incidents to improve operational efficiency</p>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+          <button type="button" onclick="window.refreshActiveSurvTab()" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; border: 1px solid #E2E8F0; background: #FFFFFF; font-size: 0.82rem; font-weight: 600; color: #334155; cursor: pointer; transition: all 0.15s;">
+            <span>🔄</span> <span>Refresh</span>
+          </button>
+          <button type="button" onclick="window.openIRReportModal('incidents')" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; border: 1px solid #E2E8F0; background: #FFFFFF; font-size: 0.82rem; font-weight: 600; color: #334155; cursor: pointer; transition: all 0.15s;">
+            <span>📥</span> <span>Export</span>
+          </button>
+          <button type="button" onclick="window.openNewIncidentModal()" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 20px; border-radius: 8px; border: none; background: #0A1931; color: #FFFFFF; font-size: 0.84rem; font-weight: 700; cursor: pointer; box-shadow: 0 2px 8px rgba(10,25,49,0.25); transition: all 0.15s;">
+            <span>+</span> <span>Report Incident</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Summary Cards Header Toggle & Cards Container -->
+      <div style="display: flex; justify-content: flex-end; margin-bottom: 8px;">
+        <button type="button" onclick="window.toggleSummaryCards('incidents')" id="btn-toggle-summary-incidents" style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 6px; border: 1px solid #E2E8F0; background: #FFFFFF; font-size: 0.74rem; font-weight: 600; color: #475569; cursor: pointer;">
+          <span>📑</span> <span>Summary Cards (<span id="lbl-summary-count-inc">5</span> visible)</span>
+        </button>
+      </div>
+
+      <!-- 5 Summary KPI Cards -->
+      <div class="ox-kpi-grid-5" id="summary-cards-incidents">
+        <div class="ox-kpi-card active-blue" id="kpi-card-inc-total" onclick="window.filterIncidentsByKpi('ALL', this)">
+          <div class="ox-kpi-icon-box blue">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          </div>
+          <div class="ox-kpi-text">
+            <div class="ox-kpi-num" id="stat-inc-total">0</div>
+            <div class="ox-kpi-label">Total</div>
+          </div>
+        </div>
+
+        <div class="ox-kpi-card" id="kpi-card-inc-month" onclick="window.filterIncidentsByKpi('MONTH', this)">
+          <div class="ox-kpi-icon-box purple">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+          </div>
+          <div class="ox-kpi-text">
+            <div class="ox-kpi-num" id="stat-inc-month">0</div>
+            <div class="ox-kpi-label">This Month</div>
+          </div>
+        </div>
+
+        <div class="ox-kpi-card" id="kpi-card-inc-crit" onclick="window.filterIncidentsByKpi('HIGH_CRITICAL', this)">
+          <div class="ox-kpi-icon-box red">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          </div>
+          <div class="ox-kpi-text">
+            <div class="ox-kpi-num" id="stat-inc-critical">0</div>
+            <div class="ox-kpi-label">High/Critical</div>
+          </div>
+        </div>
+
+        <div class="ox-kpi-card" id="kpi-card-inc-pending" onclick="window.filterIncidentsByKpi('PENDING', this)">
+          <div class="ox-kpi-icon-box yellow">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div class="ox-kpi-text">
+            <div class="ox-kpi-num" id="stat-inc-pending">0</div>
+            <div class="ox-kpi-label">Pending</div>
+          </div>
+        </div>
+
+        <div class="ox-kpi-card" id="kpi-card-inc-drafts" onclick="window.filterIncidentsByKpi('DRAFTS', this)">
+          <div class="ox-kpi-icon-box slate">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          </div>
+          <div class="ox-kpi-text">
+            <div class="ox-kpi-num" id="stat-inc-drafts">0</div>
+            <div class="ox-kpi-label">Drafts</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Search and Filter Bar -->
+      <div class="ox-toolbar-card">
+        <div class="ox-toolbar-row">
+          <div class="ox-search-box">
+            <span class="ox-search-icon">🔍</span>
+            <input type="text" id="inc-search-input" class="ox-search-input" placeholder="Search incident reports..." oninput="window.filterIncidents()" />
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <select id="inc-filter-severity" onchange="window.filterIncidents()" style="padding: 8px 12px; border-radius: 8px; border: 1px solid #E2E8F0; font-size: 0.80rem; background: #FFF; outline: none; font-weight: 600; color: #334155;">
+              <option value="ALL">All Severities</option>
+              <option value="CRITICAL">Critical (P1)</option>
+              <option value="HIGH">High (P2)</option>
+              <option value="MEDIUM">Medium (P3)</option>
+              <option value="LOW">Low (P4)</option>
+            </select>
+
+            <div class="ox-view-toggle">
+              <button type="button" id="btn-inc-view-list" class="ox-view-btn active" title="List View" onclick="window.setIncidentViewMode('list')">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+              </button>
+              <button type="button" id="btn-inc-view-grid" class="ox-view-btn" title="Grid View" onclick="window.setIncidentViewMode('grid')">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="ox-showing-label" id="lbl-inc-showing-text">
+          Showing <span id="lbl-inc-visible-count">0</span> of <span id="lbl-inc-total-count">0</span> incidents
+        </div>
+      </div>
+
+      <!-- Main Content Container: Empty State or Data Table / Grid -->
+      <div class="ox-content-card" id="incidents-content-container">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════════ -->
+    <!-- MODAL: REPORT NEW INCIDENT                                     -->
+    <!-- ══════════════════════════════════════════════════════════════ -->
+    <div id="modal-report-incident" class="surv-modal-overlay">
+      <div class="surv-modal-dialog">
+        <div class="surv-modal-header">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span style="font-size: 1.2rem; color: #DC2626;">⚠️</span>
+            <h3 style="margin: 0; font-size: 1.15rem; font-weight: 800; color: #003366;">Report New Incident</h3>
+          </div>
+          <button type="button" onclick="window.closeNewIncidentModal()" style="background: none; border: none; font-size: 1.4rem; color: #64748B; cursor: pointer;">&times;</button>
+        </div>
+
+        <form id="form-report-incident" onsubmit="window.handleCreateIncidentSubmit(event)">
+          <div class="surv-modal-body">
+            <!-- Row 1: Date & Time -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px;">
+              <div>
+                <label style="display: block; font-size: 0.74rem; font-weight: 700; color: #003366; margin-bottom: 5px;">Incident Date *</label>
+                <input type="date" id="inc-form-date" required style="width: 100%; box-sizing: border-box; padding: 8px 12px; border-radius: 6px; border: 1.5px solid #0056B3; font-size: 0.82rem; outline: none; background: #FFFFFF;" />
+              </div>
+              <div>
+                <label style="display: block; font-size: 0.74rem; font-weight: 700; color: #003366; margin-bottom: 5px;">Incident Time *</label>
+                <input type="time" id="inc-form-time" required style="width: 100%; box-sizing: border-box; padding: 8px 12px; border-radius: 6px; border: 1px solid #CBD5E1; font-size: 0.82rem; outline: none;" />
+              </div>
+            </div>
+
+            <!-- Row 2: Asset & Location -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px;">
+              <div>
+                <label style="display: block; font-size: 0.74rem; font-weight: 700; color: #003366; margin-bottom: 5px;">Associated Asset</label>
+                <select id="inc-form-asset" style="width: 100%; box-sizing: border-box; padding: 8px 12px; border-radius: 6px; border: 1px solid #CBD5E1; font-size: 0.82rem; outline: none;">
+                  <option value="60kg Rail Track (KM 124.6 UP Main)">60kg Rail Track (KM 124.6 UP Main)</option>
+                  <option value="25kV OHE Catenary Mast #48/12">25kV OHE Catenary Mast #48/12</option>
+                  <option value="Turnout Switch Point Machine #PM-04">Turnout Switch Point Machine #PM-04</option>
+                  <option value="PSC Sleeper & Ballast Bed Formation">PSC Sleeper & Ballast Bed Formation</option>
+                  <option value="Track Circuit Signal Relay S-12">Track Circuit Signal Relay S-12</option>
+                </select>
+              </div>
+              <div>
+                <label style="display: block; font-size: 0.74rem; font-weight: 700; color: #003366; margin-bottom: 5px;">Location</label>
+                <select id="inc-form-location" style="width: 100%; box-sizing: border-box; padding: 8px 12px; border-radius: 6px; border: 1px solid #CBD5E1; font-size: 0.82rem; outline: none;">
+                  <option value="GZB-ALJN (Ghaziabad - Aligarh)">GZB-ALJN (Ghaziabad - Aligarh)</option>
+                  <option value="NDLS-CNB-UP (New Delhi - Kanpur)">NDLS-CNB-UP (New Delhi - Kanpur)</option>
+                  <option value="CSMT-KYN (Mumbai Central - Kalyan)">CSMT-KYN (Mumbai Central - Kalyan)</option>
+                  <option value="HWH-BWN (Howrah - Barddhaman)">HWH-BWN (Howrah - Barddhaman)</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Row 3: Incident Type, Area, Activity -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-bottom: 14px;">
+              <div>
+                <label style="display: block; font-size: 0.74rem; font-weight: 700; color: #003366; margin-bottom: 5px;">Incident Type *</label>
+                <select id="inc-form-type" required style="width: 100%; box-sizing: border-box; padding: 8px 12px; border-radius: 6px; border: 1px solid #CBD5E1; font-size: 0.82rem; outline: none;">
+                  <option value="OHE Wire Drop / Sag">OHE Wire Drop / Sag</option>
+                  <option value="Rail Flaw / Transverse Crack">Rail Flaw / Transverse Crack</option>
+                  <option value="Track Geometry Twist">Track Geometry Twist</option>
+                  <option value="Point Machine Throw Drift">Point Machine Throw Drift</option>
+                  <option value="Ballast Washout / Subsidence">Ballast Washout / Subsidence</option>
+                  <option value="Signal Blank / Interlocking Failure">Signal Blank / Interlocking Failure</option>
+                </select>
+              </div>
+              <div>
+                <label style="display: block; font-size: 0.74rem; font-weight: 700; color: #003366; margin-bottom: 5px;">Incident Area</label>
+                <input type="text" id="inc-form-area" placeholder="e.g., Track Section KM 124/8" style="width: 100%; box-sizing: border-box; padding: 8px 12px; border-radius: 6px; border: 1px solid #CBD5E1; font-size: 0.82rem; outline: none;" />
+              </div>
+              <div>
+                <label style="display: block; font-size: 0.74rem; font-weight: 700; color: #003366; margin-bottom: 5px;">Asset Activity</label>
+                <select id="inc-form-activity" style="width: 100%; box-sizing: border-box; padding: 8px 12px; border-radius: 6px; border: 1px solid #CBD5E1; font-size: 0.82rem; outline: none;">
+                  <option value="Passenger Express Run">Passenger Express Run</option>
+                  <option value="Freight Shunting Corridor">Freight Shunting Corridor</option>
+                  <option value="Scheduled Maintenance Possession">Scheduled Maintenance Possession</option>
+                  <option value="Idling / Standby Siding">Idling / Standby Siding</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Row 4: Severity, Priority, Status, Weather -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 14px; margin-bottom: 14px;">
+              <div>
+                <label style="display: block; font-size: 0.74rem; font-weight: 700; color: #003366; margin-bottom: 5px;">Severity Rating *</label>
+                <select id="inc-form-severity" required style="width: 100%; box-sizing: border-box; padding: 8px 12px; border-radius: 6px; border: 1px solid #CBD5E1; font-size: 0.82rem; outline: none;">
+                  <option value="Critical">Critical (Immediate Block)</option>
+                  <option value="High">High (72h Resolution)</option>
+                  <option value="Medium" selected>Medium</option>
+                  <option value="Low">Low</option>
+                </select>
+              </div>
+              <div>
+                <label style="display: block; font-size: 0.74rem; font-weight: 700; color: #003366; margin-bottom: 5px;">Priority *</label>
+                <select id="inc-form-priority" required style="width: 100%; box-sizing: border-box; padding: 8px 12px; border-radius: 6px; border: 1px solid #CBD5E1; font-size: 0.82rem; outline: none;">
+                  <option value="Critical">Critical Emergency (P1)</option>
+                  <option value="High">High Priority (P2)</option>
+                  <option value="Medium" selected>Medium Priority (P3)</option>
+                  <option value="Low">Low Routine (P4)</option>
+                </select>
+              </div>
+              <div>
+                <label style="display: block; font-size: 0.74rem; font-weight: 700; color: #003366; margin-bottom: 5px;">Status</label>
+                <select id="inc-form-status" style="width: 100%; box-sizing: border-box; padding: 8px 12px; border-radius: 6px; border: 1px solid #CBD5E1; font-size: 0.82rem; outline: none;">
+                  <option value="Reported">Reported</option>
+                  <option value="Under Investigation">Under Investigation</option>
+                  <option value="Draft">Draft</option>
+                </select>
+              </div>
+              <div>
+                <label style="display: block; font-size: 0.74rem; font-weight: 700; color: #003366; margin-bottom: 5px;">Weather Condition</label>
+                <select id="inc-form-weather" style="width: 100%; box-sizing: border-box; padding: 8px 12px; border-radius: 6px; border: 1px solid #CBD5E1; font-size: 0.82rem; outline: none;">
+                  <option value="Clear / Normal">Clear / Normal</option>
+                  <option value="High Heat / Rail Expansion">High Heat / Rail Expansion</option>
+                  <option value="Heavy Rain / Monsoon">Heavy Rain / Monsoon</option>
+                  <option value="Dense Fog">Dense Fog</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Row 5: Cost, Downtime, Operator -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-bottom: 14px;">
+              <div>
+                <label style="display: block; font-size: 0.74rem; font-weight: 700; color: #003366; margin-bottom: 5px;">Estimated Cost (₹)</label>
+                <input type="number" id="inc-form-cost" placeholder="e.g. 45000" style="width: 100%; box-sizing: border-box; padding: 8px 12px; border-radius: 6px; border: 1px solid #CBD5E1; font-size: 0.82rem; outline: none;" />
+              </div>
+              <div>
+                <label style="display: block; font-size: 0.74rem; font-weight: 700; color: #003366; margin-bottom: 5px;">Downtime (hours)</label>
+                <input type="number" step="0.5" id="inc-form-downtime" placeholder="e.g. 2.5" style="width: 100%; box-sizing: border-box; padding: 8px 12px; border-radius: 6px; border: 1px solid #CBD5E1; font-size: 0.82rem; outline: none;" />
+              </div>
+              <div>
+                <label style="display: block; font-size: 0.74rem; font-weight: 700; color: #003366; margin-bottom: 5px;">Operator / Inspector Name</label>
+                <input type="text" id="inc-form-operator" placeholder="e.g. SSE P-Way ALJN (S. K. Verma)" style="width: 100%; box-sizing: border-box; padding: 8px 12px; border-radius: 6px; border: 1px solid #CBD5E1; font-size: 0.82rem; outline: none;" />
+              </div>
+            </div>
+
+            <!-- Row 6: Description -->
+            <div style="margin-bottom: 14px;">
+              <label style="display: block; font-size: 0.74rem; font-weight: 700; color: #003366; margin-bottom: 5px;">Incident Description *</label>
+              <textarea id="inc-form-desc" rows="3" required placeholder="Provide technical defect notes, track kilometer, USFD flaw depth, or catenary stagger readings..." style="width: 100%; box-sizing: border-box; padding: 8px 12px; border-radius: 6px; border: 1px solid #CBD5E1; font-size: 0.82rem; outline: none;"></textarea>
+            </div>
+
+            <!-- Row 7: Equipment Damages & Comments -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px;">
+              <div>
+                <label style="display: block; font-size: 0.74rem; font-weight: 700; color: #003366; margin-bottom: 5px;">Equipment Damages</label>
+                <textarea id="inc-form-damages" rows="2" placeholder="Describe any equipment or asset damage..." style="width: 100%; box-sizing: border-box; padding: 8px 12px; border-radius: 6px; border: 1px solid #CBD5E1; font-size: 0.82rem; outline: none;"></textarea>
+              </div>
+              <div>
+                <label style="display: block; font-size: 0.74rem; font-weight: 700; color: #003366; margin-bottom: 5px;">Additional Comments</label>
+                <textarea id="inc-form-comments" rows="2" placeholder="Any additional notes or observations..." style="width: 100%; box-sizing: border-box; padding: 8px 12px; border-radius: 6px; border: 1px solid #CBD5E1; font-size: 0.82rem; outline: none;"></textarea>
+              </div>
+            </div>
+
+            <!-- Row 8: Attachments -->
+            <div style="background: #F8FAFC; border: 1px dashed #CBD5E1; border-radius: 8px; padding: 14px;">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                <span style="font-size: 0.78rem; font-weight: 700; color: #003366;">📎 Attachments &amp; Vision Evidence</span>
+                <button type="button" onclick="window.addIncidentAttachment()" style="background: #FFFFFF; border: 1px solid #CBD5E1; padding: 4px 10px; border-radius: 4px; font-size: 0.72rem; font-weight: 600; cursor: pointer; color: #0056B3;">
+                  + Add Attachment
+                </button>
+              </div>
+              <div id="inc-attachments-list" style="font-size: 0.74rem; color: #64748B;">
+                No files attached. Attach ultrasonic waveform traces, drone photographs, or CCTV footage.
+              </div>
+            </div>
+          </div>
+
+          <div class="surv-modal-footer">
+            <button type="button" onclick="window.closeNewIncidentModal()" style="padding: 8px 16px; border-radius: 6px; border: 1px solid #CBD5E1; background: #FFFFFF; color: #475569; font-size: 0.80rem; font-weight: 700; cursor: pointer;">
+              Cancel
+            </button>
+            <button type="submit" id="btn-submit-incident" style="padding: 8px 20px; border-radius: 6px; border: none; background: #003366; color: #FFFFFF; font-size: 0.82rem; font-weight: 700; cursor: pointer; box-shadow: 0 2px 8px rgba(0,51,102,0.25);">
+              Create Incident Report
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════════ -->
+    <!-- MODAL: QA INSPECTION & FIT CERTIFICATION                        -->
+    <!-- ══════════════════════════════════════════════════════════════ -->
+    <div id="modal-new-inspection" class="surv-modal-overlay" style="display: none; align-items: center; justify-content: center; z-index: 9999;">
+      <div class="surv-modal-dialog" style="max-width: 720px; max-height: 90vh; display: flex; flex-direction: column;">
+        <div class="surv-modal-header" style="background: linear-gradient(135deg, #003366 0%, #004D99 100%); color: #FFFFFF; padding: 14px 20px;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <span style="font-size: 1.4rem; background: rgba(255,255,255,0.15); padding: 4px 8px; border-radius: 6px;">📋</span>
+            <div>
+              <h3 id="modal-insp-title-heading" style="margin: 0; font-size: 1.15rem; font-weight: 800; color: #FFFFFF;">Asset QA Inspection &amp; Safety Certification</h3>
+              <div style="font-size: 0.72rem; color: #BFDBFE; margin-top: 2px;">IRPWM / IRSEM / ACTM Indian Railways Post-Maintenance Quality Audit</div>
+            </div>
+          </div>
+          <button type="button" onclick="window.closeNewInspectionModal()" style="background: rgba(255,255,255,0.1); border: none; font-size: 1.3rem; color: #FFFFFF; cursor: pointer; border-radius: 4px; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;">&times;</button>
+        </div>
+
+        <form id="form-new-inspection" onsubmit="window.handleCreateInspectionSubmit(event)" style="overflow-y: auto; padding: 0;">
+          <input type="hidden" id="insp-form-id" value="" />
+          <input type="hidden" id="insp-form-decision" value="PASSED" />
+
+          <div class="surv-modal-body" style="padding: 18px 22px; display: flex; flex-direction: column; gap: 14px;">
+            <!-- Select Linked Work Order or Task -->
+            <div style="background: #F8FAFC; border: 1px solid #CBD5E1; border-radius: 8px; padding: 12px 14px;">
+              <label style="display: block; font-size: 0.76rem; font-weight: 700; color: #003366; margin-bottom: 5px;">
+                🔗 Target Completed Work Order / Maintenance Task
+              </label>
+              <select id="insp-form-wo-select" onchange="window.handleInspectionWorkOrderChange(this.value)" style="width: 100%; box-sizing: border-box; padding: 8px 12px; border-radius: 6px; border: 1px solid #94A3B8; font-size: 0.82rem; font-weight: 600; outline: none; background: #FFFFFF; color: #0F172A;">
+                <option value="">-- Ad-Hoc / Periodic Track Surveillance Inspection --</option>
+              </select>
+              <div id="insp-wo-sync-hint" style="font-size: 0.70rem; color: #0056B3; margin-top: 4px; font-weight: 600;">
+                ℹ️ Selecting a completed work order auto-fills details and synchronizes safety clearance across departments.
+              </div>
+            </div>
+
+            <!-- Title -->
+            <div>
+              <label style="display: block; font-size: 0.74rem; font-weight: 700; color: #003366; margin-bottom: 5px;">Inspection Title / Asset Description *</label>
+              <input type="text" id="insp-form-title" required placeholder="e.g. USFD Rail Ultrasonic Testing (KM 124-128 UP)" style="width: 100%; box-sizing: border-box; padding: 8px 12px; border-radius: 6px; border: 1px solid #CBD5E1; font-size: 0.82rem; outline: none;" />
+            </div>
+
+            <!-- Department & Section -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+              <div>
+                <label style="display: block; font-size: 0.74rem; font-weight: 700; color: #003366; margin-bottom: 5px;">Department *</label>
+                <select id="insp-form-dept" required style="width: 100%; box-sizing: border-box; padding: 8px 12px; border-radius: 6px; border: 1px solid #CBD5E1; font-size: 0.82rem; outline: none;">
+                  <option value="Civil (P-Way)">Civil (P-Way)</option>
+                  <option value="Electrical (TRD)">Electrical (TRD)</option>
+                  <option value="Signal (S&T)">Signal (S&amp;T)</option>
+                  <option value="Mechanical">Mechanical</option>
+                </select>
+              </div>
+
+              <div>
+                <label style="display: block; font-size: 0.74rem; font-weight: 700; color: #003366; margin-bottom: 5px;">Corridor Section *</label>
+                <input type="text" id="insp-form-section" required placeholder="e.g. NDLS-CNB-UP (KM 124.6)" style="width: 100%; box-sizing: border-box; padding: 8px 12px; border-radius: 6px; border: 1px solid #CBD5E1; font-size: 0.82rem; outline: none;" />
+              </div>
+            </div>
+
+            <!-- Technician & Method -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+              <div>
+                <label style="display: block; font-size: 0.74rem; font-weight: 700; color: #003366; margin-bottom: 5px;">Assigned Field Inspector / Engineer *</label>
+                <input type="text" id="insp-form-tech" required placeholder="e.g. Priya Verma (USFD Inspector)" style="width: 100%; box-sizing: border-box; padding: 8px 12px; border-radius: 6px; border: 1px solid #CBD5E1; font-size: 0.82rem; outline: none;" />
+              </div>
+
+              <div>
+                <label style="display: block; font-size: 0.74rem; font-weight: 700; color: #003366; margin-bottom: 5px;">Inspection Standard / Protocol</label>
+                <select id="insp-form-method" style="width: 100%; box-sizing: border-box; padding: 8px 12px; border-radius: 6px; border: 1px solid #CBD5E1; font-size: 0.82rem; outline: none;">
+                  <option value="USFD Ultrasonic Car (IRPWM Para 6.2)">USFD Ultrasonic Car (IRPWM Para 6.2)</option>
+                  <option value="Track Recording Car TRC-102">Track Recording Car TRC-102</option>
+                  <option value="OHE Catenary &amp; Dropper Physical / Thermal">OHE Catenary &amp; Dropper Physical / Thermal</option>
+                  <option value="Turnout Switch Gauge &amp; Throw Calibration">Turnout Switch Gauge &amp; Throw Calibration</option>
+                  <option value="Post-Block Visual Fit Certification">Post-Block Visual Fit Certification</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- ── STEP 1: INSPECTION DECISION VERDICT ── -->
+            <div style="background: #FAF6EE; border: 1px solid #C3B296; border-radius: 8px; padding: 12px 14px;">
+              <label style="display: block; font-size: 0.78rem; font-weight: 800; color: #003366; margin-bottom: 8px;">
+                ⚡ Inspection Decision &amp; Fit Certification Verdict *
+              </label>
+              
+              <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
+                <!-- PASS CARD -->
+                <div id="card-verdict-pass" onclick="window.setInspectionDecision('PASSED')" style="border: 2px solid #059669; background: #ECFDF5; border-radius: 8px; padding: 10px; cursor: pointer; text-align: center; transition: all 0.2s; box-shadow: 0 2px 6px rgba(5,150,105,0.15);">
+                  <div style="font-size: 1.3rem;">✓</div>
+                  <div style="font-weight: 800; color: #059669; font-size: 0.84rem; margin-top: 2px;">PASS / APPROVE</div>
+                  <div style="font-size: 0.68rem; color: #065F46; margin-top: 2px;">Fitness Certified. Line cleared for full speed.</div>
+                </div>
+
+                <!-- FAIL CARD -->
+                <div id="card-verdict-fail" onclick="window.setInspectionDecision('FAILED')" style="border: 1px solid #CBD5E1; background: #FFFFFF; border-radius: 8px; padding: 10px; cursor: pointer; text-align: center; transition: all 0.2s; opacity: 0.7;">
+                  <div style="font-size: 1.3rem;">⚠️</div>
+                  <div style="font-weight: 800; color: #DC2626; font-size: 0.84rem; margin-top: 2px;">FAIL / REJECT</div>
+                  <div style="font-size: 0.68rem; color: #991B1B; margin-top: 2px;">Unfit / Defect Persists. Rework Mandated.</div>
+                </div>
+
+                <!-- RE-EVALUATE CARD -->
+                <div id="card-verdict-reeval" onclick="window.setInspectionDecision('RE_EVALUATE')" style="border: 1px solid #CBD5E1; background: #FFFFFF; border-radius: 8px; padding: 10px; cursor: pointer; text-align: center; transition: all 0.2s; opacity: 0.7;">
+                  <div style="font-size: 1.3rem;">🔄</div>
+                  <div style="font-weight: 800; color: #7C3AED; font-size: 0.84rem; margin-top: 2px;">RE-EVALUATE</div>
+                  <div style="font-size: 0.68rem; color: #5B21B6; margin-top: 2px;">Requires further NDT &amp; 24h Monitoring.</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ── STEP 2: QUALITY & SAFETY SCORE ── -->
+            <div style="background: #FFFFFF; border: 1px solid #CBD5E1; border-radius: 8px; padding: 12px 14px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                <label style="font-size: 0.76rem; font-weight: 700; color: #003366;">
+                  📊 Safety &amp; Quality Compliance Score (0 - 100)
+                </label>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <span id="insp-form-score-badge" style="background: #ECFDF5; color: #059669; font-weight: 800; font-size: 0.88rem; padding: 2px 10px; border-radius: 6px; border: 1px solid #A7F3D0; font-family: var(--font-mono);">
+                    92.0 / 100
+                  </span>
+                  <span id="insp-form-score-grade" style="font-size: 0.70rem; color: #059669; font-weight: 700;">
+                    Class A (Exemplary)
+                  </span>
+                </div>
+              </div>
+              <input type="range" id="insp-form-score-range" min="0" max="100" step="0.5" value="92" oninput="window.handleInspectionScoreSlider(this.value)" style="width: 100%; cursor: pointer;" />
+              <div style="display: flex; justify-content: space-between; font-size: 0.68rem; color: #94A3B8; margin-top: 2px;">
+                <span>0 (Critical Failure)</span>
+                <span>50 (TSR Speed Restriction)</span>
+                <span>80 (Acceptable)</span>
+                <span>100 (Flawless)</span>
+              </div>
+            </div>
+
+            <!-- ── STEP 3: OBSERVATIONS & REMARKS ── -->
+            <div>
+              <label style="display: block; font-size: 0.74rem; font-weight: 700; color: #003366; margin-bottom: 5px;">
+                📝 Technical Findings &amp; Fit Certification Remarks *
+              </label>
+              <textarea id="insp-form-remarks" rows="3" required placeholder="Enter NDT ultrasonic trace observations, weld alignment tolerance (±0.5mm), track gauge calibration, or reasons for pass/fail/re-evaluate..." style="width: 100%; box-sizing: border-box; padding: 8px 12px; border-radius: 6px; border: 1px solid #CBD5E1; font-size: 0.82rem; outline: none; line-height: 1.4;"></textarea>
+            </div>
+
+            <!-- ── STEP 4: ATTACH IMAGES & SENSOR TRACES ── -->
+            <div style="background: #F8FAFC; border: 1px dashed #CBD5E1; border-radius: 8px; padding: 14px;">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                <div>
+                  <span style="font-size: 0.78rem; font-weight: 700; color: #003366;">📎 Attach Inspection Images &amp; Sensor Evidence</span>
+                  <div style="font-size: 0.68rem; color: #64748B;">Upload camera photos, NDT flaw echograms, or thermal scans.</div>
+                </div>
+                <div style="display: flex; gap: 6px;">
+                  <label for="insp-custom-file-input" style="background: #003366; color: #FFFFFF; padding: 5px 10px; border-radius: 4px; font-size: 0.72rem; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;">
+                    <span>📁</span> <span>Upload Photo</span>
+                  </label>
+                  <input type="file" id="insp-custom-file-input" accept="image/*" style="display: none;" onchange="window.handleInspectionCustomFileUpload(event)" />
+                </div>
+              </div>
+
+              <!-- Quick Add Preset Evidence Buttons -->
+              <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px;">
+                <span style="font-size: 0.70rem; color: #64748B; align-self: center;">Quick Presets:</span>
+                <button type="button" onclick="window.addInspectionImagePreset('USFD_A_Scan_Flaw_Trace.png', 'https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=600&auto=format&fit=crop&q=80', 'USFD 4MHz Probe A-Scan Reflection Echo')" style="background: #FFFFFF; border: 1px solid #CBD5E1; padding: 3px 8px; border-radius: 4px; font-size: 0.70rem; font-weight: 600; cursor: pointer; color: #0056B3;">
+                  + 📡 USFD Flaw Trace
+                </button>
+                <button type="button" onclick="window.addInspectionImagePreset('Alumino_Thermic_Weld_Macro.jpg', 'https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?w=600&auto=format&fit=crop&q=80', 'Thermite AT Weld Macrographic Joint')" style="background: #FFFFFF; border: 1px solid #CBD5E1; padding: 3px 8px; border-radius: 4px; font-size: 0.70rem; font-weight: 600; cursor: pointer; color: #0056B3;">
+                  + 🔬 Thermite Weld Joint
+                </button>
+                <button type="button" onclick="window.addInspectionImagePreset('OHE_Thermal_Infrared_Scan.jpg', 'https://images.unsplash.com/photo-1517420704952-d9f39e95b43e?w=600&auto=format&fit=crop&q=80', '25kV Catenary Dropper Thermal Infrared Scan')" style="background: #FFFFFF; border: 1px solid #CBD5E1; padding: 3px 8px; border-radius: 4px; font-size: 0.70rem; font-weight: 600; cursor: pointer; color: #0056B3;">
+                  + 🔥 OHE Thermal Scan
+                </button>
+                <button type="button" onclick="window.addInspectionImagePreset('Turnout_Switch_Gauge_Check.jpg', 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=600&auto=format&fit=crop&q=80', 'Point Machine Switch Rail Gauge Clearance')" style="background: #FFFFFF; border: 1px solid #CBD5E1; padding: 3px 8px; border-radius: 4px; font-size: 0.70rem; font-weight: 600; cursor: pointer; color: #0056B3;">
+                  + 📐 Turnout Switch Gauge
+                </button>
+              </div>
+
+              <!-- Attachments Gallery Container -->
+              <div id="insp-attachments-gallery" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; min-height: 50px;">
+                <div style="grid-column: 1 / -1; text-align: center; color: #94A3B8; font-size: 0.74rem; padding: 10px;">
+                  No photos or sensor traces attached yet. Click a preset or upload from your device.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="surv-modal-footer" style="padding: 12px 20px; background: #F8FAFC; border-top: 1px solid #E2E8F0; display: flex; justify-content: space-between; align-items: center;">
+            <button type="button" onclick="window.closeNewInspectionModal()" style="padding: 8px 16px; border-radius: 6px; border: 1px solid #CBD5E1; background: #FFFFFF; color: #475569; font-size: 0.80rem; font-weight: 700; cursor: pointer;">
+              Cancel
+            </button>
+            <button type="submit" id="btn-submit-inspection-decision" style="padding: 9px 24px; border-radius: 6px; border: none; background: #003366; color: #FFFFFF; font-size: 0.84rem; font-weight: 700; cursor: pointer; box-shadow: 0 2px 8px rgba(0,51,102,0.25); display: flex; align-items: center; gap: 6px;">
+              <span>💾</span> <span>Submit QA Audit &amp; Fit Certification</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════════ -->
+    <!-- MODAL: VIEW INSPECTION AUDIT DOSSIER                            -->
+    <!-- ══════════════════════════════════════════════════════════════ -->
+    <div id="modal-view-inspection-log" class="surv-modal-overlay" style="display: none; align-items: center; justify-content: center; z-index: 9999;">
+      <div class="surv-modal-dialog" style="max-width: 700px; max-height: 90vh; display: flex; flex-direction: column;">
+        <div class="surv-modal-header" style="background: #003366; color: #FFFFFF; padding: 14px 20px;">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span style="font-size: 1.2rem;">📑</span>
+            <div>
+              <h3 id="dossier-insp-id" style="margin: 0; font-size: 1.1rem; font-weight: 800; color: #FFFFFF;">INSP-2026-0812</h3>
+              <div id="dossier-insp-title" style="font-size: 0.74rem; color: #BFDBFE;">USFD Rail Ultrasonic Testing (KM 124-128 UP)</div>
+            </div>
+          </div>
+          <button type="button" onclick="window.closeInspectionDossier()" style="background: rgba(255,255,255,0.1); border: none; font-size: 1.3rem; color: #FFFFFF; cursor: pointer; border-radius: 4px; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;">&times;</button>
+        </div>
+
+        <div class="surv-modal-body" style="padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 14px;">
+          <!-- Status Banner -->
+          <div id="dossier-verdict-banner" style="padding: 12px 16px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; background: #ECFDF5; border: 1px solid #A7F3D0;">
+            <div>
+              <div id="dossier-verdict-text" style="font-weight: 800; font-size: 1.05rem; color: #059669;">✓ PASSED &amp; CERTIFIED</div>
+              <div id="dossier-verdict-sub" style="font-size: 0.74rem; color: #065F46; margin-top: 2px;">Asset certified fit for normal train operations at maximum permissible speed.</div>
+            </div>
+            <div id="dossier-score-badge" style="font-family: var(--font-mono); font-weight: 800; font-size: 1.3rem; color: #059669;">
+              95.4 / 100
+            </div>
+          </div>
+
+          <!-- Metadata Grid -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px; padding: 12px 14px; font-size: 0.78rem;">
+            <div><span style="color: #64748B;">Department:</span> <strong id="dossier-dept" style="color: #0F172A;">Civil (P-Way)</strong></div>
+            <div><span style="color: #64748B;">Corridor Section:</span> <strong id="dossier-section" style="color: #0F172A;">NDLS-CNB-UP</strong></div>
+            <div><span style="color: #64748B;">Inspector / Engineer:</span> <strong id="dossier-tech" style="color: #0F172A;">Priya Verma</strong></div>
+            <div><span style="color: #64748B;">Inspection Date:</span> <strong id="dossier-date" style="color: #0F172A;">2026-09-23 14:30</strong></div>
+            <div style="grid-column: 1 / -1;"><span style="color: #64748B;">Linked Work Order:</span> <strong id="dossier-wo" style="color: #0056B3; font-family: var(--font-mono);">WO-CIVIL-2026-041</strong></div>
+          </div>
+
+          <!-- Observations -->
+          <div>
+            <div style="font-weight: 700; color: #003366; font-size: 0.80rem; margin-bottom: 6px;">Technical Findings &amp; Regulatory Remarks:</div>
+            <div id="dossier-remarks" style="background: #FFFFFF; border: 1px solid #CBD5E1; border-radius: 6px; padding: 12px; font-size: 0.80rem; color: #334155; line-height: 1.5; white-space: pre-wrap;">
+              No remarks recorded.
+            </div>
+          </div>
+
+          <!-- Attached Imagery Gallery -->
+          <div>
+            <div style="font-weight: 700; color: #003366; font-size: 0.80rem; margin-bottom: 6px;">Attached Vision &amp; Sensor Evidence:</div>
+            <div id="dossier-gallery" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px;">
+              <!-- Dynamic image items -->
+            </div>
+          </div>
+        </div>
+
+        <div class="surv-modal-footer" style="padding: 12px 20px; background: #F8FAFC; border-top: 1px solid #E2E8F0; display: flex; justify-content: space-between;">
+          <button type="button" onclick="window.closeInspectionDossier()" style="padding: 7px 16px; border-radius: 6px; border: 1px solid #CBD5E1; background: #FFFFFF; color: #475569; font-size: 0.78rem; font-weight: 700; cursor: pointer;">
+            Close Dossier
+          </button>
+          <button type="button" onclick="alert('Printing Official Indian Railways Asset Fitness Certificate (Form IR-QA-404)...')" style="padding: 7px 16px; border-radius: 6px; border: none; background: #003366; color: #FFFFFF; font-size: 0.78rem; font-weight: 700; cursor: pointer;">
+            🖨️ Print IR Safety Certificate
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════════ -->
+    <!-- MODAL: VIEW INCIDENT DETAILS & DOSSIER                          -->
+    <!-- ══════════════════════════════════════════════════════════════ -->
+    <div id="modal-view-incident-details" class="surv-modal-overlay" style="display: none; align-items: center; justify-content: center; z-index: 9999;">
+      <div class="surv-modal-dialog" style="max-width: 680px; max-height: 90vh; display: flex; flex-direction: column;">
+        <div class="surv-modal-header" style="background: linear-gradient(135deg, #0A1931 0%, #003366 100%); color: #FFFFFF; padding: 14px 20px;">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span style="font-size: 1.3rem;">🚨</span>
+            <div>
+              <h3 id="inc-dossier-id" style="margin: 0; font-size: 1.1rem; font-weight: 800; color: #FFFFFF;">INC-2026-041</h3>
+              <div id="inc-dossier-type" style="font-size: 0.74rem; color: #BFDBFE;">Rail Flaw / Transverse Crack</div>
+            </div>
+          </div>
+          <button type="button" onclick="window.closeIncidentDetailsModal()" style="background: rgba(255,255,255,0.1); border: none; font-size: 1.3rem; color: #FFFFFF; cursor: pointer; border-radius: 4px; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;">&times;</button>
+        </div>
+
+        <div class="surv-modal-body" style="padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 14px;">
+          <!-- Severity / Priority Banner -->
+          <div id="inc-dossier-banner" style="padding: 12px 16px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; background: #FEF2F2; border: 1px solid #FECACA;">
+            <div>
+              <div id="inc-dossier-severity-text" style="font-weight: 800; font-size: 1.05rem; color: #DC2626;">🚨 CRITICAL EMERGENCY (P1)</div>
+              <div id="inc-dossier-block-sub" style="font-size: 0.74rem; color: #991B1B; margin-top: 2px;">Line Block Request queued in Divisional Control Office.</div>
+            </div>
+            <div id="inc-dossier-downtime-badge" style="font-family: var(--font-mono); font-weight: 800; font-size: 1.2rem; color: #DC2626;">
+              2.5h Block
+            </div>
+          </div>
+
+          <!-- Metadata Grid -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px; padding: 12px 14px; font-size: 0.78rem;">
+            <div><span style="color: #64748B;">Affected Asset:</span> <strong id="inc-dossier-asset" style="color: #0F172A;">60kg Rail Track (KM 124.6)</strong></div>
+            <div><span style="color: #64748B;">Corridor Location:</span> <strong id="inc-dossier-location" style="color: #0F172A;">NDLS-CNB-UP</strong></div>
+            <div><span style="color: #64748B;">Discipline / Cell:</span> <strong id="inc-dossier-discipline" style="color: #003366;">Track (TMS)</strong></div>
+            <div><span style="color: #64748B;">Reported By:</span> <strong id="inc-dossier-operator" style="color: #0F172A;">Priya Verma (USFD Inspector)</strong></div>
+            <div><span style="color: #64748B;">Reported At:</span> <strong id="inc-dossier-reported-at" style="color: #0F172A;">2026-09-23 14:35</strong></div>
+            <div><span style="color: #64748B;">Current Status:</span> <strong id="inc-dossier-status" style="color: #059669;">Reported</strong></div>
+          </div>
+
+          <!-- Description -->
+          <div>
+            <div style="font-weight: 700; color: #003366; font-size: 0.80rem; margin-bottom: 6px;">Incident Description &amp; Sensor Telemetry:</div>
+            <div id="inc-dossier-summary" style="background: #FFFFFF; border: 1px solid #CBD5E1; border-radius: 6px; padding: 12px; font-size: 0.80rem; color: #334155; line-height: 1.5; white-space: pre-wrap;">
+              14mm internal ultrasonic crack detected at KM 124/6 UP Main during USFD run.
+            </div>
+          </div>
+        </div>
+
+        <div class="surv-modal-footer" style="padding: 12px 20px; background: #F8FAFC; border-top: 1px solid #E2E8F0; display: flex; justify-content: space-between; align-items: center;">
+          <button type="button" onclick="window.closeIncidentDetailsModal()" style="padding: 7px 16px; border-radius: 6px; border: 1px solid #CBD5E1; background: #FFFFFF; color: #475569; font-size: 0.78rem; font-weight: 700; cursor: pointer;">
+            Close
+          </button>
+          <div style="display: flex; gap: 8px;">
+            <a href="control-office.html#emergency-requests" style="padding: 7px 16px; border-radius: 6px; background: #DC2626; color: #FFFFFF; font-size: 0.78rem; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
+              <span>🚨</span> <span>Sanction in Control Office ➔</span>
+            </a>
+            <button type="button" onclick="alert('Printing Official Incident Report memo...')" style="padding: 7px 16px; border-radius: 6px; border: 1px solid #CBD5E1; background: #FFFFFF; color: #003366; font-size: 0.78rem; font-weight: 700; cursor: pointer;">
+              🖨️ Print Report
+            </button>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -407,123 +1691,217 @@
     import { ConfidenceIndicator } from '../components/ConfidenceIndicator.js';
     import { ManualOverrideModal } from '../components/ManualOverrideModal.js';
 
-    // Mock Live Inspection Feeds Data
-    const inspections = [
-      {
-        id: "INSP-USFD-2026-801",
-        system: "USFD Ultrasonic Car #04",
-        section: "NDLS-CNB-UP (KM 412/18-20)",
-        flawType: "INTERNAL_TRANSVERSE_FISSURE",
-        score: 95.4,
-        category: "P1",
-        confidence: 0.99,
-        tooltipExplanation: "USFD ultrasonic echo pattern detected 14mm transverse fissure in rail head. Imminent rail break under 25-tonne freight axle loading.",
-        summary: "Severe internal rail fracture risk detected on 112 GMT high-speed corridor.",
-        detailed: "Ultrasonic probe reflection showed 78% signal attenuation. IRPWM Para 6.2 strictly mandates emergency fishplating within 24 hours and a 20 km/h temporary speed restriction until rail piece exchange.",
-        factors: [
-          { name: "Flaw Depth", weight: 0.28, value: "14 mm" },
-          { name: "Traffic Density", weight: 0.22, value: "112 GMT" },
-          { name: "Failure Probability", weight: 0.20, value: "96%" }
-        ],
-        action: "Impose 20 km/h TSR and execute rail exchange in 24h block window."
-      },
-      {
-        id: "INSP-TRC-2026-442",
-        system: "Track Recording Car TRC-102",
-        section: "GZB-ALJN-DN (KM 88/10-14)",
-        flawType: "TWIST_AND_GAUGE_EXCEEDANCE",
-        score: 83.2,
-        category: "P2",
-        confidence: 0.94,
-        tooltipExplanation: "Dynamic twist exceedance of 3.8 mm/m at 110 km/h. Exceeds standard maintenance threshold (3.0 mm/m).",
-        summary: "Track twist and gauge narrowing at crossover switch approach.",
-        detailed: "High lateral ride index recorded by TRC sensors. May trigger wheel-climb derailment on high-speed trains if not rectified within 72h window.",
-        factors: [
-          { name: "Track Twist", weight: 0.24, value: "3.8 mm/m" },
-          { name: "Line Speed", weight: 0.20, value: "130 km/h" }
-        ],
-        action: "Deploy CSM tamper for 1.2 km precision alignment and dynamic track stabilization."
-      },
-      {
-        id: "INSP-DRONE-2026-109",
-        system: "AI Drone Aerial LiDAR / Thermal",
-        section: "NDLS-GZB-UP (KM 14/2-6)",
-        flawType: "OHE_THERMAL_HOTSPOT",
-        score: 79.5,
-        category: "P2",
-        confidence: 0.91,
-        tooltipExplanation: "Thermal infrared camera recorded 142°C hotspot on 25kV OHE feeder jumper clamp. Overheating under heavy load.",
-        summary: "Extreme thermal overheating on main overhead catenary jumper.",
-        detailed: "Temperature delta is +64°C above ambient, indicating loose terminal clamp connection. Poses fire and wire-parting hazard during peak summer draw.",
-        factors: [
-          { name: "Thermal Delta", weight: 0.26, value: "+64°C Excess" },
-          { name: "Department", weight: 0.22, value: "TRD (90)" }
-        ],
-        action: "Schedule 60m tower wagon power block to clean and re-torque clamp connector."
-      },
-      {
-        id: "INSP-PATROL-2026-031",
-        system: "IoT Keyman Foot Patrol Device",
-        section: "CNB-PRYJ-UP (KM 618/4)",
-        flawType: "ELASTIC_CLIP_MISSING_CLUSTER",
-        score: 66.8,
-        category: "P3",
-        confidence: 0.87,
-        tooltipExplanation: "Keyman logged 8 consecutive missing ERC clips along wooden sleeper bridge transition.",
-        summary: "Cluster of missing Elastic Rail Clips (ERC) on bridge approach.",
-        detailed: "Cluster of missing fastening clips reduces lateral track resistance on approach curve. Scheduled for re-fastening within 7-day rolling corridor.",
-        factors: [
-          { name: "Missing Fastenings", weight: 0.20, value: "8 Clips Missing" },
-          { name: "Location", weight: 0.16, value: "Bridge Transition" }
-        ],
-        action: "Gang maintenance replenishment of ERC clips and rubber pads."
-      }
-    ];
+    // ── 1. Real Inspection Reports Registry & Handlers ──────────────────
+    let inspectionReportsList = (window.IR_LIVE_SYNC && typeof window.IR_LIVE_SYNC.getInspections === 'function')
+      ? window.IR_LIVE_SYNC.getInspections()
+      : [
+        {
+          id: "INSP-USFD-2026-801",
+          workOrderId: "WO-CIVIL-INC-041",
+          title: "USFD Rail Ultrasonic Testing & Flaw Detection",
+          assetSystem: "USFD Ultrasonic Car #04",
+          anomaly: "INTERNAL_TRANSVERSE_FISSURE",
+          dept: "Civil (P-Way)",
+          section: "NDLS-CNB-UP (KM 412/18-20)",
+          tech: "Priya Verma (USFD Inspector)",
+          dateTime: "2026-09-23 14:30",
+          score: 95.4,
+          sla: "24h SLA",
+          confidence: 0.99,
+          result: "FAILED",
+          status: "COMPLETED",
+          aiRationale: "Severe internal rail fracture risk detected on 112 GMT high-speed corridor.",
+          remarks: "14mm internal transverse fissure detected in rail head. 78% ultrasonic signal attenuation. IRPWM Para 6.2 strictly mandates emergency fishplating within 24 hours.",
+          images: [
+            { name: "USFD_Flaw_Trace_KM412.png", url: "https://images.unsplash.com/photo-1541888946425-d0fbb18f15f6?w=600&auto=format&fit=crop&q=80", caption: "A-Scan Ultrasonic Flaw Echo Trace (2.4MHz)" },
+            { name: "Rail_Crack_Macro.jpg", url: "https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?w=600&auto=format&fit=crop&q=80", caption: "Macro surface crack photo at rail weld toe" }
+          ]
+        },
+        {
+          id: "INSP-TRC-2026-442",
+          workOrderId: "WO-CIVIL-1002",
+          title: "Track Geometry TRC-102 Recording Run",
+          assetSystem: "Track Recording Car TRC-102",
+          anomaly: "TWIST_AND_GAUGE_EXCEEDANCE",
+          dept: "Civil (P-Way)",
+          section: "GZB-ALJN-DN (KM 88/10-14)",
+          tech: "Rajesh Kumar (TRC Engineer)",
+          dateTime: "2026-09-22 10:15",
+          score: 83.2,
+          sla: "72h SLA",
+          confidence: 0.94,
+          result: "PASSED",
+          status: "COMPLETED",
+          aiRationale: "Track twist and gauge narrowing at crossover switch approach.",
+          remarks: "Track gauge, cross-level, and twist parameters within IRPWM Clause 602 limits after continuous tamping block. Speed restriction lifted to 110 km/h.",
+          images: [
+            { name: "TRC_Graph_GZB_ALJN.png", url: "https://images.unsplash.com/photo-1517649763962-0c623266ddc0?w=600&auto=format&fit=crop&q=80", caption: "TRC Track Geometry Accelerometer Graph" }
+          ]
+        },
+        {
+          id: "INSP-DRONE-2026-109",
+          workOrderId: "WO-TRD-1004",
+          title: "25kV OHE Aerial LiDAR & Thermal Inspection",
+          assetSystem: "AI Drone Aerial LiDAR / Thermal",
+          anomaly: "OHE_THERMAL_HOTSPOT",
+          dept: "Electrical (TRD)",
+          section: "NDLS-GZB-UP (KM 14/2-6)",
+          tech: "S. K. Verma (SSE TRD)",
+          dateTime: "2026-09-21 16:45",
+          score: 79.5,
+          sla: "72h SLA",
+          confidence: 0.91,
+          result: "PASSED",
+          status: "COMPLETED",
+          aiRationale: "Extreme thermal overheating on main overhead catenary jumper.",
+          remarks: "Catenary dropper tension normalized; thermal imaging shows connector temperature at nominal 42°C under live express train drawing 600A.",
+          images: [
+            { name: "OHE_Thermal_Scan.jpg", url: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=600&auto=format&fit=crop&q=80", caption: "Thermal Drone Infrared Mast Analysis (42°C)" }
+          ]
+        },
+        {
+          id: "INSP-PATROL-2026-031",
+          workOrderId: "WO-SIG-1008",
+          title: "Keyman Daily Foot Patrol & Fitting Audit",
+          assetSystem: "IoT Trackman Patrol Device",
+          anomaly: "ELASTIC_CLIP_MISSING_CLUSTER",
+          dept: "Civil (P-Way)",
+          section: "CNB-PRYJ-UP (KM 618/4)",
+          tech: "Amit Deshmukh (SSE Track)",
+          dateTime: "2026-09-24 09:00",
+          score: 66.8,
+          sla: "7d SLA",
+          confidence: 0.87,
+          result: "PENDING",
+          status: "PENDING",
+          aiRationale: "Cluster of missing Elastic Rail Clips (ERC) on bridge approach.",
+          remarks: "Cluster of missing Elastic Rail Clips (ERC) on bridge approach detected by foot patrol GPS device. Pending field gang replacement and sign-off.",
+          images: []
+        }
+      ];
 
-    function renderInspections() {
+    window.attachedInspectionImages = [];
+    window.selectedInspKpiFilter = 'ALL';
+
+    function renderTelemetryCards() {
       const container = document.getElementById('inspection-cards-container');
+      if (!container) return;
       container.innerHTML = '';
 
-      inspections.forEach(insp => {
+      if (!inspectionReportsList || inspectionReportsList.length === 0) {
+        container.innerHTML = `
+          <div style="background: #FFFFFF; border: 1px dashed #CBD5E1; border-radius: 12px; padding: 36px 20px; text-align: center; color: #64748B;">
+            <div style="font-size: 2rem; margin-bottom: 8px;">📋</div>
+            <strong style="color: #0F172A; font-size: 1rem;">No Inspection Reports Registered</strong>
+            <div style="font-size: 0.8rem; margin-top: 4px;">Click "+ Start Inspection" or complete a work order to generate telemetry inspection reports.</div>
+            <button type="button" onclick="window.openStartInspectionModal()" style="margin-top: 14px; background: #003366; color: #FFF; border: none; padding: 8px 18px; border-radius: 6px; font-weight: 700; cursor: pointer;">
+              + Start Inspection
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      inspectionReportsList.forEach(insp => {
+        const isFailed = insp.result === 'FAILED';
+        const isPending = insp.status === 'PENDING' || insp.result === 'PENDING';
+        const isReEval = insp.result === 'RE_EVALUATE';
+        const isPassed = insp.result === 'PASSED';
+
+        let category = 'P3';
+        let scoreVal = insp.score > 0 ? insp.score : (isFailed ? 95.4 : (isReEval ? 80.0 : (isPassed ? 88.0 : 66.8)));
+        if (isFailed || scoreVal >= 85) category = 'P1';
+        else if (isReEval || scoreVal >= 70) category = 'P2';
+        else category = 'P3';
+
+        const criticalClass = category === 'P1' ? 'p1-critical' : '';
+        const systemLabel = insp.assetSystem || (
+          (insp.dept || 'Civil (P-Way)').includes('Civil')
+            ? 'USFD Ultrasonic Car #04'
+            : ((insp.dept || '').includes('TRD') || (insp.dept || '').includes('Electrical') 
+                ? 'AI Drone Aerial LiDAR / Thermal' 
+                : 'IoT Trackman Patrol Device')
+        );
+
+        const anomalyTag = insp.anomaly || (
+          isFailed 
+            ? 'INTERNAL_TRANSVERSE_FISSURE' 
+            : (isReEval 
+                ? 'TWIST_AND_GAUGE_EXCEEDANCE' 
+                : (isPending 
+                    ? 'ELASTIC_CLIP_MISSING_CLUSTER' 
+                    : 'POST_WORK_QA_AUDIT'))
+        );
+
         const card = document.createElement('div');
-        const criticalClass = insp.category === 'P1' ? 'p1-critical' : '';
         card.className = `inspection-card ${criticalClass}`;
         card.id = `card-${insp.id}`;
 
+        const detailedReason = insp.remarks || `Statutory inspection report logged on section ${insp.section} by ${insp.tech || 'Inspector'}.`;
+        const actionText = isFailed
+          ? 'Emergency Line Block & Rework Required (IRPWM Para 6.2).'
+          : (isPassed
+            ? 'Asset certified fit for normal train operations at maximum permissible speed.'
+            : (isReEval
+              ? 'Conditional clearance granted under 24h IoT vibration / thermal monitoring.'
+              : 'Pending post-maintenance field calibration & QA audit.'));
+
+        const factors = [
+          { name: "Safety Severity", weight: 0.35, value: isFailed ? "Critical (Rework)" : (isPassed ? "Certified Fit" : "Under Review") },
+          { name: "Section Load", weight: 0.25, value: insp.section || "NDLS Trunk" },
+          { name: "Inspector Verification", weight: 0.20, value: insp.tech ? insp.tech.split(' (')[0] : "QA Team" }
+        ];
+
+        const confVal = typeof insp.confidence === 'number' ? insp.confidence : (category === 'P1' ? 0.99 : (category === 'P2' ? 0.94 : 0.87));
+
         card.innerHTML = `
-          <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 10px;">
+          <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 10px; flex-wrap: wrap; gap: 10px;">
             <div>
-              <div style="display: flex; align-items: center; gap: 8px;">
-                <span style="font-family: var(--font-mono); font-weight: 700; color: #003366; font-size: 0.95rem;">
+              <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                <span style="font-family: var(--font-mono); font-weight: 800; color: #003366; font-size: 0.95rem;">
                   ${insp.id}
                 </span>
-                <span style="font-size: 0.76rem; background: rgba(0,86,179,0.08); color: #0056B3; padding: 2px 7px; border-radius: 4px; font-weight: 700;">
-                  ${insp.system}
+                <span style="font-size: 0.74rem; background: #EEF2F6; color: #0A1931; border: 1px solid #CBD5E1; padding: 2px 8px; border-radius: 4px; font-weight: 700;">
+                  ${systemLabel}
+                </span>
+                <span style="font-size: 0.72rem; padding: 2px 8px; border-radius: 4px; font-weight: 700; background: ${isPassed ? '#ECFDF5' : (isFailed ? '#FEF2F2' : '#FFFBEB')}; color: ${isPassed ? '#059669' : (isFailed ? '#DC2626' : '#D97706')}; border: 1px solid ${isPassed ? '#A7F3D0' : (isFailed ? '#FECACA' : '#FDE68A')};">
+                  ${insp.result || insp.status}
                 </span>
 
                 <!-- Explanation Tooltip Container -->
                 <div class="tooltip-container">
-                  <span class="tooltip-icon">ℹ️</span>
+                  <span class="tooltip-icon" style="color: #0056B3; cursor: pointer;">ℹ️</span>
                   <div class="tooltip-bubble">
                     <strong>AI Explanatory Rationale:</strong><br/>
-                    ${insp.tooltipExplanation}
+                    ${insp.aiRationale || insp.remarks || insp.title}
                   </div>
                 </div>
               </div>
 
-              <div style="font-size: 0.8rem; color: #64748B; margin-top: 4px;">
-                Section: <strong style="color: #0F172A;">${insp.section}</strong> | Anomaly: <strong style="color: #D9531E;">${insp.flawType}</strong>
+              <div style="font-size: 0.8rem; color: #64748B; margin-top: 5px;">
+                Section: <strong style="color: #0F172A;">${insp.section}</strong> | Anomaly: <strong style="color: #DC2626; font-family: var(--font-mono);">${anomalyTag}</strong>
               </div>
             </div>
 
-            <div style="display: flex; align-items: center; gap: 8px;">
+            <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
               <span id="badge-slot-${insp.id}">
-                ${PriorityScoreBadge.render({ score: insp.score, category: insp.category })}
+                ${PriorityScoreBadge.render({ score: scoreVal, category: category })}
               </span>
-              ${ConfidenceIndicator.render({ confidence: insp.confidence })}
+              ${ConfidenceIndicator.render({ confidence: confVal })}
               
+              <!-- Action Button: Open Dossier / Audit -->
+              ${isPending ? `
+                <button onclick="window.openStartInspectionModal('${insp.id}')" style="background: #003366; color: #FFF; border: none; padding: 5px 12px; border-radius: 6px; font-size: 0.74rem; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;">
+                  <span>🔎</span> <span>Audit / Sign-Off ➔</span>
+                </button>
+              ` : `
+                <button onclick="window.openInspectionDossier('${insp.id}')" style="background: #FFFFFF; border: 1px solid #CBD5E1; color: #003366; padding: 5px 12px; border-radius: 6px; font-size: 0.74rem; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;">
+                  <span>View Dossier</span> <span>➔</span>
+                </button>
+              `}
+
               <!-- Manual Override Button -->
-              <button onclick="window.triggerOverride('${insp.id}', '${insp.category} (${insp.score})')" style="
+              <button onclick="window.triggerOverride('${insp.id}', '${category} (${scoreVal})')" style="
                 background: rgba(217, 83, 30, 0.08);
                 border: 1px solid rgba(217, 83, 30, 0.35);
                 color: #D9531E;
@@ -541,13 +1919,13 @@
 
           <!-- Explainable AI Card -->
           ${AIExplanationCard.render({
-          id: insp.id,
-          summary: insp.summary,
-          detailedReason: insp.detailed,
-          factors: insp.factors,
-          recommendedAction: insp.action,
-          defaultExpanded: insp.category === 'P1'
-        })}
+            id: insp.id,
+            summary: insp.aiRationale || insp.remarks || insp.title,
+            detailedReason: detailedReason,
+            factors: factors,
+            recommendedAction: actionText,
+            defaultExpanded: false
+          })}
         `;
 
         container.appendChild(card);
@@ -561,7 +1939,6 @@
         currentVal,
         type: 'inspection',
         onComplete: (logEntry) => {
-          // Update the badge in UI to reflect override
           const badgeSlot = document.getElementById(`badge-slot-${targetId}`);
           if (badgeSlot) {
             badgeSlot.innerHTML = PriorityScoreBadge.render({
@@ -577,6 +1954,7 @@
     window.refreshAuditLogs = function () {
       const logs = ManualOverrideModal.getAuditLogs();
       const container = document.getElementById('audit-log-list');
+      if (!container) return;
       if (!logs || logs.length === 0) {
         container.innerHTML = "No manual overrides recorded in current browser session.";
         return;
@@ -602,8 +1980,1079 @@
       `).join('');
     };
 
-    renderInspections();
+    window.setInspectionDecision = function (verdict) {
+      const decisionInput = document.getElementById('insp-form-decision');
+      if (decisionInput) decisionInput.value = verdict;
+
+      const cardPass = document.getElementById('card-verdict-pass');
+      const cardFail = document.getElementById('card-verdict-fail');
+      const cardReeval = document.getElementById('card-verdict-reeval');
+
+      [cardPass, cardFail, cardReeval].forEach(card => {
+        if (!card) return;
+        card.style.border = '1px solid #CBD5E1';
+        card.style.background = '#FFFFFF';
+        card.style.opacity = '0.7';
+        card.style.boxShadow = 'none';
+      });
+
+      const scoreRange = document.getElementById('insp-form-score-range');
+
+      if (verdict === 'PASSED') {
+        if (cardPass) {
+          cardPass.style.border = '2px solid #059669';
+          cardPass.style.background = '#ECFDF5';
+          cardPass.style.opacity = '1';
+          cardPass.style.boxShadow = '0 2px 6px rgba(5,150,105,0.15)';
+        }
+        if (scoreRange && parseFloat(scoreRange.value) < 70) {
+          scoreRange.value = 92;
+          window.handleInspectionScoreSlider(92);
+        }
+      } else if (verdict === 'FAILED') {
+        if (cardFail) {
+          cardFail.style.border = '2px solid #DC2626';
+          cardFail.style.background = '#FEF2F2';
+          cardFail.style.opacity = '1';
+          cardFail.style.boxShadow = '0 2px 6px rgba(220,38,38,0.15)';
+        }
+        if (scoreRange && parseFloat(scoreRange.value) > 60) {
+          scoreRange.value = 42;
+          window.handleInspectionScoreSlider(42);
+        }
+      } else if (verdict === 'RE_EVALUATE') {
+        if (cardReeval) {
+          cardReeval.style.border = '2px solid #7C3AED';
+          cardReeval.style.background = '#F5F3FF';
+          cardReeval.style.opacity = '1';
+          cardReeval.style.boxShadow = '0 2px 6px rgba(124,58,237,0.15)';
+        }
+        if (scoreRange) {
+          scoreRange.value = 65;
+          window.handleInspectionScoreSlider(65);
+        }
+      }
+    };
+
+    window.handleInspectionScoreSlider = function (val) {
+      const num = parseFloat(val) || 0;
+      const badge = document.getElementById('insp-form-score-badge');
+      const grade = document.getElementById('insp-form-score-grade');
+      if (!badge || !grade) return;
+
+      badge.innerText = `${num.toFixed(1)} / 100`;
+
+      if (num >= 85) {
+        badge.style.background = '#ECFDF5';
+        badge.style.color = '#059669';
+        badge.style.borderColor = '#A7F3D0';
+        grade.innerText = 'Class A (Exemplary)';
+        grade.style.color = '#059669';
+      } else if (num >= 70) {
+        badge.style.background = '#EFF6FF';
+        badge.style.color = '#0056B3';
+        badge.style.borderColor = '#BFDBFE';
+        grade.innerText = 'Class B (Satisfactory)';
+        grade.style.color = '#0056B3';
+      } else if (num >= 50) {
+        badge.style.background = '#FFFBEB';
+        badge.style.color = '#D97706';
+        badge.style.borderColor = '#FDE68A';
+        grade.innerText = 'Marginal (Speed Restriction / TSR)';
+        grade.style.color = '#D97706';
+      } else {
+        badge.style.background = '#FEF2F2';
+        badge.style.color = '#DC2626';
+        badge.style.borderColor = '#FECACA';
+        grade.innerText = 'Unsatisfactory (Defect Mandates Block)';
+        grade.style.color = '#DC2626';
+      }
+    };
+
+    window.addInspectionImagePreset = function (name, url, caption) {
+      window.attachedInspectionImages.push({ name, url, caption });
+      window.renderInspectionAttachments();
+    };
+
+    window.handleInspectionCustomFileUpload = function (event) {
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        window.attachedInspectionImages.push({
+          name: file.name,
+          url: e.target.result,
+          caption: `Inspector Field Photo: ${file.name}`
+        });
+        window.renderInspectionAttachments();
+      };
+      reader.readAsDataURL(file);
+      event.target.value = '';
+    };
+
+    window.removeInspectionImage = function (index) {
+      window.attachedInspectionImages.splice(index, 1);
+      window.renderInspectionAttachments();
+    };
+
+    window.renderInspectionAttachments = function () {
+      const gallery = document.getElementById('insp-attachments-gallery');
+      if (!gallery) return;
+
+      if (window.attachedInspectionImages.length === 0) {
+        gallery.innerHTML = `
+          <div style="grid-column: 1 / -1; text-align: center; color: #94A3B8; font-size: 0.74rem; padding: 10px;">
+            No photos or sensor traces attached yet. Click a preset or upload from your device.
+          </div>
+        `;
+        return;
+      }
+
+      gallery.innerHTML = window.attachedInspectionImages.map((img, idx) => `
+        <div style="position: relative; border: 1px solid #CBD5E1; border-radius: 6px; overflow: hidden; background: #FFFFFF; box-shadow: 0 1px 3px rgba(0,0,0,0.08);">
+          <img src="${img.url}" alt="${img.name}" style="width: 100%; height: 75px; object-fit: cover; display: block;" />
+          <div style="padding: 4px 6px; font-size: 0.68rem; font-weight: 600; color: #003366; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${img.caption || img.name}">
+            ${img.name}
+          </div>
+          <button type="button" onclick="window.removeInspectionImage(${idx})" style="position: absolute; top: 3px; right: 3px; background: rgba(220,38,38,0.85); color: #FFF; border: none; border-radius: 50%; width: 18px; height: 18px; font-size: 0.70rem; cursor: pointer; display: flex; align-items: center; justify-content: center;" title="Remove image">
+            &times;
+          </button>
+        </div>
+      `).join('');
+    };
+
+    window.populateInspectionWorkOrderOptions = function (selectedWoId) {
+      const select = document.getElementById('insp-form-wo-select');
+      if (!select) return;
+
+      select.innerHTML = '<option value="">-- Ad-Hoc / Periodic Track Surveillance Inspection --</option>';
+
+      let workOrders = [];
+      try {
+        const raw = localStorage.getItem('rp_maintenance_work_orders');
+        if (raw) workOrders = JSON.parse(raw);
+      } catch (_) { }
+
+      inspectionReportsList.forEach(insp => {
+        if (insp.workOrderId && !workOrders.some(w => w.id === insp.workOrderId)) {
+          workOrders.push({
+            id: insp.workOrderId,
+            title: insp.title,
+            department: insp.dept,
+            section: insp.section,
+            sseStaffId: insp.tech,
+            status: insp.status === 'PENDING' ? 'COMPLETED_AWAITING_QA' : 'CERTIFIED'
+          });
+        }
+      });
+
+      workOrders.forEach(wo => {
+        const opt = document.createElement('option');
+        opt.value = wo.id;
+        opt.innerText = `[${wo.id}] ${wo.title || 'Work Order'} (${wo.section || 'Corridor'})`;
+        if (selectedWoId && wo.id === selectedWoId) opt.selected = true;
+        select.appendChild(opt);
+      });
+    };
+
+    window.handleInspectionWorkOrderChange = function (woId) {
+      if (!woId) return;
+      const matchingInsp = inspectionReportsList.find(i => i.workOrderId === woId || i.id === woId);
+      if (matchingInsp) {
+        document.getElementById('insp-form-title').value = matchingInsp.title;
+        document.getElementById('insp-form-dept').value = matchingInsp.dept || 'Civil (P-Way)';
+        document.getElementById('insp-form-section').value = matchingInsp.section;
+        document.getElementById('insp-form-tech').value = matchingInsp.tech;
+        if (matchingInsp.remarks) document.getElementById('insp-form-remarks').value = matchingInsp.remarks;
+        if (Array.isArray(matchingInsp.images) && matchingInsp.images.length > 0) {
+          window.attachedInspectionImages = [...matchingInsp.images];
+          window.renderInspectionAttachments();
+        }
+      }
+    };
+
+    window.openStartInspectionModal = function (inspId) {
+      window.attachedInspectionImages = [];
+      const form = document.getElementById('form-new-inspection');
+      if (form) form.reset();
+
+      window.populateInspectionWorkOrderOptions();
+
+      if (inspId) {
+        const target = inspectionReportsList.find(i => i.id === inspId || i.workOrderId === inspId);
+        if (target) {
+          document.getElementById('modal-insp-title-heading').innerText = `QA Audit: ${target.id}`;
+          document.getElementById('insp-form-id').value = target.id;
+          document.getElementById('insp-form-title').value = target.title;
+          document.getElementById('insp-form-dept').value = target.dept || 'Civil (P-Way)';
+          document.getElementById('insp-form-section').value = target.section;
+          document.getElementById('insp-form-tech').value = target.tech;
+          document.getElementById('insp-form-remarks').value = target.remarks || `Conducted comprehensive post-maintenance QA audit on section ${target.section}.`;
+
+          if (target.workOrderId) {
+            document.getElementById('insp-form-wo-select').value = target.workOrderId;
+          }
+
+          if (Array.isArray(target.images) && target.images.length > 0) {
+            window.attachedInspectionImages = [...target.images];
+          } else {
+            window.attachedInspectionImages = [
+              { name: "USFD_A_Scan_Flaw_Trace.png", url: "https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=600&auto=format&fit=crop&q=80", caption: "USFD Probe A-Scan Flaw Trace" }
+            ];
+          }
+
+          window.setInspectionDecision(target.result === 'FAILED' ? 'FAILED' : (target.result === 'RE_EVALUATE' ? 'RE_EVALUATE' : 'PASSED'));
+        }
+      } else {
+        document.getElementById('modal-insp-title-heading').innerText = 'Asset QA Inspection & Safety Certification';
+        document.getElementById('insp-form-id').value = '';
+        window.setInspectionDecision('PASSED');
+        window.handleInspectionScoreSlider(92);
+        window.attachedInspectionImages = [
+          { name: "Alumino_Thermic_Weld_Macro.jpg", url: "https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?w=600&auto=format&fit=crop&q=80", caption: "Thermite AT Weld Macrographic Joint" }
+        ];
+      }
+
+      window.renderInspectionAttachments();
+      const modal = document.getElementById('modal-new-inspection');
+      if (modal) modal.style.display = 'flex';
+    };
+
+    window.openNewInspectionModal = function () {
+      window.openStartInspectionModal(null);
+    };
+
+    window.closeNewInspectionModal = function () {
+      const modal = document.getElementById('modal-new-inspection');
+      if (modal) modal.style.display = 'none';
+      window.attachedInspectionImages = [];
+    };
+
+    window.openInspectionDossier = function (inspId) {
+      const target = inspectionReportsList.find(i => i.id === inspId);
+      if (!target) return;
+
+      document.getElementById('dossier-insp-id').innerText = target.id;
+      document.getElementById('dossier-insp-title').innerText = target.title;
+      document.getElementById('dossier-dept').innerText = target.dept;
+      document.getElementById('dossier-section').innerText = target.section;
+      document.getElementById('dossier-tech').innerText = target.tech;
+      document.getElementById('dossier-date').innerText = target.dateTime;
+      document.getElementById('dossier-wo').innerText = target.workOrderId || 'WO-REGULATORY-GENERAL';
+      document.getElementById('dossier-remarks').innerText = target.remarks || 'No detailed observations recorded.';
+
+      const banner = document.getElementById('dossier-verdict-banner');
+      const vText = document.getElementById('dossier-verdict-text');
+      const vSub = document.getElementById('dossier-verdict-sub');
+      const sBadge = document.getElementById('dossier-score-badge');
+
+      const scoreVal = target.score > 0 ? target.score : 88.5;
+      sBadge.innerText = `${scoreVal} / 100`;
+
+      if (target.result === 'PASSED') {
+        banner.style.background = '#ECFDF5';
+        banner.style.borderColor = '#A7F3D0';
+        vText.innerText = '✓ PASSED & CERTIFIED';
+        vText.style.color = '#059669';
+        vSub.innerText = 'Asset certified fit for normal train operations at maximum permissible speed.';
+        vSub.style.color = '#065F46';
+        sBadge.style.color = '#059669';
+      } else if (target.result === 'FAILED') {
+        banner.style.background = '#FEF2F2';
+        banner.style.borderColor = '#FECACA';
+        vText.innerText = '⚠️ FAILED - REWORK REQUIRED';
+        vText.style.color = '#DC2626';
+        vSub.innerText = 'Quality audit failed safety tolerances. Line Block cannot be cleared; rework mandated.';
+        vSub.style.color = '#991B1B';
+        sBadge.style.color = '#DC2626';
+      } else {
+        banner.style.background = '#F5F3FF';
+        banner.style.borderColor = '#DDD6FE';
+        vText.innerText = '🔄 UNDER RE-EVALUATION';
+        vText.style.color = '#7C3AED';
+        vSub.innerText = 'Conditional clearance granted under 24h IoT vibration/thermal monitoring.';
+        vSub.style.color = '#5B21B6';
+        sBadge.style.color = '#7C3AED';
+      }
+
+      const gallery = document.getElementById('dossier-gallery');
+      const images = Array.isArray(target.images) && target.images.length > 0
+        ? target.images
+        : [
+          { name: "USFD_A_Scan_Flaw_Trace.png", url: "https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=600&auto=format&fit=crop&q=80", caption: "USFD 4MHz Probe A-Scan Reflection Echo" }
+        ];
+
+      gallery.innerHTML = images.map(img => `
+        <div style="border: 1px solid #CBD5E1; border-radius: 6px; overflow: hidden; background: #FFFFFF; box-shadow: 0 1px 3px rgba(0,0,0,0.06);">
+          <a href="${img.url}" target="_blank" title="Click to view full image in high resolution">
+            <img src="${img.url}" alt="${img.name}" style="width: 100%; height: 90px; object-fit: cover; display: block;" />
+          </a>
+          <div style="padding: 6px; font-size: 0.70rem; font-weight: 700; color: #003366;">
+            ${img.name}
+            <div style="font-size: 0.65rem; color: #64748B; font-weight: 400; margin-top: 2px;">${img.caption || 'Evidence'}</div>
+          </div>
+        </div>
+      `).join('');
+
+      document.getElementById('modal-view-inspection-log').style.display = 'flex';
+    };
+
+    window.closeInspectionDossier = function () {
+      document.getElementById('modal-view-inspection-log').style.display = 'none';
+    };
+
+    window.handleCreateInspectionSubmit = function (e) {
+      e.preventDefault();
+
+      const existingId = document.getElementById('insp-form-id').value;
+      const id = existingId || `INSP-2026-${Math.floor(1000 + Math.random() * 9000)}`;
+      const woId = document.getElementById('insp-form-wo-select').value;
+      const title = document.getElementById('insp-form-title').value.trim();
+      const dept = document.getElementById('insp-form-dept').value;
+      const section = document.getElementById('insp-form-section').value.trim();
+      const tech = document.getElementById('insp-form-tech').value.trim();
+      const decision = document.getElementById('insp-form-decision').value || 'PASSED';
+      const score = parseFloat(document.getElementById('insp-form-score-range').value) || 90.0;
+      const remarks = document.getElementById('insp-form-remarks').value.trim();
+      const images = [...window.attachedInspectionImages];
+
+      const inspectionData = {
+        id,
+        workOrderId: woId,
+        title,
+        dept,
+        section,
+        tech,
+        dateTime: new Date().toISOString().replace('T', ' ').slice(0, 16),
+        score,
+        result: decision,
+        status: "COMPLETED",
+        remarks,
+        images,
+        inspectorName: tech
+      };
+
+      if (window.IR_LIVE_SYNC && typeof window.IR_LIVE_SYNC.submitInspectionDecision === 'function') {
+        window.IR_LIVE_SYNC.submitInspectionDecision(inspectionData);
+        inspectionReportsList = window.IR_LIVE_SYNC.getInspections();
+      } else {
+        const idx = inspectionReportsList.findIndex(i => i.id === id);
+        if (idx >= 0) {
+          inspectionReportsList[idx] = inspectionData;
+        } else {
+          inspectionReportsList.unshift(inspectionData);
+        }
+      }
+
+      window.closeNewInspectionModal();
+      window.updateInspectionMetrics();
+      window.renderInspectionsTable();
+      renderTelemetryCards();
+
+      const verdictTitle = decision === 'PASSED' ? '✓ APPROVED & PASSED' : (decision === 'FAILED' ? '⚠️ FAILED & REWORK MANDATED' : '🔄 RE-EVALUATION LOGGED');
+      alert(`🎯 Inspection ${id} Submitted!\n\nVerdict: ${verdictTitle}\nScore: ${score}/100\nAttached Images: ${images.length}\n\n📡 Real-time update synchronized with Maintenance Dashboard.`);
+    };
+
+    window.filterInspectionsByKpi = function (filterKey, cardEl) {
+      window.selectedInspKpiFilter = filterKey;
+      document.querySelectorAll('#summary-cards-inspections .ox-kpi-card').forEach(c => c.classList.remove('active-blue'));
+      if (cardEl) cardEl.classList.add('active-blue');
+      window.renderInspectionsTable();
+    };
+
+    window.filterInspections = function () {
+      window.renderInspectionsTable();
+    };
+
+    window.updateInspectionMetrics = function () {
+      const total = inspectionReportsList.length;
+      const completed = inspectionReportsList.filter(i => i.status === 'COMPLETED').length;
+      const pending = inspectionReportsList.filter(i => i.status === 'PENDING' || i.result === 'PENDING').length;
+      const passed = inspectionReportsList.filter(i => i.result === 'PASSED').length;
+      const failed = inspectionReportsList.filter(i => i.result === 'FAILED').length;
+      const overdue = 0;
+
+      const completionRate = total > 0 ? Math.round((completed / total) * 100) : 0;
+      const passRate = completed > 0 ? Math.round((passed / completed) * 100) : 0;
+      
+      const scores = inspectionReportsList.filter(i => i.score > 0).map(i => i.score);
+      const avgScore = scores.length > 0 ? (scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(1) : "0.0";
+
+      const totalEl = document.getElementById('stat-insp-total');
+      const compEl = document.getElementById('stat-insp-completed');
+      const pendEl = document.getElementById('stat-insp-pending');
+      const passEl = document.getElementById('stat-insp-passed');
+      const failEl = document.getElementById('stat-insp-failed');
+      const overEl = document.getElementById('stat-insp-overdue');
+      const countEl = document.getElementById('lbl-table-insp-count');
+      const badgeSurv = document.getElementById('badge-count-inspections');
+
+      if (totalEl) totalEl.innerText = total;
+      if (compEl) compEl.innerText = completed;
+      if (pendEl) pendEl.innerText = pending;
+      if (passEl) passEl.innerText = passed;
+      if (failEl) failEl.innerText = failed;
+      if (overEl) overEl.innerText = overdue;
+      if (countEl) countEl.innerText = total;
+      if (badgeSurv) badgeSurv.innerText = total;
+
+      const compRateEl = document.getElementById('meter-completion-rate');
+      const compFillEl = document.getElementById('meter-completion-fill');
+      const compSubEl = document.getElementById('meter-completion-sub');
+      if (compRateEl) compRateEl.innerText = `${completionRate}%`;
+      if (compFillEl) compFillEl.style.width = `${completionRate}%`;
+      if (compSubEl) compSubEl.innerText = `${completed} of ${total} inspections completed`;
+
+      const passRateEl = document.getElementById('meter-pass-rate');
+      const passFillEl = document.getElementById('meter-pass-fill');
+      const passSubEl = document.getElementById('meter-pass-sub');
+      if (passRateEl) passRateEl.innerText = `${passRate}%`;
+      if (passFillEl) passFillEl.style.width = `${passRate}%`;
+      if (passSubEl) passSubEl.innerText = `${passed} of ${completed} completed inspections passed`;
+
+      const scoreEl = document.getElementById('meter-avg-score');
+      const scoreFillEl = document.getElementById('meter-score-fill');
+      if (scoreEl) scoreEl.innerText = avgScore;
+      if (scoreFillEl) scoreFillEl.style.width = `${Math.min(100, parseFloat(avgScore))}%`;
+    };
+
+    window.selectedInspLocation = 'ALL';
+    window.selectedInspViewMode = 'overall';
+
+    window.setInspectionFilterMode = function (mode) {
+      window.selectedInspViewMode = mode;
+      const btnOverall = document.getElementById('btn-insp-view-overall');
+      const btnTech = document.getElementById('btn-insp-view-tech');
+      if (btnOverall) {
+        btnOverall.style.background = mode === 'overall' ? '#0A1931' : 'transparent';
+        btnOverall.style.color = mode === 'overall' ? '#FFFFFF' : '#475569';
+        btnOverall.style.fontWeight = mode === 'overall' ? '700' : '600';
+      }
+      if (btnTech) {
+        btnTech.style.background = mode === 'technician' ? '#0A1931' : 'transparent';
+        btnTech.style.color = mode === 'technician' ? '#FFFFFF' : '#475569';
+        btnTech.style.fontWeight = mode === 'technician' ? '700' : '600';
+      }
+      window.renderInspectionsTable();
+    };
+
+    window.openLocationFilterModal = function () {
+      const locations = ['ALL', 'NDLS-CNB-UP', 'GZB-ALJN', 'CSMT-KYN', 'HWH-BWN'];
+      const chosen = prompt("Select Location / Section Filter:\n1. All Locations\n2. NDLS-CNB-UP (New Delhi - Kanpur)\n3. GZB-ALJN (Ghaziabad - Aligarh)\n4. CSMT-KYN (Mumbai Central - Kalyan)\n5. HWH-BWN (Howrah - Barddhaman)", window.selectedInspLocation === 'ALL' ? '1' : window.selectedInspLocation);
+      
+      if (chosen !== null) {
+        let locKey = 'ALL';
+        if (chosen === '1' || chosen.toUpperCase() === 'ALL') locKey = 'ALL';
+        else if (chosen === '2' || chosen.includes('NDLS')) locKey = 'NDLS-CNB-UP';
+        else if (chosen === '3' || chosen.includes('GZB')) locKey = 'GZB-ALJN';
+        else if (chosen === '4' || chosen.includes('CSMT')) locKey = 'CSMT-KYN';
+        else if (chosen === '5' || chosen.includes('HWH')) locKey = 'HWH-BWN';
+        else locKey = chosen.trim();
+
+        window.selectedInspLocation = locKey;
+        const lbl = document.getElementById('lbl-insp-location');
+        if (lbl) lbl.innerText = locKey === 'ALL' ? 'All Locations' : locKey;
+        window.renderInspectionsTable();
+      }
+    };
+
+    window.renderInspectionsTable = function () {
+      const tbody = document.getElementById('inspections-tbody');
+      if (!tbody) return;
+
+      const q = (document.getElementById('insp-search-input')?.value || '').toLowerCase().trim();
+      const statusFilter = (document.getElementById('insp-filter-status')?.value || 'ALL').toUpperCase();
+      const deptFilter = (document.getElementById('insp-filter-dept')?.value || 'ALL').toUpperCase();
+
+      const filtered = inspectionReportsList.filter(item => {
+        // Location Filter
+        if (window.selectedInspLocation && window.selectedInspLocation !== 'ALL') {
+          if (!((item.section || '').toUpperCase().includes(window.selectedInspLocation.toUpperCase()))) return false;
+        }
+
+        // KPI Filter
+        if (window.selectedInspKpiFilter === 'COMPLETED' && item.status !== 'COMPLETED') return false;
+        if (window.selectedInspKpiFilter === 'PENDING' && item.status !== 'PENDING' && item.result !== 'PENDING') return false;
+        if (window.selectedInspKpiFilter === 'PASSED' && item.result !== 'PASSED') return false;
+        if (window.selectedInspKpiFilter === 'FAILED' && item.result !== 'FAILED') return false;
+        if (window.selectedInspKpiFilter === 'OVERDUE' && item.result !== 'OVERDUE') return false;
+
+        // Dropdown Filter
+        if (statusFilter !== 'ALL') {
+          if (statusFilter === 'PASSED' && item.result !== 'PASSED') return false;
+          if (statusFilter === 'FAILED' && item.result !== 'FAILED') return false;
+          if (statusFilter === 'PENDING' && item.status !== 'PENDING' && item.result !== 'PENDING') return false;
+        }
+
+        if (deptFilter !== 'ALL' && !(item.dept || '').toUpperCase().includes(deptFilter)) return false;
+
+        // Search Query
+        if (q) {
+          const matchId = (item.id || '').toLowerCase().includes(q);
+          const matchTitle = (item.title || '').toLowerCase().includes(q);
+          const matchSection = (item.section || '').toLowerCase().includes(q);
+          const matchTech = (item.tech || '').toLowerCase().includes(q);
+          const matchDept = (item.dept || '').toLowerCase().includes(q);
+          if (!matchId && !matchTitle && !matchSection && !matchTech && !matchDept) return false;
+        }
+        return true;
+      });
+
+      // Sort by Technician if in technician view mode
+      if (window.selectedInspViewMode === 'technician') {
+        filtered.sort((a, b) => (a.tech || '').localeCompare(b.tech || ''));
+      }
+
+      const countEl = document.getElementById('lbl-table-insp-count');
+      if (countEl) countEl.innerText = filtered.length;
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="9" style="text-align: center; padding: 40px 20px; color: #64748B;">
+              <div style="font-size: 1.8rem; margin-bottom: 8px;">📋</div>
+              <strong style="color: #0F172A; font-size: 0.95rem;">No inspections found</strong>
+              <div style="font-size: 0.78rem; margin-top: 4px;">Try adjusting your filters or create a new inspection.</div>
+              <button type="button" onclick="window.openStartInspectionModal()" style="margin-top: 12px; background: #003366; color: #FFF; border: none; padding: 7px 16px; border-radius: 6px; font-weight: 700; cursor: pointer;">
+                + Start Inspection
+              </button>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(i => {
+        const isPending = i.status === 'PENDING' || i.result === 'PENDING';
+
+        const resultBadge = i.result === 'PASSED'
+          ? '<span style="background:#ECFDF5; color:#059669; border:1px solid #A7F3D0; padding:3px 10px; border-radius:4px; font-weight:700; font-size:0.72rem; white-space:nowrap; display:inline-block;">✓ Passed</span>'
+          : (i.result === 'FAILED'
+            ? '<span style="background:#FEF2F2; color:#DC2626; border:1px solid #FECACA; padding:3px 10px; border-radius:4px; font-weight:700; font-size:0.72rem; white-space:nowrap; display:inline-block;">⚠️ Failed</span>'
+            : (i.result === 'RE_EVALUATE'
+              ? '<span style="background:#F5F3FF; color:#7C3AED; border:1px solid #DDD6FE; padding:3px 10px; border-radius:4px; font-weight:700; font-size:0.72rem; white-space:nowrap; display:inline-block;">🔄 Re-Evaluate</span>'
+              : '<span style="background:#FFFBEB; color:#D97706; border:1px solid #FDE68A; padding:3px 10px; border-radius:4px; font-weight:700; font-size:0.72rem; white-space:nowrap; display:inline-block;">⏳ Pending</span>'));
+
+        const statusBadge = i.status === 'COMPLETED'
+          ? '<span style="color:#059669; font-weight:700; font-size:0.74rem; background:#ECFDF5; padding:3px 8px; border-radius:4px; border:1px solid #A7F3D0; white-space:nowrap; display:inline-block;">Completed</span>'
+          : '<span style="color:#D97706; font-weight:700; font-size:0.74rem; background:#FFFBEB; padding:3px 8px; border-radius:4px; border:1px solid #FDE68A; white-space:nowrap; display:inline-block;">In Progress</span>';
+
+        const imageCount = Array.isArray(i.images) ? i.images.length : 0;
+        const imageIndicator = imageCount > 0 
+          ? `<span title="${imageCount} attached image(s)" style="display:inline-flex; align-items:center; gap:2px; font-size:0.70rem; color:#0056B3; background:#EFF6FF; padding:1px 6px; border-radius:4px; margin-left:6px; font-weight:700; border:1px solid #BFDBFE;">📷 ${imageCount}</span>` 
+          : '';
+
+        const actionBtn = isPending
+          ? `
+            <button onclick="window.openStartInspectionModal('${i.id}')" style="background: #003366; color: #FFFFFF; border: none; padding: 6px 14px; border-radius: 6px; font-weight: 700; font-size: 0.74rem; cursor: pointer; box-shadow: 0 2px 6px rgba(0,51,102,0.25); display: inline-flex; align-items: center; gap: 4px; transition: all 0.15s; white-space: nowrap;">
+              <span>🔎</span> <span>Inspect / QA Audit ➔</span>
+            </button>
+          `
+          : `
+            <button onclick="window.openInspectionDossier('${i.id}')" style="background: #FFFFFF; border: 1px solid #CBD5E1; color: #0056B3; padding: 6px 14px; border-radius: 6px; font-weight: 700; font-size: 0.74rem; cursor: pointer; transition: all 0.15s; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap;">
+              <span>View Log</span> <span>➔</span>
+            </button>
+          `;
+
+        return `
+          <tr>
+            <td style="font-family: var(--font-mono); font-weight: 700; color: #003366; white-space: nowrap;">
+              ${i.id}
+              ${imageIndicator}
+            </td>
+            <td style="min-width: 250px;">
+              <div style="font-weight: 700; color: #0F172A; font-size: 0.88rem;">${i.title}</div>
+              <div style="font-size: 0.74rem; color: #64748B; margin-top: 3px;">📍 Section: <strong style="color: #334155;">${i.section}</strong></div>
+            </td>
+            <td style="white-space: nowrap; text-align: center;"><span style="background: #F1F5F9; color: #334155; padding: 3px 10px; border-radius: 4px; font-size: 0.72rem; font-weight: 600; border: 1px solid #E2E8F0; white-space: nowrap; display: inline-block;">${i.dept}</span></td>
+            <td style="white-space: nowrap;">
+              <div style="font-weight: 600; color: #0F172A; font-size: 0.80rem;">${i.tech}</div>
+            </td>
+            <td style="font-size: 0.75rem; color: #475569; white-space: nowrap; font-family: var(--font-mono); text-align: center;">${i.dateTime}</td>
+            <td style="text-align: center; white-space: nowrap;"><strong style="color: #003366; font-size: 0.95rem; font-family: var(--font-mono);">${i.score > 0 ? i.score : '—'}</strong></td>
+            <td style="text-align: center; white-space: nowrap;">${resultBadge}</td>
+            <td style="text-align: center; white-space: nowrap;">${statusBadge}</td>
+            <td style="text-align: right; white-space: nowrap;">
+              ${actionBtn}
+            </td>
+          </tr>
+        `;
+      }).join('');
+    };
+
+    // ── 3. Incident Reports Registry & Handlers ──────────────────
+    let incidentReportsList = (window.IR_LIVE_SYNC && typeof window.IR_LIVE_SYNC.getIncidents === 'function')
+      ? window.IR_LIVE_SYNC.getIncidents()
+      : [
+          {
+            id: "INC-2026-041",
+            type: "Rail Flaw / Transverse Crack",
+            summary: "14mm internal ultrasonic crack detected at KM 124/6 UP Main during USFD run.",
+            asset: "60kg Rail Track (KM 124.6 UP Main)",
+            location: "NDLS-CNB-UP (New Delhi - Kanpur)",
+            severity: "Critical",
+            priority: "Critical (P1)",
+            downtime: "2.5h",
+            downtimeMins: 150,
+            discipline: "Track (TMS)",
+            status: "Reported",
+            reportedAt: "2026-09-23 14:35",
+            operator: "Priya Verma (USFD Inspector)"
+          },
+          {
+            id: "INC-2026-039",
+            type: "OHE Wire Drop / Sag",
+            summary: "25kV catenary feeder jumper clamp overheating at 142°C detected by thermal drone.",
+            asset: "25kV OHE Catenary Mast #48/12",
+            location: "GZB-ALJN (Ghaziabad - Aligarh)",
+            severity: "High",
+            priority: "High (P2)",
+            downtime: "1.5h",
+            downtimeMins: 90,
+            discipline: "Traction (TRD)",
+            status: "Under Investigation",
+            reportedAt: "2026-09-22 11:20",
+            operator: "S. K. Verma (SSE TRD)"
+          },
+          {
+            id: "INC-2026-035",
+            type: "Point Machine Throw Drift",
+            summary: "Switch throw timeout exceeded 5.0s during express route setting.",
+            asset: "Turnout Switch Point Machine #PM-04",
+            location: "CSMT-KYN (Mumbai Central - Kalyan)",
+            severity: "Medium",
+            priority: "Medium (P3)",
+            downtime: "0.5h",
+            downtimeMins: 30,
+            discipline: "Signal (SMMS)",
+            status: "Reported",
+            reportedAt: "2026-09-20 08:45",
+            operator: "Amit Deshmukh (SSE Signal)"
+          }
+        ];
+
+    window.currentIncViewMode = 'list';
+    window.selectedIncKpiFilter = 'ALL';
+
+    window.toggleSummaryCards = function (type) {
+      const el = document.getElementById(`summary-cards-${type}`);
+      const btn = document.getElementById(`btn-toggle-summary-${type}`);
+      if (!el) return;
+      if (el.style.display === 'none') {
+        el.style.display = 'grid';
+        if (btn) btn.innerHTML = `<span>📑</span> <span>Summary Cards (5 visible)</span>`;
+      } else {
+        el.style.display = 'none';
+        if (btn) btn.innerHTML = `<span>📑</span> <span>Summary Cards (hidden)</span>`;
+      }
+    };
+
+    window.setIncidentViewMode = function (mode) {
+      window.currentIncViewMode = mode;
+      const btnList = document.getElementById('btn-inc-view-list');
+      const btnGrid = document.getElementById('btn-inc-view-grid');
+      if (btnList) btnList.classList.toggle('active', mode === 'list');
+      if (btnGrid) btnGrid.classList.toggle('active', mode === 'grid');
+      window.renderIncidentsTable();
+    };
+
+    window.filterIncidentsByKpi = function (filterKey, cardEl) {
+      window.selectedIncKpiFilter = filterKey;
+      document.querySelectorAll('#summary-cards-incidents .ox-kpi-card').forEach(c => c.classList.remove('active-blue'));
+      if (cardEl) cardEl.classList.add('active-blue');
+      window.renderIncidentsTable();
+    };
+
+    window.updateIncidentMetrics = function () {
+      const total = incidentReportsList.length;
+      const month = incidentReportsList.filter(i => (i.reportedAt || '').includes('2026-09')).length;
+      const critical = incidentReportsList.filter(i => (i.severity || '').toUpperCase() === 'CRITICAL' || (i.severity || '').toUpperCase() === 'HIGH' || (i.priority || '').includes('P1') || (i.priority || '').includes('P2')).length;
+      const pending = incidentReportsList.filter(i => i.status === 'Reported' || i.status === 'Under Investigation').length;
+      const drafts = incidentReportsList.filter(i => i.status === 'Draft').length;
+
+      const totalEl = document.getElementById('stat-inc-total');
+      const monthEl = document.getElementById('stat-inc-month');
+      const critEl = document.getElementById('stat-inc-critical');
+      const pendEl = document.getElementById('stat-inc-pending');
+      const draftsEl = document.getElementById('stat-inc-drafts');
+      const badgeSurv = document.getElementById('badge-count-incidents');
+      const totalCountLabel = document.getElementById('lbl-inc-total-count');
+
+      if (totalEl) totalEl.innerText = total;
+      if (monthEl) monthEl.innerText = month;
+      if (critEl) critEl.innerText = critical;
+      if (pendEl) pendEl.innerText = pending;
+      if (draftsEl) draftsEl.innerText = drafts;
+      if (badgeSurv) badgeSurv.innerText = total;
+      if (totalCountLabel) totalCountLabel.innerText = total;
+    };
+
+    window.openIncidentDetailsModal = function (incId) {
+      const inc = incidentReportsList.find(i => i.id === incId);
+      if (!inc) return;
+
+      document.getElementById('inc-dossier-id').innerText = inc.id;
+      document.getElementById('inc-dossier-type').innerText = inc.type;
+      document.getElementById('inc-dossier-asset').innerText = inc.asset;
+      document.getElementById('inc-dossier-location').innerText = inc.location;
+      document.getElementById('inc-dossier-discipline').innerText = inc.discipline || 'Track (TMS)';
+      document.getElementById('inc-dossier-operator').innerText = inc.operator || 'Safety Officer';
+      document.getElementById('inc-dossier-reported-at').innerText = inc.reportedAt;
+      document.getElementById('inc-dossier-status').innerText = inc.status;
+      document.getElementById('inc-dossier-summary').innerText = inc.summary;
+      document.getElementById('inc-dossier-downtime-badge').innerText = `${inc.downtime || '2.0h'} Block`;
+
+      const isCrit = (inc.severity || '').toUpperCase() === 'CRITICAL' || (inc.priority || '').includes('P1');
+      const banner = document.getElementById('inc-dossier-banner');
+      const sText = document.getElementById('inc-dossier-severity-text');
+
+      if (isCrit) {
+        banner.style.background = '#FEF2F2';
+        banner.style.borderColor = '#FECACA';
+        sText.innerText = '🚨 CRITICAL EMERGENCY (P1)';
+        sText.style.color = '#DC2626';
+      } else {
+        banner.style.background = '#FFF7ED';
+        banner.style.borderColor = '#FED7AA';
+        sText.innerText = `⚠️ ${inc.severity?.toUpperCase()} PRIORITY (${inc.priority || 'P2'})`;
+        sText.style.color = '#D9531E';
+      }
+
+      document.getElementById('modal-view-incident-details').style.display = 'flex';
+    };
+
+    window.closeIncidentDetailsModal = function () {
+      document.getElementById('modal-view-incident-details').style.display = 'none';
+    };
+
+    window.renderIncidentsTable = function () {
+      const container = document.getElementById('incidents-content-container');
+      if (!container) return;
+
+      const q = (document.getElementById('inc-search-input')?.value || '').toLowerCase();
+      const sevFilter = document.getElementById('inc-filter-severity')?.value || 'ALL';
+
+      const filtered = incidentReportsList.filter(item => {
+        if (window.selectedIncKpiFilter === 'HIGH_CRITICAL') {
+          const isHighCrit = (item.severity || '').toUpperCase() === 'CRITICAL' || (item.severity || '').toUpperCase() === 'HIGH' || (item.priority || '').includes('P1') || (item.priority || '').includes('P2');
+          if (!isHighCrit) return false;
+        } else if (window.selectedIncKpiFilter === 'PENDING') {
+          if (item.status !== 'Reported' && item.status !== 'Under Investigation') return false;
+        } else if (window.selectedIncKpiFilter === 'DRAFTS') {
+          if (item.status !== 'Draft') return false;
+        } else if (window.selectedIncKpiFilter === 'MONTH') {
+          if (!(item.reportedAt || '').includes('2026-09')) return false;
+        }
+
+        if (sevFilter !== 'ALL' && (item.severity || '').toUpperCase() !== sevFilter && !(item.priority || '').toUpperCase().includes(sevFilter)) return false;
+
+        if (q) {
+          const matchId = (item.id || '').toLowerCase().includes(q);
+          const matchType = (item.type || '').toLowerCase().includes(q);
+          const matchSummary = (item.summary || '').toLowerCase().includes(q);
+          const matchAsset = (item.asset || '').toLowerCase().includes(q);
+          const matchLoc = (item.location || '').toLowerCase().includes(q);
+          if (!matchId && !matchType && !matchSummary && !matchAsset && !matchLoc) return false;
+        }
+        return true;
+      });
+
+      const visibleCountEl = document.getElementById('lbl-inc-visible-count');
+      if (visibleCountEl) visibleCountEl.innerText = filtered.length;
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="ox-empty-state">
+            <div class="ox-empty-icon-circle">✓</div>
+            <div class="ox-empty-title">No incidents reported</div>
+            <div class="ox-empty-desc">Great job maintaining a safe workplace! No incidents match current criteria.</div>
+            <button type="button" class="ox-btn-red-pill" onclick="window.openNewIncidentModal()">
+              <span>+</span> <span>Report Incident</span>
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      if (window.currentIncViewMode === 'grid') {
+        container.innerHTML = `
+          <div class="ox-incidents-grid">
+            ${filtered.map(inc => {
+              const isCrit = (inc.severity || '').toUpperCase() === 'CRITICAL' || (inc.priority || '').includes('P1');
+              const isHigh = (inc.severity || '').toUpperCase() === 'HIGH' || (inc.priority || '').includes('P2');
+              const sevColor = isCrit ? '#DC2626' : (isHigh ? '#D9531E' : '#0056B3');
+              const sevBg = isCrit ? '#FEF2F2' : (isHigh ? '#FFF7ED' : '#EFF6FF');
+
+              return `
+                <div class="ox-incident-item-card" style="border-left: 4px solid ${sevColor}; cursor:pointer;" onclick="window.openIncidentDetailsModal('${inc.id}')">
+                  <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+                    <span style="font-family: var(--font-mono); font-weight: 700; color: #003366; font-size: 0.88rem;">${inc.id}</span>
+                    <span style="background: ${sevBg}; color: ${sevColor}; font-size: 0.70rem; font-weight: 700; padding: 2px 7px; border-radius: 4px;">${inc.severity} (${inc.priority || 'P3'})</span>
+                  </div>
+                  <div style="font-weight: 700; color: #0F172A; font-size: 0.88rem; margin-bottom: 4px;">${inc.type}</div>
+                  <div style="font-size: 0.76rem; color: #64748B; margin-bottom: 12px; line-height: 1.4;">${inc.summary}</div>
+                  <div style="font-size: 0.74rem; color: #334155; margin-bottom: 6px;">📍 <strong>${inc.asset}</strong> • ${inc.location}</div>
+                  <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #F1F5F9; padding-top: 10px; margin-top: 8px;">
+                    <span style="font-size: 0.72rem; color: #94A3B8;">${inc.reportedAt}</span>
+                    <span style="background: #ECFDF5; color: #059669; font-weight: 700; font-size: 0.70rem; padding: 2px 8px; border-radius: 4px;">${inc.status}</span>
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = `
+        <div style="overflow-x: auto;">
+          <table class="surv-data-table">
+            <thead>
+              <tr>
+                <th style="white-space: nowrap; width: 140px;">Incident ID</th>
+                <th style="min-width: 250px;">Incident Type &amp; Summary</th>
+                <th style="min-width: 230px;">Associated Asset / Location</th>
+                <th style="text-align: center; white-space: nowrap; width: 110px;">Severity</th>
+                <th style="text-align: center; white-space: nowrap; width: 130px;">Priority</th>
+                <th style="text-align: center; white-space: nowrap; width: 90px;">Downtime</th>
+                <th style="text-align: center; white-space: nowrap; width: 120px;">Status</th>
+                <th style="text-align: center; white-space: nowrap; width: 130px;">Reported At</th>
+                <th style="text-align: right; white-space: nowrap; width: 110px;">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${filtered.map(inc => {
+                const isCrit = (inc.severity || '').toUpperCase() === 'CRITICAL' || (inc.priority || '').includes('P1');
+                const isHigh = (inc.severity || '').toUpperCase() === 'HIGH' || (inc.priority || '').includes('P2');
+
+                const sevBadge = isCrit
+                  ? '<span style="background:#FEF2F2; color:#DC2626; border:1px solid #FECACA; padding:3px 10px; border-radius:4px; font-weight:700; font-size:0.72rem; white-space:nowrap; display:inline-flex; align-items:center; gap:4px;">🚨 Critical</span>'
+                  : (isHigh
+                    ? '<span style="background:#FFF7ED; color:#D9531E; border:1px solid #FED7AA; padding:3px 10px; border-radius:4px; font-weight:700; font-size:0.72rem; white-space:nowrap; display:inline-flex; align-items:center; gap:4px;">⚠️ High</span>'
+                    : '<span style="background:#EFF6FF; color:#0056B3; border:1px solid #BFDBFE; padding:3px 10px; border-radius:4px; font-weight:700; font-size:0.72rem; white-space:nowrap; display:inline-flex; align-items:center; gap:4px;">Medium</span>');
+
+                const priBadge = isCrit
+                  ? '<span style="color:#DC2626; font-weight:800; font-size:0.78rem; white-space:nowrap; display:inline-block;">P1 Emergency</span>'
+                  : (isHigh ? '<span style="color:#D9531E; font-weight:800; font-size:0.78rem; white-space:nowrap; display:inline-block;">P2 Urgent</span>' : '<span style="color:#0056B3; font-weight:800; font-size:0.78rem; white-space:nowrap; display:inline-block;">P3 Routine</span>');
+
+                const statusColor = (inc.status === 'Reported')
+                  ? 'background:#EFF6FF; color:#0056B3; border:1px solid #BFDBFE;'
+                  : ((inc.status === 'Block Sanctioned' || inc.status === 'Resolved')
+                      ? 'background:#ECFDF5; color:#059669; border:1px solid #A7F3D0;'
+                      : 'background:#FFFBEB; color:#D97706; border:1px solid #FDE68A;');
+
+                return `
+                  <tr>
+                    <td style="font-family: var(--font-mono); font-weight: 700; color: #003366; white-space: nowrap;">${inc.id}</td>
+                    <td style="min-width: 250px;">
+                      <div style="font-weight: 700; color: #0F172A; font-size: 0.88rem;">${inc.type}</div>
+                      <div style="font-size: 0.74rem; color: #64748B; margin-top: 3px; line-height: 1.35;">${inc.summary}</div>
+                    </td>
+                    <td style="min-width: 230px;">
+                      <div style="font-weight: 700; color: #003366; font-size: 0.80rem;">${inc.asset}</div>
+                      <div style="font-size: 0.72rem; color: #64748B; margin-top: 2px;">📍 ${inc.location}</div>
+                    </td>
+                    <td style="text-align: center; white-space: nowrap;">${sevBadge}</td>
+                    <td style="text-align: center; white-space: nowrap;">${priBadge}</td>
+                    <td style="text-align: center; white-space: nowrap;"><span style="font-family: var(--font-mono); font-weight: 700; color: #475569; font-size: 0.84rem;">${inc.downtime}</span></td>
+                    <td style="text-align: center; white-space: nowrap;"><span style="${statusColor} padding:3px 10px; border-radius:4px; font-weight:700; font-size:0.72rem; white-space:nowrap; display:inline-block;">${inc.status}</span></td>
+                    <td style="font-size: 0.75rem; color: #475569; white-space: nowrap; font-family: var(--font-mono); text-align: center;">${inc.reportedAt}</td>
+                    <td style="text-align: right; white-space: nowrap;">
+                      <button onclick="window.openIncidentDetailsModal('${inc.id}')" style="background: #FFFFFF; border: 1px solid #CBD5E1; color: #0056B3; padding: 6px 14px; border-radius: 6px; font-weight: 700; font-size: 0.74rem; cursor: pointer; transition: all 0.15s; white-space: nowrap; display: inline-flex; align-items: center; gap: 4px;">
+                        <span>Details</span> <span>➔</span>
+                      </button>
+                    </td>
+                  </tr>
+                `;
+              }).join('')}
+            </tbody>
+          </table>
+        </div>
+      `;
+    };
+
+    window.filterIncidents = function () {
+      window.renderIncidentsTable();
+    };
+
+    window.openNewIncidentModal = function () {
+      const today = new Date().toISOString().slice(0, 10);
+      const time = new Date().toTimeString().slice(0, 5);
+      const dInput = document.getElementById('inc-form-date');
+      const tInput = document.getElementById('inc-form-time');
+      if (dInput) dInput.value = today;
+      if (tInput) tInput.value = time;
+      document.getElementById('modal-report-incident').style.display = 'flex';
+    };
+
+    window.closeNewIncidentModal = function () {
+      document.getElementById('modal-report-incident').style.display = 'none';
+      document.getElementById('form-report-incident').reset();
+    };
+
+    window.addIncidentAttachment = function () {
+      const name = prompt("Enter attachment title or select sensor trace (e.g. USFD_Trace_KM124.png, Drone_Thermal_09.jpg):", "USFD_Flaw_Trace_KM124.png");
+      if (name) {
+        const list = document.getElementById('inc-attachments-list');
+        list.innerHTML = `
+          <div style="background: #FFFFFF; border: 1px solid #CBD5E1; border-radius: 6px; padding: 6px 10px; display: inline-flex; align-items: center; gap: 6px; font-weight: 600; color: #003366;">
+            <span>📎</span> <span>${name}</span> <span style="color:#059669; font-size:0.70rem;">(Uploaded)</span>
+          </div>
+        `;
+      }
+    };
+
+    window.handleCreateIncidentSubmit = function (e) {
+      e.preventDefault();
+      const type = document.getElementById('inc-form-type').value;
+      const asset = document.getElementById('inc-form-asset').value;
+      const location = document.getElementById('inc-form-location').value;
+      const severity = document.getElementById('inc-form-severity').value;
+      const priority = document.getElementById('inc-form-priority').value;
+      const downtimeVal = document.getElementById('inc-form-downtime').value || '1.0';
+      const downtimeNum = parseFloat(downtimeVal) || 1.0;
+      const desc = document.getElementById('inc-form-desc').value.trim();
+      const operator = document.getElementById('inc-form-operator').value.trim() || 'Safety Surveillance Inspector';
+
+      const discipline = (type.includes('OHE') || type.includes('Catenary') || type.includes('TRD')) 
+        ? 'Traction (TRD)' 
+        : ((type.includes('Point') || type.includes('Signal') || type.includes('Track Circuit')) ? 'Signal (SMMS)' : 'Track (TMS)');
+
+      const newInc = {
+        id: `INC-2026-${Math.floor(100 + Math.random() * 900)}`,
+        type,
+        summary: desc,
+        asset,
+        location,
+        severity,
+        priority,
+        downtime: `${downtimeNum}h`,
+        downtimeMins: Math.round(downtimeNum * 60),
+        discipline,
+        status: "Reported",
+        blockStatus: "PENDING_CONTROL_SANCTION",
+        reportedAt: new Date().toISOString().replace('T', ' ').slice(0, 16),
+        operator
+      };
+
+      if (window.IR_LIVE_SYNC && typeof window.IR_LIVE_SYNC.reportIncident === 'function') {
+        window.IR_LIVE_SYNC.reportIncident(newInc);
+        incidentReportsList = window.IR_LIVE_SYNC.getIncidents();
+      } else {
+        incidentReportsList.unshift(newInc);
+      }
+
+      window.closeNewIncidentModal();
+      window.updateIncidentMetrics();
+      window.renderIncidentsTable();
+      alert(`✓ Incident report ${newInc.id} successfully registered!\n\n📡 Real-Time Transmissions Sent:\n1. Emergency Possession Request queued in Divisional Control Office.\n2. Emergency Maintenance Schedule dispatched to Maintenance Cell (PM Schedules).`);
+    };
+
+    // ── 4. Sub-Tab Switching Logic ──────────────────────────────
+    window.switchSurvTab = function (tabName) {
+      if (!tabName) tabName = 'telemetry';
+      tabName = tabName.replace('#', '');
+      if (tabName !== 'telemetry' && tabName !== 'inspections' && tabName !== 'incidents') {
+        tabName = 'telemetry';
+      }
+
+      const telView = document.getElementById('view-surv-telemetry');
+      const inspView = document.getElementById('view-surv-inspections');
+      const incView = document.getElementById('view-surv-incidents');
+
+      if (telView) telView.style.display = tabName === 'telemetry' ? 'block' : 'none';
+      if (inspView) inspView.style.display = tabName === 'inspections' ? 'block' : 'none';
+      if (incView) incView.style.display = tabName === 'incidents' ? 'block' : 'none';
+
+      document.querySelectorAll('.surv-tab-btn').forEach(b => b.classList.remove('active'));
+      const activeBtn = document.getElementById(`btn-tab-${tabName}`);
+      if (activeBtn) activeBtn.classList.add('active');
+
+      if (window.location.hash !== `#${tabName}`) {
+        history.replaceState(null, '', `#${tabName}`);
+      }
+
+      document.querySelectorAll('.snav-sub-item').forEach(item => {
+        const href = item.getAttribute('href') || '';
+        if (href.includes(`#${tabName}`)) {
+          item.classList.add('active');
+        } else if (href.includes('surveillance-dashboard.html#')) {
+          item.classList.remove('active');
+        }
+      });
+
+      if (tabName === 'inspections') {
+        window.renderInspectionsTable();
+        window.updateInspectionMetrics();
+      } else if (tabName === 'incidents') {
+        window.renderIncidentsTable();
+        window.updateIncidentMetrics();
+      } else if (tabName === 'telemetry') {
+        renderTelemetryCards();
+      }
+    };
+
+    window.refreshActiveSurvTab = function () {
+      renderTelemetryCards();
+      window.renderInspectionsTable();
+      window.updateInspectionMetrics();
+      window.renderIncidentsTable();
+      window.updateIncidentMetrics();
+      if (window.showToast) window.showToast("🔄 Surveillance data refreshed");
+    };
+
+    // ── 5. Real-Time Broadcast Subscriptions ─────────────────────
+    if (window.IR_LIVE_SYNC && typeof window.IR_LIVE_SYNC.on === 'function') {
+      window.IR_LIVE_SYNC.on('inspections_updated', function (updatedList) {
+        if (Array.isArray(updatedList)) {
+          inspectionReportsList = updatedList;
+          window.updateInspectionMetrics();
+          window.renderInspectionsTable();
+          renderTelemetryCards();
+        }
+      });
+
+      window.IR_LIVE_SYNC.on('inspection_created', function (newInsp) {
+        inspectionReportsList = window.IR_LIVE_SYNC.getInspections();
+        window.updateInspectionMetrics();
+        window.renderInspectionsTable();
+        renderTelemetryCards();
+        if (window.showToast) window.showToast(`📋 New QA Inspection Queued: ${newInsp.id}`);
+      });
+
+      window.IR_LIVE_SYNC.on('incidents_updated', function (updatedList) {
+        if (Array.isArray(updatedList)) {
+          incidentReportsList = updatedList;
+          window.updateIncidentMetrics();
+          window.renderIncidentsTable();
+        }
+      });
+    }
+
+    // ── 6. Initial Render & Hash Routing ────────────────────────
+    renderTelemetryCards();
+    window.updateInspectionMetrics();
+    window.updateIncidentMetrics();
     window.refreshAuditLogs();
+
+    function initSurvTabFromHash() {
+      const h = window.location.hash || '#telemetry';
+      if (h.includes('inspections')) {
+        window.switchSurvTab('inspections');
+      } else if (h.includes('incidents')) {
+        window.switchSurvTab('incidents');
+      } else {
+        window.switchSurvTab('telemetry');
+      }
+    }
+
+    window.addEventListener('hashchange', initSurvTabFromHash);
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initSurvTabFromHash);
+    } else {
+      initSurvTabFromHash();
+    }
   </script>
 </body>
 

@@ -8,6 +8,7 @@
  * ─────────────────────────────────────────────────────────────────────────────
  */
 
+const path = require('path');
 const { spawn } = require('child_process');
 const AI_CONFIG = require('../config/ai-config');
 const AIApiClient = require('./python-bridge/ai_api_client');
@@ -224,6 +225,92 @@ class AIServiceConnector {
 
   async validateSchedule(schedule) {
     return this.client.validateSchedule(schedule);
+  }
+
+  // ──────────────────────────────────────────────────────────────────────────
+  // AI Route & Disruption Reasoning (Groq / Gemini / Pydantic)
+  // ──────────────────────────────────────────────────────────────────────────
+
+  async analyzeRoutes(networkPayload) {
+    const pythonExe = this.config.pythonPath || 'python';
+    const scriptPath = path.resolve(__dirname, '../../ai-models/agents/route_analyzer.py');
+    const payloadStr = JSON.stringify(networkPayload || {});
+
+    return new Promise((resolve, reject) => {
+      const child = spawn(pythonExe, [scriptPath, '--input', payloadStr], {
+        windowsHide: true,
+        env: { ...process.env, PYTHONIOENCODING: 'utf-8' },
+      });
+
+      let stdoutData = '';
+      let stderrData = '';
+
+      child.stdout.on('data', (chunk) => {
+        stdoutData += chunk.toString('utf8');
+      });
+
+      child.stderr.on('data', (chunk) => {
+        stderrData += chunk.toString('utf8');
+      });
+
+      child.on('error', (err) => {
+        reject(new Error(`Failed to spawn route_analyzer.py (${pythonExe}): ${err.message}`));
+      });
+
+      child.on('close', (code) => {
+        if (code === 0) {
+          try {
+            const parsed = JSON.parse(stdoutData.trim());
+            resolve(parsed);
+          } catch (e) {
+            reject(new Error(`Failed to parse route_analyzer output: ${e.message}\nOutput: ${stdoutData}`));
+          }
+        } else {
+          reject(new Error(`route_analyzer exited with code ${code}: ${stderrData || stdoutData}`));
+        }
+      });
+    });
+  }
+
+  async inspectTrackWithVLM(vlmPayload) {
+    const pythonExe = this.config.pythonPath || 'python';
+    const scriptPath = path.resolve(__dirname, '../../ai-models/agents/multimodal_vlm_agent.py');
+    const payloadStr = JSON.stringify(vlmPayload || {});
+
+    return new Promise((resolve, reject) => {
+      const child = spawn(pythonExe, [scriptPath, payloadStr], {
+        windowsHide: true,
+        env: { ...process.env, PYTHONIOENCODING: 'utf-8' },
+      });
+
+      let stdoutData = '';
+      let stderrData = '';
+
+      child.stdout.on('data', (chunk) => {
+        stdoutData += chunk.toString('utf8');
+      });
+
+      child.stderr.on('data', (chunk) => {
+        stderrData += chunk.toString('utf8');
+      });
+
+      child.on('error', (err) => {
+        reject(new Error(`Failed to spawn multimodal_vlm_agent.py (${pythonExe}): ${err.message}`));
+      });
+
+      child.on('close', (code) => {
+        if (code === 0) {
+          try {
+            const parsed = JSON.parse(stdoutData.trim());
+            resolve(parsed);
+          } catch (e) {
+            reject(new Error(`Failed to parse multimodal_vlm_agent output: ${e.message}\nOutput: ${stdoutData}`));
+          }
+        } else {
+          reject(new Error(`multimodal_vlm_agent exited with code ${code}: ${stderrData || stdoutData}`));
+        }
+      });
+    });
   }
 
   // ──────────────────────────────────────────────────────────────────────────

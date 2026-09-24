@@ -65,7 +65,18 @@ export default function MasterCommandLayout({ children, currentTab, setCurrentTa
       group: 'FIELD & SURVEILLANCE',
       items: [
         { key: 'maintenance', label: 'Maintenance Cell', icon: Wrench, roleAllowed: ['admin', 'field-engineer'], desc: 'Work order execution & field crew dispatch' },
-        { key: 'surveillance', label: 'Surveillance & USFD', icon: Radio, roleAllowed: ['admin', 'surveillance'], desc: 'Track defect telemetry & ultrasonic inspection' },
+        {
+          key: 'surveillance',
+          label: 'Surveillance Hub',
+          icon: Radio,
+          roleAllowed: ['admin', 'surveillance'],
+          desc: 'Track defect telemetry, inspections & incidents',
+          subItems: [
+            { key: 'telemetry', label: 'Live Telemetry & GIS', iconEmoji: '📡' },
+            { key: 'inspections', label: 'Inspection Reports', iconEmoji: '📋', badge: '4', badgeColor: '#003366' },
+            { key: 'incidents', label: 'Incident Reports', iconEmoji: '🚨', badge: '3', badgeColor: '#DC2626' }
+          ]
+        },
       ]
     },
     {
@@ -249,36 +260,86 @@ export default function MasterCommandLayout({ children, currentTab, setCurrentTa
                     )}
                     {allowedItems.map(item => {
                       const Icon = item.icon;
-                      const isActive = currentTab === item.key;
+                      const isMainActive = currentTab === item.key || (item.subItems && item.subItems.some(s => currentTab === s.key));
+
                       return (
-                        <button
-                          key={item.key}
-                          onClick={() => setCurrentTab(item.key)}
-                          title={collapsed ? `${item.label} — ${item.desc}` : item.desc}
-                          style={{
-                            width: '100%',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '12px',
-                            padding: collapsed ? '10px 0' : '10px 14px',
-                            justifyContent: collapsed ? 'center' : 'flex-start',
-                            borderRadius: '11px',
-                            border: isActive ? '1px solid rgba(255,255,255,0.3)' : '1px solid transparent',
-                            marginBottom: '4px',
-                            background: isActive
-                              ? 'linear-gradient(135deg, #003366 0%, #0056B3 100%)'
-                              : 'transparent',
-                            color: isActive ? '#FFFFFF' : (darkMode ? '#CBD5E1' : '#475569'),
-                            fontWeight: isActive ? '800' : '600',
-                            fontSize: '0.84rem',
-                            cursor: 'pointer',
-                            transition: 'all 0.22s cubic-bezier(0.16, 1, 0.3, 1)',
-                            boxShadow: isActive ? '0 6px 20px rgba(0, 51, 102, 0.32)' : 'none'
-                          }}
-                        >
-                          <Icon size={18} color={isActive ? '#FFFFFF' : (darkMode ? '#94A3B8' : '#003366')} />
-                          {!collapsed && <span>{item.label}</span>}
-                        </button>
+                        <div key={item.key} style={{ marginBottom: '4px' }}>
+                          <button
+                            onClick={() => setCurrentTab(item.key)}
+                            title={collapsed ? `${item.label} — ${item.desc}` : item.desc}
+                            style={{
+                              width: '100%',
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '12px',
+                              padding: collapsed ? '10px 0' : '10px 14px',
+                              justifyContent: collapsed ? 'center' : 'flex-start',
+                              borderRadius: '11px',
+                              border: isMainActive ? '1px solid rgba(255,255,255,0.3)' : '1px solid transparent',
+                              marginBottom: item.subItems && !collapsed ? '4px' : '0',
+                              background: isMainActive
+                                ? 'linear-gradient(135deg, #003366 0%, #0056B3 100%)'
+                                : 'transparent',
+                              color: isMainActive ? '#FFFFFF' : (darkMode ? '#CBD5E1' : '#475569'),
+                              fontWeight: isMainActive ? '800' : '600',
+                              fontSize: '0.84rem',
+                              cursor: 'pointer',
+                              transition: 'all 0.22s cubic-bezier(0.16, 1, 0.3, 1)',
+                              boxShadow: isMainActive ? '0 6px 20px rgba(0, 51, 102, 0.32)' : 'none'
+                            }}
+                          >
+                            <Icon size={18} color={isMainActive ? '#FFFFFF' : (darkMode ? '#94A3B8' : '#003366')} />
+                            {!collapsed && <span>{item.label}</span>}
+                          </button>
+
+                          {item.subItems && !collapsed && (
+                            <div style={{ marginLeft: '22px', paddingLeft: '12px', borderLeft: '2px solid rgba(0, 51, 102, 0.15)', display: 'flex', flexDirection: 'column', gap: '3px', marginTop: '4px', marginBottom: '6px' }}>
+                              {item.subItems.map(sub => {
+                                const isSubActive = currentTab === sub.key || (sub.key === 'telemetry' && currentTab === 'surveillance');
+                                return (
+                                  <button
+                                    key={sub.key}
+                                    onClick={() => {
+                                      setCurrentTab('surveillance');
+                                      window.location.hash = `#${sub.key}`;
+                                    }}
+                                    style={{
+                                      display: 'flex',
+                                      alignItems: 'center',
+                                      justifyContent: 'space-between',
+                                      padding: '6px 10px',
+                                      borderRadius: '7px',
+                                      border: 'none',
+                                      background: isSubActive ? '#EEF2FF' : 'transparent',
+                                      color: isSubActive ? '#003366' : '#64748B',
+                                      fontWeight: isSubActive ? '700' : '500',
+                                      fontSize: '0.78rem',
+                                      cursor: 'pointer',
+                                      textAlign: 'left'
+                                    }}
+                                  >
+                                    <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                      <span>{sub.iconEmoji}</span>
+                                      <span>{sub.label}</span>
+                                    </span>
+                                    {sub.badge && (
+                                      <span style={{
+                                        background: sub.badgeColor === '#DC2626' ? 'rgba(220,38,38,0.15)' : 'rgba(0,51,102,0.1)',
+                                        color: sub.badgeColor || '#003366',
+                                        fontSize: '0.68rem',
+                                        fontWeight: '800',
+                                        padding: '1px 6px',
+                                        borderRadius: '10px'
+                                      }}>
+                                        {sub.badge}
+                                      </span>
+                                    )}
+                                  </button>
+                                );
+                              })}
+                            </div>
+                          )}
+                        </div>
                       );
                     })}
                   </div>

@@ -44,6 +44,7 @@ export default defineConfig({
         surveillance: resolve(__dirname, 'pages/surveillance-dashboard.html'),
         aimodels: resolve(__dirname, 'pages/ai-model-management.html'),
         pmschedules: resolve(__dirname, 'pages/pm-schedules.html'),
+        labor: resolve(__dirname, 'pages/labor.html'),
       },
     },
   },
