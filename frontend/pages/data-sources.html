@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Data Sources &amp; IoT Ingestion — RAKSHA PATH | Indian Railways AI</title>
+  <meta name="description" content="RAKSHA PATH — Ingestion Source Monitor for TRC, USFD, OMS, OHE, and Meteorological Telemetry" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+    rel="stylesheet" />
+
+  <!-- Auth Guard -->
+  <script src="../components/auth-guard.js"></script>
+  <script src="../components/user-store.js"></script>
+  <link rel="stylesheet" href="../styles/main.css" />
+  <script src="../components/SharedNav.js?v=2.5.4"></script>
+
+  <style>
+    :root {
+      --navy: #003366;
+      --saffron: #D9531E;
+      --green: #059669;
+      --border-subtle: rgba(0, 51, 102, 0.12);
+      --shadow-card: 0 4px 20px rgba(0, 51, 102, 0.06), 0 1px 3px rgba(0, 51, 102, 0.08);
+      --font-display: 'Exo 2', 'Calibri', 'Arial', sans-serif;
+      --font-body: 'Inter', 'Calibri', 'Arial', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--font-body); }
+    body { background: radial-gradient(circle at 50% 0%, #FFFFFF 0%, #FAF6EE 100%); color: #0F172A; min-height: 100vh; padding-bottom: 60px; }
+    .container { max-width: 1320px; margin: 0 auto; padding: 24px 20px; }
+
+    .header-card {
+      background: linear-gradient(135deg, #003366 0%, #002244 100%);
+      border-radius: 16px; padding: 32px 36px; color: #FFFFFF;
+      box-shadow: 0 12px 36px rgba(0, 34, 68, 0.25); margin-bottom: 24px;
+    }
+    .header-card h1 { font-family: var(--font-display); font-size: 2rem; font-weight: 800; margin-bottom: 8px; }
+    .header-card p { font-size: 0.98rem; color: #E2E8F0; max-width: 800px; line-height: 1.5; }
+
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
+    .source-card {
+      background: #FFFFFF; border: 1px solid var(--border-subtle); border-radius: 12px;
+      padding: 22px; box-shadow: var(--shadow-card); display: flex; flex-direction: column; justify-content: space-between;
+    }
+    .source-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+    .source-title { font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; color: #0F172A; }
+    .source-badge { font-size: 0.72rem; padding: 3px 8px; border-radius: 4px; font-weight: 700; text-transform: uppercase; }
+    .badge-live { background: #ECFDF5; color: #065F46; border: 1px solid #10B981; }
+    .badge-sync { background: #EEF2FF; color: #4338CA; border: 1px solid #C7D2FE; }
+
+    .stat-row { display: flex; justify-content: space-between; font-size: 0.82rem; padding: 6px 0; border-bottom: 1px solid rgba(0, 51, 102, 0.06); color: #475569; }
+    .stat-row strong { color: #0F172A; font-family: var(--font-mono); }
+  </style>
+</head>
+
+<body>
+  <main class="container">
+    <div class="header-card">
+      <div style="font-size: 0.76rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.85; margin-bottom: 8px;">
+        📡 Indian Railways Real-Time Telemetry &amp; Ingestion Mesh
+      </div>
+      <h1>Data Sources &amp; Telemetry Ingestion Monitor</h1>
+      <p>
+        Live ingestion feeds from TMS (Track Management System), SMMS, TRD SCADA, USFD Ultrasonic Rail Testing, and Satellite Weather Nodes feeding the RAKSHA PATH AI Constraint Engine.
+      </p>
+    </div>
+
+    <div class="grid-3">
+      <div class="source-card">
+        <div>
+          <div class="source-header">
+            <div class="source-title">🚆 TMS (Track Management)</div>
+            <span class="source-badge badge-live">● Live Stream</span>
+          </div>
+          <p style="font-size: 0.84rem; color: #64748B; margin-bottom: 14px;">Central Track Management System recording rail renewals, sleeper fatigue, and joint gaps.</p>
+          <div class="stat-row"><span>Ingestion Rate:</span> <strong>240 records/min</strong></div>
+          <div class="stat-row"><span>Status:</span> <strong style="color: var(--green);">Operational (99.98%)</strong></div>
+          <div class="stat-row"><span>Protocols:</span> <strong>REST / WebSocket (CRIS)</strong></div>
+        </div>
+      </div>
+
+      <div class="source-card">
+        <div>
+          <div class="source-header">
+            <div class="source-title">🔬 USFD Ultrasonic Flaws</div>
+            <span class="source-badge badge-live">● Active Car Feed</span>
+          </div>
+          <p style="font-size: 0.84rem; color: #64748B; margin-bottom: 14px;">Real-time high-speed ultrasonic flaw detection scanning rail head and web fractures.</p>
+          <div class="stat-row"><span>Current Batch:</span> <strong>GZB-ALJN Up Line</strong></div>
+          <div class="stat-row"><span>Defect Alerts:</span> <strong>3 Pending Triage</strong></div>
+          <div class="stat-row"><span>Sensor Car:</span> <strong>RDSO-USFD-04</strong></div>
+        </div>
+      </div>
+
+      <div class="source-card">
+        <div>
+          <div class="source-header">
+            <div class="source-title">⚡ TRD SCADA Catenary</div>
+            <span class="source-badge badge-live">● 25kV Feeder Live</span>
+          </div>
+          <p style="font-size: 0.84rem; color: #64748B; margin-bottom: 14px;">Traction power telemetry, contact wire temperature, current load, and isolator status.</p>
+          <div class="stat-row"><span>Substation:</span> <strong>Dadri TSS (25kV)</strong></div>
+          <div class="stat-row"><span>Power Continuity:</span> <strong style="color: var(--green);">Normal (100%)</strong></div>
+          <div class="stat-row"><span>Isolation Memos:</span> <strong>2 Pending T-351</strong></div>
+        </div>
+      </div>
+
+      <div class="source-card">
+        <div>
+          <div class="source-header">
+            <div class="source-title">⛅ OpenWeather Meteorology</div>
+            <span class="source-badge badge-sync">↻ 15m Sync</span>
+          </div>
+          <p style="font-size: 0.84rem; color: #64748B; margin-bottom: 14px;">Ambient &amp; calculated rail temperature ($t_r$) for IRPWM 602 track buckling safety.</p>
+          <div class="stat-row"><span>Ambient Temp:</span> <strong>32.4°C</strong></div>
+          <div class="stat-row"><span>Estimated Rail Temp:</span> <strong>48.6°C (Below $t_d+20$)</strong></div>
+          <div class="stat-row"><span>Buckling Risk:</span> <strong style="color: var(--green);">Low / Safe</strong></div>
+        </div>
+      </div>
+
+      <div class="source-card">
+        <div>
+          <div class="source-header">
+            <div class="source-title">🛰️ Aerial Drone Photogrammetry</div>
+            <span class="source-badge badge-sync">↻ Daily Flight Sync</span>
+          </div>
+          <p style="font-size: 0.84rem; color: #64748B; margin-bottom: 14px;">4K orthomosaic imagery for ballast washout, vegetation encroachment, and embankment slippage.</p>
+          <div class="stat-row"><span>Last Survey:</span> <strong>Yesterday 16:30 IST</strong></div>
+          <div class="stat-row"><span>Coverage:</span> <strong>42.8 km (Quad Track)</strong></div>
+          <div class="stat-row"><span>Vision AI:</span> <strong>YOLOv8 + SAM Active</strong></div>
+        </div>
+      </div>
+
+      <div class="source-card">
+        <div>
+          <div class="source-header">
+            <div class="source-title">🚦 COA Train Timetable Matcher</div>
+            <span class="source-badge badge-live">● Live Stream</span>
+          </div>
+          <p style="font-size: 0.84rem; color: #64748B; margin-bottom: 14px;">Control Office Application (COA) live train positioning and section occupancy signals.</p>
+          <div class="stat-row"><span>Active Trains:</span> <strong>38 on Section</strong></div>
+          <div class="stat-row"><span>Conflict Detector:</span> <strong style="color: var(--green);">CP-SAT Active</strong></div>
+          <div class="stat-row"><span>Sync Latency:</span> <strong>120ms</strong></div>
+        </div>
+      </div>
+    </div>
+  </main>
+</body>
+
+</html>

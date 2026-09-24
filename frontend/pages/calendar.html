@@ -43,6 +43,80 @@
       --font-mono: 'JetBrains Mono', monospace;
     }
 
+    [data-theme="dark"] {
+      --bg-page: #0B0F19;
+      --card-bg: #111827;
+      --border-color: rgba(255, 255, 255, 0.1);
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --primary-navy: #38BDF8;
+      --primary-blue: #60A5FA;
+      --text-dark: #F8FAFC;
+      --text-muted: #94A3B8;
+    }
+
+    [data-theme="dark"] body {
+      background: #0B0F19 !important;
+      color: #F8FAFC !important;
+    }
+
+    [data-theme="dark"] .cal-grid-wrapper,
+    [data-theme="dark"] .cal-week-wrapper,
+    [data-theme="dark"] .cal-filter-bar,
+    [data-theme="dark"] .cal-upnext-card,
+    [data-theme="dark"] .cal-filters-popover,
+    [data-theme="dark"] .cal-notif-popover,
+    [data-theme="dark"] .cal-btn-sec,
+    [data-theme="dark"] .cal-btn-icon,
+    [data-theme="dark"] .cal-btn-today,
+    [data-theme="dark"] .cal-view-switch,
+    [data-theme="dark"] .cal-modal-card {
+      background-color: #111827 !important;
+      border-color: rgba(255, 255, 255, 0.1) !important;
+      color: #F8FAFC !important;
+    }
+
+    [data-theme="dark"] .cal-cell {
+      background-color: #111827 !important;
+      border-color: rgba(255, 255, 255, 0.06) !important;
+    }
+
+    [data-theme="dark"] .cal-cell.other-month {
+      background-color: #0D1117 !important;
+      color: #64748B !important;
+    }
+
+    [data-theme="dark"] .cal-cell:hover {
+      background-color: #1E293B !important;
+    }
+
+    [data-theme="dark"] .cal-cell.current-day {
+      border: 2px solid #38BDF8 !important;
+      background-color: #161F30 !important;
+    }
+
+    [data-theme="dark"] .cal-days-header,
+    [data-theme="dark"] .cal-week-header-row,
+    [data-theme="dark"] .cal-week-time-label-cell {
+      background-color: #1E293B !important;
+      border-bottom-color: rgba(255, 255, 255, 0.1) !important;
+      color: #F8FAFC !important;
+    }
+
+    [data-theme="dark"] .cal-event-pill {
+      background-color: #1E293B !important;
+      border-color: rgba(255, 255, 255, 0.12) !important;
+      color: #F8FAFC !important;
+    }
+
+    [data-theme="dark"] .cal-search-box {
+      background-color: #161F30 !important;
+      border-color: rgba(255, 255, 255, 0.15) !important;
+    }
+
+    [data-theme="dark"] .cal-search-box input {
+      color: #F8FAFC !important;
+    }
+
     * {
       box-sizing: border-box;
       margin: 0;

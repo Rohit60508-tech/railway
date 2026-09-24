@@ -6,27 +6,27 @@
 
 /* ─── CSS Custom Properties ─── */
 :root {
-  /* Cream Core Scale */
-  --cream-50:   #FDFCF7;
-  --cream-100:  #FAF6EE;
-  --cream-200:  #F4EDE2;
-  --cream-300:  #EBE2D3;
-  --cream-400:  #DDD2BF;
+  /* Cream / Warm Alabaster Core Scale */
+  --cream-50:   #FDFCF9;
+  --cream-100:  #FAF7F0;
+  --cream-200:  #F3ECE0;
+  --cream-300:  #E8DEC8;
+  --cream-400:  #D8C9AE;
 
-  /* Backward Compatibility Mapping: previous navy dark references -> crisp cream/white surfaces */
-  --navy-950:  #FAF6EE; /* Primary page background */
+  /* Backward Compatibility Mapping: crisp cream/white surfaces */
+  --navy-950:  #FAF7F0; /* Primary page background with warm rich grading */
   --navy-900:  #FFFFFF; /* Elevated cards and panels */
-  --navy-800:  #F7F2E9; /* Secondary card background / soft contrast */
-  --navy-700:  #EAE3D5; /* Subtle borders & inner wells */
-  --navy-600:  #DDD4C4; /* Accent divider tones */
-  --navy-400:  #003366; /* Deep Imperial Railway Navy */
+  --navy-800:  #F6F0E6; /* Secondary card background / soft contrast */
+  --navy-700:  #E9DEC9; /* Subtle borders & inner wells */
+  --navy-600:  #D9C9AE; /* Accent divider tones */
+  --navy-400:  #002B5B; /* Deep Imperial Railway Navy */
 
   /* Primary Brand & Semantic Hierarchy (Unified Indian Railways Palette) */
-  --navy-brand:    #003366; /* Official Railway Imperial Navy */
-  --blue-500:      #003366; /* Primary Navy */
+  --navy-brand:    #002B5B; /* Official Railway Imperial Navy */
+  --blue-500:      #002B5B; /* Primary Navy */
   --blue-400:      #0056B3; /* Royal Rail Blue */
   --blue-300:      #0284C7; /* Azure Accent */
-  --blue-glow:     rgba(0, 51, 102, 0.12);
+  --blue-glow:     rgba(0, 43, 91, 0.14);
 
   --saffron:       #D9531E; /* Indian Railways Saffron */
   --saffron-l:     #E65100; /* Rich Saffron */
@@ -37,30 +37,78 @@
   --purple:        #0056B3; /* Replaced purple with Royal Rail Blue */
   --pink:          #D9531E; /* Replaced pink with Railway Saffron */
 
-  /* High Contrast Slate/Charcoal Typography for Light Cream */
-  --text-primary:   #0F172A;
-  --text-secondary: #334155;
-  --text-muted:     #64748B;
+  /* High Contrast Slate/Charcoal Typography for Light Theme */
+  --text-primary:   #0B132B;
+  --text-secondary: #2C3E50;
+  --text-muted:     #576574;
 
-  --glass-bg:      rgba(255, 255, 255, 0.85);
-  --glass-border:  rgba(195, 178, 150, 0.38);
-  --glass-hover:   rgba(255, 255, 255, 0.98);
+  --glass-bg:      rgba(255, 255, 255, 0.92);
+  --glass-border:  rgba(195, 178, 150, 0.42);
+  --glass-hover:   rgba(255, 255, 255, 1);
 
   --radius-sm:  8px;
   --radius-md:  14px;
   --radius-lg:  20px;
   --radius-xl:  28px;
 
-  --font-display: 'Calibri', 'Arial', sans-serif;
-  --font-body:    'Calibri', 'Arial', sans-serif;
-  --font-tech:    'Calibri', 'Arial', sans-serif;
+  --font-display: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Calibri', sans-serif;
+  --font-body:    'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Calibri', sans-serif;
+  --font-tech:    'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Calibri', sans-serif;
 
-  --shadow-glow:  0 0 35px rgba(0, 86, 179, 0.1), 0 8px 25px rgba(80, 60, 40, 0.08);
-  --shadow-card:  0 4px 20px rgba(70, 50, 30, 0.06), 0 1px 3px rgba(70, 50, 30, 0.08);
+  --shadow-glow:  0 0 35px rgba(0, 43, 91, 0.12), 0 8px 25px rgba(80, 60, 40, 0.08);
+  --shadow-card:  0 4px 20px rgba(0, 43, 91, 0.06), 0 1px 3px rgba(0, 0, 0, 0.05);
 
   --transition-fast: 0.18s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-smooth: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-bounce: 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   DARK MODE TOKEN OVERRIDES (System-wide High-Contrast Dark Slate)
+   ═══════════════════════════════════════════════════════════════ */
+[data-theme="dark"] {
+  /* Cream Scale -> Deep Charcoal / Slate Surfaces */
+  --cream-50:   #090D1A;
+  --cream-100:  #0F172A;
+  --cream-200:  #141E33;
+  --cream-300:  #1E293B;
+  --cream-400:  #334155;
+
+  /* Backward Compatibility Mapping */
+  --navy-950:  #090D1A; /* Primary page background with deep space grading */
+  --navy-900:  #0F172A; /* Elevated cards and panels */
+  --navy-800:  #141E33; /* Secondary card background */
+  --navy-700:  #1E293B; /* Subtle borders & inner wells */
+  --navy-600:  #334155; /* Accent divider tones */
+  --navy-400:  #38BDF8; /* Glowing rail azure */
+
+  /* Primary Brand & Semantic Hierarchy in Dark Mode */
+  --navy-brand:    #38BDF8;
+  --blue-500:      #38BDF8;
+  --blue-400:      #60A5FA;
+  --blue-300:      #93C5FD;
+  --blue-glow:     rgba(56, 189, 248, 0.22);
+
+  --saffron:       #FB923C;
+  --saffron-l:     #F97316;
+  --gold:          #FBBF24;
+  --green:         #10B981;
+  --red:           #F87171;
+  --teal:          #14B8A6;
+  --purple:        #818CF8;
+  --pink:          #FB7185;
+
+  /* High Contrast Typography for Dark Surfaces */
+  --text-primary:   #F8FAFC;
+  --text-secondary: #CBD5E1;
+  --text-muted:     #94A3B8;
+
+  --glass-bg:      rgba(15, 23, 42, 0.92);
+  --glass-border:  rgba(255, 255, 255, 0.12);
+  --glass-hover:   rgba(30, 41, 59, 0.98);
+
+  --shadow-glow:  0 0 35px rgba(56, 189, 248, 0.18), 0 8px 25px rgba(0, 0, 0, 0.55);
+  --shadow-card:  0 4px 20px rgba(0, 0, 0, 0.50), 0 1px 3px rgba(0, 0, 0, 0.35);
 }
 
 /* ─── Reset & Base ─── */
@@ -78,6 +126,7 @@ button, input, select, textarea, th, td, h1, h2, h3, h4, h5, h6, span, p, a, div
 html {
   scroll-behavior: smooth;
   font-size: 16px;
+  scrollbar-gutter: stable;
 }
 
 body {
@@ -85,8 +134,69 @@ body {
   color: var(--text-primary);
   font-family: 'Calibri', 'Arial', sans-serif;
   line-height: 1.6;
-  overflow-x: hidden;
+  overflow-x: hidden !important;
+  box-sizing: border-box !important;
+  word-break: break-word;
+  overflow-wrap: break-word;
   -webkit-font-smoothing: antialiased;
+}
+
+/* ─── Universal Anti-Overlap & Content Clearance ─── */
+.main-content,
+.admin-container,
+.master-glass-frame,
+.onboarding-container,
+.dashboard-container,
+.control-container,
+.surv-main-container,
+.pm-container,
+.labor-container {
+  overflow-x: hidden !important;
+  box-sizing: border-box !important;
+  max-width: 100% !important;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Responsive Table Wrappers & Anti-Clipping */
+.table-responsive,
+.table-container,
+.table-wrapper,
+.responsive-table-wrapper {
+  width: 100% !important;
+  overflow-x: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  box-sizing: border-box !important;
+  margin-bottom: 12px !important;
+  padding-bottom: 6px !important;
+  scrollbar-width: thin !important;
+}
+
+/* Ensure table cells don't truncate critical information */
+table {
+  width: 100% !important;
+  border-collapse: collapse !important;
+}
+
+table th, table td {
+  box-sizing: border-box !important;
+  vertical-align: middle;
+}
+
+/* Cards & Panel Word Breaking */
+.card,
+.card-panel,
+.kpi-card,
+.agent-card,
+.section-card,
+.overview-strip,
+.stat-card,
+.ai-bundling-card,
+.kpi-mini-box {
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 ::selection { background: rgba(0, 114, 255, 0.18); color: var(--navy-400); }
@@ -101,10 +211,14 @@ body {
 }
 
 /* ─── Scrollbar ─── */
-::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: #F3ECE0; }
 ::-webkit-scrollbar-thumb { background: #C5BAA8; border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: #0056B3; }
+
+[data-theme="dark"] ::-webkit-scrollbar-track { background: #111827; }
+[data-theme="dark"] ::-webkit-scrollbar-thumb { background: #334155; }
+[data-theme="dark"] ::-webkit-scrollbar-thumb:hover { background: #38BDF8; }
 
 /* ═══════════════════ NAVBAR ═══════════════════ */
 #navbar {
@@ -1466,4 +1580,258 @@ body {
 
 .ai-badge-pulse {
   animation: aiBadgePulse 1.8s ease-in-out infinite !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   UNIVERSAL LAYOUT ANTI-OVERLAP & SPACING SAFEGUARDS
+   ═══════════════════════════════════════════════════════════════ */
+/* Ensure all dashboard main containers never underflow sidebar or topbar */
+main,
+.admin-container,
+.maint-container,
+.ctrl-container,
+.surv-container,
+.labor-container,
+.cal-container,
+.ai-ops-container,
+.onboarding-container {
+  box-sizing: border-box !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  overflow-x: hidden !important;
+  position: relative !important;
+}
+
+/* Standardize KPI grid cards to prevent squashing and overlapping */
+.kpi-grid,
+.stats-grid,
+.db-kpi-row,
+.metric-row {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)) !important;
+  gap: 16px !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  margin-bottom: 24px !important;
+}
+
+.kpi-card,
+.stat-card {
+  min-height: auto !important;
+  height: auto !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  overflow: hidden !important;
+  word-break: break-word !important;
+  position: relative !important;
+}
+
+/* Universal table responsiveness to eliminate cell clashing and overlapping */
+.table-responsive,
+.um-table-wrap,
+.ai-table-wrap,
+.schedule-table-wrap,
+.data-table-container {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  overflow-x: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  display: block !important;
+  margin-bottom: 16px !important;
+  border-radius: 12px !important;
+}
+
+table,
+.ai-table,
+.um-table,
+.data-table {
+  width: 100% !important;
+  border-collapse: collapse !important;
+  min-width: 680px !important;
+  table-layout: auto !important;
+}
+
+th, td {
+  word-break: break-word !important;
+  vertical-align: middle !important;
+}
+
+/* Card panels, headers and banners flex wrap safeguard */
+.section-bar,
+.filter-bar,
+.admin-header-banner,
+.header-actions,
+.button-group,
+.tabs-container {
+  flex-wrap: wrap !important;
+  gap: 10px !important;
+  min-height: auto !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   GLOBAL DARK MODE COMPONENT STYLES
+   ═══════════════════════════════════════════════════════════════ */
+[data-theme="dark"] body {
+  background: #0B0F19 !important;
+  color: #F8FAFC !important;
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-track {
+  background: #111827 !important;
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb {
+  background: #334155 !important;
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+  background: #38BDF8 !important;
+}
+
+/* Dark mode cards, panels, and surfaces */
+[data-theme="dark"] .card,
+[data-theme="dark"] .card-panel,
+[data-theme="dark"] .card-glass,
+[data-theme="dark"] .kpi-card,
+[data-theme="dark"] .stat-card,
+[data-theme="dark"] .filter-bar,
+[data-theme="dark"] .section-bar,
+[data-theme="dark"] .bundling-card,
+[data-theme="dark"] .gantt-container,
+[data-theme="dark"] .um-modal,
+[data-theme="dark"] .ir-cred-dialog,
+[data-theme="dark"] .snav-camera-modal-card,
+[data-theme="dark"] .conflict-alert-banner,
+[data-theme="dark"] .drone-card,
+[data-theme="dark"] .tile-card,
+[data-theme="dark"] [style*="background:#FFFFFF"],
+[data-theme="dark"] [style*="background: #FFFFFF"],
+[data-theme="dark"] [style*="background: rgb(255, 255, 255)"],
+[data-theme="dark"] [style*="background:#FAF6EE"],
+[data-theme="dark"] [style*="background: #FAF6EE"],
+[data-theme="dark"] [style*="background:#FDFCF7"],
+[data-theme="dark"] [style*="background: #FDFCF7"] {
+  background-color: #111827 !important;
+  border-color: rgba(255, 255, 255, 0.09) !important;
+  color: #F8FAFC !important;
+}
+
+/* Secondary well / inner card backgrounds */
+[data-theme="dark"] [style*="background:#F7F2E9"],
+[data-theme="dark"] [style*="background: #F7F2E9"],
+[data-theme="dark"] [style*="background:#EAE3D5"],
+[data-theme="dark"] [style*="background: #EAE3D5"],
+[data-theme="dark"] [style*="background:#EDE8DD"],
+[data-theme="dark"] [style*="background: #EDE8DD"],
+[data-theme="dark"] [style*="background:#F4EDE2"],
+[data-theme="dark"] [style*="background: #F4EDE2"],
+[data-theme="dark"] .dept-tab,
+[data-theme="dark"] .snav-camera-tabs {
+  background-color: #161F30 !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  color: #CBD5E1 !important;
+}
+
+/* Dark mode typography */
+[data-theme="dark"] h1,
+[data-theme="dark"] h2,
+[data-theme="dark"] h3,
+[data-theme="dark"] h4,
+[data-theme="dark"] h5,
+[data-theme="dark"] h6,
+[data-theme="dark"] .brand-title,
+[data-theme="dark"] .kpi-label,
+[data-theme="dark"] .card-title,
+[data-theme="dark"] strong,
+[data-theme="dark"] [style*="color:#003366"],
+[data-theme="dark"] [style*="color: #003366"],
+[data-theme="dark"] [style*="color:#002244"],
+[data-theme="dark"] [style*="color: #002244"],
+[data-theme="dark"] [style*="color:#0F172A"],
+[data-theme="dark"] [style*="color: #0F172A"] {
+  color: #F8FAFC !important;
+}
+
+[data-theme="dark"] p,
+[data-theme="dark"] .kpi-delta,
+[data-theme="dark"] .text-muted,
+[data-theme="dark"] .subtext,
+[data-theme="dark"] [style*="color:#64748B"],
+[data-theme="dark"] [style*="color: #64748B"],
+[data-theme="dark"] [style*="color:#475569"],
+[data-theme="dark"] [style*="color: #475569"],
+[data-theme="dark"] [style*="color:#334155"],
+[data-theme="dark"] [style*="color: #334155"] {
+  color: #94A3B8 !important;
+}
+
+/* Dark mode tables */
+[data-theme="dark"] th {
+  background: #1E293B !important;
+  color: #F8FAFC !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12) !important;
+}
+
+[data-theme="dark"] td {
+  background: #111827 !important;
+  color: #CBD5E1 !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+}
+
+[data-theme="dark"] tr:hover td {
+  background: #1E293B !important;
+  color: #FFFFFF !important;
+}
+
+/* Dark mode form controls */
+[data-theme="dark"] input,
+[data-theme="dark"] select,
+[data-theme="dark"] textarea {
+  background: #161F30 !important;
+  color: #F8FAFC !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+}
+
+[data-theme="dark"] input:focus,
+[data-theme="dark"] select:focus,
+[data-theme="dark"] textarea:focus {
+  border-color: #38BDF8 !important;
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2) !important;
+}
+
+/* Dark mode buttons */
+[data-theme="dark"] button[style*="background:#FFFFFF"],
+[data-theme="dark"] button[style*="background: #FFFFFF"],
+[data-theme="dark"] button[style*="background:#FAF6EE"],
+[data-theme="dark"] button[style*="background: #FAF6EE"],
+[data-theme="dark"] .um-btn,
+[data-theme="dark"] .ir-btn-csv,
+[data-theme="dark"] .ir-copy-btn {
+  background: #1E293B !important;
+  color: #F8FAFC !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+}
+
+[data-theme="dark"] button[style*="background:#FFFFFF"]:hover,
+[data-theme="dark"] button[style*="background: #FFFFFF"]:hover,
+[data-theme="dark"] button[style*="background:#FAF6EE"]:hover,
+[data-theme="dark"] button[style*="background: #FAF6EE"]:hover,
+[data-theme="dark"] .um-btn:hover,
+[data-theme="dark"] .ir-btn-csv:hover,
+[data-theme="dark"] .ir-copy-btn:hover {
+  background: #2D3748 !important;
+  border-color: #38BDF8 !important;
+  color: #38BDF8 !important;
+}
+
+/* Universal Table Action Button Safeguards */
+table td button,
+.btn-action-outline,
+.btn-dossier-view,
+.table-action-btn {
+  white-space: nowrap !important;
 }

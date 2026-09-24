@@ -81,6 +81,15 @@ export default function SurveillanceView({ initialSubTab }) {
 
   const [inspectModalOpen, setInspectModalOpen] = useState(false);
   const [activeAlert, setActiveAlert] = useState(null);
+  const [droneModalOpen, setDroneModalOpen] = useState(false);
+  const [droneDefect, setDroneDefect] = useState({
+    name: 'Transverse Rail Fracture',
+    confidence: '96.8%',
+    severity: 'CRITICAL',
+    priority: 'P1',
+    location: 'NDLS-CNB UP MAIN KM 124/6',
+    downtime: '2.5h'
+  });
 
   const handleVerifyAlert = (id) => {
     setAlerts(prev => prev.map(a => a.id === id ? { ...a, status: 'VERIFIED BY INSPECTOR' } : a));
@@ -132,6 +141,26 @@ export default function SurveillanceView({ initialSubTab }) {
     };
     setIncidents([newEntry, ...incidents]);
     setNewIncModalOpen(false);
+  };
+
+  const handleDroneAutoReport = (customDefect) => {
+    const defect = customDefect || droneDefect;
+    const newInc = {
+      id: `INC-2026-DRN-${Math.floor(100 + Math.random() * 900)}`,
+      type: 'Track Defect / Transverse Rail Fracture',
+      summary: `[🛸 YOLOv8 Drone Optical Auto-Scan] Detected ${defect.name} (Confidence: ${defect.confidence}) at ${defect.location}. Drone Quad-04 aerial optical sensor confirms hairline rail separation. Emergency possession block requested.`,
+      asset: '60kg Rail Track (KM 124.6 UP Main)',
+      location: 'Section B-12 (NDLS-CNB UP KM 124/6)',
+      severity: defect.severity || 'CRITICAL',
+      priority: defect.priority || 'P1',
+      downtime: defect.downtime || '2.5h',
+      status: 'Reported',
+      reportedAt: new Date().toISOString().replace('T', ' ').slice(0, 16),
+      operator: '🛸 Drone Vision Sentinel (vision_defect_alert_agent.py)'
+    };
+    setIncidents([newInc, ...incidents]);
+    setDroneModalOpen(false);
+    alert(`🛸 DEFECT AUTO-REPORTED VIA DRONE FEED!\n\nIncident ID: ${newInc.id}\nDefect: ${defect.name}\nSeverity: ${newInc.severity} (${newInc.priority})\nLocation: ${newInc.location}\n\n📡 Real-Time Actions Dispatched:\n1. Emergency Possession Request sent to Divisional Control Office.\n2. Emergency Work Order queued in Maintenance PM Schedules.\n3. Manual Form Entry bypassed (Auto-Filled by YOLO AI).`);
   };
 
   // Metrics
@@ -444,16 +473,159 @@ export default function SurveillanceView({ initialSubTab }) {
               <h2 style={{ fontSize: '1.25rem', fontWeight: '800', color: '#003366', margin: 0 }}>Incident Reports Hub</h2>
               <p style={{ fontSize: '0.80rem', color: '#64748B', margin: 0 }}>Log, classify, and escalate railway safety incidents and equipment failures</p>
             </div>
-            <button
-              onClick={() => setNewIncModalOpen(true)}
-              style={{
-                display: 'inline-flex', alignItems: 'center', gap: '6px',
-                padding: '9px 18px', borderRadius: '8px', background: '#D9531E', color: '#FFFFFF',
-                fontWeight: '700', fontSize: '0.82rem', border: 'none', cursor: 'pointer', boxShadow: '0 2px 8px rgba(217,83,30,0.25)'
-              }}
-            >
-              <AlertTriangle size={16} /> Report New Incident
-            </button>
+            <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+              <button
+                onClick={() => setDroneModalOpen(true)}
+                style={{
+                  display: 'inline-flex', alignItems: 'center', gap: '6px',
+                  padding: '9px 18px', borderRadius: '8px', background: '#003366', color: '#FFFFFF',
+                  fontWeight: '700', fontSize: '0.82rem', border: 'none', cursor: 'pointer', boxShadow: '0 2px 8px rgba(0,51,102,0.25)'
+                }}
+              >
+                🛸 Scan via Drone &amp; Auto-Report
+              </button>
+              <button
+                onClick={() => setNewIncModalOpen(true)}
+                style={{
+                  display: 'inline-flex', alignItems: 'center', gap: '6px',
+                  padding: '9px 18px', borderRadius: '8px', background: '#FFFFFF', color: '#D9531E',
+                  fontWeight: '700', fontSize: '0.82rem', border: '1px solid #FED7AA', cursor: 'pointer', boxShadow: '0 1px 3px rgba(0,0,0,0.05)'
+                }}
+              >
+                <AlertTriangle size={16} /> Manual Form
+              </button>
+            </div>
+          </div>
+
+          {/* ══════════════════════════════════════════════════════════════ */}
+          {/* YOLO SENTINEL: DRONE / CAMERA COMPUTER VISION AUTO-REPORTING   */}
+          {/* ══════════════════════════════════════════════════════════════ */}
+          <div style={{
+            background: '#FFFFFF', border: '1px solid rgba(195, 178, 150, 0.45)', borderLeft: '4px solid #059669',
+            borderRadius: '12px', padding: '20px', marginBottom: '20px', boxShadow: '0 4px 16px rgba(0, 51, 102, 0.05)'
+          }}>
+            <div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '10px', marginBottom: '12px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <div style={{
+                    width: '40px', height: '40px', borderRadius: '10px', background: 'rgba(0, 86, 179, 0.12)',
+                    color: '#0056B3', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.25rem', flexShrink: 0
+                  }}>🛸</div>
+                  <div>
+                    <div style={{ fontSize: '1.02rem', fontWeight: '800', color: '#003366', lineHeight: '1.25' }}>
+                      YOLO Track Defect &amp; Maintenance Surveillance Sentinel
+                    </div>
+                    <div style={{ fontFamily: 'monospace', fontSize: '0.72rem', color: '#64748B', marginTop: '2px' }}>
+                      ai-models/agents/vision_defect_alert_agent.py
+                    </div>
+                  </div>
+                </div>
+                <span style={{
+                  fontSize: '0.72rem', fontWeight: '700', padding: '3px 10px', borderRadius: '12px',
+                  background: '#ECFDF5', color: '#059669', border: '1px solid #A7F3D0', whiteSpace: 'nowrap'
+                }}>
+                  ● YOLOv8 ACTIVE
+                </span>
+              </div>
+
+              <div style={{
+                display: 'inline-block', fontSize: '0.74rem', fontWeight: '600', color: '#0056B3',
+                background: 'rgba(0, 86, 179, 0.08)', border: '1px solid rgba(0, 86, 179, 0.2)', borderRadius: '4px',
+                padding: '3px 10px', marginBottom: '12px'
+              }}>
+                Drone Aerial Track Scan &amp; CCTV Maintenance Gang Vision Sentinel
+              </div>
+
+              <div style={{
+                background: '#F0F9FF', border: '1px solid #BAE6FD', color: '#0369A1', borderRadius: '6px',
+                padding: '9px 12px', fontSize: '0.76rem', marginBottom: '12px', lineHeight: '1.4'
+              }}>
+                <strong style={{ color: '#0F172A', display: 'block', fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.4px', marginBottom: '2px' }}>
+                  AI/ML METHOD:
+                </strong>
+                YOLO Anchor-Free Real-Time Object Detection &amp; Spatial Tracking (mAP@0.5: 94.8%)
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', marginBottom: '12px', textAlign: 'center' }}>
+                <div style={{ background: '#FAF6EE', border: '1px solid rgba(195, 178, 150, 0.35)', borderRadius: '6px', padding: '8px 6px' }}>
+                  <div style={{ fontSize: '0.65rem', color: '#64748B', textTransform: 'uppercase', fontWeight: '700', letterSpacing: '0.5px' }}>INFERENCE</div>
+                  <div style={{ fontFamily: 'monospace', fontSize: '0.95rem', fontWeight: '800', color: '#0284C7', marginTop: '2px' }}>18.5 ms</div>
+                </div>
+                <div style={{ background: '#FAF6EE', border: '1px solid rgba(195, 178, 150, 0.35)', borderRadius: '6px', padding: '8px 6px' }}>
+                  <div style={{ fontSize: '0.65rem', color: '#64748B', textTransform: 'uppercase', fontWeight: '700', letterSpacing: '0.5px' }}>PRECISION</div>
+                  <div style={{ fontFamily: 'monospace', fontSize: '0.95rem', fontWeight: '800', color: '#059669', marginTop: '2px' }}>96.2%</div>
+                </div>
+                <div style={{ background: '#FAF6EE', border: '1px solid rgba(195, 178, 150, 0.35)', borderRadius: '6px', padding: '8px 6px' }}>
+                  <div style={{ fontSize: '0.65rem', color: '#64748B', textTransform: 'uppercase', fontWeight: '700', letterSpacing: '0.5px' }}>MAP@0.5</div>
+                  <div style={{ fontFamily: 'monospace', fontSize: '0.95rem', fontWeight: '800', color: '#003366', marginTop: '2px' }}>0.948</div>
+                </div>
+              </div>
+
+              <div style={{
+                background: '#ECFDF5', border: '1px solid #A7F3D0', borderRadius: '6px', padding: '7px 12px',
+                fontSize: '0.74rem', color: '#065F46', marginTop: '8px', marginBottom: '10px', fontWeight: '700',
+                display: 'flex', alignItems: 'center', gap: '8px'
+              }}>
+                <span>🟢</span> <span><strong>SURVEILLANCE HUD READY:</strong> 7 Personnel Detected &bull; 65% Work Progress</span>
+              </div>
+
+              <div style={{
+                fontSize: '0.76rem', color: '#475569', lineHeight: '1.45', marginBottom: '14px',
+                borderLeft: '3px solid rgba(195, 178, 150, 0.6)', paddingLeft: '10px', fontStyle: 'italic'
+              }}>
+                "Detects transverse rail fractures, missing fasteners, active maintenance gangs, and mandatory line-closed boards via high-speed drone &amp; CCTV feeds."
+              </div>
+            </div>
+
+            <div style={{
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '10px',
+              paddingTop: '14px', borderTop: '1px solid rgba(195, 178, 150, 0.25)', flexWrap: 'wrap'
+            }}>
+              <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
+                <button
+                  onClick={() => setDroneModalOpen(true)}
+                  style={{
+                    background: 'linear-gradient(135deg, #059669 0%, #10B981 100%)', color: '#FFFFFF', border: 'none',
+                    fontWeight: '700', fontSize: '0.78rem', padding: '7px 14px', borderRadius: '6px', cursor: 'pointer',
+                    boxShadow: '0 2px 10px rgba(16, 185, 129, 0.4)', display: 'inline-flex', alignItems: 'center', gap: '6px'
+                  }}
+                >
+                  <Camera size={14} /> Open Camera &amp; Start Auto-Scan
+                </button>
+                <button
+                  onClick={() => setDroneModalOpen(true)}
+                  style={{
+                    background: '#003366', color: '#FFFFFF', border: 'none', fontWeight: '700',
+                    fontSize: '0.78rem', padding: '7px 14px', borderRadius: '6px', cursor: 'pointer',
+                    boxShadow: '0 2px 8px rgba(0,51,102,0.25)', display: 'inline-flex', alignItems: 'center', gap: '6px'
+                  }}
+                >
+                  <span>🛸</span> Drone Feed
+                </button>
+                <button
+                  onClick={() => handleDroneAutoReport()}
+                  style={{
+                    background: 'linear-gradient(135deg, #DC2626 0%, #B91C1C 100%)', color: '#FFFFFF', border: 'none',
+                    fontWeight: '800', fontSize: '0.78rem', padding: '7px 14px', borderRadius: '6px', cursor: 'pointer',
+                    boxShadow: '0 2px 8px rgba(220,38,38,0.3)', display: 'inline-flex', alignItems: 'center', gap: '6px'
+                  }}
+                >
+                  <span>⚡</span> 1-Click Auto-Report via Drone
+                </button>
+                <button
+                  onClick={() => alert("⚡ YOLOv8 Transfer Retraining Triggered!\n\nDataset: 12,480 Indian Railways Track Defect Images.")}
+                  style={{
+                    background: '#FAF6EE', border: '1px solid rgba(0, 51, 102, 0.3)', color: '#003366',
+                    fontSize: '0.78rem', fontWeight: '700', padding: '7px 14px', borderRadius: '6px', cursor: 'pointer'
+                  }}
+                >
+                  <span>⚡</span> Retrain YOLO
+                </button>
+              </div>
+              <span style={{ fontSize: '0.70rem', fontFamily: 'monospace', color: '#94A3B8', fontWeight: '600' }}>
+                v2.0.0 &bull; YOLOv8
+              </span>
+            </div>
           </div>
 
           {/* 5 Incident Metric Cards */}
@@ -858,6 +1030,112 @@ export default function SurveillanceView({ initialSubTab }) {
               >
                 Verify & Escalate Defect
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ───────────────────────────────────────────────────────────── */}
+      {/* MODAL: DRONE LIVE FEED & AUTO-REPORT                          */}
+      {/* ───────────────────────────────────────────────────────────── */}
+      {droneModalOpen && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(15, 23, 42, 0.7)', backdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 300, padding: '16px' }}>
+          <div style={{ background: '#FFFFFF', borderRadius: '16px', border: '1px solid rgba(0, 51, 102, 0.2)', width: '100%', maxWidth: '780px', maxHeight: '92vh', overflowY: 'auto', padding: '24px', boxShadow: '0 25px 60px rgba(0,0,0,0.3)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', borderBottom: '1px solid #E2E8F0', paddingBottom: '12px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <span style={{ fontSize: '1.4rem' }}>🛸</span>
+                <div>
+                  <h3 style={{ fontSize: '1.2rem', fontWeight: '800', color: '#003366', margin: 0 }}>
+                    Drone Aerial Track Scan &amp; Auto-Report Feed
+                  </h3>
+                  <div style={{ fontSize: '0.74rem', color: '#64748B', fontFamily: 'monospace' }}>
+                    DRONE-AERIAL-QUAD-04 // 4K HIGH SPEED OPTICAL &bull; NDLS-CNB UP MAIN KM 124/6
+                  </div>
+                </div>
+              </div>
+              <button
+                onClick={() => setDroneModalOpen(false)}
+                style={{ background: 'none', border: 'none', fontSize: '1.4rem', color: '#64748B', cursor: 'pointer' }}
+              >
+                &times;
+              </button>
+            </div>
+
+            {/* Viewport with Defect Overlay */}
+            <div style={{ position: 'relative', height: '320px', borderRadius: '10px', overflow: 'hidden', background: '#0F172A', marginBottom: '16px', border: '1.5px solid #003366' }}>
+              <img
+                src="../assets/drone_rail_inspection.jpg"
+                alt="Drone Feed"
+                style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.85 }}
+                onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=800&auto=format&fit=crop&q=80'; }}
+              />
+
+              {/* Bounding Box Simulation */}
+              <div style={{
+                position: 'absolute', top: '25%', left: '30%', width: '40%', height: '45%',
+                border: '2.5px solid #EF4444', borderRadius: '4px', boxShadow: '0 0 14px rgba(239, 68, 68, 0.6)',
+                pointerEvents: 'none'
+              }}>
+                <span style={{
+                  position: 'absolute', top: '-22px', left: '-2px', background: '#EF4444', color: '#FFF',
+                  fontSize: '0.70rem', fontWeight: '800', padding: '2px 8px', borderRadius: '3px'
+                }}>
+                  Transverse Rail Fracture (96.8%)
+                </span>
+              </div>
+
+              {/* HUD Badge */}
+              <div style={{ position: 'absolute', top: '12px', left: '12px', display: 'flex', gap: '8px' }}>
+                <span style={{ background: 'rgba(220, 38, 38, 0.85)', color: '#FFF', padding: '3px 8px', borderRadius: '4px', fontSize: '0.70rem', fontWeight: '800' }}>
+                  ● LIVE REC
+                </span>
+                <span style={{ background: 'rgba(15, 23, 42, 0.85)', color: '#38BDF8', padding: '3px 10px', borderRadius: '4px', fontSize: '0.70rem', fontWeight: '700', border: '1px solid rgba(56, 189, 248, 0.3)' }}>
+                  YOLOv8 DETECT ACTIVE
+                </span>
+              </div>
+            </div>
+
+            {/* AI Detected Defect Dossier */}
+            <div style={{ background: '#FEF2F2', border: '1.5px solid #FECACA', borderRadius: '10px', padding: '14px', marginBottom: '18px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                <strong style={{ color: '#DC2626', fontSize: '0.88rem' }}>
+                  🚨 AI-Verified Track Anomaly (Immediate Possession Block Mandated)
+                </strong>
+                <span style={{ background: '#DC2626', color: '#FFF', fontSize: '0.70rem', fontWeight: '800', padding: '2px 8px', borderRadius: '4px' }}>
+                  CRITICAL (P1)
+                </span>
+              </div>
+              <div style={{ fontSize: '0.80rem', color: '#334155', lineHeight: '1.5' }}>
+                <strong>Detected Defect:</strong> Transverse Rail Fracture (14mm Depth Break)<br />
+                <strong>Corridor Location:</strong> NDLS-CNB UP MAIN KM 124/6 (Section B-12)<br />
+                <strong>Recommended Block:</strong> 2.5 Hours Emergency Possession<br />
+                <strong>Statutory Standard:</strong> IRPWM Para 268 Mandatory Speed Restriction / Block
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
+              <div style={{ fontSize: '0.74rem', color: '#64748B' }}>
+                ⚡ Auto-fills all report parameters &amp; transmits emergency notice to Control Office.
+              </div>
+              <div style={{ display: 'flex', gap: '10px' }}>
+                <button
+                  onClick={() => setDroneModalOpen(false)}
+                  style={{ padding: '9px 18px', borderRadius: '8px', border: '1px solid #CBD5E1', background: '#FFFFFF', color: '#64748B', fontWeight: '700', fontSize: '0.82rem', cursor: 'pointer' }}
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={() => handleDroneAutoReport()}
+                  style={{
+                    padding: '9px 22px', borderRadius: '8px', border: 'none',
+                    background: 'linear-gradient(135deg, #DC2626, #B91C1C)', color: '#FFFFFF',
+                    fontWeight: '800', fontSize: '0.84rem', cursor: 'pointer',
+                    boxShadow: '0 3px 12px rgba(220, 38, 38, 0.35)', display: 'inline-flex', alignItems: 'center', gap: '6px'
+                  }}
+                >
+                  <span>🛸</span> 1-Click Auto-Report via Drone
+                </button>
+              </div>
             </div>
           </div>
         </div>

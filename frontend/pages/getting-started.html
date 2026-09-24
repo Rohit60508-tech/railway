@@ -69,22 +69,26 @@
     }
 
     .hero-emblem {
-      width: 80px;
-      height: 80px;
+      width: 76px;
+      height: 76px;
       margin: 0 auto 16px;
-      background: linear-gradient(135deg, #003366 0%, #0056B3 100%);
-      border-radius: 20px;
+      background: #FFFFFF;
+      border: 1.5px solid rgba(0, 51, 102, 0.12);
+      border-radius: 18px;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 12px 30px rgba(0, 51, 102, 0.22);
+      box-shadow: 0 8px 24px rgba(0, 51, 102, 0.08);
       position: relative;
+      padding: 6px;
+      box-sizing: border-box;
     }
 
     .hero-emblem img {
-      width: 54px;
-      height: 54px;
+      width: 100%;
+      height: 100%;
       object-fit: contain;
+      border-radius: 12px;
     }
 
     .hero-emblem-badge {
@@ -219,9 +223,54 @@
     /* ── Key Performance Indicators Row ── */
     .kpi-row-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: 20px;
       padding: 24px;
+    }
+
+    [data-theme="dark"] {
+      --bg-cream: #0B0F19;
+      --card-white: #111827;
+      --border-subtle: rgba(255, 255, 255, 0.1);
+    }
+
+    [data-theme="dark"] body {
+      background: #0B0F19 !important;
+      color: #F8FAFC !important;
+    }
+
+    [data-theme="dark"] .hero-title,
+    [data-theme="dark"] .section-title-text h3,
+    [data-theme="dark"] .strip-text h4,
+    [data-theme="dark"] .kpi-val-number {
+      color: #F8FAFC !important;
+    }
+
+    [data-theme="dark"] .hero-subtitle,
+    [data-theme="dark"] .section-title-text p,
+    [data-theme="dark"] .strip-text p,
+    [data-theme="dark"] .kpi-val-title,
+    [data-theme="dark"] .kpi-val-sub {
+      color: #94A3B8 !important;
+    }
+
+    [data-theme="dark"] .section-card,
+    [data-theme="dark"] .overview-strip,
+    [data-theme="dark"] .kpi-mini-box,
+    [data-theme="dark"] .btn-explore {
+      background-color: #111827 !important;
+      border-color: rgba(255, 255, 255, 0.1) !important;
+    }
+
+    [data-theme="dark"] .section-header-banner {
+      background: #161F30 !important;
+      border-bottom-color: rgba(255, 255, 255, 0.1) !important;
+    }
+
+    [data-theme="dark"] .hero-badge-tag {
+      background: #161F30 !important;
+      border-color: rgba(255, 255, 255, 0.12) !important;
+      color: #38BDF8 !important;
     }
 
     .kpi-mini-box {
@@ -626,12 +675,12 @@
 
         <div
           style="background:rgba(0,51,102,0.04); border:1px solid rgba(0,51,102,0.12); border-radius:8px; padding:3px; display:flex; gap:4px;">
-          <button type="button"
-            style="padding:5px 12px; border-radius:6px; border:none; background:transparent; color:#64748B; font-size:0.76rem; font-weight:600; cursor:pointer;">Weekly</button>
-          <button type="button"
-            style="padding:5px 12px; border-radius:6px; border:none; background:#003366; color:#FFFFFF; font-size:0.76rem; font-weight:700; cursor:pointer;">Monthly</button>
-          <button type="button"
-            style="padding:5px 12px; border-radius:6px; border:none; background:transparent; color:#64748B; font-size:0.76rem; font-weight:600; cursor:pointer;">Yearly</button>
+          <button id="gs-btn-weekly" type="button" onclick="window.switchGettingStartedStats('weekly')"
+            style="padding:5px 12px; border-radius:6px; border:none; background:transparent; color:#64748B; font-size:0.76rem; font-weight:600; cursor:pointer; transition:all 0.2s;">Weekly</button>
+          <button id="gs-btn-monthly" type="button" onclick="window.switchGettingStartedStats('monthly')"
+            style="padding:5px 12px; border-radius:6px; border:none; background:#003366; color:#FFFFFF; font-size:0.76rem; font-weight:700; cursor:pointer; transition:all 0.2s;">Monthly</button>
+          <button id="gs-btn-yearly" type="button" onclick="window.switchGettingStartedStats('yearly')"
+            style="padding:5px 12px; border-radius:6px; border:none; background:transparent; color:#64748B; font-size:0.76rem; font-weight:600; cursor:pointer; transition:all 0.2s;">Yearly</button>
         </div>
       </div>
 
@@ -641,29 +690,29 @@
             style="background:#FAF6EE; border:1px solid rgba(0,51,102,0.1); border-radius:12px; padding:16px; border-left:4px solid #003366;">
             <div style="font-size:0.72rem; color:#64748B; font-weight:700; text-transform:uppercase;">Created
               Requisitions</div>
-            <div style="font-size:1.6rem; font-weight:800; color:#003366; margin:4px 0;">148</div>
-            <div style="font-size:0.72rem; color:#059669; font-weight:600;">+12.4% vs last period</div>
+            <div id="gs-stat-reqs" style="font-size:1.6rem; font-weight:800; color:#003366; margin:4px 0;">148</div>
+            <div id="gs-stat-reqs-sub" style="font-size:0.72rem; color:#059669; font-weight:600;">+12.4% vs last period</div>
           </div>
           <div
             style="background:#FAF6EE; border:1px solid rgba(0,51,102,0.1); border-radius:12px; padding:16px; border-left:4px solid #059669;">
             <div style="font-size:0.72rem; color:#64748B; font-weight:700; text-transform:uppercase;">Completed Work
               Orders</div>
-            <div style="font-size:1.6rem; font-weight:800; color:#059669; margin:4px 0;">136</div>
-            <div style="font-size:0.72rem; color:#059669; font-weight:600;">91.8% Completion Rate</div>
+            <div id="gs-stat-completed" style="font-size:1.6rem; font-weight:800; color:#059669; margin:4px 0;">136</div>
+            <div id="gs-stat-completed-sub" style="font-size:0.72rem; color:#059669; font-weight:600;">91.8% Completion Rate</div>
           </div>
           <div
             style="background:#FAF6EE; border:1px solid rgba(0,51,102,0.1); border-radius:12px; padding:16px; border-left:4px solid #D97706;">
             <div style="font-size:0.72rem; color:#64748B; font-weight:700; text-transform:uppercase;">Avg Block Sanction
               Time</div>
-            <div style="font-size:1.6rem; font-weight:800; color:#D97706; margin:4px 0;">42 min</div>
-            <div style="font-size:0.72rem; color:#059669; font-weight:600;">-18 min via AI CP-SAT</div>
+            <div id="gs-stat-sanction" style="font-size:1.6rem; font-weight:800; color:#D97706; margin:4px 0;">42 min</div>
+            <div id="gs-stat-sanction-sub" style="font-size:0.72rem; color:#059669; font-weight:600;">-18 min via AI CP-SAT</div>
           </div>
           <div
             style="background:#FAF6EE; border:1px solid rgba(0,51,102,0.1); border-radius:12px; padding:16px; border-left:4px solid #7C3AED;">
             <div style="font-size:0.72rem; color:#64748B; font-weight:700; text-transform:uppercase;">Punctuality Index
               Saved</div>
-            <div style="font-size:1.6rem; font-weight:800; color:#7C3AED; margin:4px 0;">+4.8%</div>
-            <div style="font-size:0.72rem; color:#059669; font-weight:600;">Zero train cancellation</div>
+            <div id="gs-stat-punctuality" style="font-size:1.6rem; font-weight:800; color:#7C3AED; margin:4px 0;">+4.8%</div>
+            <div id="gs-stat-punctuality-sub" style="font-size:0.72rem; color:#059669; font-weight:600;">Zero train cancellation</div>
           </div>
         </div>
 
@@ -867,6 +916,61 @@
           if (nextSteps) nextSteps.textContent = `Recommended Next Steps for ${name}`;
         }
       });
+
+      // Period Switcher for Operational Stats
+      window.switchGettingStartedStats = function (period) {
+        const btnW = document.getElementById('gs-btn-weekly');
+        const btnM = document.getElementById('gs-btn-monthly');
+        const btnY = document.getElementById('gs-btn-yearly');
+        const elReqs = document.getElementById('gs-stat-reqs');
+        const elReqsSub = document.getElementById('gs-stat-reqs-sub');
+        const elComp = document.getElementById('gs-stat-completed');
+        const elCompSub = document.getElementById('gs-stat-completed-sub');
+        const elSanc = document.getElementById('gs-stat-sanction');
+        const elSancSub = document.getElementById('gs-stat-sanction-sub');
+        const elPunc = document.getElementById('gs-stat-punctuality');
+        const elPuncSub = document.getElementById('gs-stat-punctuality-sub');
+
+        [btnW, btnM, btnY].forEach(b => {
+          if (b) {
+            b.style.background = 'transparent';
+            b.style.color = '#64748B';
+            b.style.fontWeight = '600';
+          }
+        });
+
+        if (period === 'weekly') {
+          if (btnW) { btnW.style.background = '#003366'; btnW.style.color = '#FFFFFF'; btnW.style.fontWeight = '700'; }
+          if (elReqs) elReqs.textContent = '34';
+          if (elReqsSub) elReqsSub.textContent = '+5.2% vs last week';
+          if (elComp) elComp.textContent = '31';
+          if (elCompSub) elCompSub.textContent = '91.2% Completion Rate';
+          if (elSanc) elSanc.textContent = '38 min';
+          if (elSancSub) elSancSub.textContent = '-14 min via AI CP-SAT';
+          if (elPunc) elPunc.textContent = '+3.9%';
+          if (elPuncSub) elPuncSub.textContent = 'Zero train cancellation';
+        } else if (period === 'yearly') {
+          if (btnY) { btnY.style.background = '#003366'; btnY.style.color = '#FFFFFF'; btnY.style.fontWeight = '700'; }
+          if (elReqs) elReqs.textContent = '1,840';
+          if (elReqsSub) elReqsSub.textContent = '+24.6% YoY growth';
+          if (elComp) elComp.textContent = '1,728';
+          if (elCompSub) elCompSub.textContent = '93.9% Annual Resolution';
+          if (elSanc) elSanc.textContent = '44 min';
+          if (elSancSub) elSancSub.textContent = '-21 min AI Average';
+          if (elPunc) elPunc.textContent = '+6.4%';
+          if (elPuncSub) elPuncSub.textContent = 'Saved 840+ delay hrs';
+        } else {
+          if (btnM) { btnM.style.background = '#003366'; btnM.style.color = '#FFFFFF'; btnM.style.fontWeight = '700'; }
+          if (elReqs) elReqs.textContent = '148';
+          if (elReqsSub) elReqsSub.textContent = '+12.4% vs last period';
+          if (elComp) elComp.textContent = '136';
+          if (elCompSub) elCompSub.textContent = '91.8% Completion Rate';
+          if (elSanc) elSanc.textContent = '42 min';
+          if (elSancSub) elSancSub.textContent = '-18 min via AI CP-SAT';
+          if (elPunc) elPunc.textContent = '+4.8%';
+          if (elPuncSub) elPuncSub.textContent = 'Zero train cancellation';
+        }
+      };
     })();
   </script>
 </body>

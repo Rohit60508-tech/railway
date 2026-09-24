@@ -43,19 +43,22 @@ export class BundlingSuggestionCard {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 6px 10px;
+        flex-wrap: wrap;
+        gap: 8px;
+        padding: 8px 12px;
         background: #FAF6EE;
         border: 1px solid rgba(195, 178, 150, 0.3);
         border-radius: 6px;
-        margin-bottom: 5px;
+        margin-bottom: 6px;
         font-size: 0.78rem;
+        box-sizing: border-box;
       ">
-        <div style="display: flex; align-items: center; gap: 8px;">
-          <span style="font-family: 'Calibri', 'Arial', sans-serif; color: #003366; font-weight: 700;">${t.id}</span>
-          <span style="color: #0F172A;">${t.desc || t.work_type}</span>
-          ${t.machine ? `<span style="font-size: 0.7rem; background: rgba(0, 51, 102, 0.06); color: #003366; padding: 1px 6px; border-radius: 3px; font-weight: 600;">🚜 ${t.machine}</span>` : ''}
+        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; flex: 1 1 200px; min-width: 0;">
+          <span style="font-family: 'Calibri', 'Arial', sans-serif; color: #003366; font-weight: 700; flex-shrink: 0;">${t.id}</span>
+          <span style="color: #0F172A; word-break: break-word;">${t.desc || t.work_type}</span>
+          ${t.machine ? `<span style="font-size: 0.7rem; background: rgba(0, 51, 102, 0.06); color: #003366; padding: 1px 6px; border-radius: 3px; font-weight: 600; flex-shrink: 0;">🚜 ${t.machine}</span>` : ''}
         </div>
-        <span style="font-family: 'Calibri', 'Arial', sans-serif; color: #64748B;">${t.duration || '90m'}</span>
+        <span style="font-family: 'Calibri', 'Arial', sans-serif; color: #64748B; font-weight: 600; flex-shrink: 0;">${t.duration || '90m'}</span>
       </div>
     `).join('');
 
@@ -77,9 +80,9 @@ export class BundlingSuggestionCard {
           background: #003366;
         "></div>
 
-        <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 10px;">
+        <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 10px; flex-wrap: wrap; gap: 10px;">
           <div>
-            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px; flex-wrap: wrap;">
               <span style="font-size: 1.1rem;">🔗</span>
               <span style="font-family: 'Calibri', 'Arial', sans-serif; font-weight: 700; font-size: 0.95rem; color: #0F172A; letter-spacing: 0.5px;">
                 ${bundleId}
@@ -88,7 +91,7 @@ export class BundlingSuggestionCard {
                 ${sectionId}
               </span>
             </div>
-            <div style="display: flex; align-items: center; gap: 6px; margin-top: 4px;">
+            <div style="display: flex; align-items: center; gap: 6px; margin-top: 4px; flex-wrap: wrap;">
               ${deptPills}
             </div>
           </div>
@@ -116,7 +119,7 @@ export class BundlingSuggestionCard {
           </div>
         </div>
 
-        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px; font-size: 0.8rem; color: #334155;">
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px; font-size: 0.8rem; color: #334155; flex-wrap: wrap;">
           <span>🕒 <strong>Proposed Window:</strong> ${timeWindow}</span>
           <span>📦 <strong>${tasks.length} Bundled Tasks</strong></span>
         </div>
@@ -153,7 +156,7 @@ export class BundlingSuggestionCard {
           </div>
         </div>
 
-        <div style="display: flex; align-items: center; justify-content: flex-end; gap: 8px;">
+        <div style="display: flex; align-items: center; justify-content: flex-end; gap: 8px; flex-wrap: wrap;">
           <button onclick="window.BundlingSuggestionCard.inspect('${bundleId}')" style="
             background: #FFFFFF;
             border: 1px solid rgba(0, 51, 102, 0.2);

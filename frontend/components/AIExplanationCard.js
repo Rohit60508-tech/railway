@@ -58,7 +58,7 @@ export class AIExplanationCard {
         font-family: 'Calibri', 'Arial', sans-serif;
       ">
         <div class="ai-xai-header" onclick="window.AIExplanationCard.toggle('${cardId}')" style="
-          padding: 6px 10px;
+          padding: 8px 12px;
           display: flex;
           align-items: center;
           justify-content: space-between;
@@ -66,12 +66,13 @@ export class AIExplanationCard {
           background: #F8F4EC;
           user-select: none;
           gap: 8px;
+          flex-wrap: wrap;
         ">
-          <div style="display: flex; align-items: center; gap: 6px; flex: 1; min-width: 0;">
+          <div style="display: flex; align-items: center; gap: 6px; flex: 1 1 240px; min-width: 0; flex-wrap: wrap;">
             <span style="font-size: 0.85rem; flex-shrink: 0;">🧠</span>
             <span style="font-size: 0.74rem; font-weight: 700; color: #003366; letter-spacing: 0.3px; white-space: nowrap; flex-shrink: 0;">AI RATIONALE:</span>
             <span style="font-family: var(--font-mono); font-size: 0.65rem; color: #6D28D9; background: #EDE9FE; border: 1px solid #DDD6FE; padding: 1px 5px; border-radius: 3px; font-weight: 700; flex-shrink: 0;">railway-explainer</span>
-            <span style="font-size: 0.76rem; color: #334155; opacity: 0.95; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${summary || 'Multi-factor risk evaluation applied.'}</span>
+            <span style="font-size: 0.76rem; color: #334155; opacity: 0.95; word-break: break-word;">${summary || 'Multi-factor risk evaluation applied.'}</span>
           </div>
           <span class="ai-xai-chevron" style="
             font-size: 0.68rem;
