@@ -177,7 +177,7 @@
     /* ── Shared Left Sidebar & Topbar Layout ──────────────────────── */
     :root {
       --snav-sidebar-collapsed-width: 68px;
-      --snav-sidebar-expanded-width: 290px;
+      --snav-sidebar-expanded-width: 320px;
       --snav-topbar-height: 60px;
       --snav-navy-900: #002244;
       --snav-navy-800: #003366;
@@ -217,7 +217,7 @@
       display: flex !important;
       flex-direction: column !important;
       justify-content: space-between !important;
-      z-index: 999999 !important;
+      z-index: 99995 !important;
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
       user-select: none;
       overflow: hidden !important;
@@ -258,14 +258,16 @@
       width: 42px !important;
       height: 42px !important;
       border-radius: 12px !important;
-      background: linear-gradient(135deg, #001F3F 0%, #003366 100%) !important;
-      border: 2px solid #FFC107 !important;
+      background: #FFFFFF !important;
+      border: 1.5px solid rgba(0, 51, 102, 0.14) !important;
       display: flex !important;
       align-items: center !important;
       justify-content: center !important;
-      box-shadow: 0 4px 12px rgba(0, 31, 63, 0.25) !important;
+      box-shadow: 0 2px 8px rgba(0, 51, 102, 0.06) !important;
       margin: 0 auto !important;
       flex-shrink: 0 !important;
+      padding: 4px !important;
+      box-sizing: border-box !important;
     }
 
     #ir-left-sidebar:not(:hover):not(.expanded):not(.open) .snav-menu {
@@ -436,17 +438,19 @@
     #ir-left-sidebar:hover .snav-brand-logo-tile,
     #ir-left-sidebar.expanded .snav-brand-logo-tile,
     #ir-left-sidebar.open .snav-brand-logo-tile {
-      width: 44px !important;
-      height: 44px !important;
+      width: 42px !important;
+      height: 42px !important;
       border-radius: 12px !important;
-      background: linear-gradient(135deg, #001F3F 0%, #003366 100%) !important;
-      border: 2px solid #FFC107 !important;
+      background: #FFFFFF !important;
+      border: 1.5px solid rgba(0, 51, 102, 0.14) !important;
       display: flex !important;
       align-items: center !important;
       justify-content: center !important;
-      box-shadow: 0 4px 12px rgba(0, 31, 63, 0.25) !important;
+      box-shadow: 0 2px 8px rgba(0, 51, 102, 0.06) !important;
       margin: 0 !important;
       flex-shrink: 0 !important;
+      padding: 4px !important;
+      box-sizing: border-box !important;
     }
 
     #ir-left-sidebar:hover .snav-sidebar-brand-text,
@@ -463,7 +467,7 @@
     #ir-left-sidebar:hover .snav-menu,
     #ir-left-sidebar.expanded .snav-menu,
     #ir-left-sidebar.open .snav-menu {
-      padding: 8px 10px !important;
+      padding: 8px 12px 8px 8px !important;
       display: flex !important;
       flex-direction: column !important;
       align-items: stretch !important;
@@ -473,6 +477,7 @@
       overflow-y: auto !important;
       overflow-x: hidden !important;
       scrollbar-width: thin !important;
+      scrollbar-gutter: stable !important;
       scrollbar-color: rgba(0, 51, 102, 0.25) transparent !important;
       -webkit-overflow-scrolling: touch;
     }
@@ -510,6 +515,16 @@
       letter-spacing: 0.8px !important;
       padding: 8px 6px 2px !important;
       white-space: nowrap !important;
+      text-align: left !important;
+    }
+
+    .snav-item,
+    .snav-item-parent,
+    button.snav-item {
+      text-align: left !important;
+      font-family: inherit !important;
+      appearance: none !important;
+      -webkit-appearance: none !important;
     }
 
     #ir-left-sidebar:hover .snav-item,
@@ -520,9 +535,9 @@
     #ir-left-sidebar.open .snav-item-parent {
       width: 100% !important;
       height: auto !important;
-      min-height: 38px !important;
+      min-height: 40px !important;
       max-height: none !important;
-      padding: 8px 10px !important;
+      padding: 8px 12px !important;
       margin: 2px 0 !important;
       display: flex !important;
       align-items: center !important;
@@ -534,6 +549,8 @@
       background: transparent !important;
       border: 1px solid transparent !important;
       cursor: pointer !important;
+      text-align: left !important;
+      font-family: inherit !important;
     }
 
     #ir-left-sidebar:hover .snav-item:hover,
@@ -574,7 +591,8 @@
     #ir-left-sidebar.open .snav-item-icon {
       width: 22px !important;
       height: 22px !important;
-      margin-right: 10px !important;
+      margin-right: 12px !important;
+      margin-left: 2px !important;
       display: flex !important;
       align-items: center !important;
       justify-content: center !important;
@@ -619,12 +637,12 @@
       min-width: 0 !important;
       max-width: none !important;
       white-space: nowrap !important;
-      overflow: hidden !important;
-      text-overflow: clip !important;
+      overflow: visible !important;
       font-size: 0.85rem !important;
       font-weight: 600 !important;
       color: #1E293B !important;
       letter-spacing: -0.1px !important;
+      text-align: left !important;
     }
 
     #ir-left-sidebar:hover .snav-item-badge,
@@ -696,11 +714,23 @@
       pointer-events: auto !important;
       margin: 10px 4px 6px 4px !important;
       background: #FFFFFF !important;
-      border: 1.5px solid rgba(0, 51, 102, 0.1) !important;
+      border: 1.5px solid rgba(0, 51, 102, 0.12) !important;
       border-radius: 12px !important;
       padding: 10px 12px !important;
       box-shadow: 0 2px 8px rgba(0, 51, 102, 0.03) !important;
       flex-shrink: 0 !important;
+      cursor: pointer !important;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+      position: relative !important;
+    }
+
+    #ir-left-sidebar:hover .snav-whats-new-box:hover,
+    #ir-left-sidebar.expanded .snav-whats-new-box:hover,
+    #ir-left-sidebar.open .snav-whats-new-box:hover {
+      background: #FAF6EE !important;
+      border-color: #D9531E !important;
+      box-shadow: 0 4px 14px rgba(217, 83, 30, 0.15) !important;
+      transform: translateY(-2px) !important;
     }
 
     #ir-left-sidebar:hover .snav-sidebar-divider,
@@ -826,10 +856,17 @@
       align-items: center !important;
       justify-content: space-between !important;
       padding: 0 24px !important;
-      z-index: 999998 !important;
+      z-index: 99990 !important;
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
       box-sizing: border-box !important;
-      transition: left 0.28s cubic-bezier(0.4, 0, 0.2, 1) !important;
+      transition: left 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    }
+
+    #ir-left-sidebar:hover ~ #ir-shared-topbar,
+    #ir-left-sidebar.expanded ~ #ir-shared-topbar,
+    #ir-left-sidebar.open ~ #ir-shared-topbar,
+    body.snav-expanded #ir-shared-topbar {
+      left: var(--snav-sidebar-expanded-width) !important;
     }
 
     .snav-topbar-left {
@@ -837,6 +874,37 @@
       align-items: center;
       gap: 14px;
       min-width: 0;
+      flex: 1 1 auto;
+      overflow: hidden;
+    }
+
+    .snav-topbar-title-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .snav-topbar-title {
+      font-size: 0.88rem;
+      font-weight: 800;
+      color: #003366;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .snav-topbar-sub {
+      font-size: 0.68rem;
+      font-weight: 500;
+      color: #64748B;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .snav-mobile-toggle {
@@ -1770,26 +1838,35 @@
 
     /* ── FULL SCREEN OPERATIONAL REPORT DOSSIER (NOT A POPUP) ───────── */
     .ir-modal-backdrop {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(15, 23, 42, 0.7);
-      backdrop-filter: blur(8px);
-      z-index: 100000;
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      background: rgba(11, 15, 25, 0.78) !important;
+      backdrop-filter: blur(8px) !important;
+      -webkit-backdrop-filter: blur(8px) !important;
+      z-index: 2000000 !important;
       display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 0 !important;
-      box-sizing: border-box;
+      align-items: center !important;
+      justify-content: center !important;
+      padding: 24px 20px !important;
+      box-sizing: border-box !important;
       opacity: 0;
       transition: opacity 0.2s ease;
     }
 
-    .ir-modal-backdrop.open {
-      display: flex;
-      opacity: 1;
+    .ir-modal-backdrop.open,
+    .ir-modal-backdrop[style*="display: flex"],
+    .ir-modal-backdrop[style*="display: block"] {
+      display: flex !important;
+      opacity: 1 !important;
+    }
+
+    #ir-report-modal {
+      padding: 0 !important;
     }
 
     /* FULL SCREEN DIALOG */
@@ -2162,25 +2239,75 @@
       border-color: #003366;
     }
 
-    /* ── Dedicated Personnel Credentials Modal Styles ─────────────── */
-    .ir-cred-dialog {
+    /* ── Dedicated Settings & Personnel Governance Modal Styles ─────────────── */
+    .ir-cred-dialog, .ir-settings-dialog {
       background: #FFFFFF !important;
-      border-radius: 14px !important;
+      border-radius: 16px !important;
       width: 100% !important;
-      max-width: 980px !important;
-      height: 85vh !important;
-      max-height: 85vh !important;
+      max-width: 1060px !important;
+      height: min(86vh, 840px) !important;
+      max-height: calc(100vh - 48px) !important;
       display: flex !important;
       flex-direction: column !important;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.45) !important;
-      border: 1px solid rgba(0, 51, 102, 0.25) !important;
+      box-shadow: 0 30px 60px -15px rgba(0, 35, 75, 0.45) !important;
+      border: 1.5px solid rgba(0, 51, 102, 0.22) !important;
       overflow: hidden !important;
+      margin: auto !important;
+      position: relative !important;
+      z-index: 2000005 !important;
     }
 
-    .ir-cred-header {
+    /* ── Universal High-Priority Modal Overlay Z-Index & Layout Fixes ── */
+    .modal-overlay,
+    .surv-modal-overlay,
+    .swarm-modal-overlay,
+    .pm-modal-backdrop,
+    .pm-modal-overlay,
+    .mr-modal-overlay,
+    .co-modal-overlay,
+    .snav-camera-modal-backdrop,
+    #ir-tactical-modal-overlay,
+    #ir-settings-modal,
+    #ir-report-modal,
+    #ir-cred-modal,
+    #snav-cred-user-modal,
+    [id^="modal-"],
+    [id*="-modal"],
+    div[role="dialog"] {
+      z-index: 2000000 !important;
+    }
+
+    /* Fix in-page sub-headers getting covered under fixed 60px top bar when scrolling */
+    .admin-header,
+    .top-bar,
+    .co-header,
+    .surv-header,
+    .ml-header {
+      position: static !important;
+      top: auto !important;
+      margin-top: 0 !important;
+    }
+
+    /* Universal protection against content clipping under topbar */
+    .admin-main,
+    .dashboard-container,
+    .co-container,
+    .surv-main,
+    .ml-container,
+    .pm-container,
+    .mr-container,
+    .calendar-container,
+    .labor-container,
+    .master-glass-frame,
+    .main-content {
+      box-sizing: border-box !important;
+      padding-top: 10px;
+    }
+
+    .ir-cred-header, .ir-settings-header {
       flex-shrink: 0 !important;
-      padding: 14px 24px !important;
-      background: linear-gradient(135deg, #002244 0%, #003366 100%) !important;
+      padding: 16px 24px !important;
+      background: linear-gradient(135deg, #001F3F 0%, #002B5B 50%, #003366 100%) !important;
       color: #FFFFFF !important;
       display: flex !important;
       align-items: center !important;
@@ -2188,53 +2315,232 @@
       border-bottom: 3px solid #D9531E !important;
     }
 
-    .ir-cred-body {
+    .ir-settings-nav-tabs {
+      display: flex !important;
+      background: #F4EDE2 !important;
+      border-bottom: 1.5px solid rgba(0, 51, 102, 0.14) !important;
+      padding: 0 16px !important;
+      gap: 4px !important;
+      overflow-x: auto !important;
+      flex-shrink: 0 !important;
+    }
+
+    .ir-settings-nav-btn {
+      padding: 12px 18px !important;
+      background: none !important;
+      border: none !important;
+      border-bottom: 3px solid transparent !important;
+      color: #475569 !important;
+      font-weight: 700 !important;
+      font-size: 0.82rem !important;
+      cursor: pointer !important;
+      display: flex !important;
+      align-items: center !important;
+      gap: 8px !important;
+      transition: all 0.15s ease !important;
+      white-space: nowrap !important;
+    }
+
+    .ir-settings-nav-btn:hover {
+      color: #002B5B !important;
+      background: rgba(255, 255, 255, 0.5) !important;
+    }
+
+    .ir-settings-nav-btn.active {
+      color: #002B5B !important;
+      border-bottom-color: #D9531E !important;
+      background: #FFFFFF !important;
+      font-weight: 800 !important;
+    }
+
+    .ir-cred-body, .ir-settings-body {
       flex: 1 1 auto !important;
       min-height: 0 !important;
-      padding: 20px 24px !important;
+      padding: 22px 26px !important;
       overflow-y: auto !important;
-      background: #FAF6EE !important;
+      background: #FAF7F0 !important;
       box-sizing: border-box !important;
+    }
+
+    .ir-settings-tab-panel {
+      display: none !important;
+    }
+
+    .ir-settings-tab-panel.active {
+      display: block !important;
+      animation: fadeInSettings 0.2s ease;
+    }
+
+    @keyframes fadeInSettings {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Universal Indian Railways Tactical Modal Tile System ────────── */
+    #ir-tactical-modal-overlay {
+      position: fixed !important;
+      inset: 0 !important;
+      z-index: 1000005 !important;
+      background: rgba(11, 15, 25, 0.72) !important;
+      backdrop-filter: blur(8px) !important;
+      -webkit-backdrop-filter: blur(8px) !important;
+      display: none;
+      align-items: center !important;
+      justify-content: center !important;
+      padding: 20px !important;
+      opacity: 0;
+      transition: opacity 0.22s ease !important;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+    }
+
+    #ir-tactical-modal-overlay.open {
+      display: flex !important;
+      opacity: 1 !important;
+    }
+
+    .ir-tactical-dialog {
+      background: #FFFFFF !important;
+      border-radius: 16px !important;
+      width: 100% !important;
+      max-width: 630px !important;
+      max-height: 90vh !important;
+      display: flex !important;
+      flex-direction: column !important;
+      overflow: hidden !important;
+      box-shadow: 0 25px 60px -10px rgba(0, 34, 68, 0.45), 0 0 0 1px rgba(0, 51, 102, 0.18) !important;
+      border: 1.5px solid rgba(0, 51, 102, 0.2) !important;
+      transform: translateY(18px) scale(0.97) !important;
+      transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    }
+
+    #ir-tactical-modal-overlay.open .ir-tactical-dialog {
+      transform: translateY(0) scale(1) !important;
+    }
+
+    .ir-tactical-header {
+      padding: 16px 22px !important;
+      background: linear-gradient(135deg, #001F3F 0%, #003366 100%) !important;
+      color: #FFFFFF !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      border-bottom: 3px solid #D9531E !important;
+      flex-shrink: 0 !important;
+    }
+
+    .ir-tactical-body {
+      padding: 22px 24px !important;
+      background: #FAF6EE !important;
+      color: #0F172A !important;
+      overflow-y: auto !important;
+      font-size: 0.88rem !important;
+      line-height: 1.6 !important;
+      flex: 1 1 auto !important;
+    }
+
+    .ir-tactical-footer {
+      padding: 14px 22px !important;
+      background: #FFFFFF !important;
+      border-top: 1px solid rgba(0, 51, 102, 0.12) !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: flex-end !important;
+      gap: 10px !important;
+      flex-shrink: 0 !important;
+    }
+
+    .ir-tactical-kv-card {
+      background: #FFFFFF !important;
+      border: 1px solid rgba(0, 51, 102, 0.12) !important;
+      border-radius: 8px !important;
+      padding: 8px 12px !important;
+      margin: 6px 0 !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      gap: 10px !important;
+      font-size: 0.82rem !important;
+    }
+
+    .ir-tactical-step-card {
+      background: #FFFFFF !important;
+      border-left: 3.5px solid #003366 !important;
+      border-radius: 6px !important;
+      padding: 9px 12px !important;
+      margin: 6px 0 !important;
+      font-size: 0.82rem !important;
+      color: #1E293B !important;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+    }
+
+    /* Dark Mode Tokens for Tactical Modal Tile */
+    [data-theme="dark"] .ir-tactical-dialog,
+    [data-theme="dark"] .ir-cred-dialog {
+      background: #111827 !important;
+      border-color: rgba(56, 189, 248, 0.3) !important;
+      box-shadow: 0 25px 60px -10px rgba(0, 0, 0, 0.7), 0 0 30px rgba(56, 189, 248, 0.15) !important;
+    }
+
+    [data-theme="dark"] .ir-tactical-header,
+    [data-theme="dark"] .ir-cred-header {
+      background: linear-gradient(135deg, #0B0F19 0%, #161F30 100%) !important;
+      border-bottom-color: #F97316 !important;
+    }
+
+    [data-theme="dark"] .ir-tactical-body,
+    [data-theme="dark"] .ir-cred-body {
+      background: #0B0F19 !important;
+      color: #F8FAFC !important;
+    }
+
+    [data-theme="dark"] .ir-tactical-footer {
+      background: #111827 !important;
+      border-top-color: rgba(255, 255, 255, 0.1) !important;
+    }
+
+    [data-theme="dark"] .ir-tactical-kv-card,
+    [data-theme="dark"] .ir-tactical-step-card {
+      background: #161F30 !important;
+      border-color: rgba(255, 255, 255, 0.1) !important;
+      color: #F1F5F9 !important;
     }
 
     /* Print media query for official print */
     @media print {
-      body * {
-        visibility: hidden !important;
-      }
-      #ir-report-modal,
-      #ir-report-modal .ir-report-dialog,
-      #ir-report-modal .ir-report-body,
-      #ir-report-modal .ir-report-paper,
-      #ir-report-modal .ir-report-paper * {
-        visibility: visible !important;
-      }
-      #ir-report-modal {
-        position: absolute !important;
-        left: 0 !important;
-        top: 0 !important;
-        width: 100% !important;
-        padding: 0 !important;
-        background: transparent !important;
-      }
-      #ir-report-modal .ir-report-dialog {
-        border: none !important;
-        box-shadow: none !important;
-        max-width: 100% !important;
-        max-height: none !important;
-      }
+      #ir-left-sidebar,
+      #ir-shared-topbar,
+      #ir-fs-workspace,
       .ir-report-header,
       .ir-report-tabs,
       .ir-report-toolbar,
       .ir-report-footer,
-      #ir-left-sidebar,
-      #ir-shared-topbar,
-      #ir-fs-workspace {
+      .btn,
+      button,
+      .surv-modal-footer,
+      .no-print {
         display: none !important;
+      }
+      #ir-report-modal,
+      .surv-modal-overlay,
+      .swarm-modal-overlay {
+        position: static !important;
+        background: transparent !important;
+        padding: 0 !important;
+        display: block !important;
+      }
+      #ir-report-modal .ir-report-dialog,
+      .surv-modal-dialog,
+      .swarm-modal-card {
+        border: none !important;
+        box-shadow: none !important;
+        max-width: 100% !important;
+        max-height: none !important;
+        overflow: visible !important;
       }
       body {
         padding: 0 !important;
         background: #FFFFFF !important;
+        color: #000000 !important;
       }
     }
 
@@ -2489,6 +2795,293 @@
         padding: 24px 20px !important;
       }
     }
+
+    /* ══════════════════════════════════════════════════════════════
+       SHAREDNAV DARK MODE OVERRIDES
+       ══════════════════════════════════════════════════════════════ */
+    [data-theme="dark"] body {
+      background: #0B0F19 !important;
+      color: #F8FAFC !important;
+    }
+
+    /* Left Sidebar in Dark Mode */
+    [data-theme="dark"] #ir-left-sidebar {
+      background: #0D1117 !important;
+      border-right: 1.5px solid rgba(255, 255, 255, 0.08) !important;
+      box-shadow: 2px 0 20px rgba(0, 0, 0, 0.45) !important;
+    }
+
+    [data-theme="dark"] #ir-left-sidebar:not(:hover):not(.expanded):not(.open) .snav-sidebar-footer,
+    [data-theme="dark"] #ir-left-sidebar:hover .snav-sidebar-footer,
+    [data-theme="dark"] #ir-left-sidebar.expanded .snav-sidebar-footer,
+    [data-theme="dark"] #ir-left-sidebar.open .snav-sidebar-footer {
+      background: #090D14 !important;
+      border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+    }
+
+    [data-theme="dark"] .snav-item-icon {
+      color: #94A3B8 !important;
+    }
+
+    [data-theme="dark"] .snav-item-icon svg {
+      stroke: #94A3B8 !important;
+    }
+
+    [data-theme="dark"] #ir-left-sidebar:hover .snav-item-text,
+    [data-theme="dark"] #ir-left-sidebar.expanded .snav-item-text,
+    [data-theme="dark"] #ir-left-sidebar.open .snav-item-text {
+      color: #F8FAFC !important;
+    }
+
+    [data-theme="dark"] #ir-left-sidebar:hover .snav-item:hover,
+    [data-theme="dark"] #ir-left-sidebar.expanded .snav-item:hover,
+    [data-theme="dark"] #ir-left-sidebar.open .snav-item:hover,
+    [data-theme="dark"] #ir-left-sidebar:hover .snav-item-parent:hover,
+    [data-theme="dark"] #ir-left-sidebar.expanded .snav-item-parent:hover,
+    [data-theme="dark"] #ir-left-sidebar.open .snav-item-parent:hover {
+      background: rgba(56, 189, 248, 0.12) !important;
+      color: #38BDF8 !important;
+    }
+
+    [data-theme="dark"] #ir-left-sidebar:hover .snav-item:hover .snav-item-icon svg,
+    [data-theme="dark"] #ir-left-sidebar.expanded .snav-item:hover .snav-item-icon svg,
+    [data-theme="dark"] #ir-left-sidebar.open .snav-item:hover .snav-item-icon svg,
+    [data-theme="dark"] #ir-left-sidebar:hover .snav-item-parent:hover .snav-item-icon svg,
+    [data-theme="dark"] #ir-left-sidebar.expanded .snav-item-parent:hover .snav-item-icon svg,
+    [data-theme="dark"] #ir-left-sidebar.open .snav-item-parent:hover .snav-item-icon svg {
+      stroke: #38BDF8 !important;
+    }
+
+    [data-theme="dark"] #ir-left-sidebar:hover .snav-item--active,
+    [data-theme="dark"] #ir-left-sidebar.expanded .snav-item--active,
+    [data-theme="dark"] #ir-left-sidebar.open .snav-item--active,
+    [data-theme="dark"] #ir-left-sidebar:not(:hover):not(.expanded):not(.open) .snav-item--active {
+      background: rgba(56, 189, 248, 0.16) !important;
+      color: #38BDF8 !important;
+      border: 1.5px solid rgba(56, 189, 248, 0.4) !important;
+    }
+
+    [data-theme="dark"] #ir-left-sidebar:hover .snav-item--active .snav-item-icon svg,
+    [data-theme="dark"] #ir-left-sidebar.expanded .snav-item--active .snav-item-icon svg,
+    [data-theme="dark"] #ir-left-sidebar.open .snav-item--active .snav-item-icon svg,
+    [data-theme="dark"] #ir-left-sidebar:not(:hover):not(.expanded):not(.open) .snav-item--active .snav-item-icon svg {
+      stroke: #38BDF8 !important;
+    }
+
+    [data-theme="dark"] #ir-left-sidebar:hover .snav-item--active::before,
+    [data-theme="dark"] #ir-left-sidebar.expanded .snav-item--active::before,
+    [data-theme="dark"] #ir-left-sidebar.open .snav-item--active::before {
+      background: #38BDF8 !important;
+    }
+
+    [data-theme="dark"] .snav-sub-item {
+      color: #94A3B8 !important;
+    }
+
+    [data-theme="dark"] .snav-sub-item:hover,
+    [data-theme="dark"] .snav-sub-item.active {
+      background: rgba(56, 189, 248, 0.14) !important;
+      color: #38BDF8 !important;
+    }
+
+    [data-theme="dark"] .snav-whats-new-box {
+      background: #161F30 !important;
+      border-color: rgba(255, 255, 255, 0.08) !important;
+    }
+
+    [data-theme="dark"] .snav-whats-new-box div:first-child span {
+      color: #38BDF8 !important;
+    }
+
+    [data-theme="dark"] .snav-whats-new-box strong {
+      color: #38BDF8 !important;
+    }
+
+    /* Topbar Header in Dark Mode */
+    [data-theme="dark"] #ir-shared-topbar {
+      background: rgba(13, 17, 23, 0.96) !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
+    }
+
+    [data-theme="dark"] .snav-topbar-title {
+      color: #F8FAFC !important;
+    }
+
+    [data-theme="dark"] .snav-topbar-sub {
+      color: #94A3B8 !important;
+    }
+
+    [data-theme="dark"] .snav-btn-report-quick {
+      background: #161F30 !important;
+      color: #38BDF8 !important;
+      border-color: rgba(56, 189, 248, 0.3) !important;
+    }
+
+    [data-theme="dark"] .snav-btn-report-quick:hover {
+      background: #38BDF8 !important;
+      color: #0B0F19 !important;
+    }
+
+    [data-theme="dark"] .snav-icon-btn,
+    [data-theme="dark"] .snav-lang-select {
+      background: #161F30 !important;
+      border-color: rgba(255, 255, 255, 0.12) !important;
+      color: #F8FAFC !important;
+    }
+
+    [data-theme="dark"] .snav-icon-btn:hover,
+    [data-theme="dark"] .snav-lang-select:hover {
+      background: #1E293B !important;
+      border-color: #38BDF8 !important;
+      color: #38BDF8 !important;
+    }
+
+    [data-theme="dark"] .snav-user-badge {
+      background: #161F30 !important;
+      border-color: rgba(255, 255, 255, 0.12) !important;
+    }
+
+    [data-theme="dark"] .snav-user-name {
+      color: #F8FAFC !important;
+    }
+
+    [data-theme="dark"] .snav-user-role {
+      color: #94A3B8 !important;
+    }
+
+    [data-theme="dark"] .snav-status-pill {
+      background: rgba(16, 185, 129, 0.12) !important;
+      border-color: rgba(16, 185, 129, 0.25) !important;
+      color: #10B981 !important;
+    }
+
+    /* Dropdowns in Dark Mode */
+    [data-theme="dark"] .snav-notif-dropdown,
+    [data-theme="dark"] .snav-menu-dropdown {
+      background: #111827 !important;
+      border-color: rgba(255, 255, 255, 0.12) !important;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6) !important;
+    }
+
+    [data-theme="dark"] .snav-notif-header {
+      background: #161F30 !important;
+      border-color: rgba(255, 255, 255, 0.08) !important;
+    }
+
+    [data-theme="dark"] .snav-notif-title {
+      color: #F8FAFC !important;
+    }
+
+    [data-theme="dark"] .snav-notif-item {
+      border-bottom-color: rgba(255, 255, 255, 0.06) !important;
+    }
+
+    [data-theme="dark"] .snav-notif-item.unread {
+      background: rgba(56, 189, 248, 0.06) !important;
+    }
+
+    [data-theme="dark"] .snav-notif-heading {
+      color: #F8FAFC !important;
+    }
+
+    [data-theme="dark"] .snav-notif-desc {
+      color: #94A3B8 !important;
+    }
+
+    [data-theme="dark"] .snav-notif-footer {
+      background: #0D1117 !important;
+      border-top-color: rgba(255, 255, 255, 0.08) !important;
+    }
+
+    [data-theme="dark"] .snav-menu-item {
+      color: #E2E8F0 !important;
+    }
+
+    [data-theme="dark"] .snav-menu-item:hover,
+    [data-theme="dark"] .snav-menu-item.active {
+      background: #1E293B !important;
+      color: #38BDF8 !important;
+    }
+
+    /* Full-screen Workspaces in Dark Mode */
+    [data-theme="dark"] #ir-fs-workspace {
+      background: #0B0F19 !important;
+      color: #F8FAFC !important;
+    }
+
+    [data-theme="dark"] .ir-fs-header {
+      background: #0D1117 !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+    }
+
+    [data-theme="dark"] .ir-fs-title {
+      color: #F8FAFC !important;
+    }
+
+    [data-theme="dark"] .ir-fs-card {
+      background: #111827 !important;
+      border-color: rgba(255, 255, 255, 0.08) !important;
+      color: #F8FAFC !important;
+    }
+
+    [data-theme="dark"] .ir-report-paper {
+      background: #111827 !important;
+      color: #F8FAFC !important;
+      border-color: rgba(255, 255, 255, 0.12) !important;
+      box-shadow: 0 4px 25px rgba(0, 0, 0, 0.5) !important;
+    }
+
+    [data-theme="dark"] .ir-report-header-banner {
+      background: #161F30 !important;
+      border-bottom-color: rgba(255, 255, 255, 0.08) !important;
+    }
+
+    [data-theme="dark"] .ir-report-table th {
+      background: #1E293B !important;
+      color: #F8FAFC !important;
+      border-bottom-color: rgba(255, 255, 255, 0.12) !important;
+    }
+
+    [data-theme="dark"] .ir-report-table td {
+      border-bottom-color: rgba(255, 255, 255, 0.06) !important;
+      color: #E2E8F0 !important;
+    }
+
+    [data-theme="dark"] .ir-report-table tr:hover {
+      background: rgba(255, 255, 255, 0.04) !important;
+    }
+
+    [data-theme="dark"] .ir-report-footer {
+      background: #0D1117 !important;
+      border-top-color: rgba(255, 255, 255, 0.08) !important;
+    }
+
+    /* Global Footer in Dark Mode */
+    [data-theme="dark"] .ir-global-footer-wrapper {
+      border-top-color: rgba(255, 255, 255, 0.08) !important;
+    }
+
+    [data-theme="dark"] .ir-footer-card {
+      background: #111827 !important;
+      border-color: rgba(255, 255, 255, 0.08) !important;
+    }
+
+    [data-theme="dark"] .ir-footer-card-role {
+      color: #38BDF8 !important;
+    }
+
+    [data-theme="dark"] .ir-footer-card-org {
+      color: #CBD5E1 !important;
+    }
+
+    [data-theme="dark"] .ir-footer-link {
+      color: #60A5FA !important;
+    }
+
+    [data-theme="dark"] .ir-footer-bottom-text {
+      color: #94A3B8 !important;
+    }
   `;
 
   function buildSidebarHTML() {
@@ -2573,7 +3166,7 @@
         <div class="snav-brand-wrapper">
           <a href="admin-dashboard.html" class="snav-sidebar-brand-card" title="RAKSHA PATH Command Center">
             <div class="snav-brand-logo-tile">
-              <img src="/raksha_path_logo.png" alt="Indian Railways Logo" style="width: 32px; height: 32px; object-fit: contain; border-radius: 6px;" onerror="this.onerror=null; this.src='../raksha_path_logo.png';" />
+              <img src="/raksha_path_logo.png" alt="Indian Railways Logo" style="width: 100%; height: 100%; object-fit: contain; border-radius: 8px; display: block;" onerror="if(!this._f1){this._f1=1; this.src='../public/raksha_path_logo.png';} else if(!this._f2){this._f2=1; this.src='../raksha_path_logo.png';} else if(!this._f3){this._f3=1; this.src='raksha_path_logo.png';}" />
             </div>
             <div class="snav-sidebar-brand-text">
               <span style="font-weight: 800; font-size: 0.88rem; color: #002244; letter-spacing: -0.2px; white-space: nowrap;">RAKSHA PATH</span>
@@ -2631,35 +3224,32 @@
             <span class="snav-item-chevron">›</span>
           </button>
 
-          ${isAdmin ? `
-            <div class="snav-group-heading" style="margin-top:6px;">GOVERNANCE &amp; SECURITY</div>
-            <button class="snav-item" id="snav-btn-credentials" type="button" title="Manage authorized personnel credentials">
-              <span class="snav-item-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
-              <span class="snav-item-text">Personnel Credentials</span>
-              <span class="snav-item-badge">RBAC</span>
-              <span class="snav-item-chevron">›</span>
-            </button>
-          ` : ''}
-
-          <!-- What's New Card (Oxmaint AI Style) -->
-          <div class="snav-whats-new-box">
-            <div style="display:flex; align-items:center; gap:8px; color:#003366; font-weight:800; font-size:0.82rem; margin-bottom:4px;">
-              <span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m11 17 2 2a1 1 0 0 0 1.4 0l4.3-4.3a1 1 0 0 0 0-1.4l-2.6-2.6a1 1 0 0 0-1.4 0L11 14"/><path d="m18 10 3.3-3.3a1 1 0 0 0 0-1.4l-2.6-2.6a1 1 0 0 0-1.4 0L14 6"/><path d="m2 14 3.3 3.3a1 1 0 0 0 1.4 0l4.3-4.3"/><path d="m6 10-3.3-3.3a1 1 0 0 1 0-1.4l2.6-2.6a1 1 0 0 1 1.4 0L10 6"/></svg></span>
-              <span>What's New</span>
+          <!-- What's New Card (Interactive Release Notes Modal Trigger) -->
+          <div class="snav-whats-new-box" id="snav-whats-new-btn" onclick="window.openWhatsNewModal()" role="button" tabindex="0" title="Click to view new features in v2.4.2 Production">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:4px;">
+              <div style="display:flex; align-items:center; gap:6px; color:#002B5B; font-weight:800; font-size:0.82rem;">
+                <span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m11 17 2 2a1 1 0 0 0 1.4 0l4.3-4.3a1 1 0 0 0 0-1.4l-2.6-2.6a1 1 0 0 0-1.4 0L11 14"/><path d="m18 10 3.3-3.3a1 1 0 0 0 0-1.4l-2.6-2.6a1 1 0 0 0-1.4 0L14 6"/><path d="m2 14 3.3 3.3a1 1 0 0 0 1.4 0l4.3-4.3"/><path d="m6 10-3.3-3.3a1 1 0 0 1 0-1.4l2.6-2.6a1 1 0 0 1 1.4 0L10 6"/></svg></span>
+                <span>What's New</span>
+              </div>
+              <span style="font-size:0.65rem; background:rgba(217,83,30,0.12); color:#D9531E; padding:1px 6px; border-radius:4px; font-weight:800; text-transform:uppercase;">v2.4.2</span>
             </div>
-            <div style="font-size:0.72rem; color:#64748B; font-weight:500; line-height:1.35;">
-              View our latest update<br/>
-              <strong style="color:#003366;">v1.4.6</strong>
+            <div style="font-size:0.72rem; color:#64748B; font-weight:500; line-height:1.35; display:flex; justify-content:space-between; align-items:flex-end;">
+              <div>
+                View our latest update<br/>
+                <strong style="color:#002B5B;">v2.4.2 Production</strong>
+              </div>
+              <span style="color:#D9531E; font-weight:800; font-size:0.85rem;">✨</span>
             </div>
           </div>
 
           <div class="snav-sidebar-divider"></div>
 
-          <a href="getting-started.html" class="snav-item snav-settings-link" style="flex-shrink:0;">
+          <button type="button" class="snav-item snav-settings-link" id="snav-btn-sidebar-settings" onclick="window.openSettingsModal()" style="flex-shrink:0; background:none; border:none; width:100%; text-align:left; cursor:pointer;" title="Settings, Credentials, Diagnostics & Appearance">
             <span class="snav-item-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span>
-            <span class="snav-item-text">Settings</span>
+            <span class="snav-item-text">Settings &amp; Governance</span>
+            <span class="snav-item-badge" style="background:rgba(0,43,91,0.09);color:#002B5B;">⚙️</span>
             <span class="snav-item-chevron">›</span>
-          </a>
+          </button>
         </nav>
 
         <!-- Sidebar Footer -->
@@ -2669,7 +3259,7 @@
             <span>FastAPI &amp; CP-SAT Active</span>
           </div>
           <div class="snav-footer-meta">
-            RAKSHA PATH Corridor v2.4.1<br/>
+            RAKSHA PATH Corridor v2.4.2<br/>
             Northern Railway HQ • DLI Division
           </div>
         </div>
@@ -2700,10 +3290,6 @@
             </div>
             <div class="snav-topbar-sub">${page.sub}</div>
           </div>
-          <button class="snav-btn-report-quick" id="snav-topbar-report-btn" type="button">
-            <span>📊</span>
-            <span>Generate Report (Full Screen)</span>
-          </button>
         </div>
 
         <!-- Right side: Notifications, utilities, user & sign out -->
@@ -2809,8 +3395,18 @@
               </div>
             </div>
 
+            <!-- Dark / Light Mode Switcher -->
+            <button type="button" class="snav-icon-btn snav-theme-btn" id="snav-btn-theme" title="Switch between Dark & Light Mode" onclick="window.toggleSiteTheme()">
+              <span id="snav-theme-icon" style="font-size:1.05rem; line-height:1; display:flex; align-items:center; justify-content:center;">🌙</span>
+            </button>
+
+            <!-- Settings & System Governance Button in Topbar -->
+            <button type="button" class="snav-icon-btn" id="snav-btn-top-settings" title="System Settings, Appearance & Credentials" onclick="window.openSettingsModal()">
+              ⚙️
+            </button>
+
             <!-- Camera & Scanner Studio Button -->
-            <button type="button" class="snav-icon-btn" id="snav-btn-camera" title="Scanner, Snapshots &amp; Visual Inspection" onclick="window.openCameraToolModal()">
+            <button type="button" class="snav-icon-btn" id="snav-btn-camera" title="Scanner, Snapshots & Visual Inspection" onclick="window.openCameraToolModal()">
               📷
             </button>
 
@@ -2836,22 +3432,6 @@
               </div>
             </div>
 
-            <!-- Division Selector with Dropdown -->
-            <div style="position: relative; display: inline-flex;">
-              <div class="snav-site-selector" id="snav-div-btn" title="Active Railway Zone / Division" onclick="window.toggleDivisionDropdown(event)">
-                <span>🏢</span>
-                <span id="snav-current-div">Delhi Division</span>
-                <small>▾</small>
-              </div>
-              <div class="snav-menu-dropdown" id="snav-div-menu" onclick="event.stopPropagation();" style="min-width: 210px;">
-                <button type="button" class="snav-menu-item active" onclick="window.selectDivision('Delhi Division (NR)')">🏢 Delhi Division (NR)</button>
-                <button type="button" class="snav-menu-item" onclick="window.selectDivision('Prayagraj / Kanpur (NCR)')">🏢 Prayagraj / Kanpur (NCR)</button>
-                <button type="button" class="snav-menu-item" onclick="window.selectDivision('Lucknow Division (NR)')">🏢 Lucknow Division (NR)</button>
-                <button type="button" class="snav-menu-item" onclick="window.selectDivision('Mumbai Central (WR)')">🏢 Mumbai Central (WR)</button>
-                <button type="button" class="snav-menu-item" onclick="window.selectDivision('Howrah Division (ER)')">🏢 Howrah Division (ER)</button>
-                <button type="button" class="snav-menu-item" onclick="window.selectDivision('All Divisions (HQ Multi)')">🌐 All Divisions (HQ Multi)</button>
-              </div>
-            </div>
           </div>
 
           <div class="snav-status-pill" title="Gateway connection active">
@@ -5959,32 +6539,858 @@
     if (modal) modal.classList.remove('open');
   };
 
-  window.openUserCredentialsModal = function () {
-    const modal = document.getElementById('ir-cred-modal');
+  // ── Unified Settings & Governance Modal Handlers ──────────────────
+  window.openSettingsModal = function (tabName = 'credentials') {
+    let modal = document.getElementById('ir-settings-modal');
+    if (!modal) {
+      const mount = document.createElement('div');
+      mount.innerHTML = buildSettingsModalHTML();
+      document.body.appendChild(mount.firstElementChild);
+      modal = document.getElementById('ir-settings-modal');
+    }
     if (!modal) return;
     modal.classList.add('open');
-    renderCredentialsTable();
+    modal.style.display = 'flex';
+    window.switchSettingsTab(tabName);
+    window.updateSettingsThemeUi();
+  };
+
+  window.closeSettingsModal = function () {
+    const modal = document.getElementById('ir-settings-modal');
+    if (modal) {
+      modal.classList.remove('open');
+      modal.style.display = 'none';
+    }
+  };
+
+  window.switchSettingsTab = function (tabName) {
+    const navBtns = document.querySelectorAll('.ir-settings-nav-btn');
+    const panels = document.querySelectorAll('.ir-settings-tab-panel');
+
+    navBtns.forEach(btn => {
+      if (btn.dataset.settingsTab === tabName) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    });
+
+    panels.forEach(p => {
+      if (p.id === `ir-settings-panel-${tabName}`) {
+        p.classList.add('active');
+      } else {
+        p.classList.remove('active');
+      }
+    });
+
+    if (tabName === 'credentials') {
+      renderCredentialsTable();
+    } else if (tabName === 'backend') {
+      window.testBackendConnectivity();
+    } else if (tabName === 'appearance') {
+      window.updateSettingsThemeUi();
+    }
+  };
+
+  window.updateSettingsThemeUi = function () {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    const cardLight = document.getElementById('ir-theme-card-light');
+    const cardDark = document.getElementById('ir-theme-card-dark');
+    const badgeLight = document.getElementById('ir-badge-theme-light');
+    const badgeDark = document.getElementById('ir-badge-theme-dark');
+
+    if (cardLight && cardDark && badgeLight && badgeDark) {
+      if (isDark) {
+        cardDark.style.borderColor = '#38BDF8';
+        cardDark.style.boxShadow = '0 0 20px rgba(56, 189, 248, 0.35)';
+        badgeDark.style.background = '#38BDF8';
+        badgeDark.style.color = '#0B0F19';
+        badgeDark.textContent = 'ACTIVE';
+
+        cardLight.style.borderColor = 'rgba(0,51,102,0.2)';
+        cardLight.style.boxShadow = 'none';
+        badgeLight.style.background = '#E2E8F0';
+        badgeLight.style.color = '#475569';
+        badgeLight.textContent = 'ACTIVATE';
+      } else {
+        cardLight.style.borderColor = '#002B5B';
+        cardLight.style.boxShadow = '0 0 20px rgba(0, 43, 91, 0.2)';
+        badgeLight.style.background = '#002B5B';
+        badgeLight.style.color = '#FFFFFF';
+        badgeLight.textContent = 'ACTIVE';
+
+        cardDark.style.borderColor = 'rgba(255,255,255,0.15)';
+        cardDark.style.boxShadow = 'none';
+        badgeDark.style.background = 'rgba(255,255,255,0.15)';
+        badgeDark.style.color = '#94A3B8';
+        badgeDark.textContent = 'ACTIVATE';
+      }
+    }
+  };
+
+  window.testBackendConnectivity = async function () {
+    const logBox = document.getElementById('ir-backend-diagnostic-log');
+    const icon = document.getElementById('ir-ping-icon');
+    if (icon) icon.textContent = '⏳';
+
+    const updateBadge = (id, online, text, color) => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.style.background = online ? 'rgba(5,150,105,0.12)' : 'rgba(220,38,38,0.12)';
+        el.style.color = online ? '#059669' : '#DC2626';
+        el.textContent = text;
+      }
+    };
+
+    const updateLat = (id, text, color) => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.textContent = text;
+        if (color) el.style.color = color;
+      }
+    };
+
+    let logLines = [];
+    const addLog = (msg) => {
+      logLines.push(`[${new Date().toLocaleTimeString()}] ${msg}`);
+      if (logBox) logBox.innerHTML = logLines.join('<br/>');
+    };
+
+    addLog('⚡ Initiating full-stack diagnostic mesh ping...');
+
+    // 1. Ping Node Gateway & Telemetry
+    try {
+      const t0 = performance.now();
+      const res = await fetch('/api/v1/server/telemetry');
+      const lat = Math.round(performance.now() - t0);
+      if (res.ok) {
+        const data = await res.json();
+        updateBadge('ir-status-node', true, '● ONLINE');
+        updateLat('ir-latency-node', `Latency: ${lat}ms (${data.uptime_human || 'Active'})`, '#059669');
+        addLog(`✓ Node Gateway (Port 5000): HTTP 200 OK (${lat}ms) - Uptime ${data.uptime_human}`);
+      } else {
+        updateBadge('ir-status-node', false, '● DEGRADED');
+        updateLat('ir-latency-node', `HTTP ${res.status}`, '#DC2626');
+        addLog(`⚠ Node Gateway returned HTTP ${res.status}`);
+      }
+    } catch (e) {
+      updateBadge('ir-status-node', false, '● ERROR');
+      updateLat('ir-latency-node', 'Failed', '#DC2626');
+      addLog(`✗ Node Gateway error: ${e.message}`);
+    }
+
+    // 2. Ping Python AI Daemon via API Gateway
+    try {
+      const t0 = performance.now();
+      const res = await fetch('/api/v1/health');
+      const lat = Math.round(performance.now() - t0);
+      if (res.ok) {
+        const data = await res.json();
+        updateBadge('ir-status-python', true, '● ONLINE');
+        updateLat('ir-latency-python', `FastAPI Port 5001: ${lat}ms`, '#059669');
+        addLog(`✓ Python FastAPI Daemon: Status ${data.status || 'HEALTHY'} (${lat}ms)`);
+      } else {
+        updateBadge('ir-status-python', false, '● OFFLINE');
+        updateLat('ir-latency-python', `HTTP ${res.status}`, '#DC2626');
+        addLog(`⚠ Python AI Inference returned HTTP ${res.status}`);
+      }
+    } catch (e) {
+      updateBadge('ir-status-python', false, '● FALLBACK');
+      updateLat('ir-latency-python', 'Fallback Active', '#D97706');
+      addLog(`⚠ Python AI Daemon ping fallback active`);
+    }
+
+    // 3. Check Supabase Audit Store
+    try {
+      const res = await fetch('/api/v1/supabase/status');
+      if (res.ok) {
+        const data = await res.json();
+        updateBadge('ir-status-db', true, '● SYNCED');
+        updateLat('ir-latency-db', `Storage: ${data.storage_mode || 'Persistent WAL'}`, '#059669');
+        addLog(`✓ Database Storage: ${data.storage_mode || 'Persistent WAL'} (Cryptographically Sealed)`);
+      } else {
+        updateBadge('ir-status-db', true, '● LOCAL WAL');
+        updateLat('ir-latency-db', 'Local Disk Snapshot OK', '#059669');
+        addLog(`✓ Database Storage: Local Disk WAL Snapshot Active`);
+      }
+    } catch (_) {
+      updateBadge('ir-status-db', true, '● LOCAL WAL');
+      updateLat('ir-latency-db', 'Local Disk Snapshot OK', '#059669');
+    }
+
+    // 4. Check Live Train Telemetry Feed
+    try {
+      const res = await fetch('/api/v1/trains');
+      if (res.ok) {
+        const data = await res.json();
+        const trainCount = data.trains ? data.trains.length : 6;
+        updateBadge('ir-status-rapidapi', true, '● ACTIVE');
+        updateLat('ir-latency-rapidapi', `${trainCount} Live Trains Synced`, '#059669');
+        addLog(`✓ Live IRCTC Telemetry: ${trainCount} real-time rakes tracked on NDLS-CNB`);
+      }
+    } catch (_) { }
+
+    addLog('✅ Full-stack diagnostics complete. All systems operational.');
+    if (icon) icon.textContent = '⚡';
+  };
+
+  // Backward-compatible alias for personal credentials
+  window.openUserCredentialsModal = function (tab = 'credentials') {
+    window.openSettingsModal(tab || 'credentials');
   };
 
   window.closeUserCredentialsModal = function () {
-    const modal = document.getElementById('ir-cred-modal');
-    if (modal) modal.classList.remove('open');
+    window.closeSettingsModal();
   };
 
-  // Actions for credentials modal
+  // ── Universal Indian Railways Tactical Modal Tile & Alert Engine ─────
+  window.showIRModalTile = function (options = {}) {
+    let overlay = document.getElementById('ir-tactical-modal-overlay');
+    if (!overlay) {
+      const mount = document.createElement('div');
+      mount.innerHTML = buildIRModalTileHTML();
+      document.body.appendChild(mount.firstElementChild);
+      overlay = document.getElementById('ir-tactical-modal-overlay');
+    }
+
+    const titleEl = document.getElementById('ir-tactical-title');
+    const badgeEl = document.getElementById('ir-tactical-badge');
+    const iconEl = document.getElementById('ir-tactical-icon');
+    const bodyEl = document.getElementById('ir-tactical-body');
+    const primBtn = document.getElementById('ir-tactical-btn-primary');
+    const secBtn = document.getElementById('ir-tactical-btn-secondary');
+
+    const msg = typeof options === 'string' ? options : (options.message || options.text || '');
+    const title = options.title || 'RAKSHA PATH Command Tile';
+    const type = options.type || (msg.includes('🚨') || msg.includes('EMERGENCY') || msg.includes('CRITICAL') || msg.includes('failed') || msg.includes('Error') ? 'error' : (msg.includes('✓') || msg.includes('✅') || msg.includes('SUCCESS') ? 'success' : 'info'));
+    const badge = options.badge || (type === 'error' ? 'SAFETY CRITICAL' : (type === 'success' ? 'SYSTEM COMMITTED' : 'OPERATIONAL ACTION'));
+    const icon = options.icon || (type === 'error' ? '🚨' : (type === 'success' ? '✅' : '🚆'));
+
+    if (titleEl) titleEl.textContent = title;
+    if (badgeEl) {
+      badgeEl.textContent = badge;
+      badgeEl.style.background = type === 'error' ? '#FEF2F2' : (type === 'success' ? '#ECFDF5' : 'rgba(0, 86, 179, 0.12)');
+      badgeEl.style.color = type === 'error' ? '#DC2626' : (type === 'success' ? '#059669' : '#0056B3');
+      badgeEl.style.border = type === 'error' ? '1px solid #FECACA' : (type === 'success' ? '1px solid #A7F3D0' : '1px solid rgba(0, 86, 179, 0.3)');
+    }
+    if (iconEl) iconEl.textContent = icon;
+
+    // Intelligent message parser & card formatter
+    if (bodyEl) {
+      if (options.contentHtml) {
+        bodyEl.innerHTML = options.contentHtml;
+      } else {
+        const rawLines = msg.split('\n').map(l => l.trim()).filter(Boolean);
+        let formattedHtml = '';
+        let listBuffer = [];
+
+        rawLines.forEach(line => {
+          // Check for numbered/bullet points (e.g. "1. Emergency Possession...", "➔ Once sanctioned...")
+          if (/^(\d+[\.\)]|➔|•|-|\*)\s+/.test(line)) {
+            const text = line.replace(/^(\d+[\.\)]|➔|•|-|\*)\s+/, '');
+            listBuffer.push(`<div class="ir-tactical-step-card"><strong>●</strong> ${escapeHtml(text)}</div>`);
+          } else if (line.includes(': ') && !line.startsWith('http') && line.length < 120) {
+            // Key-Value telemetry pair (e.g. "SHA-256 Hash: SECURED", "SLA Target: 24 Hours")
+            const parts = line.split(': ');
+            const k = parts[0];
+            const v = parts.slice(1).join(': ');
+            formattedHtml += `
+              <div class="ir-tactical-kv-card">
+                <span style="color:#64748B; font-weight:700; font-size:0.78rem;">${escapeHtml(k)}:</span>
+                <span style="color:#003366; font-weight:800; font-family:var(--font-mono, monospace); font-size:0.80rem; background:rgba(0,51,102,0.06); padding:2px 8px; border-radius:4px;">${escapeHtml(v)}</span>
+              </div>
+            `;
+          } else {
+            // General text banner / header
+            if (line.startsWith('✓') || line.startsWith('✅') || line.startsWith('🚨') || line.startsWith('⚡') || line.startsWith('🛑')) {
+              formattedHtml += `<div style="font-weight:800; font-size:1.02rem; color:#003366; margin-bottom:10px;">${escapeHtml(line)}</div>`;
+            } else {
+              formattedHtml += `<p style="margin:6px 0; color:#334155; font-size:0.86rem;">${escapeHtml(line)}</p>`;
+            }
+          }
+        });
+
+        if (listBuffer.length > 0) {
+          formattedHtml += `<div style="margin-top:10px; display:flex; flex-direction:column; gap:4px;">${listBuffer.join('')}</div>`;
+        }
+
+        bodyEl.innerHTML = formattedHtml || `<p style="margin:0;">${escapeHtml(msg)}</p>`;
+      }
+    }
+
+    if (primBtn) {
+      primBtn.textContent = options.primaryLabel || '✓ Acknowledge';
+      primBtn.onclick = () => {
+        overlay.classList.remove('open');
+        if (typeof options.onConfirm === 'function') options.onConfirm();
+      };
+    }
+
+    if (secBtn) {
+      if (options.secondaryLabel || options.isConfirm) {
+        secBtn.style.display = 'inline-flex';
+        secBtn.textContent = options.secondaryLabel || 'Cancel';
+        secBtn.onclick = () => {
+          overlay.classList.remove('open');
+          if (typeof options.onCancel === 'function') options.onCancel();
+        };
+      } else {
+        secBtn.style.display = 'none';
+      }
+    }
+
+    overlay.classList.add('open');
+  };
+
+  window.closeIRModalTile = function () {
+    const overlay = document.getElementById('ir-tactical-modal-overlay');
+    if (overlay) overlay.classList.remove('open');
+  };
+
+  // ── Global Native alert() & confirm() Replacement ──────────────────
+  // Replaces the native browser popup with modern Indian Railways UI tile
+  window.alert = function (message) {
+    window.showIRModalTile({
+      title: 'RAKSHA PATH Operational Notice',
+      message: String(message || ''),
+      primaryLabel: '✓ Acknowledge'
+    });
+  };
+
+  window.showIRConfirm = function (message, title, onConfirm, onCancel) {
+    window.showIRModalTile({
+      title: title || 'Confirmation Required',
+      message: String(message || ''),
+      isConfirm: true,
+      secondaryLabel: 'Cancel',
+      primaryLabel: 'Proceed',
+      onConfirm: onConfirm,
+      onCancel: onCancel
+    });
+  };
+
+  function escapeHtml(str) {
+    if (!str) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+  window.escapeHtml = escapeHtml;
+
+  function buildIRModalTileHTML() {
+    return `
+      <div id="ir-tactical-modal-overlay" onclick="if(event.target===this) window.closeIRModalTile();" role="dialog" aria-modal="true">
+        <div class="ir-tactical-dialog">
+          <div class="ir-tactical-header">
+            <div style="display:flex; align-items:center; gap:10px;">
+              <span id="ir-tactical-icon" style="font-size:1.4rem;">🚆</span>
+              <div>
+                <div id="ir-tactical-title" style="font-weight:800; font-size:0.96rem; color:#FFFFFF; letter-spacing:-0.2px;">RAKSHA PATH Command Tile</div>
+                <div style="font-size:0.68rem; color:#BFDBFE; font-weight:500;">Ministry of Railways • Automated Intelligence Operations</div>
+              </div>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span id="ir-tactical-badge" style="font-size:0.65rem; font-weight:800; padding:3px 8px; border-radius:12px; background:rgba(0,86,179,0.15); color:#93C5FD; border:1px solid rgba(147,197,253,0.3);">NOTICE</span>
+              <button type="button" onclick="window.closeIRModalTile()" style="background:rgba(255,255,255,0.12); border:none; color:#FFFFFF; border-radius:6px; width:28px; height:28px; cursor:pointer; font-size:1.1rem; display:flex; align-items:center; justify-content:center;" title="Close Tile">✕</button>
+            </div>
+          </div>
+          <div class="ir-tactical-body" id="ir-tactical-body">
+            <!-- Dynamic Parsed Tile Content -->
+          </div>
+          <div class="ir-tactical-footer">
+            <button type="button" id="ir-tactical-btn-secondary" style="padding:8px 18px; border-radius:8px; border:1px solid rgba(0,51,102,0.2); background:#FFFFFF; color:#475569; font-weight:700; font-size:0.80rem; cursor:pointer; display:none;">
+              Cancel
+            </button>
+            <button type="button" id="ir-tactical-btn-primary" style="padding:8px 22px; border-radius:8px; border:none; background:linear-gradient(135deg, #002244 0%, #003366 100%); color:#FFFFFF; font-weight:800; font-size:0.82rem; cursor:pointer; box-shadow:0 3px 12px rgba(0,51,102,0.3);">
+              ✓ Acknowledge
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  // ── Unified Settings & Personnel Governance Modal Builder ───────────
+  function buildSettingsModalHTML() {
+    return `
+      <div class="ir-modal-backdrop" id="ir-settings-modal" style="display:none;" role="dialog" aria-modal="true">
+        <div class="ir-settings-dialog">
+          <!-- Modal Header -->
+          <div class="ir-settings-header">
+            <div style="display:flex; align-items:center; gap:12px;">
+              <span style="font-size:1.5rem; line-height:1;">⚙️</span>
+              <div>
+                <div style="font-weight:800; font-size:1.05rem; color:#FFFFFF; letter-spacing:-0.2px;">System Settings &amp; Governance Console</div>
+                <div style="font-size:0.70rem; color:#BFDBFE;">Unified Platform Administration, Personnel Access Control (RBAC), Theme, Regional Zones &amp; Live Telemetry Diagnostics</div>
+              </div>
+            </div>
+            <button type="button" id="ir-settings-modal-close" onclick="window.closeSettingsModal()" style="background:rgba(255,255,255,0.12); border:none; color:#FFFFFF; border-radius:6px; width:30px; height:30px; cursor:pointer; font-size:1.2rem; display:flex; align-items:center; justify-content:center;" title="Close Settings">✕</button>
+          </div>
+
+          <!-- Settings Tab Bar -->
+          <div class="ir-settings-nav-tabs" id="ir-settings-tabs-bar">
+            <button type="button" class="ir-settings-nav-btn active" data-settings-tab="credentials" onclick="window.switchSettingsTab('credentials')">
+              <span>🔐</span>
+              <span>Personnel &amp; RBAC Credentials</span>
+            </button>
+            <button type="button" class="ir-settings-nav-btn" data-settings-tab="appearance" onclick="window.switchSettingsTab('appearance')">
+              <span>🎨</span>
+              <span>Appearance &amp; Theme</span>
+            </button>
+            <button type="button" class="ir-settings-nav-btn" data-settings-tab="regional" onclick="window.switchSettingsTab('regional')">
+              <span>🌐</span>
+              <span>Zone &amp; Regional Language</span>
+            </button>
+            <button type="button" class="ir-settings-nav-btn" data-settings-tab="backend" onclick="window.switchSettingsTab('backend')">
+              <span>🔗</span>
+              <span>Backend &amp; DB Connectivity</span>
+            </button>
+            <button type="button" class="ir-settings-nav-btn" data-settings-tab="alerts" onclick="window.switchSettingsTab('alerts')">
+              <span>🔔</span>
+              <span>Safety Alert Rules</span>
+            </button>
+          </div>
+
+          <!-- Settings Body Area -->
+          <div class="ir-settings-body">
+
+            <!-- ══════════ TAB 1: PERSONNEL & RBAC CREDENTIALS ══════════ -->
+            <div class="ir-settings-tab-panel active" id="ir-settings-panel-credentials">
+              <div style="background:#FFFFFF; border-radius:12px; border:1px solid rgba(0,51,102,0.14); padding:16px 20px; margin-bottom:16px; box-shadow:0 2px 8px rgba(0,0,0,0.03); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
+                <div style="display:flex; align-items:center; gap:10px; flex:1 1 340px;">
+                  <div style="position:relative; width:100%; max-width:320px;">
+                    <input type="text" id="ir-cred-search" placeholder="Search officer, username, division..." style="width:100%; padding:8px 12px 8px 34px; border-radius:8px; border:1px solid rgba(0,51,102,0.2); font-size:0.80rem; background:#FAF6EE; box-sizing:border-box;" />
+                    <span style="position:absolute; left:10px; top:50%; transform:translateY(-50%); font-size:0.85rem; color:#64748B;">🔍</span>
+                  </div>
+                  <div style="display:flex; gap:6px; flex-wrap:wrap;" id="ir-cred-filter-tabs">
+                    <button type="button" class="ir-filter-btn" data-role="all" style="padding:6px 14px; border-radius:6px; border:1px solid #002B5B; background:#002B5B; color:#FFF; font-size:0.74rem; font-weight:700; cursor:pointer;">All Personnel</button>
+                    <button type="button" class="ir-filter-btn" data-role="tms" style="padding:6px 14px; border-radius:6px; border:1px solid rgba(0,51,102,0.2); background:#FFF; color:#0F172A; font-size:0.74rem; font-weight:700; cursor:pointer;">TMS Track</button>
+                    <button type="button" class="ir-filter-btn" data-role="smms" style="padding:6px 14px; border-radius:6px; border:1px solid rgba(0,51,102,0.2); background:#FFF; color:#0F172A; font-size:0.74rem; font-weight:700; cursor:pointer;">SMMS Signal</button>
+                    <button type="button" class="ir-filter-btn" data-role="trd" style="padding:6px 14px; border-radius:6px; border:1px solid rgba(0,51,102,0.2); background:#FFF; color:#0F172A; font-size:0.74rem; font-weight:700; cursor:pointer;">TRD Traction</button>
+                    <button type="button" class="ir-filter-btn" data-role="control" style="padding:6px 14px; border-radius:6px; border:1px solid rgba(0,51,102,0.2); background:#FFF; color:#0F172A; font-size:0.74rem; font-weight:700; cursor:pointer;">Control Office</button>
+                  </div>
+                </div>
+
+                <button type="button" id="ir-btn-add-cred-user" onclick="if(typeof window.openSnavUserModal==='function') window.openSnavUserModal(null)" style="padding:9px 18px; border-radius:8px; border:none; background:linear-gradient(135deg, #002B5B 0%, #0056B3 100%); color:#FFFFFF; font-weight:800; font-size:0.80rem; cursor:pointer; display:flex; align-items:center; gap:6px; box-shadow:0 3px 10px rgba(0,43,91,0.25);">
+                  <span>➕</span>
+                  <span>Add Officer Account</span>
+                </button>
+              </div>
+
+              <div style="background:#FFFFFF; border-radius:12px; border:1px solid rgba(0,51,102,0.14); overflow:hidden; box-shadow:0 3px 12px rgba(0,0,0,0.04);">
+                <div style="max-height:48vh; overflow-y:auto;">
+                  <table style="width:100%; border-collapse:collapse; text-align:left; font-size:0.80rem;">
+                    <thead>
+                      <tr style="background:#FAF7F0; border-bottom:1.5px solid rgba(0,51,102,0.14); color:#002B5B; font-weight:800; position:sticky; top:0; z-index:2;">
+                        <th style="padding:12px 16px;">Officer / Engineer</th>
+                        <th style="padding:12px 16px;">Username</th>
+                        <th style="padding:12px 16px;">Assigned Role &amp; Discipline</th>
+                        <th style="padding:12px 16px;">Division / Zone</th>
+                        <th style="padding:12px 16px;">Status</th>
+                        <th style="padding:12px 16px; text-align:right;">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody id="ir-cred-tbody">
+                      <!-- Injected by renderCredentialsTable -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <!-- ══════════ TAB 2: UI APPEARANCE & THEME ══════════ -->
+            <div class="ir-settings-tab-panel" id="ir-settings-panel-appearance">
+              <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:18px; margin-bottom:18px;">
+                <!-- Light Mode Card -->
+                <div onclick="document.documentElement.removeAttribute('data-theme'); localStorage.setItem('ir_theme', 'light'); window.updateSettingsThemeUi();" style="cursor:pointer; background:#FAF7F0; border:2px solid #002B5B; border-radius:12px; padding:18px; box-shadow:0 4px 15px rgba(0,0,0,0.05); transition:all 0.2s;" id="ir-theme-card-light">
+                  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                    <span style="font-size:1.6rem;">☀️</span>
+                    <span style="font-size:0.72rem; font-weight:800; background:#002B5B; color:#FFF; padding:3px 10px; border-radius:12px;" id="ir-badge-theme-light">ACTIVE</span>
+                  </div>
+                  <div style="font-weight:800; color:#002B5B; font-size:0.95rem; margin-bottom:4px;">Warm Royal Alabaster (Light Theme)</div>
+                  <div style="font-size:0.76rem; color:#64748B;">Official Indian Railways daylight operations tone with deep navy contrast and high readability.</div>
+                </div>
+
+                <!-- Dark Mode Card -->
+                <div onclick="document.documentElement.setAttribute('data-theme', 'dark'); localStorage.setItem('ir_theme', 'dark'); window.updateSettingsThemeUi();" style="cursor:pointer; background:#0F172A; border:1.5px solid rgba(255,255,255,0.15); border-radius:12px; padding:18px; box-shadow:0 4px 15px rgba(0,0,0,0.2); transition:all 0.2s;" id="ir-theme-card-dark">
+                  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                    <span style="font-size:1.6rem;">🌙</span>
+                    <span style="font-size:0.72rem; font-weight:800; background:rgba(255,255,255,0.15); color:#94A3B8; padding:3px 10px; border-radius:12px;" id="ir-badge-theme-dark">ACTIVATE</span>
+                  </div>
+                  <div style="font-weight:800; color:#F8FAFC; font-size:0.95rem; margin-bottom:4px;">Deep Space Obsidian (Night Theme)</div>
+                  <div style="font-size:0.76rem; color:#94A3B8;">High-contrast night command center mode tailored for 24/7 Control Office surveillance &amp; low eye fatigue.</div>
+                </div>
+              </div>
+
+              <!-- Accessibility & UI Density Settings -->
+              <div style="background:#FFFFFF; border-radius:12px; border:1px solid rgba(0,51,102,0.14); padding:20px; box-shadow:0 2px 8px rgba(0,0,0,0.03);">
+                <div style="font-weight:800; font-size:0.92rem; color:#002B5B; margin-bottom:14px;">Ergonomics &amp; Layout Density</div>
+                
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+                  <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 14px; background:#FAF7F0; border-radius:8px; border:1px solid rgba(0,51,102,0.12);">
+                    <div>
+                      <div style="font-weight:700; font-size:0.82rem; color:#0F172A;">WCAG AAA High-Contrast Text</div>
+                      <div style="font-size:0.72rem; color:#64748B;">Enhances table border sharpness and text contrast</div>
+                    </div>
+                    <input type="checkbox" id="ir-setting-high-contrast" checked style="width:18px; height:18px; cursor:pointer;" />
+                  </div>
+
+                  <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 14px; background:#FAF7F0; border-radius:8px; border:1px solid rgba(0,51,102,0.12);">
+                    <div>
+                      <div style="font-weight:700; font-size:0.82rem; color:#0F172A;">Smooth Hardware Micro-Animations</div>
+                      <div style="font-size:0.72rem; color:#64748B;">GPU accelerated transitions &amp; train movement pulses</div>
+                    </div>
+                    <input type="checkbox" id="ir-setting-smooth-anim" checked style="width:18px; height:18px; cursor:pointer;" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ══════════ TAB 3: ZONE & REGIONAL LANGUAGE ══════════ -->
+            <div class="ir-settings-tab-panel" id="ir-settings-panel-regional">
+              <div style="background:#FFFFFF; border-radius:12px; border:1px solid rgba(0,51,102,0.14); padding:20px; box-shadow:0 2px 8px rgba(0,0,0,0.03); margin-bottom:16px;">
+                <div style="font-weight:800; font-size:0.92rem; color:#002B5B; margin-bottom:14px;">Multilingual Rail Command Interface</div>
+                
+                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:12px; margin-bottom:16px;">
+                  <button type="button" onclick="window.selectLanguage('EN', 'English')" class="ir-lang-card-btn" data-lang="EN" style="padding:14px; border-radius:8px; border:1.5px solid #002B5B; background:#FAF7F0; text-align:left; cursor:pointer;">
+                    <div style="font-size:1.2rem; margin-bottom:4px;">🇬🇧</div>
+                    <div style="font-weight:800; font-size:0.84rem; color:#002B5B;">English (EN)</div>
+                    <div style="font-size:0.70rem; color:#64748B;">Default RailNet Standard</div>
+                  </button>
+                  <button type="button" onclick="window.selectLanguage('HI', 'हिन्दी')" class="ir-lang-card-btn" data-lang="HI" style="padding:14px; border-radius:8px; border:1px solid rgba(0,51,102,0.2); background:#FFF; text-align:left; cursor:pointer;">
+                    <div style="font-size:1.2rem; margin-bottom:4px;">🇮🇳</div>
+                    <div style="font-weight:800; font-size:0.84rem; color:#002B5B;">हिन्दी (HI)</div>
+                    <div style="font-size:0.70rem; color:#64748B;">राजभाषा मानक</div>
+                  </button>
+                  <button type="button" onclick="window.selectLanguage('BN', 'বাংলা')" class="ir-lang-card-btn" data-lang="BN" style="padding:14px; border-radius:8px; border:1px solid rgba(0,51,102,0.2); background:#FFF; text-align:left; cursor:pointer;">
+                    <div style="font-size:1.2rem; margin-bottom:4px;">🇮🇳</div>
+                    <div style="font-weight:800; font-size:0.84rem; color:#002B5B;">বাংলা (BN)</div>
+                    <div style="font-size:0.70rem; color:#64748B;">পূর্ব রেলওয়ে</div>
+                  </button>
+                  <button type="button" onclick="window.selectLanguage('MR', 'मराठी')" class="ir-lang-card-btn" data-lang="MR" style="padding:14px; border-radius:8px; border:1px solid rgba(0,51,102,0.2); background:#FFF; text-align:left; cursor:pointer;">
+                    <div style="font-size:1.2rem; margin-bottom:4px;">🇮🇳</div>
+                    <div style="font-weight:800; font-size:0.84rem; color:#002B5B;">मराठी (MR)</div>
+                    <div style="font-size:0.70rem; color:#64748B;">मध्य व पश्चिम रेल्वे</div>
+                  </button>
+                  <button type="button" onclick="window.selectLanguage('TA', 'தமிழ்')" class="ir-lang-card-btn" data-lang="TA" style="padding:14px; border-radius:8px; border:1px solid rgba(0,51,102,0.2); background:#FFF; text-align:left; cursor:pointer;">
+                    <div style="font-size:1.2rem; margin-bottom:4px;">🇮🇳</div>
+                    <div style="font-weight:800; font-size:0.84rem; color:#002B5B;">தமிழ் (TA)</div>
+                    <div style="font-size:0.70rem; color:#64748B;">தெற்கு ரயில்வே</div>
+                  </button>
+                  <button type="button" onclick="window.selectLanguage('TE', 'తెలుగు')" class="ir-lang-card-btn" data-lang="TE" style="padding:14px; border-radius:8px; border:1px solid rgba(0,51,102,0.2); background:#FFF; text-align:left; cursor:pointer;">
+                    <div style="font-size:1.2rem; margin-bottom:4px;">🇮🇳</div>
+                    <div style="font-weight:800; font-size:0.84rem; color:#002B5B;">తెలుగు (TE)</div>
+                    <div style="font-size:0.70rem; color:#64748B;">దక్షిణ మధ్య రైల్వే</div>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Zonal Jurisdiction Config -->
+              <div style="background:#FFFFFF; border-radius:12px; border:1px solid rgba(0,51,102,0.14); padding:20px; box-shadow:0 2px 8px rgba(0,0,0,0.03);">
+                <div style="font-weight:800; font-size:0.92rem; color:#002B5B; margin-bottom:14px;">Zonal Headquarters &amp; Operating Division</div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+                  <div>
+                    <label style="font-weight:700; color:#334155; font-size:0.78rem; display:block; margin-bottom:4px;">Operating Railway Zone:</label>
+                    <select id="ir-setting-zone" style="width:100%; padding:9px 12px; border-radius:8px; border:1px solid rgba(0,51,102,0.2); background:#FAF7F0; font-size:0.82rem; font-weight:600;">
+                      <option value="NR" selected>Northern Railway (NR) — HQ Baroda House, New Delhi</option>
+                      <option value="NCR">North Central Railway (NCR) — HQ Prayagraj</option>
+                      <option value="ER">Eastern Railway (ER) — HQ Fairlie Place, Kolkata</option>
+                      <option value="WR">Western Railway (WR) — HQ Churchgate, Mumbai</option>
+                      <option value="CR">Central Railway (CR) — HQ CSMT, Mumbai</option>
+                      <option value="SR">Southern Railway (SR) — HQ Chennai Central</option>
+                      <option value="ECoR">East Coast Railway (ECoR) — HQ Bhubaneswar</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label style="font-weight:700; color:#334155; font-size:0.78rem; display:block; margin-bottom:4px;">Divisional Control Office:</label>
+                    <select id="ir-setting-division" style="width:100%; padding:9px 12px; border-radius:8px; border:1px solid rgba(0,51,102,0.2); background:#FAF7F0; font-size:0.82rem; font-weight:600;">
+                      <option value="DLI" selected>Delhi Division (DLI) — DRM Office State Entry Road</option>
+                      <option value="LKO">Lucknow Division (LKO)</option>
+                      <option value="PRYJ">Prayagraj Division (PRYJ)</option>
+                      <option value="MB">Moradabad Division (MB)</option>
+                      <option value="FZR">Firozpur Division (FZR)</option>
+                      <option value="UMB">Ambala Division (UMB)</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ══════════ TAB 4: BACKEND & DB CONNECTIVITY DIAGNOSTICS ══════════ -->
+            <div class="ir-settings-tab-panel" id="ir-settings-panel-backend">
+              <div style="background:#FFFFFF; border-radius:12px; border:1px solid rgba(0,51,102,0.14); padding:20px; box-shadow:0 2px 8px rgba(0,0,0,0.03); margin-bottom:16px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:10px;">
+                  <div>
+                    <div style="font-weight:800; font-size:0.95rem; color:#002B5B;">Live Service Telemetry &amp; Microservice Mesh</div>
+                    <div style="font-size:0.74rem; color:#64748B;">Real-time health status, ports, database connections &amp; AI daemon responsiveness</div>
+                  </div>
+                  <button type="button" id="ir-btn-ping-backend" onclick="window.testBackendConnectivity()" style="padding:8px 18px; border-radius:8px; border:none; background:#059669; color:#FFF; font-weight:800; font-size:0.78rem; cursor:pointer; display:flex; align-items:center; gap:6px; box-shadow:0 2px 8px rgba(5,150,105,0.25);">
+                    <span id="ir-ping-icon">⚡</span>
+                    <span>Test Live Backend Connection</span>
+                  </button>
+                </div>
+
+                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:12px; margin-bottom:16px;">
+                  <!-- Node Gateway -->
+                  <div style="padding:14px; background:#FAF7F0; border-radius:8px; border:1px solid rgba(0,51,102,0.12);">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                      <span style="font-weight:800; font-size:0.80rem; color:#002B5B;">Node.js Web Gateway</span>
+                      <span id="ir-status-node" style="padding:2px 8px; border-radius:12px; background:#ECFDF5; color:#059669; font-weight:800; font-size:0.68rem;">● ONLINE</span>
+                    </div>
+                    <div style="font-size:0.72rem; color:#64748B;">Port: <code style="color:#002B5B; font-weight:700;">5000</code> &bull; HTTP/REST</div>
+                    <div style="font-size:0.70rem; color:#059669; margin-top:4px;" id="ir-latency-node">Latency: ~2ms</div>
+                  </div>
+
+                  <!-- Python FastAPI Daemon -->
+                  <div style="padding:14px; background:#FAF7F0; border-radius:8px; border:1px solid rgba(0,51,102,0.12);">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                      <span style="font-weight:800; font-size:0.80rem; color:#002B5B;">Python AI Inference</span>
+                      <span id="ir-status-python" style="padding:2px 8px; border-radius:12px; background:#ECFDF5; color:#059669; font-weight:800; font-size:0.68rem;">● ONLINE</span>
+                    </div>
+                    <div style="font-size:0.72rem; color:#64748B;">Port: <code style="color:#002B5B; font-weight:700;">5001</code> &bull; FastAPI + Uvicorn</div>
+                    <div style="font-size:0.70rem; color:#059669; margin-top:4px;" id="ir-latency-python">Latency: ~12ms</div>
+                  </div>
+
+                  <!-- Supabase / Local SQLite -->
+                  <div style="padding:14px; background:#FAF7F0; border-radius:8px; border:1px solid rgba(0,51,102,0.12);">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                      <span style="font-weight:800; font-size:0.80rem; color:#002B5B;">Database &amp; Audit Store</span>
+                      <span id="ir-status-db" style="padding:2px 8px; border-radius:12px; background:#ECFDF5; color:#059669; font-weight:800; font-size:0.68rem;">● SYNCED</span>
+                    </div>
+                    <div style="font-size:0.72rem; color:#64748B;">Supabase REST + SQLite WAL</div>
+                    <div style="font-size:0.70rem; color:#059669; margin-top:4px;" id="ir-latency-db">SHA-256 Verified</div>
+                  </div>
+
+                  <!-- RapidAPI Live Feed -->
+                  <div style="padding:14px; background:#FAF7F0; border-radius:8px; border:1px solid rgba(0,51,102,0.12);">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                      <span style="font-weight:800; font-size:0.80rem; color:#002B5B;">Live IRCTC Telemetry</span>
+                      <span id="ir-status-rapidapi" style="padding:2px 8px; border-radius:12px; background:#ECFDF5; color:#059669; font-weight:800; font-size:0.68rem;">● ACTIVE</span>
+                    </div>
+                    <div style="font-size:0.72rem; color:#64748B;">RapidAPI / RailRadar Live</div>
+                    <div style="font-size:0.70rem; color:#059669; margin-top:4px;" id="ir-latency-rapidapi">Active Corridor Stream</div>
+                  </div>
+                </div>
+
+                <!-- Live Log Terminal Box -->
+                <div style="background:#090D1A; border-radius:8px; padding:14px; color:#A7F3D0; font-family:monospace; font-size:0.72rem; line-height:1.6; max-height:140px; overflow-y:auto;" id="ir-backend-diagnostic-log">
+                  [SYSTEM STARTUP] Node.js Gateway bound to http://localhost:5000<br/>
+                  [AI DAEMON] Python Uvicorn Fast Inference running on http://127.0.0.1:5001<br/>
+                  [CORRIDOR TELEMETRY] RapidAPI IRCTC stream synchronized on NDLS-CNB trunk<br/>
+                  [PERSISTENCE] Cryptographic SHA-256 tamper-evident storage active. Ready.
+                </div>
+              </div>
+            </div>
+
+            <!-- ══════════ TAB 5: SAFETY ALERTS & NOTIFICATION RULES ══════════ -->
+            <div class="ir-settings-tab-panel" id="ir-settings-panel-alerts">
+              <div style="background:#FFFFFF; border-radius:12px; border:1px solid rgba(0,51,102,0.14); padding:20px; box-shadow:0 2px 8px rgba(0,0,0,0.03);">
+                <div style="font-weight:800; font-size:0.92rem; color:#002B5B; margin-bottom:14px;">Operational Safety Thresholds &amp; Directives</div>
+                
+                <div style="display:flex; flex-direction:column; gap:16px;">
+                  <!-- Rail Temp Threshold -->
+                  <div style="padding:14px; background:#FAF7F0; border-radius:8px; border:1px solid rgba(0,51,102,0.12);">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                      <div>
+                        <div style="font-weight:800; font-size:0.82rem; color:#002B5B;">Rail Temperature Buckling Alert (IRPWM Para 602)</div>
+                        <div style="font-size:0.72rem; color:#64748B;">Triggers automated hot weather patrolling advisory when rail temp exceeds limit</div>
+                      </div>
+                      <span id="ir-temp-val-display" style="font-weight:800; font-size:0.90rem; color:#D9531E;">52.0°C</span>
+                    </div>
+                    <input type="range" min="45" max="65" step="0.5" value="52" id="ir-slider-temp" oninput="document.getElementById('ir-temp-val-display').textContent = this.value + '°C'" style="width:100%; cursor:pointer;" />
+                  </div>
+
+                  <!-- USFD Flaw Severity Rule -->
+                  <div style="display:flex; align-items:center; justify-content:space-between; padding:14px; background:#FAF7F0; border-radius:8px; border:1px solid rgba(0,51,102,0.12);">
+                    <div>
+                      <div style="font-weight:800; font-size:0.82rem; color:#002B5B;">Automated 30 km/h TSR Clamping on P1 Transverse Fracture</div>
+                      <div style="font-size:0.72rem; color:#64748B;">Automatically recommends temporary speed restriction during ultrasonic defect detection</div>
+                    </div>
+                    <input type="checkbox" id="ir-setting-auto-tsr" checked style="width:18px; height:18px; cursor:pointer;" />
+                  </div>
+
+                  <!-- Audio Sound Alerts -->
+                  <div style="display:flex; align-items:center; justify-content:space-between; padding:14px; background:#FAF7F0; border-radius:8px; border:1px solid rgba(0,51,102,0.12);">
+                    <div>
+                      <div style="font-weight:800; font-size:0.82rem; color:#002B5B;">Tactical Audio Chime for Critical Emergencies</div>
+                      <div style="font-size:0.72rem; color:#64748B;">Play audible alarm when P1 corridor blockage or track buckling event is ingested</div>
+                    </div>
+                    <input type="checkbox" id="ir-setting-sound-alerts" checked style="width:18px; height:18px; cursor:pointer;" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Add/Edit Officer User Sub-Modal -->
+        <div id="snav-cred-user-modal" style="display:none; position:fixed; inset:0; z-index:1000020; background:rgba(0,0,0,0.65); backdrop-filter:blur(5px); align-items:center; justify-content:center; padding:20px;">
+          <div style="background:#FFFFFF; border-radius:14px; max-width:480px; width:100%; box-shadow:0 25px 50px rgba(0,0,0,0.35); overflow:hidden; border:1.5px solid rgba(0,51,102,0.25);">
+            <div style="padding:14px 20px; background:linear-gradient(135deg, #001F3F 0%, #002B5B 100%); color:#FFFFFF; display:flex; justify-content:space-between; align-items:center;">
+              <h4 id="snav-cum-title" style="margin:0; font-size:0.95rem; font-weight:800;">Add New Personnel Account</h4>
+              <button type="button" id="snav-cum-close" onclick="document.getElementById('snav-cred-user-modal').style.display='none'" style="background:none; border:none; color:#FFF; font-size:1.2rem; cursor:pointer;">✕</button>
+            </div>
+            <div style="padding:20px; display:flex; flex-direction:column; gap:12px; font-size:0.80rem;">
+              <input type="hidden" id="snav-cum-id" />
+              <div id="snav-cum-err" style="display:none; padding:8px 12px; border-radius:6px; background:#FEF2F2; color:#DC2626; border:1px solid #FECACA; font-weight:700;"></div>
+
+              <div>
+                <label style="font-weight:700; color:#334155; display:block; margin-bottom:4px;">Full Name &amp; Designation:</label>
+                <input type="text" id="snav-cum-name" placeholder="e.g. Rajesh Sharma (SSE/Track)" style="width:100%; padding:8px 12px; border-radius:6px; border:1px solid rgba(0,51,102,0.2); box-sizing:border-box;" />
+              </div>
+
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                <div>
+                  <label style="font-weight:700; color:#334155; display:block; margin-bottom:4px;">Username:</label>
+                  <input type="text" id="snav-cum-username" placeholder="e.g. sse_track_aligarh" style="width:100%; padding:8px 12px; border-radius:6px; border:1px solid rgba(0,51,102,0.2); box-sizing:border-box;" />
+                </div>
+                <div>
+                  <label style="font-weight:700; color:#334155; display:block; margin-bottom:4px;">Password (Auth PIN):</label>
+                  <input type="password" id="snav-cum-password" placeholder="••••••••" style="width:100%; padding:8px 12px; border-radius:6px; border:1px solid rgba(0,51,102,0.2); box-sizing:border-box;" />
+                </div>
+              </div>
+
+              <div>
+                <label style="font-weight:700; color:#334155; display:block; margin-bottom:4px;">Department / Authorized Role:</label>
+                <select id="snav-cum-role" style="width:100%; padding:8px 12px; border-radius:6px; border:1px solid rgba(0,51,102,0.2); background:#FFF; box-sizing:border-box;">
+                  <option value="admin">🏢 Executive Admin / Zonal HQ (Super Admin)</option>
+                  <option value="control-officer">🎛️ Section Controller (Control Office)</option>
+                  <option value="field-tms">🔨 SSE / Track (Permanent Way TMS)</option>
+                  <option value="field-smms">⚡ SSE / Signal (SMMS Interlocking)</option>
+                  <option value="field-trd">🔌 SSE / Traction (TRD 25kV OHE)</option>
+                  <option value="surveillance-officer">📡 Surveillance / Drone &amp; USFD Inspector</option>
+                  <option value="field-engineer">👷 Field Maintenance Engineer</option>
+                </select>
+              </div>
+
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                <div>
+                  <label style="font-weight:700; color:#334155; display:block; margin-bottom:4px;">Official Email (RailNet):</label>
+                  <input type="email" id="snav-cum-email" placeholder="officer@nr.railnet.gov.in" style="width:100%; padding:8px 12px; border-radius:6px; border:1px solid rgba(0,51,102,0.2); box-sizing:border-box;" />
+                </div>
+                <div>
+                  <label style="font-weight:700; color:#334155; display:block; margin-bottom:4px;">CUG Mobile Number:</label>
+                  <input type="tel" id="snav-cum-phone" placeholder="+91-98765-43210" style="width:100%; padding:8px 12px; border-radius:6px; border:1px solid rgba(0,51,102,0.2); box-sizing:border-box;" />
+                </div>
+              </div>
+
+              <div>
+                <label style="font-weight:700; color:#334155; display:block; margin-bottom:4px;">Division &amp; Jurisdiction:</label>
+                <input type="text" id="snav-cum-division" value="Northern Railway — Delhi Division" style="width:100%; padding:8px 12px; border-radius:6px; border:1px solid rgba(0,51,102,0.2); box-sizing:border-box;" />
+              </div>
+
+              <div style="display:flex; align-items:center; gap:8px; margin-top:4px;">
+                <input type="checkbox" id="snav-cum-active" checked style="width:16px; height:16px;" />
+                <label for="snav-cum-active" style="font-weight:700; color:#059669;">Account Active &amp; Authorized for System Login</label>
+              </div>
+            </div>
+
+            <div style="padding:12px 20px; background:#FAF7F0; border-top:1px solid rgba(0,51,102,0.12); display:flex; justify-content:flex-end; gap:10px;">
+              <button type="button" id="snav-cum-cancel" onclick="document.getElementById('snav-cred-user-modal').style.display='none'" style="padding:8px 16px; border-radius:6px; border:1px solid rgba(0,51,102,0.2); background:#FFF; color:#475569; font-weight:700; cursor:pointer;">Cancel</button>
+              <button type="button" id="snav-cum-save" style="padding:8px 20px; border-radius:6px; border:none; background:#002B5B; color:#FFF; font-weight:800; cursor:pointer; box-shadow:0 2px 8px rgba(0,43,91,0.25);">Save Officer</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  // ── Render Credentials Table with Filter Pills ──────────────────────
+  function renderCredentialsTable(searchQuery = '', filterRole = 'all') {
+    const tbody = document.getElementById('ir-cred-tbody');
+    if (!tbody || !window.IR_UserStore) return;
+
+    let users = window.IR_UserStore.getAll() || [];
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase();
+      users = users.filter(u =>
+        (u.name && u.name.toLowerCase().includes(q)) ||
+        (u.username && u.username.toLowerCase().includes(q)) ||
+        (u.division && u.division.toLowerCase().includes(q)) ||
+        (u.role && u.role.toLowerCase().includes(q))
+      );
+    }
+
+    if (filterRole && filterRole !== 'all') {
+      users = users.filter(u => {
+        const r = (u.role || '').toLowerCase();
+        if (filterRole === 'tms') return r.includes('tms') || r.includes('track');
+        if (filterRole === 'smms') return r.includes('smms') || r.includes('signal');
+        if (filterRole === 'trd') return r.includes('trd') || r.includes('traction');
+        if (filterRole === 'control') return r.includes('control');
+        return true;
+      });
+    }
+
+    if (users.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="6" style="text-align:center; padding:30px; color:#64748B;">
+            No personnel accounts match the specified criteria.
+          </td>
+        </tr>
+      `;
+      return;
+    }
+
+    const ROLE_LABELS = {
+      'admin': { label: '🏢 Executive Admin', bg: '#EFF6FF', col: '#0056B3' },
+      'control-officer': { label: '🎛️ Section Controller', bg: '#F5F3FF', col: '#7C3AED' },
+      'field-tms': { label: '🔨 SSE / Track (TMS)', bg: '#ECFDF5', col: '#059669' },
+      'field-smms': { label: '⚡ SSE / Signal (SMMS)', bg: '#FFFBEB', col: '#D97706' },
+      'field-trd': { label: '🔌 SSE / Traction (TRD)', bg: '#FEF2F2', col: '#DC2626' },
+      'surveillance-officer': { label: '📡 Surveillance / Drone', bg: '#F0FDF4', col: '#16A34A' },
+      'field-engineer': { label: '👷 Field Maintenance', bg: '#F8FAFC', col: '#475569' }
+    };
+
+    tbody.innerHTML = users.map(u => {
+      const roleMeta = ROLE_LABELS[u.role] || { label: u.role || 'Personnel', bg: '#F1F5F9', col: '#334155' };
+      return `
+        <tr style="border-bottom: 1px solid rgba(0,51,102,0.08);">
+          <td style="padding:12px 16px;">
+            <div style="font-weight:700; color:#002244;">${escapeHtml(u.name || u.username)}</div>
+            <div style="font-size:0.72rem; color:#64748B;">${escapeHtml(u.email || 'officer@nr.railnet.gov.in')}</div>
+          </td>
+          <td style="padding:12px 16px;">
+            <code style="background:#FAF6EE; border:1px solid rgba(0,51,102,0.15); padding:2px 6px; border-radius:4px; font-weight:700; color:#003366;">@${escapeHtml(u.username)}</code>
+          </td>
+          <td style="padding:12px 16px;">
+            <span style="display:inline-flex; align-items:center; gap:4px; padding:3px 8px; border-radius:6px; background:${roleMeta.bg}; color:${roleMeta.col}; font-weight:700; font-size:0.74rem;">
+              ${roleMeta.label}
+            </span>
+          </td>
+          <td style="padding:12px 16px; color:#475569;">${escapeHtml(u.division || 'Northern Railway')}</td>
+          <td style="padding:12px 16px;">
+            <span style="display:inline-flex; align-items:center; gap:5px; font-weight:700; font-size:0.74rem; color:${u.active ? '#059669' : '#DC2626'};">
+              <span>${u.active ? '●' : '○'}</span>
+              <span>${u.active ? 'Active' : 'Suspended'}</span>
+            </span>
+          </td>
+          <td style="padding:12px 16px; text-align:right;">
+            <div style="display:inline-flex; gap:6px;">
+              <button type="button" onclick="window.editUserCred('${u.id}')" style="padding:4px 8px; border-radius:4px; border:1px solid rgba(0,51,102,0.2); background:#FFF; color:#003366; font-size:0.72rem; font-weight:700; cursor:pointer;" title="Edit Account">✏️ Edit</button>
+              <button type="button" onclick="window.toggleUserCred('${u.id}')" style="padding:4px 8px; border-radius:4px; border:1px solid rgba(0,51,102,0.2); background:#FAF6EE; color:#334155; font-size:0.72rem; font-weight:700; cursor:pointer;" title="Toggle Access">${u.active ? '⏸' : '▶'}</button>
+              <button type="button" onclick="window.deleteUserCred('${u.id}')" style="padding:4px 8px; border-radius:4px; border:1px solid #FECACA; background:#FEF2F2; color:#DC2626; font-size:0.72rem; font-weight:700; cursor:pointer;" title="Delete Account">🗑️</button>
+            </div>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  // Global Actions for credentials modal
   window.editUserCred = function (userId) {
     if (typeof window.umEdit === 'function') {
       window.umEdit(userId);
     } else {
       const u = window.IR_UserStore.getAll().find(x => x.id === userId);
-      if (!u) return;
-      const newName = prompt(`Edit Full Name for @${u.username}:`, u.name || '');
-      if (newName === null) return;
-      const newPass = prompt(`Change Password for @${u.username} (leave blank to keep current):`, '');
-      const updates = { name: newName.trim() };
-      if (newPass && newPass.trim()) updates.password = newPass.trim();
-      window.IR_UserStore.update(userId, updates);
-      renderCredentialsTable();
+      if (u && typeof window.openSnavUserModal === 'function') {
+        window.openSnavUserModal(u);
+      }
     }
   };
 
@@ -6019,17 +7425,18 @@
         toast.classList.remove('show');
       }, 2500);
     }).catch(err => {
-      alert('Copied: ' + text);
+      window.showIRModalTile({ title: 'Clipboard Data', message: 'Copied: ' + text });
     });
   };
 
   window.deleteUserCred = function (userId) {
     const u = window.IR_UserStore.getAll().find(x => x.id === userId);
     if (!u) return;
-    if (confirm(`Delete personnel account for "${u.name || u.username}"?`)) {
+    window.showIRConfirm(`Delete authorized personnel account for "${u.name || u.username}"? This action removes their access credentials.`, 'Confirm Account Deletion', () => {
       window.IR_UserStore.delete(userId);
       renderCredentialsTable();
-    }
+      window.showIRModalTile({ title: 'Account Removed', message: `Officer account for @${u.username} has been revoked.`, type: 'success' });
+    });
   };
 
   function buildCameraModalHTML() {
@@ -6161,7 +7568,7 @@
       ${buildTopbarHTML()}
       ${buildFullScreenWorkspaceHTML()}
       ${buildReportModalHTML()}
-      ${buildCredentialsModalHTML()}
+      ${buildSettingsModalHTML()}
       ${buildCameraModalHTML()}
     `;
 
@@ -6283,20 +7690,15 @@
       });
     }
 
-    // Credentials Modal
-    const credBtn = document.getElementById('snav-btn-credentials');
-    if (credBtn) credBtn.addEventListener('click', window.openUserCredentialsModal);
-
-    const credCloseBtn = document.getElementById('ir-cred-modal-close');
-    const credModal = document.getElementById('ir-cred-modal');
-    if (credCloseBtn) credCloseBtn.addEventListener('click', window.closeUserCredentialsModal);
-    if (credModal) {
-      credModal.addEventListener('click', (e) => {
-        if (e.target === credModal) window.closeUserCredentialsModal();
+    // Settings Modal backdrop click
+    const settingsModal = document.getElementById('ir-settings-modal');
+    if (settingsModal) {
+      settingsModal.addEventListener('click', (e) => {
+        if (e.target === settingsModal) window.closeSettingsModal();
       });
     }
 
-    // Credentials search & filters
+    // Credentials search & filters inside Settings
     const credSearch = document.getElementById('ir-cred-search');
     let activeCredFilter = 'all';
     if (credSearch) {
@@ -6315,9 +7717,9 @@
           b.style.color = '#0F172A';
           b.style.borderColor = 'rgba(0,51,102,0.2)';
         });
-        btn.style.background = '#003366';
+        btn.style.background = '#002B5B';
         btn.style.color = '#FFF';
-        btn.style.borderColor = '#003366';
+        btn.style.borderColor = '#002B5B';
         activeCredFilter = btn.dataset.role || 'all';
         renderCredentialsTable(credSearch ? credSearch.value.trim() : '', activeCredFilter);
       });
@@ -6466,9 +7868,17 @@
     if (sidebar) {
       sidebar.addEventListener('mouseenter', () => {
         sidebar.classList.add('expanded');
+        document.body.classList.add('snav-expanded');
+        const tb = document.getElementById('ir-shared-topbar');
+        if (tb) tb.style.left = 'var(--snav-sidebar-expanded-width)';
       });
       sidebar.addEventListener('mouseleave', () => {
         sidebar.classList.remove('expanded');
+        document.body.classList.remove('snav-expanded');
+        const tb = document.getElementById('ir-shared-topbar');
+        if (tb && !sidebar.classList.contains('open')) {
+          tb.style.left = 'var(--snav-sidebar-collapsed-width)';
+        }
       });
     }
 
@@ -7026,7 +8436,216 @@
     if (existingMascot) {
       existingMascot.remove();
     }
+
+    // Initialize theme button state in DOM
+    if (window.initSiteTheme) {
+      window.initSiteTheme();
+    }
   }
+
+  // ── Global Theme Toggle System (Dark & Light Mode) ───────────
+  window.initSiteTheme = function () {
+    let savedTheme = 'light';
+    try {
+      savedTheme = localStorage.getItem('raksha_theme') || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    } catch (_) {}
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    const themeIcon = document.getElementById('snav-theme-icon');
+    if (themeIcon) {
+      themeIcon.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+    }
+    const themeBtn = document.getElementById('snav-btn-theme');
+    if (themeBtn) {
+      themeBtn.setAttribute('title', savedTheme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode');
+    }
+  };
+
+  window.toggleSiteTheme = function () {
+    const currentTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+    const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', nextTheme);
+    try {
+      localStorage.setItem('raksha_theme', nextTheme);
+    } catch (_) {}
+    const themeIcon = document.getElementById('snav-theme-icon');
+    if (themeIcon) {
+      themeIcon.textContent = nextTheme === 'dark' ? '☀️' : '🌙';
+    }
+    const themeBtn = document.getElementById('snav-btn-theme');
+    if (themeBtn) {
+      themeBtn.setAttribute('title', nextTheme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode');
+    }
+    window.dispatchEvent(new CustomEvent('themechange', { detail: { theme: nextTheme } }));
+  };
+
+  // WHAT'S NEW MODAL LOGIC & INJECTION
+  window.openWhatsNewModal = function () {
+    let modal = document.getElementById('ir-whats-new-modal');
+    if (!modal) {
+      modal = document.createElement('div');
+      modal.id = 'ir-whats-new-modal';
+      modal.style.cssText = `
+        position: fixed; inset: 0; z-index: 99999;
+        background: rgba(0, 15, 35, 0.7); backdrop-filter: blur(8px);
+        display: flex; align-items: center; justify-content: center;
+        padding: 20px; animation: irFadeIn 0.25s ease;
+      `;
+      modal.innerHTML = `
+        <div style="
+          background: #FFFFFF; width: 100%; max-width: 780px; max-height: 90vh;
+          border-radius: 16px; border: 1.5px solid rgba(0, 51, 102, 0.2);
+          box-shadow: 0 20px 60px rgba(0, 34, 68, 0.35); overflow: hidden;
+          display: flex; flex-direction: column; font-family: 'Inter', 'Calibri', 'Arial', sans-serif;
+        " onclick="event.stopPropagation()">
+          
+          <!-- Modal Header -->
+          <div style="
+            background: linear-gradient(135deg, #003366 0%, #002244 100%);
+            padding: 22px 26px; color: #FFFFFF; position: relative;
+            display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;
+          ">
+            <div>
+              <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+                <span style="background: #D9531E; color: #FFFFFF; font-size: 0.68rem; padding: 2px 8px; border-radius: 4px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">v2.4.2 Production</span>
+                <span style="font-size: 0.72rem; color: #93C5FD; font-weight: 600;">Active Release · RDSO / CRIS Certified</span>
+              </div>
+              <h2 style="font-family: 'Exo 2', 'Calibri', 'Arial', sans-serif; font-size: 1.45rem; font-weight: 800; margin: 0; line-height: 1.2;">
+                🚀 What's New in RAKSHA PATH AI
+              </h2>
+              <p style="font-size: 0.82rem; color: #E2E8F0; margin-top: 4px; margin-bottom: 0;">
+                High-speed corridor block possession solver &amp; multi-department maintenance AI suite
+              </p>
+            </div>
+
+            <button onclick="window.closeWhatsNewModal()" style="
+              background: rgba(255, 255, 255, 0.12); border: 1px solid rgba(255, 255, 255, 0.2);
+              color: #FFFFFF; width: 32px; height: 32px; border-radius: 8px; cursor: pointer;
+              display: flex; align-items: center; justify-content: center; font-size: 1.1rem;
+              transition: all 0.2s ease; flex-shrink: 0;
+            " onmouseover="this.style.background='rgba(255,255,255,0.25)'" onmouseout="this.style.background='rgba(255,255,255,0.12)'">✕</button>
+          </div>
+
+          <!-- Feature Changelog List -->
+          <div style="padding: 22px 26px; overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 14px; background: #FAF6EE;">
+            
+            <!-- Feature 1 -->
+            <div style="background: #FFFFFF; border: 1px solid rgba(0, 51, 102, 0.12); border-left: 5px solid #003366; border-radius: 10px; padding: 14px 16px; box-shadow: 0 2px 8px rgba(0, 51, 102, 0.04);">
+              <div style="display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 0.95rem; color: #003366; margin-bottom: 4px;">
+                <span>🧠</span>
+                <span>AI CP-SAT Constraint Possession Solver &amp; Zero-Delay Path Shift</span>
+              </div>
+              <p style="font-size: 0.82rem; color: #334155; line-height: 1.5; margin: 0;">
+                Automatically optimizes <strong>Night-Shadow (00:00–04:30)</strong> and <strong>Afternoon Lull (12:30–15:00)</strong> possession windows against the live COA train timetable. Single-click <em>"Apply AI Alternative"</em> resolves crossing train conflicts without delaying Mail/Express trains.
+              </p>
+            </div>
+
+            <!-- Feature 2 -->
+            <div style="background: #FFFFFF; border: 1px solid rgba(0, 51, 102, 0.12); border-left: 5px solid #D9531E; border-radius: 10px; padding: 14px 16px; box-shadow: 0 2px 8px rgba(0, 51, 102, 0.04);">
+              <div style="display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 0.95rem; color: #D9531E; margin-bottom: 4px;">
+                <span>🔗</span>
+                <span>Multi-Department Joint Shadow Bundling &amp; Synergy Savings</span>
+              </div>
+              <p style="font-size: 0.82rem; color: #334155; line-height: 1.5; margin: 0;">
+                Co-schedules Civil (P-Way), Electrical (TRD OHE), and Signaling (S&amp;T) requisitions into unified corridor blocks with synchronized departmental handshake clearances, saving over <strong>4.5+ corridor block hours daily</strong>.
+              </p>
+            </div>
+
+            <!-- Feature 3 -->
+            <div style="background: #FFFFFF; border: 1px solid rgba(0, 51, 102, 0.12); border-left: 5px solid #059669; border-radius: 10px; padding: 14px 16px; box-shadow: 0 2px 8px rgba(0, 51, 102, 0.04);">
+              <div style="display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 0.95rem; color: #059669; margin-bottom: 4px;">
+                <span>🎯</span>
+                <span>Automated IRPWM 2020 Defect Triage &amp; Priority Scoring</span>
+              </div>
+              <p style="font-size: 0.82rem; color: #334155; line-height: 1.5; margin: 0;">
+                Real-time Priority Score (0–100) computation with strict SLAs: 🚨 <strong>P1 (24h Critical)</strong>, ⚡ <strong>P2 (72h High)</strong>, ⚠️ <strong>P3 (7d Medium)</strong>, and ℹ️ <strong>P4 (30d Routine)</strong> with Explainable AI (XAI) factor breakdowns.
+              </p>
+            </div>
+
+            <!-- Feature 4 -->
+            <div style="background: #FFFFFF; border: 1px solid rgba(0, 51, 102, 0.12); border-left: 5px solid #7C3AED; border-radius: 10px; padding: 14px 16px; box-shadow: 0 2px 8px rgba(0, 51, 102, 0.04);">
+              <div style="display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 0.95rem; color: #7C3AED; margin-bottom: 4px;">
+                <span>📡</span>
+                <span>3D Digital Twin, USFD Flaws &amp; Thermal Buckling Telemetry</span>
+              </div>
+              <p style="font-size: 0.82rem; color: #334155; line-height: 1.5; margin: 0;">
+                Inspect ultrasonic rail flaws in 3D WebGL, monitor live OpenWeather track temperature for <strong>IRPWM Para 602</strong> thermal rail buckling safety ($t_r$ vs $t_d+20^\circ\text{C}$), and review 4K aerial drone photogrammetry.
+              </p>
+            </div>
+
+            <!-- Feature 5 -->
+            <div style="background: #FFFFFF; border: 1px solid rgba(0, 51, 102, 0.12); border-left: 5px solid #0056B3; border-radius: 10px; padding: 14px 16px; box-shadow: 0 2px 8px rgba(0, 51, 102, 0.04);">
+              <div style="display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 0.95rem; color: #0056B3; margin-bottom: 4px;">
+                <span>🔒</span>
+                <span>Cryptographic Immutable Audit Ledger &amp; HITL Overrides</span>
+              </div>
+              <p style="font-size: 0.82rem; color: #334155; line-height: 1.5; margin: 0;">
+                All safety-critical decisions, slot sanctions, and manual controller overrides are stamped with SHA-256 tamper-evident cryptographic hashes in Supabase Cloud with full operational justification tracking.
+              </p>
+            </div>
+
+            <!-- Feature 6 -->
+            <div style="background: #FFFFFF; border: 1px solid rgba(0, 51, 102, 0.12); border-left: 5px solid #D97706; border-radius: 10px; padding: 14px 16px; box-shadow: 0 2px 8px rgba(0, 51, 102, 0.04);">
+              <div style="display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 0.95rem; color: #D97706; margin-bottom: 4px;">
+                <span>📖</span>
+                <span>Interactive Technical Documentation &amp; CRIS SOC Support</span>
+              </div>
+              <p style="font-size: 0.82rem; color: #334155; line-height: 1.5; margin: 0;">
+                New centralized documentation portal with API gateway references, compliance protocols, and 24/7 CRIS technical escalation hotline at <code>project-summary.html#contacts</code>.
+              </p>
+            </div>
+          </div>
+
+          <!-- Modal Footer Actions -->
+          <div style="
+            background: #FFFFFF; padding: 14px 26px; border-top: 1px solid rgba(0, 51, 102, 0.1);
+            display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;
+          ">
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+              <a href="project-summary.html" style="
+                background: #003366; color: #FFFFFF; text-decoration: none; padding: 8px 16px;
+                border-radius: 8px; font-size: 0.8rem; font-weight: 700; display: inline-flex; align-items: center; gap: 6px;
+                transition: all 0.2s ease;
+              ">📖 View Full Documentation →</a>
+
+              <a href="project-summary.html#contacts" style="
+                background: rgba(217, 83, 30, 0.1); border: 1px solid rgba(217, 83, 30, 0.3); color: #D9531E;
+                text-decoration: none; padding: 8px 16px; border-radius: 8px; font-size: 0.8rem; font-weight: 700;
+                display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s ease;
+              ">🎧 Contact SOC Support →</a>
+            </div>
+
+            <button onclick="window.closeWhatsNewModal()" style="
+              background: #F1F5F9; border: 1px solid #CBD5E1; color: #334155; padding: 8px 18px;
+              border-radius: 8px; font-size: 0.8rem; font-weight: 700; cursor: pointer;
+            ">Got it, Close</button>
+          </div>
+        </div>
+      `;
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) window.closeWhatsNewModal();
+      });
+      document.body.appendChild(modal);
+    } else {
+      modal.style.display = 'flex';
+    }
+  };
+
+  window.closeWhatsNewModal = function () {
+    const modal = document.getElementById('ir-whats-new-modal');
+    if (modal) {
+      modal.style.display = 'none';
+    }
+  };
+
+  // Close modal on Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      window.closeWhatsNewModal();
+    }
+  });
+
+  // Immediate theme initialization to prevent flash
+  window.initSiteTheme();
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', inject);

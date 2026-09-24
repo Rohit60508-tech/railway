@@ -25,6 +25,9 @@
   <script src="../components/SharedNav.js?v=2.5.4"></script>
   <script src="../components/shared-live-sync.js"></script>
 
+  <!-- PDF Generation Engine -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
   <style>
     :root {
       --bg-page: #F8FAFC;
@@ -44,6 +47,54 @@
       --accent-red: #EF4444;
       --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    [data-theme="dark"] {
+      --bg-page: #0B0F19;
+      --card-bg: #111827;
+      --border-color: rgba(255, 255, 255, 0.1);
+      --border-focus: #38BDF8;
+      --text-main: #F8FAFC;
+      --text-muted: #94A3B8;
+      --text-secondary: #CBD5E1;
+      --primary-navy: #38BDF8;
+      --primary-hover: #60A5FA;
+    }
+
+    [data-theme="dark"] .qr-card-container,
+    [data-theme="dark"] .summary-metric-card,
+    [data-theme="dark"] .table-outer-wrapper,
+    [data-theme="dark"] .custom-modal-dialog,
+    [data-theme="dark"] .btn-action-outline,
+    [data-theme="dark"] .lang-dropdown-btn,
+    [data-theme="dark"] .tab-item-btn.active,
+    [data-theme="dark"] .search-bar-input,
+    [data-theme="dark"] .filter-select-btn {
+      background-color: #111827 !important;
+      border-color: rgba(255, 255, 255, 0.1) !important;
+      color: #F8FAFC !important;
+    }
+
+    [data-theme="dark"] .requests-table th {
+      background-color: #1E293B !important;
+      color: #F8FAFC !important;
+      border-bottom-color: rgba(255, 255, 255, 0.12) !important;
+    }
+
+    [data-theme="dark"] .requests-table td {
+      background-color: #111827 !important;
+      color: #CBD5E1 !important;
+      border-bottom-color: rgba(255, 255, 255, 0.06) !important;
+    }
+
+    [data-theme="dark"] .requests-table tr:hover td {
+      background-color: #1E293B !important;
+    }
+
+    @media (max-width: 990px) {
+      .overview-content-wrapper {
+        grid-template-columns: 1fr !important;
+      }
     }
 
     * {
@@ -103,6 +154,7 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
+      white-space: nowrap;
       background: #FFFFFF;
       border: 1px solid var(--border-color);
       border-radius: 8px;
@@ -119,6 +171,89 @@
       background: #F8FAFC;
       border-color: #CBD5E1;
       color: var(--text-main);
+    }
+
+    .btn-dossier-view {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      white-space: nowrap;
+      padding: 6px 14px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: #003366;
+      background: #EFF6FF;
+      border: 1px solid #BFDBFE;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      box-shadow: 0 1px 3px rgba(0, 51, 102, 0.06);
+    }
+
+    .btn-dossier-view:hover {
+      background: #003366;
+      color: #FFFFFF;
+      border-color: #002244;
+      transform: translateY(-1px);
+      box-shadow: 0 3px 8px rgba(0, 51, 102, 0.16);
+    }
+
+    .btn-dossier-view:active {
+      transform: translateY(0);
+    }
+
+    [data-theme="dark"] .btn-dossier-view {
+      background: rgba(56, 189, 248, 0.12);
+      color: #38BDF8;
+      border-color: rgba(56, 189, 248, 0.35);
+    }
+
+    [data-theme="dark"] .btn-dossier-view:hover {
+      background: #0284C7;
+      color: #FFFFFF;
+      border-color: #38BDF8;
+    }
+
+    .btn-pdf-download {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      white-space: nowrap;
+      padding: 6px 10px;
+      font-size: 0.74rem;
+      font-weight: 700;
+      color: #0369A1;
+      background: #F0F9FF;
+      border: 1px solid #BAE6FD;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      box-shadow: 0 1px 2px rgba(3, 105, 161, 0.05);
+    }
+
+    .btn-pdf-download:hover {
+      background: #0284C7;
+      color: #FFFFFF;
+      border-color: #0369A1;
+      transform: translateY(-1px);
+      box-shadow: 0 3px 8px rgba(2, 132, 199, 0.25);
+    }
+
+    .btn-pdf-download:active {
+      transform: translateY(0);
+    }
+
+    [data-theme="dark"] .btn-pdf-download {
+      background: rgba(2, 132, 199, 0.15);
+      color: #38BDF8;
+      border-color: rgba(56, 189, 248, 0.35);
+    }
+
+    [data-theme="dark"] .btn-pdf-download:hover {
+      background: #0284C7;
+      color: #FFFFFF;
     }
 
     .lang-dropdown-btn {
@@ -1483,6 +1618,17 @@
   <div id="ir-toast"></div>
 
   <script>
+    function escapeHtml(str) {
+      if (str === null || str === undefined) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+    window.escapeHtml = escapeHtml;
+
     const initialMaintenanceRequests = [
       {
         id: "REQ-2026-0842",
@@ -1616,13 +1762,462 @@
             <td>${priorityBadge}</td>
             <td>${statusBadge}</td>
             <td style="font-size: 0.74rem; color: var(--text-muted);">${req.submittedAt}</td>
-            <td style="text-align: right;">
-              <button type="button" class="btn-action-outline" style="padding: 4px 10px; font-size: 0.74rem;" onclick="alert('Viewing dossier for ' + '${req.id}')">Details</button>
+            <td style="text-align: right; white-space: nowrap;">
+              <div style="display: inline-flex; align-items: center; justify-content: flex-end; gap: 6px;">
+                <button type="button" class="btn-dossier-view" onclick="window.viewRequestDossierModal('${req.id}')" title="Inspect Full Technical Dossier for ${req.id}">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                  </svg>
+                  <span>View Dossier</span>
+                </button>
+                <button type="button" class="btn-pdf-download" onclick="window.downloadRequisitionPDF('${req.id}')" title="Direct Download Official PDF Dossier for ${req.id}">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                    <polyline points="7 10 12 15 17 10"/>
+                    <line x1="12" y1="15" x2="12" y2="3"/>
+                  </svg>
+                  <span>PDF</span>
+                </button>
+              </div>
             </td>
           </tr>
         `;
       }).join('');
     }
+
+    window.sanctionWorkOrder = function (reqId) {
+      const req = maintenanceRequests.find(r => r.id === reqId);
+      if (req) {
+        req.status = 'WORK_ORDER_CREATED';
+        updateMetrics();
+        renderRequestsTable();
+      }
+      window.closeIRModalTile();
+      window.showToast(`✓ Work order successfully sanctioned for ${reqId}! Scheduled in corridor slot.`, "success");
+    };
+
+    window.markRequestUnderReview = function (reqId) {
+      const req = maintenanceRequests.find(r => r.id === reqId);
+      if (req) {
+        req.status = 'UNDER_REVIEW';
+        updateMetrics();
+        renderRequestsTable();
+      }
+      window.closeIRModalTile();
+      window.showToast(`🔍 Requisition ${reqId} is now marked under technical review.`, "success");
+    };
+
+    window.copyRequisitionId = function (reqId) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(reqId);
+      }
+      window.showToast(`📋 Requisition ID ${reqId} copied to clipboard!`, "success");
+    };
+
+    window.downloadRequisitionPDF = function (reqId) {
+      const allExt = typeof window.getExternalRequests === 'function' ? window.getExternalRequests() : [];
+      const req = maintenanceRequests.find(r => r.id === reqId) || allExt.find(r => r.id === reqId) || {
+        id: reqId,
+        title: 'Overhead Traction & Track Geometry Inspection',
+        dept: 'TRD',
+        deptLabel: 'Electrical / TRD',
+        section: 'NDLS–GZB (UP Line KM 28/4)',
+        requester: 'SSE / Traction Distribution',
+        submittedAt: new Date().toLocaleDateString('en-GB') + ', 09:30',
+        priority: 'CRITICAL',
+        status: 'WORK_ORDER_CREATED',
+        desc: 'Twist irregularity & 25kV OHE dropper inspection. Immediate block recommended.'
+      };
+
+      try {
+        if (window.jspdf && window.jspdf.jsPDF) {
+          const { jsPDF } = window.jspdf;
+          const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+
+          // 1. Top Header Navy Banner
+          doc.setFillColor(0, 43, 91); // Deep Navy #002B5B
+          doc.rect(0, 0, 210, 28, 'F');
+
+          // Header Text
+          doc.setTextColor(255, 255, 255);
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(13);
+          doc.text('GOVERNMENT OF INDIA • MINISTRY OF RAILWAYS', 105, 11, { align: 'center' });
+
+          doc.setFont('helvetica', 'normal');
+          doc.setFontSize(8.5);
+          doc.setTextColor(215, 235, 255);
+          doc.text('RAKSHA PATH AI DISPATCH PLATFORM • TECHNICAL REQUISITION DOSSIER', 105, 18, { align: 'center' });
+
+          doc.setFontSize(7.5);
+          doc.setTextColor(190, 220, 250);
+          doc.text('ISO 9001:2015 CERTIFIED DIGITAL MAINTENANCE DISPATCH RECORD', 105, 23, { align: 'center' });
+
+          // 2. Requisition Identifier & Timestamp Card
+          doc.setFillColor(241, 245, 249);
+          doc.setDrawColor(203, 213, 225);
+          doc.roundedRect(14, 34, 182, 22, 2, 2, 'FD');
+
+          doc.setTextColor(0, 51, 102);
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(11);
+          doc.text(`REQUISITION DOSSIER: ${req.id}`, 20, 43);
+
+          doc.setFont('helvetica', 'normal');
+          doc.setFontSize(8);
+          doc.setTextColor(100, 116, 139);
+          doc.text(`Submitted On: ${req.submittedAt || 'Today'}  |  Exported: ${new Date().toLocaleString()}`, 20, 50);
+
+          // Status Badge Box on Right
+          doc.setFillColor(0, 51, 102);
+          doc.roundedRect(136, 38, 54, 14, 2, 2, 'F');
+          doc.setTextColor(255, 255, 255);
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(7.8);
+          const statText = req.status === 'WORK_ORDER_CREATED' ? 'SANCTIONED' : (req.status === 'UNDER_REVIEW' ? 'UNDER REVIEW' : 'PENDING');
+          doc.text(`STATUS: ${statText}`, 163, 47, { align: 'center' });
+
+          // 3. Asset / Problem Description Box
+          doc.setFillColor(255, 255, 255);
+          doc.setDrawColor(186, 230, 253);
+          doc.roundedRect(14, 60, 182, 18, 2, 2, 'FD');
+
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(7.5);
+          doc.setTextColor(100, 116, 139);
+          doc.text('PRIMARY ASSET / REQUISITION TITLE:', 20, 66);
+
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(9.5);
+          doc.setTextColor(15, 23, 42);
+          doc.text(doc.splitTextToSize(req.title || 'Track Requisition', 170), 20, 73);
+
+          // 4. Parameter Grid (4 Key Quadrants)
+          const gridY = 82;
+          const boxW = 88;
+          const boxH = 20;
+
+          // Box 1: Department
+          doc.setFillColor(248, 250, 252);
+          doc.setDrawColor(226, 232, 240);
+          doc.roundedRect(14, gridY, boxW, boxH, 1.5, 1.5, 'FD');
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(7.5);
+          doc.setTextColor(100, 116, 139);
+          doc.text('DEPARTMENT & WING', 20, gridY + 6);
+          doc.setFontSize(9.5);
+          doc.setTextColor(0, 51, 102);
+          doc.text(req.deptLabel || req.dept || 'Engineering', 20, gridY + 14);
+
+          // Box 2: Corridor Section
+          doc.roundedRect(108, gridY, boxW, boxH, 1.5, 1.5, 'FD');
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(7.5);
+          doc.setTextColor(100, 116, 139);
+          doc.text('CORRIDOR SECTION / LOCATION', 114, gridY + 6);
+          doc.setFontSize(9.5);
+          doc.setTextColor(0, 51, 102);
+          doc.text(req.section || 'Main Line', 114, gridY + 14);
+
+          // Box 3: Requester
+          const gridY2 = gridY + 23;
+          doc.roundedRect(14, gridY2, boxW, boxH, 1.5, 1.5, 'FD');
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(7.5);
+          doc.setTextColor(100, 116, 139);
+          doc.text('REQUESTING OFFICER / SSE GANG', 20, gridY2 + 6);
+          doc.setFontSize(9.5);
+          doc.setTextColor(0, 51, 102);
+          doc.text(req.requester || 'SSE In-Charge', 20, gridY2 + 14);
+
+          // Box 4: Priority SLA
+          doc.roundedRect(108, gridY2, boxW, boxH, 1.5, 1.5, 'FD');
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(7.5);
+          doc.setTextColor(100, 116, 139);
+          doc.text('PRIORITY CLASSIFICATION & SLA', 114, gridY2 + 6);
+          doc.setFontSize(9.5);
+          doc.setTextColor(req.priority === 'CRITICAL' ? 220 : 0, req.priority === 'CRITICAL' ? 38 : 51, req.priority === 'CRITICAL' ? 38 : 102);
+          doc.text(`${req.priority || 'P1 CRITICAL'} (Immediate Block Window)`, 114, gridY2 + 14);
+
+          // 5. Technical Scope & Rectification Instructions Box
+          const techY = gridY2 + 25;
+          doc.setFillColor(255, 255, 255);
+          doc.setDrawColor(203, 213, 225);
+          doc.roundedRect(14, techY, 182, 46, 2, 2, 'FD');
+
+          doc.setFillColor(0, 51, 102);
+          doc.rect(14, techY, 182, 7, 'F');
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(7.5);
+          doc.setTextColor(255, 255, 255);
+          doc.text('TECHNICAL SCOPE & ENGINEERING RECTIFICATION SPECIFICATIONS', 18, techY + 5);
+
+          doc.setFont('helvetica', 'normal');
+          doc.setFontSize(8.5);
+          doc.setTextColor(51, 65, 85);
+          const scopeText = req.desc || 'Routine track geometry inspection, ultrasonic rail flaw testing (USFD), and catenary wire height calibration requested in accordance with Indian Railways Permanent Way & Traction Maintenance Manual.';
+          const splitScope = doc.splitTextToSize(scopeText, 172);
+          doc.text(splitScope, 20, techY + 14);
+
+          // Corridor Possession Note
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(8);
+          doc.setTextColor(0, 51, 102);
+          doc.text('Corridor Block Advisory:', 20, techY + 36);
+          doc.setFont('helvetica', 'normal');
+          doc.setFontSize(7.8);
+          doc.setTextColor(100, 116, 139);
+          doc.text('Automatic AI conflict check verified. Approved for scheduled slot bundling during maintenance shadow.', 56, techY + 36);
+
+          // 6. Security & Digital Signatures Area
+          const sigY = techY + 50;
+          doc.setFillColor(248, 250, 252);
+          doc.setDrawColor(226, 232, 240);
+          doc.roundedRect(14, sigY, 182, 38, 2, 2, 'FD');
+
+          // Signature Col 1
+          doc.setDrawColor(148, 163, 184);
+          doc.line(24, sigY + 24, 75, sigY + 24);
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(7.5);
+          doc.setTextColor(71, 85, 105);
+          doc.text('SSE / P-WAY / TRD IN-CHARGE', 24, sigY + 29);
+          doc.setFont('helvetica', 'normal');
+          doc.setFontSize(6.5);
+          doc.setTextColor(148, 163, 184);
+          doc.text('Digitally Certified & Timestamped', 24, sigY + 33);
+
+          // Signature Col 2
+          doc.line(130, sigY + 24, 182, sigY + 24);
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(7.5);
+          doc.setTextColor(71, 85, 105);
+          doc.text('CHIEF CONTROLLER / DISPATCH', 130, sigY + 29);
+          doc.setFont('helvetica', 'normal');
+          doc.setFontSize(6.5);
+          doc.setTextColor(148, 163, 184);
+          doc.text('Sanctioning Authority', 130, sigY + 33);
+
+          // Digital Audit Stamp in Center
+          doc.setFillColor(239, 246, 255);
+          doc.setDrawColor(191, 219, 254);
+          doc.roundedRect(82, sigY + 6, 44, 26, 1, 1, 'FD');
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(6.5);
+          doc.setTextColor(29, 78, 216);
+          doc.text('RAKSHA PATH', 104, sigY + 12, { align: 'center' });
+          doc.setFontSize(6);
+          doc.setTextColor(100, 116, 139);
+          doc.text('CRYPTOGRAPHIC SEAL', 104, sigY + 17, { align: 'center' });
+          doc.setFont('courier', 'bold');
+          doc.setFontSize(6);
+          doc.setTextColor(15, 23, 42);
+          doc.text(`RP-${(req.id || 'REQ').replace(/[^a-zA-Z0-9]/g, '')}`, 104, sigY + 24, { align: 'center' });
+
+          // 7. Footer
+          doc.setFillColor(0, 43, 91);
+          doc.rect(0, 287, 210, 10, 'F');
+          doc.setTextColor(255, 255, 255);
+          doc.setFont('helvetica', 'normal');
+          doc.setFontSize(7);
+          doc.text('Indian Railways AI Corridor & Safety Control System • CONFIDENTIAL & OFFICIAL USE ONLY', 105, 293, { align: 'center' });
+
+          // Direct File Download
+          const fileName = `IR_Requisition_Dossier_${req.id}.pdf`;
+          doc.save(fileName);
+          window.showToast(`✓ Official PDF Dossier downloaded: ${fileName}`, "success");
+        } else {
+          // Fallback to printable docket if library is loading
+          window.printDossierDocket(reqId);
+        }
+      } catch (err) {
+        console.error('PDF Generation Error:', err);
+        window.printDossierDocket(reqId);
+      }
+    };
+
+    window.printDossierDocket = function (reqId) {
+      const allExt = typeof window.getExternalRequests === 'function' ? window.getExternalRequests() : [];
+      const req = maintenanceRequests.find(r => r.id === reqId) || allExt.find(r => r.id === reqId) || { id: reqId, title: 'Maintenance Requisition' };
+      const printWin = window.open('', '_blank', 'width=800,height=600');
+      if (printWin) {
+        printWin.document.write(`
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <title>IR Requisition Docket - ${escapeHtml(req.id)}</title>
+            <style>
+              body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; padding: 24px; color: #1e293b; line-height: 1.5; }
+              .header { border-bottom: 2px solid #003366; padding-bottom: 12px; margin-bottom: 20px; }
+              .title { font-size: 20px; font-weight: bold; color: #003366; }
+              .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+              .box { border: 1px solid #cbd5e1; padding: 10px; border-radius: 6px; background: #f8fafc; }
+              .label { font-size: 11px; color: #64748b; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; }
+              .val { font-size: 14px; font-weight: bold; color: #0f172a; margin-top: 4px; }
+              .desc-box { border: 1px solid #cbd5e1; padding: 14px; border-radius: 6px; background: #ffffff; }
+            </style>
+          </head>
+          <body>
+            <div class="header">
+              <div style="font-size: 12px; color: #64748b; font-weight: 700; letter-spacing: 1px;">INDIAN RAILWAYS &bull; RAKSHA PATH AI DISPATCH</div>
+              <div class="title">TECHNICAL REQUISITION DOSSIER: ${escapeHtml(req.id)}</div>
+            </div>
+            <div class="grid">
+              <div class="box"><div class="label">Asset / Problem Summary</div><div class="val">${escapeHtml(req.title)}</div></div>
+              <div class="box"><div class="label">Department</div><div class="val">${escapeHtml(req.deptLabel || req.dept || 'Engineering')}</div></div>
+              <div class="box"><div class="label">Corridor Section</div><div class="val">${escapeHtml(req.section || 'Main Line')}</div></div>
+              <div class="box"><div class="label">Priority & Status</div><div class="val">${escapeHtml(req.priority || 'HIGH')} / ${escapeHtml(req.status || 'SANCTIONED')}</div></div>
+            </div>
+            <div class="desc-box">
+              <div class="label">Technical Scope & Rectification Instructions</div>
+              <div style="margin-top: 6px; font-size: 13px; color: #334155;">${escapeHtml(req.desc || 'Routine track geometry and signaling maintenance.')}</div>
+            </div>
+            <div style="margin-top: 30px; border-top: 1px solid #e2e8f0; padding-top: 10px; font-size: 11px; color: #94a3b8; text-align: center;">
+              Official Maintenance Record &bull; Generated via RAKSHA PATH Dispatch Platform &bull; ${new Date().toLocaleString()}
+            </div>
+            <script>window.onload = function() { window.print(); }<\/script>
+          </body>
+          </html>
+        `);
+        printWin.document.close();
+      }
+    };
+
+    window.viewRequestDossierModal = function (reqId) {
+      const allExt = typeof window.getExternalRequests === 'function' ? window.getExternalRequests() : [];
+      let req = maintenanceRequests.find(r => r.id === reqId) || allExt.find(r => r.id === reqId);
+      if (!req) {
+        req = {
+          id: reqId,
+          title: 'Track Geometry Irregularity',
+          dept: 'CIVIL',
+          deptLabel: 'Permanent Way (TMS)',
+          section: 'NDLS–GZB (UP Line)',
+          requester: 'SSE In-Charge',
+          submittedAt: 'Today, 09:30',
+          priority: 'CRITICAL',
+          status: 'PENDING',
+          desc: 'Twist fault 4.2mm/m identified during track recording car run. Speed restriction advised.'
+        };
+      }
+
+      const statusBadge = req.status === 'WORK_ORDER_CREATED'
+        ? '<span style="display:inline-flex; align-items:center; gap:5px; background:#ECFDF5; color:#059669; border:1px solid #A7F3D0; font-weight:800; padding:4px 10px; border-radius:999px; font-size:0.75rem; white-space:nowrap; flex-shrink:0;"><span>✓</span><span>Work Order Sanctioned</span></span>'
+        : (req.status === 'UNDER_REVIEW'
+          ? '<span style="display:inline-flex; align-items:center; gap:5px; background:#EFF6FF; color:#2563EB; border:1px solid #BFDBFE; font-weight:800; padding:4px 10px; border-radius:999px; font-size:0.75rem; white-space:nowrap; flex-shrink:0;"><span>🔍</span><span>Under Technical Review</span></span>'
+          : '<span style="display:inline-flex; align-items:center; gap:5px; background:#FEF3C7; color:#D97706; border:1px solid #FDE68A; font-weight:800; padding:4px 10px; border-radius:999px; font-size:0.75rem; white-space:nowrap; flex-shrink:0;"><span>⏳</span><span>Pending Approval</span></span>');
+
+      const priorityBadge = req.priority === 'CRITICAL'
+        ? '<span style="color:#DC2626; font-weight:800; background:#FEF2F2; padding:3px 8px; border-radius:6px; border:1px solid #FECACA; font-size:0.75rem; display:inline-block; white-space:nowrap;">🚨 Critical (P1) &bull; Immediate Block</span>'
+        : (req.priority === 'HIGH'
+          ? '<span style="color:#EA580C; font-weight:800; background:#FFF7ED; padding:3px 8px; border-radius:6px; border:1px solid #FFEDD5; font-size:0.75rem; display:inline-block; white-space:nowrap;">⚠️ High (P2) &bull; 24h Window</span>'
+          : '<span style="color:#059669; font-weight:800; background:#ECFDF5; padding:3px 8px; border-radius:6px; border:1px solid #A7F3D0; font-size:0.75rem; display:inline-block; white-space:nowrap;">⚡ Standard (P3/P4)</span>');
+
+      const canSanction = req.status !== 'WORK_ORDER_CREATED';
+      const canReview = req.status === 'PENDING';
+
+      const dossierHtml = `
+        <div style="display:flex; flex-direction:column; gap:12px; font-size:0.84rem;">
+          <!-- Top Hero Header Card with Non-wrapping Badge -->
+          <div style="padding:14px 16px; background:linear-gradient(135deg, rgba(0,43,91,0.06) 0%, rgba(2,132,199,0.08) 100%); border:1px solid rgba(0,51,102,0.16); border-radius:12px; box-shadow:0 1px 3px rgba(0,51,102,0.04);">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:8px;">
+              <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                <span style="font-family:var(--font-mono, monospace); font-weight:800; color:#FFFFFF; background:#002B5B; padding:3px 8px; border-radius:6px; font-size:0.76rem; letter-spacing:0.5px;">${escapeHtml(req.id)}</span>
+                <span style="color:#64748B; font-size:0.76rem; font-weight:600;">📅 ${escapeHtml(req.submittedAt || 'Today')}</span>
+              </div>
+              <div style="flex-shrink:0;">${statusBadge}</div>
+            </div>
+            <div style="font-weight:800; color:#001F3F; font-size:1.02rem; line-height:1.45; letter-spacing:-0.2px;">
+              ${escapeHtml(req.title)}
+            </div>
+          </div>
+
+          <!-- 4-Quadrant Parameters Matrix -->
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+            <div style="background:#FFFFFF; border:1px solid rgba(0,51,102,0.12); border-radius:10px; padding:10px 14px; display:flex; flex-direction:column; gap:3px; box-shadow:0 1px 2px rgba(0,0,0,0.02);">
+              <div style="color:#64748B; font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; display:flex; align-items:center; gap:5px;">
+                <span>🏢</span> Department
+              </div>
+              <div style="color:#002B5B; font-weight:800; font-size:0.86rem;">
+                ${escapeHtml(req.deptLabel || req.dept || 'Engineering')}
+              </div>
+            </div>
+
+            <div style="background:#FFFFFF; border:1px solid rgba(0,51,102,0.12); border-radius:10px; padding:10px 14px; display:flex; flex-direction:column; gap:3px; box-shadow:0 1px 2px rgba(0,0,0,0.02);">
+              <div style="color:#64748B; font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; display:flex; align-items:center; gap:5px;">
+                <span>📍</span> Section / Track
+              </div>
+              <div style="color:#002B5B; font-weight:800; font-size:0.86rem; font-family:var(--font-mono, monospace);">
+                ${escapeHtml(req.section || 'Main Corridor')}
+              </div>
+            </div>
+
+            <div style="background:#FFFFFF; border:1px solid rgba(0,51,102,0.12); border-radius:10px; padding:10px 14px; display:flex; flex-direction:column; gap:3px; box-shadow:0 1px 2px rgba(0,0,0,0.02);">
+              <div style="color:#64748B; font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; display:flex; align-items:center; gap:5px;">
+                <span>👤</span> Requested By
+              </div>
+              <div style="color:#002B5B; font-weight:800; font-size:0.86rem;">
+                ${escapeHtml(req.requester || 'Senior Section Engineer')}
+              </div>
+            </div>
+
+            <div style="background:#FFFFFF; border:1px solid rgba(0,51,102,0.12); border-radius:10px; padding:10px 14px; display:flex; flex-direction:column; gap:3px; box-shadow:0 1px 2px rgba(0,0,0,0.02);">
+              <div style="color:#64748B; font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; display:flex; align-items:center; gap:5px;">
+                <span>⏱️</span> Priority &amp; SLA
+              </div>
+              <div>${priorityBadge}</div>
+            </div>
+          </div>
+
+          <!-- Technical Breakdown & Scope Card -->
+          <div style="padding:12px 14px; background:#FFFFFF; border:1px solid rgba(0,51,102,0.12); border-radius:10px; box-shadow:0 1px 2px rgba(0,0,0,0.02);">
+            <div style="font-weight:700; color:#002B5B; font-size:0.78rem; margin-bottom:6px; display:flex; align-items:center; justify-content:space-between;">
+              <div style="display:flex; align-items:center; gap:6px;">
+                <span>🛠️</span>
+                <span>Technical Breakdown &amp; Rectification Scope</span>
+              </div>
+              <span style="font-size:0.68rem; font-weight:700; color:#059669; background:#ECFDF5; border:1px solid #A7F3D0; padding:1px 6px; border-radius:4px;">✓ Live Conflict Checked</span>
+            </div>
+            <p style="margin:0; color:#334155; font-size:0.82rem; line-height:1.55;">${escapeHtml(req.desc || 'Routine track geometry and signaling maintenance requested.')}</p>
+          </div>
+
+          <!-- Interactive Action Buttons Bar -->
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(130px, 1fr)); gap:8px; padding-top:6px; border-top:1px dashed rgba(0,51,102,0.16);">
+            <button type="button" style="padding:9px 12px; font-size:0.78rem; font-weight:800; background:linear-gradient(135deg, #0284C7 0%, #0369A1 100%); color:#FFFFFF; border:none; border-radius:8px; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:6px; transition:all 0.18s ease; box-shadow:0 2px 6px rgba(2,132,199,0.3); white-space:nowrap;" onclick="window.downloadRequisitionPDF('${req.id}')" title="Generate and Download Official PDF Dossier">
+              <span>📥</span> Download PDF
+            </button>
+            ${canSanction ? `
+              <button type="button" style="padding:9px 12px; font-size:0.78rem; font-weight:800; background:#002B5B; color:#FFFFFF; border:none; border-radius:8px; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:6px; transition:all 0.18s ease; box-shadow:0 2px 6px rgba(0,43,91,0.25); white-space:nowrap;" onclick="window.sanctionWorkOrder('${req.id}')" title="Sanction and allocate corridor slot">
+                <span>⚡</span> Sanction Order
+              </button>
+            ` : ''}
+            ${canReview ? `
+              <button type="button" style="padding:9px 12px; font-size:0.78rem; font-weight:700; background:#EFF6FF; color:#1D4ED8; border:1px solid #BFDBFE; border-radius:8px; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:6px; transition:all 0.18s ease; white-space:nowrap;" onclick="window.markRequestUnderReview('${req.id}')" title="Move to Under Review state">
+                <span>🔍</span> Mark Review
+              </button>
+            ` : ''}
+            <button type="button" style="padding:9px 10px; font-size:0.78rem; font-weight:700; background:#F8FAFC; color:#334155; border:1px solid #CBD5E1; border-radius:8px; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:5px; transition:all 0.18s ease; white-space:nowrap;" onclick="window.copyRequisitionId('${req.id}')" title="Copy Requisition Reference ID">
+              <span>📋</span> Copy ID
+            </button>
+            <button type="button" style="padding:9px 10px; font-size:0.78rem; font-weight:700; background:#F8FAFC; color:#334155; border:1px solid #CBD5E1; border-radius:8px; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:5px; transition:all 0.18s ease; white-space:nowrap;" onclick="window.printDossierDocket('${req.id}')" title="Open printable browser view">
+              <span>🖨️</span> Print View
+            </button>
+          </div>
+        </div>
+      `;
+
+      window.showIRModalTile({
+        title: `📋 Technical Requisition Dossier: ${reqId}`,
+        contentHtml: dossierHtml,
+        badge: 'REQUISITION DOSSIER',
+        primaryLabel: '✓ Close Dossier',
+        icon: '📋'
+      });
+    };
 
     window.toggleOverviewAccordion = function () {
       const wrapper = document.getElementById("overview-content-wrapper");

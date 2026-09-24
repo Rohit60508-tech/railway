@@ -161,6 +161,84 @@
     }
   ];
 
+  const DEFAULT_PM_SCHEDULES = [
+    {
+      id: 'PM-1001',
+      title: 'Deep Screening Machine (BCM) Ballast Cleaning',
+      discipline: 'Track (TMS)',
+      corridor: 'DLI-GZB Section, Km 14.8 - 22.0',
+      sectionId: 'NDLS-GZB-DN',
+      stationFrom: 'NDLS',
+      stationTo: 'GZB',
+      frequency: 'Monthly',
+      nextDate: new Date(Date.now() + 86400000 * 2).toISOString().split('T')[0],
+      block: '180 mins',
+      sse: 'SSE / Track Machine / NDLS',
+      status: 'Awaiting Control Office Sanction',
+      isArchived: false
+    },
+    {
+      id: 'PM-1002',
+      title: 'Periodic USFD Ultrasonic Flaw Detection Scan',
+      discipline: 'Surveillance (USFD)',
+      corridor: 'GZB-ALJN Mainline, Km 42.0 - 65.0',
+      sectionId: 'GZB-ALJN-DN',
+      stationFrom: 'GZB',
+      stationTo: 'ALJN',
+      frequency: 'Fortnightly',
+      nextDate: new Date(Date.now() + 86400000 * 5).toISOString().split('T')[0],
+      block: '120 mins',
+      sse: 'SSE / USFD Lab / Ghaziabad',
+      status: 'Awaiting Control Office Sanction',
+      isArchived: false
+    },
+    {
+      id: 'PM-1003',
+      title: '25kV OHE Catenary Height & Stagger Calibration',
+      discipline: 'Traction (TRD)',
+      corridor: 'NDLS-TKD Suburban Corridor',
+      sectionId: 'NDLS-TKD-UP',
+      stationFrom: 'NDLS',
+      stationTo: 'TKD',
+      frequency: 'Quarterly',
+      nextDate: new Date(Date.now() + 86400000 * 2).toISOString().split('T')[0],
+      block: '150 mins',
+      sse: 'SSE / TRD / Hazrat Nizamuddin',
+      status: 'Awaiting Control Office Sanction',
+      isArchived: false
+    },
+    {
+      id: 'PM-1004',
+      title: 'Point Machine Stroke, Lubrication & Gap Check',
+      discipline: 'Signal (SMMS)',
+      corridor: 'New Delhi Yard West Interlocking (P-104A)',
+      sectionId: 'NDLS-GZB-DN',
+      stationFrom: 'NDLS',
+      stationTo: 'GZB',
+      frequency: 'Monthly',
+      nextDate: new Date().toISOString().split('T')[0],
+      block: '60 mins',
+      sse: 'SSE / Signal / NDLS Central',
+      status: 'Awaiting Control Office Sanction',
+      isArchived: false
+    },
+    {
+      id: 'PM-1005',
+      title: 'Axle Counter & Track Circuit Shunt Verification',
+      discipline: 'Signal (SMMS)',
+      corridor: 'Sahibabad Auto Signaling Zone',
+      sectionId: 'NDLS-GZB-DN',
+      stationFrom: 'NDLS',
+      stationTo: 'GZB',
+      frequency: 'Weekly',
+      nextDate: new Date(Date.now() + 86400000 * 5).toISOString().split('T')[0],
+      block: '90 mins',
+      sse: 'SSE / Telecom / SBB',
+      status: 'Awaiting Control Office Sanction',
+      isArchived: false
+    }
+  ];
+
   class UniversalLiveSync {
     constructor() {
       this.listeners = new Map();
@@ -392,13 +470,52 @@
     }
 
     // ── 3. PM SCHEDULES DATA ────────────────────────────────────
+    _parseCorridorDetails(corridorStr, disc) {
+      let sec = 'NDLS-GZB-DN', stFrom = 'NDLS', stTo = 'GZB';
+      const c = (corridorStr || '').toUpperCase();
+      if (c.includes('GZB-ALJN') || c.includes('ALIGARH')) {
+        sec = 'GZB-ALJN-DN'; stFrom = 'GZB'; stTo = 'ALJN';
+      } else if (c.includes('ALJN-TDL') || c.includes('TUNDLA')) {
+        sec = 'ALJN-TDL-UP'; stFrom = 'ALJN'; stTo = 'TDL';
+      } else if (c.includes('TDL-CNB') || c.includes('KANPUR')) {
+        sec = 'TDL-CNB-UP'; stFrom = 'TDL'; stTo = 'CNB';
+      } else if (c.includes('CNB-PRYJ') || c.includes('PRAYAGRAJ')) {
+        sec = 'CNB-PRYJ-DN'; stFrom = 'CNB'; stTo = 'PRYJ';
+      } else if (c.includes('TKD') || c.includes('TUGHLAKABAD') || c.includes('NIZAMUDDIN')) {
+        sec = 'NDLS-TKD-UP'; stFrom = 'NDLS'; stTo = 'TKD';
+      } else if (c.includes('MTC') || c.includes('MEERUT')) {
+        sec = 'NDLS-MTC-DN'; stFrom = 'NDLS'; stTo = 'MTC';
+      } else if (c.includes('MB') || c.includes('MORADABAD')) {
+        sec = 'GZB-MB-DN'; stFrom = 'GZB'; stTo = 'MB';
+      }
+      return { sectionId: sec, stationFrom: stFrom, stationTo: stTo };
+    }
+
+    _normalizeDisciplineDept(disc) {
+      const d = (disc || '').toUpperCase();
+      if (d.includes('TRD') || d.includes('TRACTION') || d.includes('ELECTRICAL') || d.includes('OHE')) return 'Electrical (TRD)';
+      if (d.includes('SIG') || d.includes('SMMS') || d.includes('TELECOM') || d.includes('POINT') || d.includes('AXLE')) return 'Signal & Telecom';
+      if (d.includes('MECH') || d.includes('ROLLING')) return 'Mechanical';
+      return 'Civil (P-Way)';
+    }
+
     getSchedules() {
       try {
         const raw = localStorage.getItem(STORAGE_KEYS.PM_SCHEDULES);
-        if (!raw) return [];
-        return JSON.parse(raw) || [];
+        if (!raw) {
+          localStorage.setItem(STORAGE_KEYS.PM_SCHEDULES, JSON.stringify(DEFAULT_PM_SCHEDULES));
+          DEFAULT_PM_SCHEDULES.forEach(s => this.dispatchPMScheduleToControlOffice(s));
+          return DEFAULT_PM_SCHEDULES;
+        }
+        const list = JSON.parse(raw) || [];
+        if (!Array.isArray(list) || list.length === 0) {
+          localStorage.setItem(STORAGE_KEYS.PM_SCHEDULES, JSON.stringify(DEFAULT_PM_SCHEDULES));
+          DEFAULT_PM_SCHEDULES.forEach(s => this.dispatchPMScheduleToControlOffice(s));
+          return DEFAULT_PM_SCHEDULES;
+        }
+        return list;
       } catch (_) {
-        return [];
+        return DEFAULT_PM_SCHEDULES;
       }
     }
 
@@ -407,6 +524,54 @@
         localStorage.setItem(STORAGE_KEYS.PM_SCHEDULES, JSON.stringify(schedules));
         this.broadcast('schedules_updated', schedules);
       } catch (_) { }
+    }
+
+    async dispatchPMScheduleToControlOffice(schedule) {
+      const loc = this._parseCorridorDetails(schedule.corridor, schedule.discipline);
+      const dept = this._normalizeDisciplineDept(schedule.discipline);
+      const mins = parseInt(schedule.block) || 120;
+      const targetDate = schedule.nextDate || new Date().toISOString().split('T')[0];
+
+      const payload = {
+        request_id: schedule.id,
+        section_id: schedule.sectionId || loc.sectionId,
+        station_from: schedule.stationFrom || loc.stationFrom,
+        station_to: schedule.stationTo || loc.stationTo,
+        start_km: 12.0,
+        end_km: 18.0,
+        km_pole: 'KM 12-18',
+        requested_window: `${targetDate} (01:30 – 04:30 Scheduled PM Shadow)`,
+        window_start_time: '01:30',
+        window_end_time: '04:30',
+        duration_minutes: mins,
+        department: dept,
+        work_description: `[PM Schedule] ${schedule.title} (${schedule.frequency} cycle) · In-charge: ${schedule.sse}`,
+        priority: schedule.priority || 'P2',
+        status: schedule.isSanctioned ? 'SANCTIONED' : 'PENDING_REVIEW',
+        source: 'PREVENTIVE_MAINTENANCE'
+      };
+
+      try {
+        await fetch('/api/v1/requested-windows', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+      } catch (err) {
+        console.warn('[PM Sync] Notice on dispatching to requested-windows:', err);
+      }
+
+      this.broadcast('pm_schedule_dispatched', { schedule, payload });
+      return payload;
+    }
+
+    async syncAllPMSchedulesToControlOffice() {
+      const schedules = this.getSchedules();
+      for (const s of schedules) {
+        if (!s.isArchived) {
+          await this.dispatchPMScheduleToControlOffice(s);
+        }
+      }
     }
 
     // ── 4. POST-MAINTENANCE INSPECTIONS & QA VERIFICATION ────────

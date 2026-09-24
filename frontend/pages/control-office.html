@@ -78,9 +78,8 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 100;
+      position: static;
+      z-index: 10;
     }
 
     .brand-group {
@@ -520,17 +519,73 @@
       <div class="ctrl-grid">
 
         <!-- ═══════════════════ LEFT COLUMN: RECOMMENDED SLOTS & INTELLIGENCE ═══════════════════ -->
+        <!-- ═══════════════════ LEFT COLUMN: RECOMMENDED SLOTS & INTELLIGENCE ═══════════════════ -->
         <div class="panel-card">
           <div class="panel-title"
             style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
             <span>AI-Recommended Block Windows (Feasibility Ranked)</span>
             <div style="display: flex; align-items: center; gap: 6px;">
+              <span id="rec-corridor-badge"
+                style="font-size: 0.72rem; color: #003366; font-family: var(--font-mono); font-weight: 700;">NDLS-CNB-UP Corridor</span>
               <span
-                style="font-size: 0.72rem; color: #003366; font-family: var(--font-mono); font-weight: 700;">NDLS-CNB-UP
-                Corridor</span>
-              <span
-                style="font-size: 0.68rem; background: #ECFDF5; color: #059669; border: 1px solid rgba(5,150,105,0.3); padding: 2px 6px; border-radius: 4px; font-weight: 700;">🛰️
-                Live RapidAPI Feed</span>
+                style="font-size: 0.68rem; background: #ECFDF5; color: #059669; border: 1px solid rgba(5,150,105,0.3); padding: 2px 6px; border-radius: 4px; font-weight: 700;">🛰️ Live RapidAPI Feed</span>
+            </div>
+          </div>
+
+          <!-- ── Live Parameter Selector: Corridor, Section, Date, Time ── -->
+          <div style="background: #FAF6EE; border: 1.5px solid rgba(0,51,102,0.15); border-radius: 10px; padding: 12px 14px; margin-bottom: 14px; display: flex; flex-direction: column; gap: 10px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 6px; font-size: 0.78rem; font-weight: 800; color: #003366;">
+                <span>🎯</span>
+                <span>Live Corridor &amp; Window Query Parameters</span>
+              </div>
+              <span style="font-size: 0.70rem; color: #64748B; font-weight: 600;">Auto-syncs with IRCTC RapidAPI Live Telemetry</span>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px;">
+              <!-- Corridor Select -->
+              <div>
+                <label style="display: block; font-size: 0.68rem; font-weight: 700; color: #475569; margin-bottom: 3px;">Corridor</label>
+                <select id="rec-corridor-select" onchange="window.onRecCorridorChange(this.value)" style="width: 100%; padding: 6px 8px; border: 1px solid #CBD5E1; border-radius: 6px; font-size: 0.74rem; font-weight: 700; color: #003366; background: #FFFFFF; outline: none; cursor: pointer;">
+                  <option value="NDLS-CNB" selected>NDLS–CNB (Delhi–Kanpur Trunk)</option>
+                  <option value="NDLS-GZB">NDLS–GZB (Delhi–Ghaziabad)</option>
+                  <option value="GZB-ALJN">GZB–ALJN (Ghaziabad–Aligarh)</option>
+                  <option value="ALJN-TDL">ALJN–TDL (Aligarh–Tundla)</option>
+                  <option value="TDL-CNB">TDL–CNB (Tundla–Kanpur)</option>
+                  <option value="CNB-PRYJ">CNB–PRYJ (Kanpur–Prayagraj)</option>
+                  <option value="NDLS-MTC">NDLS–MTC (Delhi–Meerut)</option>
+                  <option value="GZB-MB">GZB–MB (Ghaziabad–Moradabad)</option>
+                </select>
+              </div>
+
+              <!-- Section Select -->
+              <div>
+                <label style="display: block; font-size: 0.68rem; font-weight: 700; color: #475569; margin-bottom: 3px;">Section / Track</label>
+                <select id="rec-section-select" onchange="window.triggerRecSlotsLiveFetch()" style="width: 100%; padding: 6px 8px; border: 1px solid #CBD5E1; border-radius: 6px; font-size: 0.74rem; font-weight: 700; color: #0F172A; background: #FFFFFF; outline: none; cursor: pointer;">
+                  <option value="NDLS-CNB-UP" selected>UP Line (Towards NDLS)</option>
+                  <option value="NDLS-CNB-DN">DN Line (Towards CNB)</option>
+                  <option value="NDLS-CNB-3RD">3RD Line (Freight/Slow)</option>
+                </select>
+              </div>
+
+              <!-- Date Select -->
+              <div>
+                <label style="display: block; font-size: 0.68rem; font-weight: 700; color: #475569; margin-bottom: 3px;">Scheduled Date</label>
+                <input type="date" id="rec-date-select" onchange="window.triggerRecSlotsLiveFetch()" style="width: 100%; padding: 5px 8px; border: 1px solid #CBD5E1; border-radius: 6px; font-size: 0.74rem; font-weight: 700; color: #0F172A; background: #FFFFFF; outline: none; box-sizing: border-box; cursor: pointer;" />
+              </div>
+
+              <!-- Time Shift Select -->
+              <div>
+                <label style="display: block; font-size: 0.68rem; font-weight: 700; color: #475569; margin-bottom: 3px;">Time Focus / Shift</label>
+                <select id="rec-time-select" onchange="window.triggerRecSlotsLiveFetch()" style="width: 100%; padding: 6px 8px; border: 1px solid #CBD5E1; border-radius: 6px; font-size: 0.74rem; font-weight: 700; color: #0F172A; background: #FFFFFF; outline: none; cursor: pointer;">
+                  <option value="ALL_DAY" selected>24h Full Scan</option>
+                  <option value="NIGHT_SHADOW">Night Shadow (00–06h)</option>
+                  <option value="MORNING_PEAK">Morning Peak (06–11h)</option>
+                  <option value="AFTERNOON_LULL">Afternoon Lull (11–16h)</option>
+                  <option value="EVENING_PEAK">Evening Peak (16–21h)</option>
+                  <option value="LATE_NIGHT">Late Night (21–24h)</option>
+                </select>
+              </div>
             </div>
           </div>
 
@@ -540,10 +595,13 @@
               <span style="font-size: 1rem; animation: pulse 2s infinite;">🟢</span>
               <div>
                 <span style="letter-spacing: 0.3px;">LIVE INGESTION: Indian Railway IRCTC (RapidAPI)</span>
-                <div style="font-size: 0.66rem; color: #A7F3D0; font-weight: 500; margin-top: 1px;">Tracking 18 active corridor rakes across NDLS–GZB–ALJN–CNB</div>
+                <div id="rec-telemetry-text" style="font-size: 0.66rem; color: #A7F3D0; font-weight: 500; margin-top: 1px;">Tracking 18 active corridor rakes across NDLS–GZB–ALJN–CNB</div>
               </div>
             </div>
-            <span id="live-feed-ticker" style="font-family: var(--font-mono); font-size: 0.68rem; color: #ECFDF5; background: rgba(255,255,255,0.15); padding: 3px 8px; border-radius: 4px;">● LIVE STREAM ACTIVE</span>
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <span id="live-feed-ticker" style="font-family: var(--font-mono); font-size: 0.68rem; color: #ECFDF5; background: rgba(255,255,255,0.15); padding: 3px 8px; border-radius: 4px;">● LIVE STREAM ACTIVE</span>
+              <button onclick="window.triggerRecSlotsLiveFetch()" title="Rescan Live RapidAPI Feed" style="background: rgba(255,255,255,0.2); border: none; color: #FFF; padding: 3px 8px; border-radius: 4px; font-size: 0.68rem; font-weight: 700; cursor: pointer;">↻ Rescan</button>
+            </div>
           </div>
 
           <div id="recommended-slots-list">
@@ -1645,14 +1703,95 @@
       }
     };
 
-    async function fetchLiveRecommendedSlots(secId, stFrom, stTo) {
+    // Corridor section mapping
+    const CORRIDOR_SECTIONS_MAP = {
+      'NDLS-CNB': [
+        { id: 'NDLS-CNB-UP', label: 'UP Line (Towards NDLS)' },
+        { id: 'NDLS-CNB-DN', label: 'DN Line (Towards CNB)' },
+        { id: 'NDLS-CNB-3RD', label: '3RD Line (Freight/Slow)' }
+      ],
+      'NDLS-GZB': [
+        { id: 'NDLS-GZB-UP', label: 'UP Line (Towards NDLS)' },
+        { id: 'NDLS-GZB-DN', label: 'DN Line (Towards GZB)' },
+        { id: 'NDLS-GZB-3RD', label: '3RD / Suburban Track' }
+      ],
+      'GZB-ALJN': [
+        { id: 'GZB-ALJN-UP', label: 'UP Line (Towards GZB)' },
+        { id: 'GZB-ALJN-DN', label: 'DN Line (Towards ALJN)' }
+      ],
+      'ALJN-TDL': [
+        { id: 'ALJN-TDL-UP', label: 'UP Line (Towards ALJN)' },
+        { id: 'ALJN-TDL-DN', label: 'DN Line (Towards TDL)' }
+      ],
+      'TDL-CNB': [
+        { id: 'TDL-CNB-UP', label: 'UP Line (Towards TDL)' },
+        { id: 'TDL-CNB-DN', label: 'DN Line (Towards CNB)' }
+      ],
+      'CNB-PRYJ': [
+        { id: 'CNB-PRYJ-UP', label: 'UP Line (Towards CNB)' },
+        { id: 'CNB-PRYJ-DN', label: 'DN Line (Towards PRYJ)' }
+      ],
+      'NDLS-MTC': [
+        { id: 'NDLS-MTC-UP', label: 'UP Line (Towards NDLS)' },
+        { id: 'NDLS-MTC-DN', label: 'DN Line (Towards MTC)' }
+      ],
+      'GZB-MB': [
+        { id: 'GZB-MB-UP', label: 'UP Line (Towards GZB)' },
+        { id: 'GZB-MB-DN', label: 'DN Line (Towards MB)' }
+      ]
+    };
+
+    window.onRecCorridorChange = function(corr) {
+      const secSel = document.getElementById('rec-section-select');
+      if (secSel && CORRIDOR_SECTIONS_MAP[corr]) {
+        secSel.innerHTML = CORRIDOR_SECTIONS_MAP[corr].map(s => `<option value="${s.id}">${s.label}</option>`).join('');
+      }
+      window.triggerRecSlotsLiveFetch();
+    };
+
+    window.triggerRecSlotsLiveFetch = async function() {
+      const corr = document.getElementById('rec-corridor-select')?.value || 'NDLS-CNB';
+      const sec = document.getElementById('rec-section-select')?.value || `${corr}-UP`;
+      const date = document.getElementById('rec-date-select')?.value || new Date().toISOString().split('T')[0];
+      const time = document.getElementById('rec-time-select')?.value || 'ALL_DAY';
+
+      const ticker = document.getElementById('live-feed-ticker');
+      if (ticker) ticker.innerHTML = '● SCANNING LIVE...';
+
+      await window.fetchLiveRecommendedSlots(sec, null, null, corr, date, time);
+
+      if (ticker) ticker.innerHTML = '● LIVE STREAM ACTIVE';
+    };
+
+    async function fetchLiveRecommendedSlots(secId, stFrom, stTo, corrParam, dateParam, timeParam) {
       try {
-        const sFrom = stFrom || document.getElementById('swm-stn-from')?.value || document.getElementById('fs-conflict-station-from')?.value || 'NDLS';
-        const sTo = stTo || document.getElementById('swm-stn-to')?.value || document.getElementById('fs-conflict-station-to')?.value || 'GZB';
-        const sId = secId || document.getElementById('swm-section')?.value || 'NDLS-GZB-DN';
-        const res = await fetch(`/api/v1/live-recommended-slots?section_id=${encodeURIComponent(sId)}&station_from=${encodeURIComponent(sFrom)}&station_to=${encodeURIComponent(sTo)}`);
+        const corr = corrParam || document.getElementById('rec-corridor-select')?.value || 'NDLS-CNB';
+        const sId = secId || document.getElementById('rec-section-select')?.value || document.getElementById('swm-section')?.value || `${corr}-UP`;
+        const dt = dateParam || document.getElementById('rec-date-select')?.value || new Date().toISOString().split('T')[0];
+        const tm = timeParam || document.getElementById('rec-time-select')?.value || 'ALL_DAY';
+
+        let sFrom = stFrom || document.getElementById('swm-stn-from')?.value || document.getElementById('fs-conflict-station-from')?.value;
+        let sTo = stTo || document.getElementById('swm-stn-to')?.value || document.getElementById('fs-conflict-station-to')?.value;
+
+        const queryUrl = `/api/v1/live-recommended-slots?corridor=${encodeURIComponent(corr)}&section_id=${encodeURIComponent(sId)}&date=${encodeURIComponent(dt)}&time=${encodeURIComponent(tm)}${sFrom ? `&station_from=${encodeURIComponent(sFrom)}` : ''}${sTo ? `&station_to=${encodeURIComponent(sTo)}` : ''}`;
+
+        const res = await fetch(queryUrl);
         if (res.ok) {
-          recommendedSlots = await res.json();
+          const data = await res.json();
+          if (Array.isArray(data)) {
+            recommendedSlots = data;
+          } else if (data.slots && Array.isArray(data.slots)) {
+            recommendedSlots = data.slots;
+            
+            // Update telemetry bar & header badge
+            const badge = document.getElementById('rec-corridor-badge');
+            if (badge) badge.innerText = `${data.section_id || sId} Corridor`;
+
+            const telem = document.getElementById('rec-telemetry-text');
+            if (telem) {
+              telem.innerText = `Tracking ${data.active_corridor_rakes || 18} active corridor rakes across ${data.station_from}–${data.station_to} (${data.date})`;
+            }
+          }
           renderRecommendedSlots();
         }
       } catch (e) {
@@ -1660,6 +1799,14 @@
       }
     }
     window.fetchLiveRecommendedSlots = fetchLiveRecommendedSlots;
+
+    // Initialize default date
+    setTimeout(() => {
+      const dateInput = document.getElementById('rec-date-select');
+      if (dateInput && !dateInput.value) {
+        dateInput.value = new Date().toISOString().split('T')[0];
+      }
+    }, 50);
 
     async function fetchLiveConflicts() {
       try {

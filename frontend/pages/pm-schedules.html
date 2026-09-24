@@ -163,21 +163,62 @@
     /* ── 5 Metric KPI Summary Cards Grid ── */
     .pm-kpi-grid {
       display: grid;
-      grid-template-columns: repeat(5, 1fr);
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: 16px;
       margin-bottom: 24px;
     }
 
-    @media (max-width: 1180px) {
-      .pm-kpi-grid {
-        grid-template-columns: repeat(3, 1fr);
-      }
+    [data-theme="dark"] {
+      --bg-color: #0B0F19;
+      --card-bg: #111827;
+      --border-color: rgba(255, 255, 255, 0.1);
+      --primary-navy: #38BDF8;
+      --primary-navy-hover: #60A5FA;
+      --text-dark: #F8FAFC;
+      --text-muted: #94A3B8;
+      --text-sub: #CBD5E1;
     }
 
-    @media (max-width: 768px) {
-      .pm-kpi-grid {
-        grid-template-columns: 1fr;
-      }
+    [data-theme="dark"] .pm-main-card,
+    [data-theme="dark"] .pm-table-card,
+    [data-theme="dark"] .pm-kpi-card,
+    [data-theme="dark"] .pm-btn-secondary,
+    [data-theme="dark"] .pm-search-input,
+    [data-theme="dark"] .pm-view-toggles,
+    [data-theme="dark"] .pm-cards-visibility-pill,
+    [data-theme="dark"] .pm-modal-card {
+      background-color: #111827 !important;
+      border-color: rgba(255, 255, 255, 0.1) !important;
+      color: #F8FAFC !important;
+    }
+
+    [data-theme="dark"] .pm-filter-tab:hover,
+    [data-theme="dark"] .pm-filter-tab.active {
+      background-color: #1E293B !important;
+      border-color: rgba(255, 255, 255, 0.15) !important;
+      color: #38BDF8 !important;
+    }
+
+    [data-theme="dark"] .pm-table th {
+      background-color: #1E293B !important;
+      color: #F8FAFC !important;
+      border-bottom-color: rgba(255, 255, 255, 0.12) !important;
+    }
+
+    [data-theme="dark"] .pm-table td {
+      background-color: #111827 !important;
+      color: #CBD5E1 !important;
+      border-bottom-color: rgba(255, 255, 255, 0.06) !important;
+    }
+
+    [data-theme="dark"] .pm-table tr:hover td {
+      background-color: #1E293B !important;
+    }
+
+    [data-theme="dark"] .pm-empty-icon-wrap {
+      background-color: #161F30 !important;
+      border-color: #334155 !important;
+      color: #38BDF8 !important;
     }
 
     .pm-kpi-card {
@@ -853,10 +894,31 @@
       </div>
     </div>
 
+    <!-- ── Automated PM ➔ Control Office ➔ Maintenance Workflow Pipeline Bar ── -->
+    <div style="background: #FFFFFF; border: 1.5px solid rgba(0,51,102,0.14); border-radius: 12px; padding: 14px 18px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 1.3rem;">⚡</span>
+        <div>
+          <div style="font-weight: 800; font-size: 0.88rem; color: #003366;">Automated PM Maintenance Operational Pipeline</div>
+          <div style="font-size: 0.78rem; color: #64748B; margin-top: 1px;">
+            PM Schedule Created ➔ <strong>Control Office Sanctions Block</strong> ➔ <strong>Maintenance Team Accepts Slot</strong> ➔ <strong>Work Done &amp; Completed</strong>
+          </div>
+        </div>
+      </div>
+      <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+        <a href="control-office.html" style="background: #003366; color: #FFF; text-decoration: none; padding: 6px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; display: inline-flex; align-items: center; gap: 4px;">
+          <span>🖥️</span><span>Control Office Approval ↗</span>
+        </a>
+        <a href="maintenance-dashboard.html" style="background: #059669; color: #FFF; text-decoration: none; padding: 6px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; display: inline-flex; align-items: center; gap: 4px;">
+          <span>🔧</span><span>Maintenance Execution ↗</span>
+        </a>
+      </div>
+    </div>
+
     <!-- ═══════════════════ TABLE DATA VIEW (WHEN SCHEDULES EXIST) ═══════════════════ -->
     <div class="pm-table-card" id="pm-table-data-view">
-      <div style="padding:14px 18px; border-bottom:1px solid var(--border-color); display:flex; justify-content:space-between; align-items:center; background:#FAFAFA;">
-        <span style="font-size:0.86rem; font-weight:700; color:#1E293B;">Active Preventive Maintenance Roster</span>
+      <div style="padding:14px 18px; border-bottom:1px solid var(--border-color); display:flex; justify-content:space-between; align-items:center; background:#FAFAFA; flex-wrap: wrap; gap: 8px;">
+        <span style="font-size:0.86rem; font-weight:700; color:#1E293B;">Active Preventive Maintenance Roster &amp; Operational Flow</span>
         <button type="button" class="pm-btn-secondary" style="padding:4px 10px; font-size:0.75rem;" onclick="window.resetToEmptyState()">
           Clear / Return to Empty View
         </button>
@@ -865,13 +927,13 @@
         <thead>
           <tr>
             <th>Schedule ID</th>
-            <th>Title & Equipment</th>
+            <th>Title &amp; Equipment</th>
             <th>Discipline</th>
-            <th>Corridor / Km</th>
+            <th>Corridor / Section</th>
             <th>Frequency</th>
             <th>Next Due Date</th>
             <th>Required Block</th>
-            <th>Status</th>
+            <th>Lifecycle Workflow Phase</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -1066,8 +1128,27 @@
       }
     };
 
+    // Cached requested windows state
+    let cachedWindowsMap = {};
+
+    async function loadRequestedWindowsMap() {
+      try {
+        const res = await fetch('/api/v1/requested-windows');
+        if (res.ok) {
+          const list = await res.json();
+          if (Array.isArray(list)) {
+            cachedWindowsMap = {};
+            list.forEach(w => {
+              const id = w.request_id || w.id;
+              if (id) cachedWindowsMap[id] = w;
+            });
+          }
+        }
+      } catch (_) { }
+    }
+
     // Create Schedule Submit
-    window.handleCreateScheduleSubmit = function(e) {
+    window.handleCreateScheduleSubmit = async function(e) {
       e.preventDefault();
       const title = document.getElementById('sched-title').value.trim();
       const discipline = document.getElementById('sched-discipline').value;
@@ -1086,7 +1167,7 @@
         nextDate: nextDate,
         block: block + ' mins',
         sse: sse,
-        status: 'Active',
+        status: 'Awaiting Control Office Sanction',
         isArchived: false
       };
 
@@ -1094,11 +1175,18 @@
       if (window.IR_LIVE_SYNC && typeof window.IR_LIVE_SYNC.saveSchedules === 'function') {
         window.IR_LIVE_SYNC.saveSchedules(pmSchedules);
       }
+
+      // Automatically dispatch to Control Office for line block sanction
+      if (window.IR_LIVE_SYNC && typeof window.IR_LIVE_SYNC.dispatchPMScheduleToControlOffice === 'function') {
+        await window.IR_LIVE_SYNC.dispatchPMScheduleToControlOffice(newSched);
+      }
+
       window.closeCreateScheduleModal();
       document.getElementById('pm-create-form').reset();
       updateKPIs();
+      await loadRequestedWindowsMap();
       renderList();
-      alert(`Schedule "${title}" successfully created and added to active cyclic roster!`);
+      alert(`✅ PM Schedule "${title}" (${newSched.id}) successfully created!\n\n➔ Automatically routed to Control Office for line block sanction\n➔ Once sanctioned, it will appear in Maintenance Team Work Orders for acceptance.`);
     };
 
     if (window.IR_LIVE_SYNC && typeof window.IR_LIVE_SYNC.on === 'function') {
@@ -1108,6 +1196,9 @@
           updateKPIs();
           renderList();
         }
+      });
+      window.IR_LIVE_SYNC.on('emergency_block_sanctioned', function () {
+        loadRequestedWindowsMap().then(() => renderList());
       });
     }
 
@@ -1130,7 +1221,21 @@
       document.getElementById('badge-archived').textContent = archivedCount;
     }
 
-    // Render List or Empty State
+    function getLocalAcceptedMap() {
+      try {
+        const raw = localStorage.getItem('rp_accepted_work_orders_map');
+        return raw ? JSON.parse(raw) : {};
+      } catch (_) { return {}; }
+    }
+
+    function getLocalCompletedMap() {
+      try {
+        const raw = localStorage.getItem('rp_completed_work_orders_map');
+        return raw ? JSON.parse(raw) : {};
+      } catch (_) { return {}; }
+    }
+
+    // Render List or Empty State with Live 4-Stage Operational Flow
     function renderList() {
       const emptyState = document.getElementById('pm-empty-state-view');
       const tableView = document.getElementById('pm-table-data-view');
@@ -1154,9 +1259,65 @@
       emptyState.style.display = 'none';
       tableView.style.display = 'block';
 
-      tbody.innerHTML = filtered.map(s => `
+      const acceptedMap = getLocalAcceptedMap();
+      const completedMap = getLocalCompletedMap();
+
+      tbody.innerHTML = filtered.map(s => {
+        const reqWindow = cachedWindowsMap[s.id] || cachedWindowsMap[`REQ-${s.id}`] || {};
+        const st = (reqWindow.status || s.status || 'PENDING_REVIEW').toUpperCase();
+
+        const isCompleted = !!completedMap[s.id] || !!completedMap[`WO-CIVIL-${s.id}`] || !!completedMap[`WO-TRD-${s.id}`] || !!completedMap[`WO-SIG-${s.id}`] || st === 'COMPLETED' || st === 'CLOSED' || st === 'RECTIFIED';
+        const isAccepted = isCompleted || !!acceptedMap[s.id] || !!acceptedMap[`WO-CIVIL-${s.id}`] || !!acceptedMap[`WO-TRD-${s.id}`] || !!acceptedMap[`WO-SIG-${s.id}`] || st === 'ACCEPTED' || st === 'IN_PROGRESS';
+        const isSanctioned = isAccepted || isCompleted || st === 'SANCTIONED' || st === 'APPROVED' || st === 'ALTERNATIVE_APPLIED' || st === 'FORCE_SANCTIONED' || (s.status && s.status.toLowerCase().includes('sanction'));
+
+        let phaseBadge = '';
+        let flowActionBtn = '';
+
+        if (isCompleted) {
+          phaseBadge = `
+            <div style="display:inline-flex; align-items:center; gap:5px; background:#ECFDF5; border:1px solid #A7F3D0; color:#065F46; padding:4px 10px; border-radius:12px; font-weight:800; font-size:0.74rem;">
+              <span>✅</span>
+              <span>4. Work Completed &amp; Certified</span>
+            </div>`;
+          flowActionBtn = `
+            <a href="maintenance-dashboard.html#wo-${s.id}" style="display:inline-flex; align-items:center; gap:4px; background:#ECFDF5; border:1px solid #059669; color:#059669; padding:4px 9px; border-radius:6px; font-size:0.72rem; font-weight:700; text-decoration:none;">
+              <span>📜</span><span>View Certificate</span>
+            </a>`;
+        } else if (isAccepted) {
+          phaseBadge = `
+            <div style="display:inline-flex; align-items:center; gap:5px; background:#FEF3C7; border:1px solid #FDE68A; color:#92400E; padding:4px 10px; border-radius:12px; font-weight:800; font-size:0.74rem;">
+              <span>🏗️</span>
+              <span>3. Work In Progress (Accepted)</span>
+            </div>`;
+          flowActionBtn = `
+            <a href="maintenance-dashboard.html#wo-${s.id}" style="display:inline-flex; align-items:center; gap:4px; background:#D97706; color:#FFF; padding:4px 9px; border-radius:6px; font-size:0.72rem; font-weight:700; text-decoration:none;">
+              <span>☑</span><span>Tick Work Done ➔</span>
+            </a>`;
+        } else if (isSanctioned) {
+          phaseBadge = `
+            <div style="display:inline-flex; align-items:center; gap:5px; background:#EFF6FF; border:1px solid #BFDBFE; color:#1E40AF; padding:4px 10px; border-radius:12px; font-weight:800; font-size:0.74rem;">
+              <span>📌</span>
+              <span>2. Sanctioned ➔ Pending Acceptance</span>
+            </div>`;
+          flowActionBtn = `
+            <a href="maintenance-dashboard.html#wo-${s.id}" style="display:inline-flex; align-items:center; gap:4px; background:#003366; color:#FFF; padding:4px 9px; border-radius:6px; font-size:0.72rem; font-weight:700; text-decoration:none;">
+              <span>✓</span><span>Accept &amp; Lock Slot ➔</span>
+            </a>`;
+        } else {
+          phaseBadge = `
+            <div style="display:inline-flex; align-items:center; gap:5px; background:#FEF2F2; border:1px solid #FECACA; color:#991B1B; padding:4px 10px; border-radius:12px; font-weight:800; font-size:0.74rem;">
+              <span>🟡</span>
+              <span>1. Awaiting Control Office Sanction</span>
+            </div>`;
+          flowActionBtn = `
+            <a href="control-office.html" style="display:inline-flex; align-items:center; gap:4px; background:#FAF6EE; border:1px solid #003366; color:#003366; padding:4px 9px; border-radius:6px; font-size:0.72rem; font-weight:700; text-decoration:none;">
+              <span>🖥️</span><span>Sanction in Control Office ➔</span>
+            </a>`;
+        }
+
+        return `
         <tr>
-          <td><strong style="color:#161E54;">${s.id}</strong></td>
+          <td><strong style="color:#161E54; font-family:var(--font-mono);">${s.id}</strong></td>
           <td>
             <div style="font-weight:700; color:#0F172A;">${s.title}</div>
             <div style="font-size:0.75rem; color:#64748B;">Assigned: ${s.sse}</div>
@@ -1166,18 +1327,18 @@
           <td><span style="color:#475569; font-weight:600;">${s.frequency}</span></td>
           <td><strong style="color:#0F172A;">${s.nextDate}</strong></td>
           <td><span style="background:#F1F5F9; color:#0F172A; font-weight:700; padding:2px 8px; border-radius:6px;">${s.block}</span></td>
+          <td>${phaseBadge}</td>
           <td>
-            <span class="pm-status-pill ${s.isArchived ? 'pm-status-overdue' : 'pm-status-active'}">
-              ${s.isArchived ? 'Archived' : 'Active'}
-            </span>
-          </td>
-          <td>
-            <button type="button" class="pm-btn-secondary" style="padding:4px 8px; font-size:0.75rem;" onclick="window.toggleArchive('${s.id}')">
-              ${s.isArchived ? 'Restore' : 'Archive'}
-            </button>
+            <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+              ${flowActionBtn}
+              <button type="button" class="pm-btn-secondary" style="padding:3px 7px; font-size:0.72rem;" onclick="window.toggleArchive('${s.id}')">
+                ${s.isArchived ? 'Restore' : 'Archive'}
+              </button>
+            </div>
           </td>
         </tr>
-      `).join('');
+      `;
+      }).join('');
     }
 
     // Toggle Archive
@@ -1306,9 +1467,17 @@
       document.body.removeChild(link);
     };
 
-    // Initialize on page load
-    updateKPIs();
-    renderList();
+    // Initialize on page load and sync to Control Office
+    loadRequestedWindowsMap().then(() => {
+      updateKPIs();
+      renderList();
+    });
+
+    if (window.IR_LIVE_SYNC && typeof window.IR_LIVE_SYNC.syncAllPMSchedulesToControlOffice === 'function') {
+      window.IR_LIVE_SYNC.syncAllPMSchedulesToControlOffice().then(() => {
+        loadRequestedWindowsMap().then(() => renderList());
+      });
+    }
   </script>
 </body>
 </html>

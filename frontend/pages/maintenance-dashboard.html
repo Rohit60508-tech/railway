@@ -73,9 +73,8 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 100;
+      position: static;
+      z-index: 10;
     }
 
     .brand-group {
@@ -220,16 +219,57 @@
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
+      gap: 14px;
       margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .wo-title-wrapper {
+      flex: 1 1 500px;
+      min-width: 0;
     }
 
     .wo-title {
-      font-size: 1.05rem;
+      font-size: 1.02rem;
       font-weight: 700;
       color: #0F172A;
       display: flex;
       align-items: center;
-      gap: 10px;
+      flex-wrap: wrap;
+      gap: 8px 10px;
+      line-height: 1.4;
+    }
+
+    .wo-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .btn-manual-override {
+      background: rgba(217, 83, 30, 0.08);
+      border: 1px solid rgba(217, 83, 30, 0.35);
+      color: #D9531E;
+      padding: 5px 12px;
+      border-radius: 6px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+
+    .btn-manual-override:hover {
+      background: rgba(217, 83, 30, 0.16);
+      border-color: #D9531E;
+      transform: translateY(-1px);
     }
 
     .wo-meta-row {
@@ -756,6 +796,16 @@
         <!-- Populated dynamically ONLY with accepted work orders -->
       </div>
 
+      <!-- ═══════════════════ MULTI-DEPT BUNDLING SECTION ═══════════════════ -->
+      <div class="section-title" style="margin-top: 36px;">
+        <span>🔗</span>
+        <span>AI Multi-Department Bundling Opportunities (CP-SAT Solver)</span>
+      </div>
+
+      <div id="bundling-cards-container">
+        <!-- Populated dynamically by BundlingSuggestionCard -->
+      </div>
+
       <!-- ═══════════════════ SECTION 3: WORK COMPLETED & CLOSED REQUISITIONS ═══════════════════ -->
       <div class="section-title"
         style="margin-top: 36px; display: flex; align-items: center; justify-content: space-between;">
@@ -787,16 +837,6 @@
 
       <div class="work-orders-grid" id="completed-work-orders-container">
         <!-- Populated dynamically with completed work orders -->
-      </div>
-
-      <!-- ═══════════════════ MULTI-DEPT BUNDLING SECTION ═══════════════════ -->
-      <div class="section-title" style="margin-top: 36px;">
-        <span>🔗</span>
-        <span>AI Multi-Department Bundling Opportunities (CP-SAT Solver)</span>
-      </div>
-
-      <div id="bundling-cards-container">
-        <!-- Populated dynamically by BundlingSuggestionCard -->
       </div>
 
       <!-- ═══════════════════ AUDIT LOGS SECTION ═══════════════════ -->
@@ -2212,22 +2252,22 @@
 
               card.innerHTML = `
                 <div class="wo-header">
-                  <div>
+                  <div class="wo-title-wrapper">
                     <div class="wo-title">
                       <span>${wo.title}</span>
-                      <span style="background: #059669; color: white; font-size: 0.68rem; padding: 2px 8px; border-radius: 4px; font-weight: 700; text-transform: uppercase;">
+                      <span style="background: #059669; color: white; font-size: 0.68rem; padding: 3px 8px; border-radius: 4px; font-weight: 700; text-transform: uppercase; white-space: nowrap; display: inline-flex; align-items: center; gap: 3px; flex-shrink: 0;">
                         ✓ CONTROL OFFICE SANCTIONED
                       </span>
                       ${isAltApproved ? `
-                      <span style="background: #ECFDF5; color: #065F46; border: 1px solid #10B981; font-size: 0.66rem; padding: 2px 7px; border-radius: 4px; font-weight: 700; display: inline-flex; align-items: center; gap: 3px;">
+                      <span style="background: #ECFDF5; color: #065F46; border: 1px solid #10B981; font-size: 0.66rem; padding: 2px 7px; border-radius: 4px; font-weight: 700; display: inline-flex; align-items: center; gap: 3px; white-space: nowrap; flex-shrink: 0;">
                         <span>💡</span> AI ALT APPROVED
                       </span>` : ''}
                       ${otherGroupIds.length > 0 ? `
-                      <span style="background: #EEF2FF; color: #4338CA; border: 1px solid #C7D2FE; font-size: 0.66rem; padding: 2px 7px; border-radius: 4px; font-weight: 700; display: inline-flex; align-items: center; gap: 3px;">
+                      <span style="background: #EEF2FF; color: #4338CA; border: 1px solid #C7D2FE; font-size: 0.66rem; padding: 2px 7px; border-radius: 4px; font-weight: 700; display: inline-flex; align-items: center; gap: 3px; white-space: nowrap; flex-shrink: 0;">
                         <span>🔀</span> BUNDLED WITH ${otherGroupIds.join(', ')}
                       </span>` : ''}
-                      <div class="tooltip-wrap">
-                        <span style="font-size: 0.85rem; color: #003366;">ℹ️</span>
+                      <div class="tooltip-wrap" style="display: inline-flex; align-items: center; flex-shrink: 0;">
+                        <span style="font-size: 0.85rem; color: #003366; cursor: pointer;">ℹ️</span>
                         <div class="tooltip-box">${wo.tooltipExplanation}</div>
                       </div>
                     </div>
@@ -2236,22 +2276,17 @@
                     </div>
                   </div>
 
-                  <div style="display: flex; align-items: center; gap: 8px;">
-                    <span id="badge-slot-${wo.id}">
+                  <div class="wo-header-actions">
+                    <span id="badge-slot-${wo.id}" style="display: inline-flex; flex-shrink: 0;">
                       ${PriorityScoreBadge.render({ score: wo.score, category: wo.category })}
                     </span>
-                    ${ConfidenceIndicator.render({ confidence: wo.confidence })}
+                    <span style="display: inline-flex; flex-shrink: 0;">
+                      ${ConfidenceIndicator.render({ confidence: wo.confidence })}
+                    </span>
 
-                    <button onclick="window.overrideWo('${wo.id}', '${wo.category}')" style="
-                      background: rgba(217, 83, 30, 0.08);
-                      border: 1px solid rgba(217, 83, 30, 0.35);
-                      color: #D9531E;
-                      padding: 5px 12px;
-                      border-radius: 6px;
-                      font-size: 0.74rem;
-                      font-weight: 700;
-                      cursor: pointer;
-                    ">Manual Override</button>
+                    <button onclick="window.overrideWo('${wo.id}', '${wo.category}')" class="btn-manual-override">
+                      Manual Override
+                    </button>
                   </div>
                 </div>
 
@@ -2341,14 +2376,14 @@
 
             card.innerHTML = `
               <div class="wo-header">
-                <div>
+                <div class="wo-title-wrapper">
                   <div class="wo-title">
                     <span style="color: #065F46; font-weight: 800;">${wo.title}</span>
-                    <span style="background: #059669; color: white; font-size: 0.68rem; padding: 3px 10px; border-radius: 12px; font-weight: 800; text-transform: uppercase;">
+                    <span style="background: #059669; color: white; font-size: 0.68rem; padding: 3px 10px; border-radius: 12px; font-weight: 800; text-transform: uppercase; white-space: nowrap; display: inline-flex; align-items: center; gap: 3px; flex-shrink: 0;">
                       🔒 WORK ACCEPTED &amp; SLOT LOCKED
                     </span>
-                    <div class="tooltip-wrap">
-                      <span style="font-size: 0.85rem; color: #003366;">ℹ️</span>
+                    <div class="tooltip-wrap" style="display: inline-flex; align-items: center; flex-shrink: 0;">
+                      <span style="font-size: 0.85rem; color: #003366; cursor: pointer;">ℹ️</span>
                       <div class="tooltip-box">${wo.tooltipExplanation}</div>
                     </div>
                   </div>
@@ -2357,11 +2392,13 @@
                   </div>
                 </div>
 
-                <div style="display: flex; align-items: center; gap: 8px;">
-                  <span id="badge-slot-${wo.id}">
+                <div class="wo-header-actions">
+                  <span id="badge-slot-${wo.id}" style="display: inline-flex; flex-shrink: 0;">
                     ${PriorityScoreBadge.render({ score: wo.score, category: wo.category })}
                   </span>
-                  ${ConfidenceIndicator.render({ confidence: wo.confidence })}
+                  <span style="display: inline-flex; flex-shrink: 0;">
+                    ${ConfidenceIndicator.render({ confidence: wo.confidence })}
+                  </span>
                 </div>
               </div>
 
@@ -2494,10 +2531,10 @@
 
         card.innerHTML = `
           <div class="wo-header">
-            <div>
+            <div class="wo-title-wrapper">
               <div class="wo-title">
                 <span style="color: #065F46; font-weight: 700;">${wo.title}</span>
-                <span style="background: #059669; color: white; font-size: 0.68rem; padding: 3px 10px; border-radius: 12px; font-weight: 800; text-transform: uppercase;">
+                <span style="background: #059669; color: white; font-size: 0.68rem; padding: 3px 10px; border-radius: 12px; font-weight: 800; text-transform: uppercase; white-space: nowrap; display: inline-flex; align-items: center; gap: 3px; flex-shrink: 0;">
                   ✓ STATUTORY WORK COMPLETED &amp; CERTIFIED
                 </span>
               </div>
@@ -2506,9 +2543,9 @@
               </div>
             </div>
 
-            <div style="display: flex; align-items: center; gap: 8px;">
+            <div class="wo-header-actions">
               ${qaBadgeHtml}
-              <span style="background: rgba(5, 150, 105, 0.15); color: #059669; border: 1px solid rgba(5, 150, 105, 0.3); padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 800;">
+              <span style="background: rgba(5, 150, 105, 0.15); color: #059669; border: 1px solid rgba(5, 150, 105, 0.3); padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 800; white-space: nowrap; display: inline-flex; align-items: center; flex-shrink: 0;">
                 ✓ 100% EXECUTED
               </span>
             </div>

@@ -17,7 +17,7 @@ const AI_CONFIG = {
 
   // AI Inference REST Service
   apiBaseUrl: process.env.AI_SERVICE_URL || 'http://127.0.0.1:5001',
-  timeoutMs: parseInt(process.env.AI_TIMEOUT_MS || '15000', 10),
+  timeoutMs: parseInt(process.env.AI_TIMEOUT_MS || '2500', 10),
 
   // Strategy: 'REST_FIRST' (tries HTTP port 5001, falls back to python CLI if down)
   // Options: 'REST_FIRST', 'REST_ONLY', 'CLI_ONLY'
