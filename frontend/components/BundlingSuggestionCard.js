@@ -166,6 +166,8 @@ export class BundlingSuggestionCard {
             font-size: 0.78rem;
             font-weight: 600;
             cursor: pointer;
+            white-space: nowrap;
+            flex-shrink: 0;
             transition: all 0.2s ease;
           ">Review Bundle</button>
 
@@ -179,6 +181,8 @@ export class BundlingSuggestionCard {
             font-weight: 600;
             cursor: pointer;
             box-shadow: 0 2px 8px rgba(0, 51, 102, 0.25);
+            white-space: nowrap;
+            flex-shrink: 0;
             transition: all 0.2s ease;
           ">Accept &amp; Move to Work Orders</button>
         </div>

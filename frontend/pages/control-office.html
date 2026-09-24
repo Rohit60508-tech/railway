@@ -1881,30 +1881,42 @@
             <span style="color: #64748B; font-size: 0.68rem; font-family: var(--font-mono);">⚡ RapidAPI Ingestion Live</span>
           </div>` : ''}
 
-          <div style="display: flex; align-items: center; justify-content: space-between; font-size: 0.78rem; color: #475569;">
-            <span>&#8505;&#65039; ${slot.rationale}</span>
-            <div style="display: flex; align-items: center; gap: 8px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; font-size: 0.78rem; color: #475569; gap: 16px; margin-top: 6px;">
+            <span style="flex: 1 1 auto; line-height: 1.45; min-width: 0;">&#8505;&#65039; ${slot.rationale}</span>
+            <div style="display: flex; align-items: center; gap: 8px; flex-shrink: 0; white-space: nowrap;">
               <button style="
                 background: #003366;
                 border: none;
                 color: #ffffff;
-                padding: 6px 16px;
+                padding: 7px 16px;
                 border-radius: 6px;
                 font-weight: 700;
                 font-size: 0.76rem;
                 cursor: pointer;
                 box-shadow: 0 2px 8px rgba(0, 51, 102, 0.2);
+                white-space: nowrap;
+                flex-shrink: 0;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                line-height: 1.2;
               " onclick="window.sanctionSlot('${slot.id}', '${slot.window}')">Sanction Block</button>
 
               <button onclick="window.overrideBlock('${slot.id}', '${slot.status}')" style="
                 background: rgba(217, 83, 30, 0.08);
                 border: 1px solid rgba(217, 83, 30, 0.35);
                 color: #D9531E;
-                padding: 5px 12px;
+                padding: 6px 14px;
                 border-radius: 6px;
                 font-size: 0.74rem;
                 font-weight: 700;
                 cursor: pointer;
+                white-space: nowrap;
+                flex-shrink: 0;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                line-height: 1.2;
               ">Override</button>
             </div>
           </div>

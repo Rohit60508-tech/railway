@@ -1800,14 +1800,7 @@
         if (!result.ok) { modalErr.textContent = result.error; modalErr.classList.add('show'); return; }
         closeModal();
         if (typeof renderTable === 'function') renderTable();
-        const credModalTbody = document.getElementById('ir-cred-tbody');
-        if (credModalTbody && typeof window.openUserCredentialsModal === 'function') {
-          const credSearch = document.getElementById('ir-cred-search');
-          // If modal is currently open, re-render its table
-          if (document.getElementById('ir-cred-modal')?.classList.contains('open')) {
-            window.openUserCredentialsModal();
-          }
-        }
+        if (typeof window.renderCredentialsTable === 'function') window.renderCredentialsTable();
       });
 
       // Initial render (only for admin role)
